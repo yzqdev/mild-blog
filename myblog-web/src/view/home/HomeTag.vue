@@ -1,13 +1,30 @@
 <template>
-
+  <div class="home-tag"><PassageList :list="list"></PassageList></div>
 </template>
 
 <script>
+import { getArticleById } from "@/utils/apiConfig";
+import PassageList from "@/components/PassageList.vue";
+
 export default {
-  name: "HomeTag"
-}
+  name: "HomeTag",
+  components: { PassageList },
+  data() {
+    return {
+      list: null,
+    };
+  },
+  async created() {
+    let id = this.$route.params.id;
+    const { data } = await getArticleById(id);
+    this.list = data.blogPageResult.list;
+  },
+};
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.home-tag {
+  flex: 1;
+  padding: 20px 100px;
+}
 </style>

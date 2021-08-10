@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/view/Home.vue";
-import Main from "@/view/Main.vue";
+import AdminMain from "@/view/admin/AdminMain.vue";
 import HomeMain from "@/view/home/HomeMain.vue";
 import HomeLink from "@/view/home/HomeLink.vue";
 import AdminPage from "@/view/AdminPage.vue";
 import HomeTag from "@/view/home/HomeTag.vue";
 import HomeAbout from "@/view/home/HomeAbout.vue";
+import HomeBlog from "@/view/home/HomeBlog.vue";
 
 const routes = [
   {
@@ -25,9 +26,14 @@ const routes = [
       },
       {
         path: "tag/:id",
-        name: "HomeTag",
+        name: "homeTag",
         component: HomeTag,
-      },{
+      },  {
+        path: "blog/:id",
+        name: "homeBlog",
+        component: HomeBlog,
+      },
+      {
         path: "about",
         name: "HomeAbout",
         component: HomeAbout,
@@ -43,8 +49,8 @@ const routes = [
     children: [
       {
         path: "main",
-        name: "main",
-        component: Main,
+        name: "AdminMain",
+        component: AdminMain,
       },
     ],
   },

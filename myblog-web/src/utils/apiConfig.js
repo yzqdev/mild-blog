@@ -10,3 +10,9 @@ export const getConfigs=() => {
 export const getLinks=() => {
   return axios.get('/home/link')
 }
+export const getBlogById=(data) => {
+  return axios.get('/home/blog/'+data)
+}
+export const getArticleById=(data) => {
+  return axios.get('/home/tag/'+data)
+}

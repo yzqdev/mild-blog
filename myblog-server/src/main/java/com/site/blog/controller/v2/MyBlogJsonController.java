@@ -191,7 +191,7 @@ public class MyBlogJsonController {
      * @date 2019/9/6 13:09
      */
     @GetMapping({"/blog/{blogId}", "/article/{blogId}"})
-    public String detail(@PathVariable("blogId") Long blogId) {
+    public Result  detail(@PathVariable("blogId") Long blogId) {
         // 获得文章info
         BlogInfo blogInfo = blogInfoService.getById(blogId);
         List<BlogTagRelation> blogTagRelations = blogTagRelationService.list(new QueryWrapper<BlogTagRelation>()
@@ -223,7 +223,7 @@ public class MyBlogJsonController {
         result.put("blogDetailVO", blogDetailVO);
         result.put("tagList", tagList);
         result.put("pageName", "详情");
-        return "blog/" + theme + "/detail";
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,result);
     }
 
     /**

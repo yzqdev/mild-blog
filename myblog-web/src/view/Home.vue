@@ -1,15 +1,12 @@
 <template>
   <header class="home-header">
     <div>
-      <el-link href="#">{{ configs.websiteName }}</el-link>
+      <el-link href="/home/main">{{ configs.websiteName }}</el-link>
     </div>
     <div class="nav">
-      <router-link
-        class="nav-link"
-        v-for="item in navs"
-        :to="item.link"
-        >{{ item.text }}</router-link
-      >
+      <router-link class="nav-link" v-for="item in navs" :to="item.link">{{
+        item.text
+      }}</router-link>
     </div>
   </header>
   <router-view />
@@ -39,11 +36,11 @@ export default {
   data() {
     return {
       navs: [
-        { text: "主页", id: 1, link: "main" },
-        { text: "友情链接", id: 2, link: "link" },
-        { text: "关于", id: 3, link: "about" },
+        { text: "主页", id: 1, link: "/home/main" },
+        { text: "友情链接", id: 2, link: "/home/link" },
+        { text: "关于", id: 3, link: "/home/about" },
       ],
-      activeRoute: '',
+      activeRoute: "",
       configs: {
         sysAuthor: "南街",
         sysAuthorImg: "http://localhost/authorImg/20190906_18162846.jpg",
@@ -52,7 +49,7 @@ export default {
         sysUpdateTime: "2019-08-24 20:33:23",
         sysUrl: "localhost:80",
         sysVersion: "1.1.0",
-        websiteName: "v1 blog",
+        websiteName: "",
       },
     };
   },
@@ -61,10 +58,15 @@ export default {
       // this.activeRoute = item.id;
       // this.$router.push({ name: item.link });
     },
+    async getData() {
+      let { data } = await getConfigs();
+    },
   },
-  async created() {
-    let { data } = await getConfigs();
-    this.configs = data;
+  created() {
+    console.log(`%chome创造`,`color:red;font-size:16px;background:transparent`)
+    getConfigs().then(({ data }) => {
+      this.configs = data;
+    });
   },
 };
 </script>
