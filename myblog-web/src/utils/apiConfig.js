@@ -21,3 +21,18 @@ export const loginApi = (username,password) => {
 export const regApi = (username,password) => {
   return axios.post(`/admin/reg?username=${username}&password=${password}`,  );
 };
+export const getSystemInfo=() => {
+  return axios.get('/admin/blogConfig/list')
+}
+export const addSystemInfo=(data) => {
+  return axios.post('/admin/blogConfig/add',data)
+}
+export const delSystemInfo=(data) => {
+  return axios.delete('/admin/blogConfig/del/'+data)
+}
+export const getLinkList=({page,limit}) => {
+  return axios.get(`/admin/link/paging?page=${page}&limit=${limit}`)
+}
+export const editLink=(data ) => {
+  return axios.post("/admin/link/edit",data)
+}
