@@ -7,3 +7,6 @@ export const getIndex=() => {
 export const getConfigs=() => {
   return axios.get("/home/configs")
 }
+export const getLinks=() => {
+  return axios.get('/home/link')
+}

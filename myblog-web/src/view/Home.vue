@@ -1,16 +1,126 @@
 <template>
-  <HomeHeader></HomeHeader>
+  <header class="home-header">
+    <div>
+      <el-link href="#">{{ configs.websiteName }}</el-link>
+    </div>
+    <div class="nav">
+      <router-link
+        class="nav-link"
+        v-for="item in navs"
+        :to="item.link"
+        >{{ item.text }}</router-link
+      >
+    </div>
+  </header>
   <router-view />
-  <HomeFooter></HomeFooter>
+  <footer class="footer blog-footer">
+    <div class="blog-text-center">
+      <article>&copy;{{ configs.sysAuthor }}singal blog.</article>
+      <span class="ft-warn">&heartsuit;</span>&nbsp;{{ configs.sysCopyRight }}
+      <a>浙ICP备 xxxxxx-x号</a><br />
+      version: {{ configs.sysVersion }} Powered by
+      <a
+        href="#"
+        target="_blank"
+        th:text="${configurations.get('sysCopyRight')}"
+        >2019 南街</a
+      ><span style="margin-left: 20px"
+        >更新时间:{{ configs.sysUpdateTime }}</span
+      >
+    </div>
+  </footer>
 </template>
 
 <script>
-import HomeFooter from "@/view/home/HomeFooter.vue";
-import HomeHeader from "@/view/home/HomeHeader.vue";
+import { getConfigs } from "@/utils/apiConfig";
 export default {
   name: "Home",
-  components: { HomeHeader, HomeFooter },
+  components: {},
+  data() {
+    return {
+      navs: [
+        { text: "主页", id: 1, link: "main" },
+        { text: "友情链接", id: 2, link: "link" },
+        { text: "关于", id: 3, link: "about" },
+      ],
+      activeRoute: '',
+      configs: {
+        sysAuthor: "南街",
+        sysAuthorImg: "http://localhost/authorImg/20190906_18162846.jpg",
+        sysCopyRight: "xuebingsi(xuebingsi) 访问官网",
+        sysEmail: "1320291471@qq.com",
+        sysUpdateTime: "2019-08-24 20:33:23",
+        sysUrl: "localhost:80",
+        sysVersion: "1.1.0",
+        websiteName: "v1 blog",
+      },
+    };
+  },
+  methods: {
+    gotoRoute(item) {
+      // this.activeRoute = item.id;
+      // this.$router.push({ name: item.link });
+    },
+  },
+  async created() {
+    let { data } = await getConfigs();
+    this.configs = data;
+  },
 };
 </script>
 
-<style scoped></style>
+<style lang="less" scoped>
+.blog-footer {
+  padding: 2rem 0 2rem 0;
+  margin-top: 5rem;
+  background-color: #273547;
+  color: #fff !important;
+  a {
+    color: #fff;
+    span {
+      color: #fff;
+    }
+  }
+  .blog-text-center {
+    text-align: center;
+    font-size: 14px;
+  }
+}
+.home-header {
+  background-color: #f5f5f5;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  height: 60px;
+  .nav {
+    flex: 1;
+    text-align: right;
+    height: 100%;
+    line-height: 60px;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+
+    .nav-link {
+      margin: 0 20px;
+      cursor: pointer;
+      color: #555;
+      outline: 0;
+      text-decoration: none;
+      overflow-wrap: break-word;
+      border-radius: 2px;
+      padding: 5px 10px;
+      transition: all 0.3s ease-in-out;
+      &:hover {
+        background-color: #ddd;
+        color: #222;
+      }
+    }
+    .nav-active,
+    .router-link-active {
+      background-color: #ddd;
+      color: #222;
+    }
+  }
+}
+</style>

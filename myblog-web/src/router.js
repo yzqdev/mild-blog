@@ -2,10 +2,12 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/view/Home.vue";
 import Main from "@/view/Main.vue";
 import HomeMain from "@/view/home/HomeMain.vue";
+import HomeLink from "@/view/home/HomeLink.vue";
 import AdminPage from "@/view/AdminPage.vue";
+import HomeTag from "@/view/home/HomeTag.vue";
+import HomeAbout from "@/view/home/HomeAbout.vue";
 
 const routes = [
-
   {
     path: "/home",
     name: "home",
@@ -13,8 +15,22 @@ const routes = [
     children: [
       {
         path: "main",
-        name: "Homemain",
+        name: "HomeMain",
         component: HomeMain,
+      },
+      {
+        path: "link",
+        name: "HomeLink",
+        component: HomeLink,
+      },
+      {
+        path: "tag/:id",
+        name: "HomeTag",
+        component: HomeTag,
+      },{
+        path: "about",
+        name: "HomeAbout",
+        component: HomeAbout,
       },
     ],
   },

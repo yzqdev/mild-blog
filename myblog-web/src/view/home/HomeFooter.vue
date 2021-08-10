@@ -48,18 +48,17 @@ export default {
   padding: 2rem 0 2rem 0;
   margin-top: 5rem;
   background-color: #273547;
-  color: #fff !important;
+  color: #fff !important;a {
+  color: #fff;
+  span {
+    color: #fff;
+  }
+}
   .blog-text-center {
     text-align: center;
     font-size: 14px;
   }
 }
 
-.blog-footer a {
-  color: #fff;
-}
 
-.blog-footer span {
-  color: #fff;
-}
 </style>
