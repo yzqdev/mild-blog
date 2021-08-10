@@ -14,7 +14,10 @@ public class AjaxResultPage<T> implements Serializable {
     //状态码
     private int code;
 
-    //提示消息
+    /**
+     * 提示消息
+     */
+
     private String msg;
 
     //总条数

@@ -1,4 +1,4 @@
-package com.site.blog.controller.admin;
+package com.site.blog.controller.v2;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -18,23 +18,21 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
 /**
+ * @author yzqde
  * @qq交流群 796794009
  * @qq 1320291471
  * @Description: 评论标签
  * @date: 2019/8/6 17:24
  */
-@Controller
-@RequestMapping("/admin")
-@Api(tags = "v1评论")
-public class CommentController {
+@RestController
+@RequestMapping("/v2/admin")
+@Api(tags = "评论json")
+public class CommentJsonController {
 
     @Resource
     private BlogCommentService blogCommentService;
 
-    @GetMapping("/v1/comment")
-    public String gotoComment(){
-        return "adminLayui/comment-list";
-    }
+
 
     /**
      * 返回评论列表
@@ -43,8 +41,7 @@ public class CommentController {
      * @return com.site.blog.pojo.dto.AjaxResultPage<com.site.blog.entity.BlogComment>
      * @date 2020/4/24 21:23
      */
-    @ResponseBody
-    @GetMapping("/v1/comment/paging")
+    @GetMapping("/comment/paging")
     public AjaxResultPage<BlogComment> getCommentList(AjaxPutPage<BlogComment> ajaxPutPage, BlogComment condition){
         QueryWrapper<BlogComment> queryWrapper = new QueryWrapper<>(condition);
         Page<BlogComment> page = ajaxPutPage.putPageToPage();
@@ -61,8 +58,7 @@ public class CommentController {
      * @return com.site.blog.pojo.dto.Result<java.lang.String>
      * @date 2020/4/24 21:21
      */
-    @ResponseBody
-    @PostMapping(value = {"/v1/comment/isDel","/v1/comment/commentStatus"})
+    @PostMapping(value = {"/comment/isDel","/comment/commentStatus"})
     public Result<String> updateCommentStatus(BlogComment blogComment){
         boolean flag = blogCommentService.updateById(blogComment);
         if (flag){
@@ -77,8 +73,7 @@ public class CommentController {
      * @return com.site.blog.pojo.dto.Result<java.lang.String>
      * @date 2020/4/24 21:23
      */
-    @ResponseBody
-    @PostMapping("/v1/comment/delete")
+    @PostMapping("/comment/delete")
     public Result<String> deleteComment(@RequestParam Long commentId){
         boolean flag = blogCommentService.removeById(commentId);
         if (flag){
@@ -94,8 +89,7 @@ public class CommentController {
      * @return com.site.blog.pojo.dto.Result<java.lang.String>
      * @date 2020/4/24 21:21
      */
-    @ResponseBody
-    @PostMapping("/v1/comment/edit")
+    @PostMapping("/comment/edit")
     public Result<String> editComment(BlogComment blogComment){
         blogComment.setReplyCreateTime(DateUtils.getLocalCurrentDate());
         blogComment.setCommentBody(StringEscapeUtils.escapeHtml4(blogComment.getCommentBody()));

@@ -15,6 +15,7 @@ import com.site.blog.model.vo.BlogDetailVO;
 import com.site.blog.service.*;
 import com.site.blog.util.PageResult;
 import com.site.blog.util.ResultGenerator;
+import io.swagger.annotations.Api;
 import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
@@ -38,6 +39,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/v2/home")
+@Api(tags = "首页数据")
 public class MyBlogJsonController {
 
     public static String theme = "amaze";
@@ -242,13 +244,11 @@ HashMap<String,Object> result=new HashMap<>();
     /**
      * 友链界面
      *
-     * @param request
      * @return java.lang.String
      * @date 2019/9/6 17:26
      */
     @GetMapping({"/link"})
-    public String link(HttpServletRequest request) {
-        request.setAttribute("pageName", "友情链接");
+    public Result link( ) {
         List<BlogLink> favoriteLinks = blogLinkService.list(new QueryWrapper<BlogLink>()
                 .lambda().eq(BlogLink::getLinkType, LinkConstants.LINK_TYPE_FRIENDSHIP.getLinkTypeId())
         );
@@ -259,11 +259,13 @@ HashMap<String,Object> result=new HashMap<>();
                 .lambda().eq(BlogLink::getLinkType, LinkConstants.LINK_TYPE_PRIVATE.getLinkTypeId())
         );
         //判断友链类别并封装数据 0-友链 1-推荐 2-个人网站
-        request.setAttribute("favoriteLinks", favoriteLinks);
-        request.setAttribute("recommendLinks", recommendLinks);
-        request.setAttribute("personalLinks", personalLinks);
-        request.setAttribute("configurations", blogConfigService.getAllConfigs());
-        return "blog/" + theme + "/link";
+        HashMap<String,Object> result=new HashMap<>();
+        result.put("pageName", "友情链接");
+        result.put("favoriteLinks", favoriteLinks);
+        result.put("recommendLinks", recommendLinks);
+        result.put("personalLinks", personalLinks);
+        result.put("configurations", blogConfigService.getAllConfigs());
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,result);
     }
 
     /**

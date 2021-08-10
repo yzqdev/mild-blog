@@ -9,6 +9,7 @@ import com.site.blog.model.entity.AdminUser;
 import com.site.blog.service.*;
 import com.site.blog.util.MD5Utils;
 import com.site.blog.util.ResultGenerator;
+import io.swagger.annotations.Api;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,8 @@ import javax.servlet.http.HttpSession;
  * @modified By:
  */
 @RestController
-@RequestMapping("/v2")
+@RequestMapping("/v2/admin")
+@Api(value = "后台json",tags = "后台json")
 public class AdminJsonController {
     @Resource
     private AdminUserService adminUserService;
@@ -39,7 +41,7 @@ public class AdminJsonController {
     @Resource
     private BlogLinkService blogLinkService;
     @ResponseBody
-    @PostMapping(value = "/admin/loginPost")
+    @PostMapping(value = "/loginPost")
     public Result<String> login(String username, String password,
                                 HttpSession session) {
         if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
@@ -63,7 +65,7 @@ public class AdminJsonController {
         }
     }
     @ResponseBody
-    @PostMapping(value = "/admin/regPost")
+    @PostMapping(value = "/regPost")
     public Result<String> register(String username, String password ) {
         if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
@@ -93,7 +95,7 @@ public class AdminJsonController {
      * @date: 2019/8/25 9:15
      */
     @ResponseBody
-    @GetMapping("/admin/password")
+    @GetMapping("/password")
     public Result<String> validatePassword(String oldPwd, HttpSession session){
         Integer userId = (Integer) session.getAttribute(SessionConstants.LOGIN_USER_ID);
         boolean flag = adminUserService.validatePassword(userId,oldPwd);
