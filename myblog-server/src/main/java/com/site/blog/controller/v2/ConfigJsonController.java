@@ -76,7 +76,10 @@ public class ConfigJsonController {
      * @date 2019/8/30 10:57
      */
     @PostMapping("/blogConfig/add")
-    public Result<String> addBlogConfig(BlogConfig blogConfig){
+    public Result  addBlogConfig(@RequestBody BlogConfig blogConfig){
+        System.out.println(blogConfig
+        );
+        System.out.println("到达这里blogadd");
         blogConfig.setCreateTime(DateUtils.getLocalCurrentDate());
         blogConfig.setUpdateTime(DateUtils.getLocalCurrentDate());
         boolean flag = blogConfigService.save(blogConfig);
@@ -93,8 +96,8 @@ public class ConfigJsonController {
      * @return com.site.blog.pojo.dto.Result
      * @date 2019/8/30 11:21
      */
-    @PostMapping("/blogConfig/del")
-    public Result<String> delBlogConfig(@RequestParam String configField){
+    @DeleteMapping("/blogConfig/del/{id}")
+    public Result<String> delBlogConfig(@PathVariable("id") String configField){
         boolean flag = blogConfigService.removeById(configField);
         if (flag){
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);

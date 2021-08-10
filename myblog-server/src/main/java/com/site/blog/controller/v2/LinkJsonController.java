@@ -88,14 +88,9 @@ public class LinkJsonController {
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping("/link/edit")
-    public String editLink(Integer linkId, Model model) {
-        if (linkId != null) {
-            BlogLink blogLink = blogLinkService.getById(linkId);
-            model.addAttribute("blogLink", blogLink);
-        }
-        return "adminLayui/link-edit";
-    }
+
+
+ 
 
     @PostMapping("/link/edit")
     public Result<String> updateAndSaveLink(BlogLink blogLink) {
