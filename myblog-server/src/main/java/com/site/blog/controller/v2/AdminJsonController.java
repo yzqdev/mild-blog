@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
  */
 @RestController
 @RequestMapping("/v2")
-public class AdminV2Controller {
+public class AdminJsonController {
     @Resource
     private AdminUserService adminUserService;
     @Resource

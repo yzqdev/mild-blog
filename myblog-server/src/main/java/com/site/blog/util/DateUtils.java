@@ -1,7 +1,6 @@
 package com.site.blog.util;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 /**
  * @program: my-blog
@@ -19,6 +18,6 @@ public class DateUtils {
      * @date 2019/8/28 13:03
      */
     public static Timestamp getLocalCurrentDate(){
-        return new Timestamp(new Date().getTime());
+        return new Timestamp(System.currentTimeMillis());
     }
 }

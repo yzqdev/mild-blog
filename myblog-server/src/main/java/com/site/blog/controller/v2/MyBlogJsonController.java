@@ -25,9 +25,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.sql.ResultSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -63,13 +62,13 @@ public class MyBlogJsonController {
 
     /**
      * 博客首页
-     * @param request
+     *
      * @author Linn-cn
      * @date 2020/12/7
      */
-    @GetMapping({"/", "/index" })
-    public String index( ) {
-        return this.page(  new BlogPageCondition()
+    @GetMapping({"/", "/index"})
+    public Result index() {
+        return this.page(new BlogPageCondition()
                 .setPageNum(1)
                 .setPageName("首页")
         );
@@ -78,14 +77,13 @@ public class MyBlogJsonController {
     /**
      * 分类
      *
-     * @param request
      * @param categoryName
      * @author Linn-cn
      * @date 2020/12/7
      */
     @GetMapping({"/category/{categoryName}"})
-    public String category( @PathVariable("categoryName") String categoryName) {
-        return this.page(request, new BlogPageCondition()
+    public Result category(@PathVariable("categoryName") String categoryName) {
+        return this.page(  new BlogPageCondition()
                 .setPageNum(1)
                 .setPageName("分类")
                 .setCategoryName(categoryName));
@@ -94,14 +92,13 @@ public class MyBlogJsonController {
     /**
      * 搜索
      *
-     * @param request
      * @param keyword
      * @return java.lang.String
      * @date 2019/9/6 7:03
      */
     @GetMapping({"/search/{keyword}"})
-    public String search( @PathVariable("keyword") String keyword) {
-        return this.page(request, new BlogPageCondition()
+    public Result search(@PathVariable("keyword") String keyword) {
+        return this.page( new BlogPageCondition()
                 .setPageNum(1)
                 .setPageName("首页")
                 .setKeyword(keyword)
@@ -111,14 +108,13 @@ public class MyBlogJsonController {
     /**
      * 标签
      *
-     * @param request
      * @param tagId
      * @return java.lang.String
      * @date 2019/9/6 7:04
      */
     @GetMapping({"/tag/{tagId}"})
-    public String tag( @PathVariable("tagId") String tagId) {
-        return this.page(request, new BlogPageCondition()
+    public Result tag(@PathVariable("tagId") String tagId) {
+        return this.page(  new BlogPageCondition()
                 .setPageNum(1)
                 .setPageName("标签")
                 .setTagId(tagId));
@@ -127,20 +123,20 @@ public class MyBlogJsonController {
     /**
      * 博客分页
      *
-     * @param request
      * @param condition
      * @throws
      * @author Linn-cn
      * @date 2020/12/7
      */
     @GetMapping({"/page"})
-    public String page(  BlogPageCondition condition) {
+    public Result page(BlogPageCondition condition) {
         if (Objects.isNull(condition.getPageNum())) {
             condition.setPageNum(1);
         }
         if (Objects.isNull(condition.getPageSize())) {
             condition.setPageSize(5);
         }
+        HashMap<String,Object> result=new HashMap<>();
         Page<BlogInfo> page = new Page<>(condition.getPageNum(), condition.getPageSize());
         LambdaQueryWrapper<BlogInfo> sqlWrapper = Wrappers.<BlogInfo>lambdaQuery()
                 .like(Objects.nonNull(condition.getKeyword()), BlogInfo::getBlogTitle, condition.getKeyword())
@@ -158,33 +154,32 @@ public class MyBlogJsonController {
         blogInfoService.page(page, sqlWrapper);
         PageResult blogPageResult = new PageResult(page.getRecords(), page.getTotal(), condition.getPageSize(), condition.getPageNum());
         if (Objects.nonNull(condition.getKeyword())) {
-            request.setAttribute("keyword", condition.getKeyword());
+            result.put("keyword", condition.getKeyword());
         }
         if (Objects.nonNull(condition.getTagId())) {
-            request.setAttribute("tagId", condition.getTagId());
+            result.put("tagId", condition.getTagId());
         }
         if (Objects.nonNull(condition.getCategoryName())) {
-            request.setAttribute("categoryName", condition.getCategoryName());
+            result.put("categoryName", condition.getCategoryName());
         }
-        request.setAttribute("blogPageResult", blogPageResult);
-        request.setAttribute("pageName", condition.getPageName());
-        request.setAttribute("newBlogs", blogInfoService.getNewBlog());
-        request.setAttribute("hotBlogs", blogInfoService.getHotBlog());
-        request.setAttribute("hotTags", blogTagService.getBlogTagCountForIndex());
-        request.setAttribute("configurations", blogConfigService.getAllConfigs());
-        return "blog/" + theme + "/index";
+        result.put("blogPageResult", blogPageResult);
+        result.put("pageName", condition.getPageName());
+        result.put("newBlogs", blogInfoService.getNewBlog());
+        result.put("hotBlogs", blogInfoService.getHotBlog());
+        result.put("hotTags", blogTagService.getBlogTagCountForIndex());
+        result.put("configurations", blogConfigService.getAllConfigs());
+        return  ResultGenerator.getResultByHttp(HttpStatusEnum.OK,result);
     }
 
     /**
      * 文章详情
      *
-     * @param request
      * @param blogId
      * @return java.lang.String
      * @date 2019/9/6 13:09
      */
     @GetMapping({"/blog/{blogId}", "/article/{blogId}"})
-    public String detail( @PathVariable("blogId") Long blogId) {
+    public String detail(@PathVariable("blogId") Long blogId) {
         // 获得文章info
         BlogInfo blogInfo = blogInfoService.getById(blogId);
         List<BlogTagRelation> blogTagRelations = blogTagRelationService.list(new QueryWrapper<BlogTagRelation>()
@@ -209,14 +204,14 @@ public class MyBlogJsonController {
                 .eq(BlogComment::getCommentStatus, CommentStatusEnum.ALLOW.getStatus())
                 .eq(BlogComment::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus())
                 .eq(BlogComment::getBlogId, blogId));
-
+HashMap<String,Object> result=new HashMap<>();
         BlogDetailVO blogDetailVO = new BlogDetailVO();
         BeanUtils.copyProperties(blogInfo, blogDetailVO);
         blogDetailVO.setCommentCount(blogCommentCount);
-        request.setAttribute("blogDetailVO", blogDetailVO);
-        request.setAttribute("tagList", tagList);
-        request.setAttribute("pageName", "详情");
-        request.setAttribute("configurations", blogConfigService.getAllConfigs());
+        result.put("blogDetailVO", blogDetailVO);
+        result.put("tagList", tagList);
+        result.put("pageName", "详情");
+        result.put("configurations", blogConfigService.getAllConfigs());
         return "blog/" + theme + "/detail";
     }
 
@@ -279,7 +274,7 @@ public class MyBlogJsonController {
      */
     @PostMapping(value = "/blog/comment")
     @ResponseBody
-    public Result<String> comment(
+    public Result<String> comment(HttpServletRequest request,
                                   @Validated BlogComment blogComment) {
         String ref = request.getHeader("Referer");
         // 对非法字符进行转义，防止xss漏洞
