@@ -8,7 +8,9 @@ package com.site.blog.constants;
  * @create: 2019-08-15 09:11
  **/
 public enum HttpStatusEnum {
-
+    /**
+     * 200提示
+     */
     OK(200,"成功"),
     BAD_REQUEST(400,"请求参数有误"),
     UNAUTHORIZED(401,"登录失败"),

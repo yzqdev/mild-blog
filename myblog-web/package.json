@@ -1,0 +1,26 @@
+{
+  "name": "bpass-web-vue",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "yarn &&vite --host",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@vitejs/plugin-vue": "^1.4.0",
+    "axios": "^0.21.1",
+    "element-plus": "1.0.2-beta.70",
+    "less": "^4.1.1",
+    "prettier": "^2.3.2",
+    "sass": "^1.37.5",
+    "vue": "^3.0.11",
+    "vue-router": "^4.0.10",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@vue/compiler-sfc": "^3.2.1",
+    "dayjs": "^1.10.6",
+    "trim-html": "^0.1.9",
+    "vite": "^2.4.4"
+  }
+}
