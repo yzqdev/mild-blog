@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="blog-list-fragment" class="am-u-lg-8 am-u-sm-12">
+    <main class="articles-list">
+        <div>
+            <th:block th:if="${null != blogPageResult}">
+                <th:block th:each="blog,iterStat : ${blogPageResult.list}">
+                    <article class="am-g blog-entry-article">
+                        <div class="am-u-lg-6 am-u-lg-12 am-u-sm-12 blog-entry-text post-preview">
+                            <div class="topic-header">
+                                <div class="pull-left">
+                                    <div class="blog-flex-center">
+                                        <div class="blog-flex0">
+                                            <img th:src="@{${configurations.get('sysAuthorImg')}}" alt=""
+                                                 class="link avatar avatar-image">
+                                        </div>
+                                        <div class="author-lockup blog-flex1">
+                                            <a class="link" href="javascript:;"
+                                               th:text="${configurations.get('sysAuthor')}">13</a>
+                                            <span class="in">in</span>
+                                            <span class="category-name">
+                                <a class="category-name" rel="tag" th:href="@{'/category/' + ${blog.blogCategoryName}}"
+                                   th:utext="${blog.blogCategoryName}">
+                                    </a>
+                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="pull-right time pc_time"
+                                      th:text="${#dates.format(blog.createTime, 'yyyy-MM-dd')}">2019-01</span>
+                            </div>
+                            <h1 class="post-index-title"><a itemtype="url" th:href="@{'/blog/' + ${blog.blogId}}">
+                                <th:block th:text="${blog.blogTitle}"></th:block>
+                            </a>
+                            </h1>
+                            <div class="abstract vditor-reset">
+                                <p th:text="${blog.blogPreface}">
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                </th:block>
+            </th:block>
+            <!-- 分页逻辑 -->
+            <div id="page"></div>
+        </div>
+    </main>
+    <link rel="stylesheet" type="text/css" th:href="@{/X-admin/lib/layui/css/layui.css}">
+    <script type="text/javascript" th:src="@{/X-admin/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/X-admin/lib/layui/layui.js}" charset="utf-8"></script>
+    <script type="application/javascript" th:inline="javascript">
+        layui.use(['laypage'], function () {
+            var laypage = layui.laypage,
+                $ = layui.jquery;
+            laypage.render({
+                elem: 'page'
+                , count: [[${blogPageResult.totalCount}?:'1']] //数据总数
+                , limit: 5
+                , curr: [[${blogPageResult.currPage}?:'1']]
+                , jump: function (obj, first) {
+                    //首次不执行
+                    if(!first){
+                        var url = "/page?pageNum=" + obj.curr + "&pageSize=" + obj.limit;
+                        if ([[${keyword}]] != null){
+                            url = url + "&keyword=" + [[${keyword}]];
+                        }
+                        if ([[${tagId}]] != null){
+                            url = url + "&tagId=" + [[${tagId}]];
+                        }
+                        if ([[${categoryName}]] != null){
+                            url = url + "&categoryName=" + [[${categoryName}]];
+                        }
+                        if ([[${pageName}]] != null){
+                            url = url + "&pageName=" + [[${pageName}]];
+                        }
+                        location.href = url;
+                    }
+                }
+            });
+
+        });
+    </script>
+</div>
+</html>

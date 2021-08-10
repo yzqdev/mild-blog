@@ -1,0 +1,93 @@
+package com.site.blog.service.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.site.blog.constants.BlogStatusEnum;
+import com.site.blog.constants.DeleteStatusEnum;
+import com.site.blog.model.vo.SimpleBlogListVO;
+import com.site.blog.mapper.BlogCommentMapper;
+import com.site.blog.mapper.BlogInfoMapper;
+import com.site.blog.mapper.BlogTagRelationMapper;
+import com.site.blog.model.entity.BlogComment;
+import com.site.blog.model.entity.BlogInfo;
+import com.site.blog.model.entity.BlogTagRelation;
+import com.site.blog.service.BlogInfoService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * <p>
+ * 博客信息表 服务实现类
+ * </p>
+ *
+ * @author: 南街
+ * @since 2019-08-27
+ */
+@Service
+public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> implements BlogInfoService {
+
+    @Resource
+    private BlogInfoMapper blogInfoMapper;
+
+    @Resource
+    private BlogTagRelationMapper blogTagRelationMapper;
+
+    @Resource
+    private BlogCommentMapper blogCommentMapper;
+
+    @Override
+    public List<SimpleBlogListVO> getNewBlog() {
+        List<SimpleBlogListVO> simpleBlogListVOS = new ArrayList<>();
+        Page<BlogInfo> page = new Page<>(1,5);
+        blogInfoMapper.selectPage(page,new QueryWrapper<BlogInfo>()
+                .lambda()
+                .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
+                .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus())
+                .orderByDesc(BlogInfo::getCreateTime));
+        for (BlogInfo blogInfo : page.getRecords()){
+            SimpleBlogListVO simpleBlogListVO = new SimpleBlogListVO();
+            BeanUtils.copyProperties(blogInfo, simpleBlogListVO);
+            simpleBlogListVOS.add(simpleBlogListVO);
+        }
+        return simpleBlogListVOS;
+    }
+
+    @Override
+    public List<SimpleBlogListVO> getHotBlog() {
+        List<SimpleBlogListVO> simpleBlogListVOS = new ArrayList<>();
+        Page<BlogInfo> page = new Page<>(1,5);
+        blogInfoMapper.selectPage(page,new QueryWrapper<BlogInfo>()
+                .lambda()
+                .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
+                .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus())
+                .orderByDesc(BlogInfo::getBlogViews));
+        for (BlogInfo blogInfo : page.getRecords()){
+            SimpleBlogListVO simpleBlogListVO = new SimpleBlogListVO();
+            BeanUtils.copyProperties(blogInfo, simpleBlogListVO);
+            simpleBlogListVOS.add(simpleBlogListVO);
+        }
+        return simpleBlogListVOS;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean clearBlogInfo(Long blogId) {
+        if (SqlHelper.retBool(blogInfoMapper.deleteById(blogId))){
+            QueryWrapper<BlogTagRelation> tagRelationWrapper = new QueryWrapper<>();
+            tagRelationWrapper.lambda().eq(BlogTagRelation::getBlogId,blogId);
+            blogTagRelationMapper.delete(tagRelationWrapper);
+            QueryWrapper<BlogComment> commentWrapper = new QueryWrapper<>();
+            commentWrapper.lambda().eq(BlogComment::getBlogId,blogId);
+            blogCommentMapper.delete(commentWrapper);
+            return true;
+        }
+        return false;
+    }
+}
