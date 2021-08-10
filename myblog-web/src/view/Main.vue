@@ -1,8 +1,10 @@
 <template>
-amin
+<div>
+  aminaminaminaminaminaminaminamin
+</div>
 </template>
 
-<script setup>
+<script  >
 
 </script>
 

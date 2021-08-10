@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/view/Home.vue";
 import Main from "@/view/Main.vue";
+import HomeMain from "@/view/home/HomeMain.vue";
 import AdminPage from "@/view/AdminPage.vue";
 
 const routes = [
-  { path: "/", redirect: "/home/main" },
-  { path: "/admin", redirect: "/admin/main" },
+
   {
     path: "/home",
     name: "home",
@@ -13,11 +13,13 @@ const routes = [
     children: [
       {
         path: "main",
-        name: "main",
-        component: Main,
+        name: "Homemain",
+        component: HomeMain,
       },
     ],
   },
+  { path: "/", redirect: "/home/main" },
+  { path: "/admin", redirect: "/admin/main" },
   {
     path: "/admin",
     name: "admin",

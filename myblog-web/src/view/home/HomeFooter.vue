@@ -1,21 +1,65 @@
 <template>
-  <footer class="footer blog-footer"  >
+  <footer class="footer blog-footer">
     <div class="blog-text-center">
-      &copy;
-      <a  text="${configurations.get('sysAuthor')}">your singal blog.</a>
-      <span class="ft-warn">&heartsuit;</span>&nbsp;site blog
-      <a>浙ICP备 xxxxxx-x号</a><br/>
-      Powered by <a href="#" target="_blank" th:text="${configurations.get('sysCopyRight')}">2019 南街</a>
+
+      <article>  &copy;{{ configs.sysAuthor }}singal blog.</article>
+      <span class="ft-warn">&heartsuit;</span>&nbsp;{{ configs.sysCopyRight }}
+      <a>浙ICP备 xxxxxx-x号</a><br />
+    version: {{configs.sysVersion}}  Powered by
+      <a
+        href="#"
+        target="_blank"
+        th:text="${configurations.get('sysCopyRight')}"
+        >2019 南街</a
+      ><span style="margin-left: 20px;">更新时间:{{configs.sysUpdateTime}}</span>
     </div>
   </footer>
 </template>
 
 <script>
+import { getConfigs } from "@/utils/apiConfig";
+
 export default {
-  name: "HomeFooter"
-}
+  name: "HomeFooter",
+  data() {
+    return {
+      configs: {
+        sysAuthor: "南街",
+        sysAuthorImg: "http://localhost/authorImg/20190906_18162846.jpg",
+        sysCopyRight: "xuebingsi(xuebingsi) 访问官网",
+        sysEmail: "1320291471@qq.com",
+        sysUpdateTime: "2019-08-24 20:33:23",
+        sysUrl: "localhost:80",
+        sysVersion: "1.1.0",
+        websiteName: "v1 blog",
+      },
+    };
+  },
+  created() {
+    getConfigs().then((res) => {
+      this.configs = res.data;
+    });
+  },
+};
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+.blog-footer {
+  padding: 2rem 0 2rem 0;
+  margin-top: 5rem;
+  background-color: #273547;
+  color: #fff !important;
+  .blog-text-center {
+    text-align: center;
+    font-size: 14px;
+  }
+}
 
+.blog-footer a {
+  color: #fff;
+}
+
+.blog-footer span {
+  color: #fff;
+}
 </style>
