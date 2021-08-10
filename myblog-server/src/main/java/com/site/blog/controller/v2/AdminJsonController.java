@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 
 /**
  * @author Yangzhengqian
@@ -41,8 +42,8 @@ public class AdminJsonController {
     @Resource
     private BlogLinkService blogLinkService;
     @ResponseBody
-    @PostMapping(value = "/loginPost")
-    public Result<String> login(String username, String password,
+    @PostMapping(value = "/login")
+    public Result  login(String username, String password,
                                 HttpSession session) {
         if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
@@ -59,7 +60,8 @@ public class AdminJsonController {
             session.setAttribute(SessionConstants.LOGIN_USER_NAME, adminUser.getLoginUserName());
             session.setAttribute(SessionConstants.AUTHOR_IMG, blogConfigService.getById(
                     SysConfigConstants.SYS_AUTHOR_IMG.getConfigField()));
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,"/admin/v1/index");
+
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,adminUser);
         } else {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.UNAUTHORIZED);
         }

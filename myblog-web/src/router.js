@@ -7,6 +7,7 @@ import AdminPage from "@/view/AdminPage.vue";
 import HomeTag from "@/view/home/HomeTag.vue";
 import HomeAbout from "@/view/home/HomeAbout.vue";
 import HomeBlog from "@/view/home/HomeBlog.vue";
+import AdminLogin from "@/view/admin/AdminLogin.vue";
 
 const routes = [
   {
@@ -49,8 +50,8 @@ const routes = [
     children: [
       {
         path: "main",
-        name: "AdminMain",
-        component: AdminMain,
+        name: "adminLogin",
+        component: AdminLogin,
       },
     ],
   },

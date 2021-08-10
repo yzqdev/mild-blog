@@ -60,13 +60,11 @@ export default {
     },
     async getData() {
       let { data } = await getConfigs();
+      this.configs = data;
     },
   },
   created() {
-    console.log(`%chome创造`,`color:red;font-size:16px;background:transparent`)
-    getConfigs().then(({ data }) => {
-      this.configs = data;
-    });
+    this.getData();
   },
 };
 </script>

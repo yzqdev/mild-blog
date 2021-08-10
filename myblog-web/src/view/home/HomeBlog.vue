@@ -2,7 +2,7 @@
   <div class="home-blog">
     <h1>{{ blog.blogTitle }}</h1>
     <div>
-      <span>{{ blog.createTime }}</span
+      <span>{{ formatTime(blog.createTime) }}</span
       ><span>共有{{ blog.commentCount }}条评论</span
       ><span>{{ blog.blogViews }}浏览</span>
     </div>
@@ -15,14 +15,15 @@
       >
     </div>
     <article class="blog-content">
-      <div v-html="toHtml(blog.blogContent)"></div>
+      <v-md-preview :text="blog.blogContent"></v-md-preview>
     </article>
   </div>
 </template>
 
 <script>
 import { getBlogById } from "@/utils/apiConfig";
-import marked from "marked";
+import dayjs from "dayjs";
+
 export default {
   name: "HomeBlog",
   data() {
@@ -32,15 +33,22 @@ export default {
     };
   },
   async created() {
+
     let id = this.$route.params.id;
     const { data } = await getBlogById(id);
 
     this.blog = data.blogDetailVO;
     this.tags = data.tagList;
+    console.log(new Date(this.blog.createTime))
+    console.log(dayjs(new Date(this.blog.createTime)).format("YYYY-MM-DD"));
   },
+  computed: {},
   methods: {
-    toHtml(item) {
-      return marked(item);
+    formatTime(time) {
+      console.log();
+      let res = dayjs(new Date(time)).format("YYYY-MM-DD");
+      console.log(res);
+      return res;
     },
     gotoTag(item) {
       this.$router.push("/home/tag/" + item.tagId);
