@@ -18,3 +18,6 @@ export const getArticleById = (data) => {
 export const loginApi = (username,password) => {
   return axios.post(`/admin/login?username=${username}&password=${password}`,  );
 };
+export const regApi = (username,password) => {
+  return axios.post(`/admin/reg?username=${username}&password=${password}`,  );
+};
