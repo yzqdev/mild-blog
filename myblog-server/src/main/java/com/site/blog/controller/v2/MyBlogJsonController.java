@@ -85,7 +85,7 @@ public class MyBlogJsonController {
      */
     @GetMapping({"/category/{categoryName}"})
     public Result category(@PathVariable("categoryName") String categoryName) {
-        return this.page(  new BlogPageCondition()
+        return this.page(new BlogPageCondition()
                 .setPageNum(1)
                 .setPageName("分类")
                 .setCategoryName(categoryName));
@@ -100,7 +100,7 @@ public class MyBlogJsonController {
      */
     @GetMapping({"/search/{keyword}"})
     public Result search(@PathVariable("keyword") String keyword) {
-        return this.page( new BlogPageCondition()
+        return this.page(new BlogPageCondition()
                 .setPageNum(1)
                 .setPageName("首页")
                 .setKeyword(keyword)
@@ -116,10 +116,21 @@ public class MyBlogJsonController {
      */
     @GetMapping({"/tag/{tagId}"})
     public Result tag(@PathVariable("tagId") String tagId) {
-        return this.page(  new BlogPageCondition()
+        return this.page(new BlogPageCondition()
                 .setPageNum(1)
                 .setPageName("标签")
                 .setTagId(tagId));
+    }
+
+    @GetMapping("/configs")
+    public Result getConfigs() {
+        try {
+
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogConfigService.getAllConfigs());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST, "00");
     }
 
     /**
@@ -138,7 +149,7 @@ public class MyBlogJsonController {
         if (Objects.isNull(condition.getPageSize())) {
             condition.setPageSize(5);
         }
-        HashMap<String,Object> result=new HashMap<>();
+        HashMap<String, Object> result = new HashMap<>();
         Page<BlogInfo> page = new Page<>(condition.getPageNum(), condition.getPageSize());
         LambdaQueryWrapper<BlogInfo> sqlWrapper = Wrappers.<BlogInfo>lambdaQuery()
                 .like(Objects.nonNull(condition.getKeyword()), BlogInfo::getBlogTitle, condition.getKeyword())
@@ -169,8 +180,7 @@ public class MyBlogJsonController {
         result.put("newBlogs", blogInfoService.getNewBlog());
         result.put("hotBlogs", blogInfoService.getHotBlog());
         result.put("hotTags", blogTagService.getBlogTagCountForIndex());
-        result.put("configurations", blogConfigService.getAllConfigs());
-        return  ResultGenerator.getResultByHttp(HttpStatusEnum.OK,result);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, result);
     }
 
     /**
@@ -206,14 +216,13 @@ public class MyBlogJsonController {
                 .eq(BlogComment::getCommentStatus, CommentStatusEnum.ALLOW.getStatus())
                 .eq(BlogComment::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus())
                 .eq(BlogComment::getBlogId, blogId));
-HashMap<String,Object> result=new HashMap<>();
+        HashMap<String, Object> result = new HashMap<>();
         BlogDetailVO blogDetailVO = new BlogDetailVO();
         BeanUtils.copyProperties(blogInfo, blogDetailVO);
         blogDetailVO.setCommentCount(blogCommentCount);
         result.put("blogDetailVO", blogDetailVO);
         result.put("tagList", tagList);
         result.put("pageName", "详情");
-        result.put("configurations", blogConfigService.getAllConfigs());
         return "blog/" + theme + "/detail";
     }
 
@@ -248,7 +257,7 @@ HashMap<String,Object> result=new HashMap<>();
      * @date 2019/9/6 17:26
      */
     @GetMapping({"/link"})
-    public Result link( ) {
+    public Result link() {
         List<BlogLink> favoriteLinks = blogLinkService.list(new QueryWrapper<BlogLink>()
                 .lambda().eq(BlogLink::getLinkType, LinkConstants.LINK_TYPE_FRIENDSHIP.getLinkTypeId())
         );
@@ -259,13 +268,12 @@ HashMap<String,Object> result=new HashMap<>();
                 .lambda().eq(BlogLink::getLinkType, LinkConstants.LINK_TYPE_PRIVATE.getLinkTypeId())
         );
         //判断友链类别并封装数据 0-友链 1-推荐 2-个人网站
-        HashMap<String,Object> result=new HashMap<>();
+        HashMap<String, Object> result = new HashMap<>();
         result.put("pageName", "友情链接");
         result.put("favoriteLinks", favoriteLinks);
         result.put("recommendLinks", recommendLinks);
         result.put("personalLinks", personalLinks);
-        result.put("configurations", blogConfigService.getAllConfigs());
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,result);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, result);
     }
 
     /**

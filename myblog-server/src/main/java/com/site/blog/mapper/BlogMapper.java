@@ -10,7 +10,6 @@ import java.util.List;
 public interface BlogMapper extends BaseMapper<BlogInfo>{
     int deleteByPrimaryKey(Long blogId);
 
-    int insert(BlogInfo record);
 
     int insertSelective(BlogInfo record);
 
