@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { loginApi } from "@/utils/apiConfig";
+import {loginApi, regApi} from "@/utils/apiConfig";
 
 export default {
   name: "AdminLogin",
@@ -58,10 +58,17 @@ export default {
         console.log(data)
         if (data ) {
           this.$message.success("成功")
+          this.$router.push({name:'adminWelcome'})
         }
       });
     },
-    reg() {},
+    reg() {
+      regApi(this.regForm.username,this.regForm.password).then(({data }) => {
+        if (data ) {
+          this.$message.success("成功")
+        }
+      })
+    },
   },
 };
 </script>
