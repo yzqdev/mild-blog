@@ -26,6 +26,7 @@ public class MyBlogWebMvcConfigurer implements WebMvcConfigurer {
                 .excludePathPatterns("/admin/v1/reg")
                 .excludePathPatterns("/admin/v1/regPost")
                 .excludePathPatterns("/admin/v1/reload")
+                .excludePathPatterns("/v2/**")
                 .excludePathPatterns("/admin/dist/**")
                 .excludePathPatterns("/admin/plugins/**")
                 .excludePathPatterns("/X-admin/**");
