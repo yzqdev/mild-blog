@@ -49,4 +49,11 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     public boolean updateUserInfo(AdminUser adminUser) {
         return SqlHelper.retBool(adminUserMappe.updateById(adminUser));
     }
+
+    @Override
+    public int register(AdminUser admin) {
+admin.setLoginPassword(MD5Utils.MD5Encode(admin.getLoginPassword(),"UTF-8"));
+      int flag=  adminUserMappe.insert(admin);
+        return flag;
+    }
 }

@@ -58,6 +58,10 @@ public class AdminController {
     public String login() {
         return "adminLayui/login";
     }
+    @GetMapping(value = "/v1/reg")
+    public String reg() {
+        return "adminLayui/reg";
+    }
 
     /**
      * @Description: 返回welcome界面
@@ -100,10 +104,10 @@ public class AdminController {
      * @date: 2019/8/23 19:50
      */
     @ResponseBody
-    @PostMapping(value = "/v1/login")
+    @PostMapping(value = "/v1/loginPost")
     public Result<String> login(String username, String password,
                         HttpSession session) {
-        if (StringUtils.hasText(username) || StringUtils.isEmpty(password)) {
+        if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
         }
         QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<AdminUser>(
@@ -120,6 +124,33 @@ public class AdminController {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,"/admin/v1/index");
         } else {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.UNAUTHORIZED);
+        }
+    }
+    @ResponseBody
+    @PostMapping(value = "/v1/regPost")
+    public Result<String> register(String username, String password ) {
+        if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
+        }
+        QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<AdminUser>(
+                new AdminUser().setLoginUserName(username)
+                        .setLoginPassword(MD5Utils.MD5Encode(password,"UTF-8"))
+        );
+        AdminUser adminUser = adminUserService.getOne(queryWrapper);
+        if (adminUser != null) {
+          return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST,"用户名已存在");
+        } else {
+            AdminUser regUser=new AdminUser();
+            regUser.setLoginUserName(username);
+            regUser.setLoginPassword(password);
+            adminUserService.register(regUser);
+            //session.setAttribute(SessionConstants.LOGIN_USER, adminUser.getNickName());
+            //session.setAttribute(SessionConstants.LOGIN_USER_ID, adminUser.getAdminUserId());
+            //session.setAttribute(SessionConstants.LOGIN_USER_NAME, adminUser.getLoginUserName());
+            //session.setAttribute(SessionConstants.AUTHOR_IMG, blogConfigService.getById(
+            //        SysConfigConstants.SYS_AUTHOR_IMG.getConfigField()));
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,"/admin/v1/index");
+
         }
     }
 

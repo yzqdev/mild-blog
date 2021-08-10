@@ -21,7 +21,7 @@
 <body onkeydown="enterSubmit(event)" class="login-bg">
 
 <div class="login layui-anim layui-anim-up">
-    <div class="message">blog-管理登录</div>
+    <div class="message">blog-管理注册</div>
     <div id="darkbannerwrap"></div>
 
     <div class="layui-form">
@@ -32,7 +32,7 @@
         <hr class="hr15">
         <div id="slider"></div>
         <hr class="hr15">
-        <input id="login" value="登录" lay-submit lay-filter="login" style="width:100%;" type="submit">
+        <input id="reg" value="注册" lay-submit lay-filter="reg" style="width:100%;" type="submit">
         <hr class="hr20">
     </div>
 </div>
@@ -40,7 +40,7 @@
 
     function enterSubmit(obj) {
         //当enter 键按下后，需要执行的事件
-        var button = document.getElementById('login');
+        var button = document.getElementById('reg');
         if (obj.keyCode == 13) {
             button.click();
         }
@@ -63,11 +63,11 @@
         });
 
         // 监听提交
-        form.on('submit(login)', function (data) {
+        form.on('submit(reg)', function (data) {
             // 用于表单验证是否已经滑动成功
             if(slider.isOk()){
                 $.ajax({
-                    url: "/admin/v1/loginPost",
+                    url: "/admin/v1/regPost",
                     type: "post",
                     data: data.field,
                     success: function(s) {
