@@ -61,10 +61,7 @@ public class CategoryJsonController {
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, list);
     }
 
-    @GetMapping("/category")
-    public String gotoBlogCategory() {
-        return "adminLayui/category-list";
-    }
+
 
     /**
      * 分类的分页

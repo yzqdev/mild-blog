@@ -7,6 +7,7 @@ import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.constants.UploadConstants;
 import com.site.blog.model.dto.AjaxPutPage;
 import com.site.blog.model.dto.AjaxResultPage;
+import com.site.blog.model.dto.BlogInfoDo;
 import com.site.blog.model.dto.Result;
 import com.site.blog.model.entity.BlogInfo;
 import com.site.blog.model.entity.BlogTagRelation;
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,21 +120,32 @@ public class BlogJsonController {
     /**
      * 保存文章内容
      *
-     * @param blogTagIds
-     * @param blogInfo
+     * @param blogInfoDo
      * @return com.zhulin.blog.dto.Result
      * @date 2019/8/28 15:04
      */
     
     @PostMapping("/blog/edit")
-    public Result<String> saveBlog(@RequestParam("blogTagIds[]") List<Integer> blogTagIds, BlogInfo blogInfo) {
-        if (CollectionUtils.isEmpty(blogTagIds) || ObjectUtils.isEmpty(blogInfo)) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
-        }
+    public Result<String> saveBlog(@RequestBody BlogInfoDo blogInfoDo) {
+
+        //if (ObjectUtils.isEmpty(blogInfoDo.getBlogTags()) || ObjectUtils.isEmpty(blogInfoDo)) {
+        //    return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
+        //}
+        BlogInfo blogInfo=new BlogInfo();
+        blogInfo.setBlogViews(blogInfoDo.getBlogViews());
+blogInfo.setBlogTitle(blogInfoDo.getBlogTitle());
+blogInfo.setBlogTags(blogInfoDo.getBlogTags());
         blogInfo.setCreateTime(DateUtils.getLocalCurrentDate());
         blogInfo.setUpdateTime(DateUtils.getLocalCurrentDate());
+        blogInfo.setBlogCategoryId(blogInfoDo.getBlogCategoryId());
+        blogInfo.setBlogContent(blogInfoDo.getBlogContent());
+        blogInfo.setBlogPreface(blogInfoDo.getBlogPreface());
+        blogInfo.setIsDeleted(0);
+        blogInfo.setBlogStatus(1);
+        System.out.println(blogInfo);
+        System.out.println("----------------------blgofin");
         if (blogInfoService.saveOrUpdate(blogInfo)) {
-            blogTagRelationService.removeAndsaveBatch(blogTagIds, blogInfo);
+            blogTagRelationService.removeAndsaveBatch(Arrays.asList(blogInfo.getBlogTags().split(",")), blogInfo);
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);

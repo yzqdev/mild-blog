@@ -15,7 +15,7 @@
       <el-form-item label="标签"
         ><el-select
           style="width: 100%"
-          v-model="articleForm.tagId"
+          v-model="articleForm.blogTags"
           multiple
           placeholder="请选择"
         >
@@ -68,11 +68,11 @@ export default {
   data() {
     return {
       articleForm: {
-        blogTitle: "",
-        tagId: "",
-        blogCategoryId: "",
-        blogContent: "",
-        blogPreface: "",
+        blogTitle: "111",
+        blogTags: [141,140],
+        blogCategoryId: 20,
+        blogContent: "sdfdsfdsf",
+        blogPreface: "asgsggs",
       },
       text: "",
       tagOptions: [],
@@ -92,6 +92,7 @@ export default {
     },
     submit() {
       console.log(this.articleForm);
+      this.articleForm.blogTags=this.articleForm.blogTags.join()
       addBlog(this.articleForm).then(({ data }) => {
         console.log(data);
       });

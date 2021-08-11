@@ -30,10 +30,10 @@ public class BlogTagRelationServiceImpl extends ServiceImpl<BlogTagRelationMappe
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void removeAndsaveBatch(List<Integer> blogTagIds, BlogInfo blogInfo) {
+    public void removeAndsaveBatch(List<String> blogTagIds, BlogInfo blogInfo) {
         Long blogId = blogInfo.getBlogId();
         List<BlogTagRelation> list = blogTagIds.stream().map(blogTagId -> new BlogTagRelation()
-                .setTagId(blogTagId)
+                .setTagId(Integer.valueOf(blogTagId))
                 .setBlogId(blogId)).collect(Collectors.toList());
         blogTagRelationMapper.delete(new QueryWrapper<BlogTagRelation>()
                 .lambda()

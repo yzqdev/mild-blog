@@ -134,7 +134,7 @@ public class BlogController {
      */
     @ResponseBody
     @PostMapping("/v1/blog/edit")
-    public Result<String> saveBlog(@RequestParam("blogTagIds[]") List<Integer> blogTagIds, BlogInfo blogInfo) {
+    public Result<String> saveBlog(@RequestParam("blogTagIds[]") List<String> blogTagIds, BlogInfo blogInfo) {
         if (CollectionUtils.isEmpty(blogTagIds) || ObjectUtils.isEmpty(blogInfo)) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
         }
