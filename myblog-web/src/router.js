@@ -15,6 +15,7 @@ import CategoryList from "@/view/admin/CategoryList.vue";
 import TagList from "@/view/admin/TagList.vue";
 import LinkList from "@/view/admin/LinkList.vue";
 import SystemInfo from "@/view/admin/SystemInfo.vue";
+import ArticleEdit from "@/view/admin/ArticleEdit.vue";
 
 const routes = [
   {
@@ -75,6 +76,10 @@ const routes = [
             path: "article-list",
             name: "articleList",
             component: ArticleList,
+          },  {
+            path: "article-edit",
+            name: "articleEdit",
+            component: ArticleEdit,
           },
           {
             path: "comment-list",

@@ -39,3 +39,18 @@ export const editLink=(data ) => {
 export const getUserInfo=(  ) => {
   return axios.get("/admin/getUser" )
 }
+export const getBlogList=({page,limit}) => {
+  return axios.get(`/admin/blog/list?page=${page}&limit=${limit}`)
+}
+export const getCommentList=({page,limit}) => {
+  return axios.get(`/admin/comment/paging?page=${page}&limit=${limit}`)
+}
+export const getTagList=( ) => {
+  return axios.get(`/admin/tags/list`)
+}
+export const getCateList=( ) => {
+  return axios.get(`/admin/category/list`)
+}
+export const addBlog=(params) => {
+  return axios.post('/admin/blog/edit',params)
+}

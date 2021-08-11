@@ -7,7 +7,9 @@
         </el-menu-item>
         <el-submenu index="2">
           <template #title><i class="el-icon-menu"></i>文章管理</template>
-          <el-menu-item index="/admin/home/article-list">
+          <el-menu-item index="/admin/home/article-edit">
+            文章编辑
+          </el-menu-item>  <el-menu-item index="/admin/home/article-list">
             文章列表
           </el-menu-item>
           <el-menu-item index="/admin/home/comment-list">

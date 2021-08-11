@@ -1,9 +1,12 @@
 package com.site.blog.config;
 
 import com.site.blog.interceptor.AdminUserInterceptor;
+import com.site.blog.interceptor.InterceptorCORS;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import javax.annotation.Resource;
 
 
 /**
@@ -11,12 +14,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class MyBlogWebMvcConfigurer implements WebMvcConfigurer {
-
+@Resource
+    InterceptorCORS interceptorCORS;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 添加一个拦截器，拦截以/admin为前缀的url路径
-
+registry.addInterceptor(interceptorCORS).addPathPatterns("/**");
         registry.addInterceptor(new AdminUserInterceptor()).addPathPatterns("/v2/admin/**").excludePathPatterns("/v2/admin/login").excludePathPatterns("/v2/admin/reg");
     }
 

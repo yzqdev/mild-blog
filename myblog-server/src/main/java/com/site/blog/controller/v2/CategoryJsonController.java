@@ -145,10 +145,7 @@ public class CategoryJsonController {
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping("/category/add")
-    public String addBlogConfig() {
-        return "adminLayui/category-add";
-    }
+
 
     /**
      * 新增分类信息
