@@ -2,6 +2,7 @@ package com.site.blog.config;
 
 import com.site.blog.constants.UploadConstants;
 import com.site.blog.interceptor.AdminLoginInterceptor;
+import com.site.blog.interceptor.AdminUserInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -30,6 +31,7 @@ public class MyBlogWebMvcConfigurer implements WebMvcConfigurer {
                 .excludePathPatterns("/admin/dist/**")
                 .excludePathPatterns("/admin/plugins/**")
                 .excludePathPatterns("/X-admin/**");
+        registry.addInterceptor(new AdminUserInterceptor()).addPathPatterns("/v2/**").excludePathPatterns("/v2/admin/login").excludePathPatterns("/v2/admin/reg");
     }
 
     /**

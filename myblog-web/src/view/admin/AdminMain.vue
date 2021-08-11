@@ -2,6 +2,9 @@
   <div class="admin-main">
     <aside class="sidebar">
       <el-menu :default-active="actMenu" router class="el-menu-vertical-demo">
+        <el-menu-item index="/admin/home/welcome">
+          <template #title><i class="el-icon-menu"></i>系统信息</template>
+        </el-menu-item>
         <el-submenu index="2">
           <template #title><i class="el-icon-menu"></i>文章管理</template>
           <el-menu-item index="/admin/home/article-list">
@@ -26,16 +29,33 @@
       </el-menu>
     </aside>
     <div class="right-content">
-      <header >
-        adsdf
+      <header class="admin-header">
+        <el-link href="/home/main">七月飞雪</el-link>
+        <article class="logout">
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              {{ `用户名` }}<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>账户信息</el-dropdown-item>
+                <el-dropdown-item>系统信息</el-dropdown-item>
+                <el-dropdown-item divided>退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </article>
       </header>
-      <router-view />
+      <div class="admin-content">
+        <router-view />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { defineComponent } from "vue";
+import { getUserInfo } from "@/utils/apiConfig";
 
 export default defineComponent({
   name: "AdminMain",
@@ -51,6 +71,16 @@ export default defineComponent({
   data() {
     return { actMenu: "" };
   },
+  created() {
+    this.getUser();
+  },
+  methods: {
+    getUser() {
+      getUserInfo().then(({ data }) => {
+        console.log(data);
+      });
+    },
+  },
 });
 </script>
 
@@ -62,8 +92,23 @@ export default defineComponent({
     width: 300px;
   }
   .right-content {
-    padding: 20px;
     flex: 1;
+    .admin-header {
+      padding: 20px;
+      background-color: #eee;
+      display: flex;
+      align-items: center;
+      span {
+        cursor: pointer;
+      }
+      .logout {
+        flex: 1;
+        text-align: right;
+      }
+    }
+    .admin-content {
+      padding: 20px;
+    }
   }
 }
 </style>

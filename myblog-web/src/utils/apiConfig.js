@@ -36,3 +36,6 @@ export const getLinkList=({page,limit}) => {
 export const editLink=(data ) => {
   return axios.post("/admin/link/edit",data)
 }
+export const getUserInfo=(  ) => {
+  return axios.get("/admin/userInfo" )
+}
