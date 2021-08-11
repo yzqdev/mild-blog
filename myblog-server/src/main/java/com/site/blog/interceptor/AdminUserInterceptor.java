@@ -51,7 +51,7 @@ public class AdminUserInterceptor implements HandlerInterceptor {
             AdminUser user = adminUserService.getAdminUserById(Integer.valueOf(userId));
             request.setAttribute(BaseConstants.USER_ATTR, user);
          }
-
+        response.setHeader("Access-Control-Expose-Headers", "Authorization");
         return true;
     }
 

@@ -58,6 +58,7 @@
 <script>
 import { defineComponent } from "vue";
 import { getUserInfo } from "@/utils/apiConfig";
+import axios from "axios";
 
 export default defineComponent({
   name: "AdminMain",
@@ -74,9 +75,16 @@ export default defineComponent({
     return { actMenu: "" };
   },
   created() {
+// this.getToken()
     this.getUser();
   },
   methods: {
+    getToken(){
+      console.log(`%cxinhaijioao`,`color:red;font-size:16px;background:transparent`)
+      axios.get("http://localhost:8060/users", { headers: {token: "123456787"}}).then((res ) => {
+        console.log(res)
+      })
+    },
     logout() {
       localStorage.clear();
       this.$router.push("/admin");

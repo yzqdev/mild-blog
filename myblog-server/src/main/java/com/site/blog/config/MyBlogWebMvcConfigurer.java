@@ -15,24 +15,22 @@ public class MyBlogWebMvcConfigurer implements WebMvcConfigurer {
 
     @Resource
     private AdminLoginInterceptor adminLoginInterceptor;
-    @Resource
-    private AdminUserInterceptor adminUserInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 添加一个拦截器，拦截以/admin为前缀的url路径
-        //registry.addInterceptor(adminLoginInterceptor)
-        //        .addPathPatterns("/admin/**")
-        //        .excludePathPatterns("/admin/v1/login")
-        //        .excludePathPatterns("/admin/v1/loginPost")
-        //        .excludePathPatterns("/admin/v1/reg")
-        //        .excludePathPatterns("/admin/v1/regPost")
-        //        .excludePathPatterns("/admin/v1/reload")
-        //        .excludePathPatterns("/v2/**")
-        //        .excludePathPatterns("/admin/dist/**")
-        //        .excludePathPatterns("/admin/plugins/**")
-        //        .excludePathPatterns("/X-admin/**");
-        registry.addInterceptor(adminUserInterceptor).addPathPatterns("/v2/admin/**").excludePathPatterns("/v2/admin/login").excludePathPatterns("/v2/admin/reg");
+        registry.addInterceptor(adminLoginInterceptor)
+                .addPathPatterns("/admin/**")
+                .excludePathPatterns("/admin/v1/login")
+                .excludePathPatterns("/admin/v1/loginPost")
+                .excludePathPatterns("/admin/v1/reg")
+                .excludePathPatterns("/admin/v1/regPost")
+                .excludePathPatterns("/admin/v1/reload")
+                .excludePathPatterns("/v2/**")
+                .excludePathPatterns("/admin/dist/**")
+                .excludePathPatterns("/admin/plugins/**")
+                .excludePathPatterns("/X-admin/**");
+        registry.addInterceptor(new AdminUserInterceptor()).addPathPatterns("/v2/admin/**").excludePathPatterns("/v2/admin/login").excludePathPatterns("/v2/admin/reg");
     }
 
     /**

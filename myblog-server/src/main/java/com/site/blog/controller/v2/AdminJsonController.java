@@ -113,14 +113,12 @@ public class AdminJsonController {
     }
 
     @GetMapping("/userInfo")
-    public Result getuserInfo(HttpServletRequest request) {
+    public Result getuserInfo( ) {
         try {
-           String token=request.getHeader("token");
-log.debug(token);
-log.info("token=...");
-     AdminUser user= (AdminUser) request.getAttribute("adminUser");
 
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, user);
+            System.out.println("心如这里");
+
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, "user");
         } catch (Exception e) {
             e.printStackTrace();
         }
