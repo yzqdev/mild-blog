@@ -1,18 +1,19 @@
 import { getApiUrl } from "@/utils/getApiUrl";
-
+import store from "@/store";
 import axios from "axios";
-
+axios.defaults.withCredentials = true;
 axios.interceptors.request.use(
   (config) => {
     console.log("requestUrl==", config.url);
 
     // if (process.client) {
-      if (localStorage.getItem("token")) {
-          console.log(`%c来阿里`,`color:red;font-size:16px;background:transparent`)
-          console.log(localStorage.getItem("token"))
-        config.headers['token'] = localStorage.getItem("token");
-      }
-      console.log(config)
+    config.headers["version"] = "1.0";
+    config.headers["Content-Type"] = "application/json;charset=UTF-8";
+    if (store.getters.token) {
+      config.headers.token = store.getters.token;
+    }
+
+    console.log(config);
     // }
     return config;
   },

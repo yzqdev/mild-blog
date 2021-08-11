@@ -40,6 +40,7 @@ public class AdminUserInterceptor implements HandlerInterceptor {
         if (token==null){
             token=request.getParameter(BaseConstants.TOKEN);
         }
+        System.out.println(request.getHeader("Authorization"));
         System.out.println("to------------------------");
       log.info("token="+token);
         boolean flag = JwtUtil.verifyToken(token);
@@ -56,11 +57,11 @@ public class AdminUserInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
+
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+
     }
 }

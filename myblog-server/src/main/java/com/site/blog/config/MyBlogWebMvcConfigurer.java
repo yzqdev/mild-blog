@@ -15,8 +15,9 @@ public class MyBlogWebMvcConfigurer implements WebMvcConfigurer {
 
     @Resource
     private AdminLoginInterceptor adminLoginInterceptor;
-@Resource
-private AdminUserInterceptor adminUserInterceptor;
+    @Resource
+    private AdminUserInterceptor adminUserInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 添加一个拦截器，拦截以/admin为前缀的url路径
@@ -31,7 +32,7 @@ private AdminUserInterceptor adminUserInterceptor;
         //        .excludePathPatterns("/admin/dist/**")
         //        .excludePathPatterns("/admin/plugins/**")
         //        .excludePathPatterns("/X-admin/**");
-        registry.addInterceptor(adminUserInterceptor).addPathPatterns("/v2/**").excludePathPatterns("/v2/admin/login").excludePathPatterns("/v2/admin/reg");
+        registry.addInterceptor(adminUserInterceptor).addPathPatterns("/v2/admin/**").excludePathPatterns("/v2/admin/login").excludePathPatterns("/v2/admin/reg");
     }
 
     /**

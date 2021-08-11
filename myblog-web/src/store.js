@@ -7,6 +7,11 @@ const store = createStore({
       statVisible: false,
     };
   },
+  getters:{
+    token:(state)=>{
+      return state.user.token
+    }
+  },
   mutations: {
     setUserToken(state,val ){
       state.user.token=val
