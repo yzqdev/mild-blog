@@ -75,21 +75,27 @@ export default defineComponent({
     return { actMenu: "" };
   },
   created() {
-// this.getToken()
+    // this.getToken()
     this.getUser();
   },
   methods: {
-    getToken(){
-      console.log(`%cxinhaijioao`,`color:red;font-size:16px;background:transparent`)
-      axios.get("http://localhost:8060/users", { headers: {token: "123456787"}}).then((res ) => {
-        console.log(res)
-      })
+    getToken() {
+      console.log(
+        `%cxinhaijioao`,
+        `color:red;font-size:16px;background:transparent`
+      );
+      axios
+        .get("http://localhost:8060/users", { headers: { token: "123456787" } })
+        .then((res) => {
+          console.log(res);
+        });
     },
     logout() {
       localStorage.clear();
       this.$router.push("/admin");
     },
     getUser() {
+
       getUserInfo().then(({ data }) => {
         console.log(data);
       });

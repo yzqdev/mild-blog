@@ -52,12 +52,6 @@ spring:
         enabled: true
         login-username: admin
         login-password: z1320291471
-  thymeleaf:
-    cache: false
-    mode: HTML
-    encoding: UTF-8
-    servlet:
-      content-type: text/html
 
 mybatis-plus:
   type-aliases-package: com.site.blog.entity

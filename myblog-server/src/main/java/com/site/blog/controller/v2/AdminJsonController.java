@@ -1,6 +1,7 @@
 package com.site.blog.controller.v2;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.site.blog.constants.BaseConstants;
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.constants.SessionConstants;
 import com.site.blog.constants.SysConfigConstants;
@@ -59,7 +60,7 @@ public class AdminJsonController {
         System.out.println(MD5Utils.MD5Encode(password, "UTF-8"));
         AdminUser adminUser = adminUserService.getOne(queryWrapper);
         if (adminUser != null) {
-            String token = JwtUtil.sign(adminUser.getLoginUserName(),adminUser.getAdminUserId());
+            String token = JwtUtil.sign(adminUser.getLoginUserName(), adminUser.getAdminUserId());
 
             session.setAttribute(SessionConstants.LOGIN_USER, adminUser.getNickName());
             session.setAttribute(SessionConstants.LOGIN_USER_ID, adminUser.getAdminUserId());
@@ -112,13 +113,16 @@ public class AdminJsonController {
         return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
     }
 
-    @GetMapping("/userInfo")
-    public Result getuserInfo( ) {
+    @GetMapping("/getUser")
+    public Result getUserInfo(HttpServletRequest request) {
         try {
+            AdminUser user = (AdminUser) request.getAttribute(BaseConstants.USER_ATTR);
 
             System.out.println("心如这里");
+            HashMap<String, Object> res = new HashMap<>(1);
+            res.put("user", user);
 
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, "user");
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, res);
         } catch (Exception e) {
             e.printStackTrace();
         }
