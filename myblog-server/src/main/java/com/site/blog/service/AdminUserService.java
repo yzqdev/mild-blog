@@ -18,4 +18,11 @@ public interface AdminUserService extends IService<AdminUser> {
     boolean updateUserInfo(AdminUser adminUser);
 
     int register(AdminUser user);
+
+    /**
+     * 根据adminuserid获取用户
+     * @param id
+     * @return
+     */
+    AdminUser getAdminUserById(Integer id);
 }

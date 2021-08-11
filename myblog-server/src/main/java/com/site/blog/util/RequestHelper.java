@@ -1,6 +1,7 @@
 package com.site.blog.util;
 
 
+import com.site.blog.constants.BaseConstants;
 import com.site.blog.model.entity.AdminUser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
@@ -14,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.*;
 
@@ -51,7 +51,7 @@ public class RequestHelper {
 
     public static AdminUser getSessionUser() {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        AdminUser attribute = (AdminUser) requestAttributes.getAttribute("adminUser", RequestAttributes.SCOPE_REQUEST);
+        AdminUser attribute = (AdminUser) requestAttributes.getAttribute(BaseConstants.USER_ATTR, RequestAttributes.SCOPE_REQUEST);
         return attribute;
     }
 

@@ -40,7 +40,9 @@
               <el-dropdown-menu>
                 <el-dropdown-item>账户信息</el-dropdown-item>
                 <el-dropdown-item>系统信息</el-dropdown-item>
-                <el-dropdown-item divided>退出登录</el-dropdown-item>
+                <el-dropdown-item divided @click="logout"
+                  >退出登录</el-dropdown-item
+                >
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -75,6 +77,10 @@ export default defineComponent({
     this.getUser();
   },
   methods: {
+    logout() {
+      localStorage.clear();
+      this.$router.push("/admin");
+    },
     getUser() {
       getUserInfo().then(({ data }) => {
         console.log(data);

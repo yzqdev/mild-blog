@@ -11,10 +11,12 @@ import com.site.blog.util.JwtUtil;
 import com.site.blog.util.MD5Utils;
 import com.site.blog.util.ResultGenerator;
 import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 
@@ -27,6 +29,7 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/v2/admin")
 @Api(value = "后台json", tags = "后台json")
+@Slf4j
 public class AdminJsonController {
     @Resource
     private AdminUserService adminUserService;
@@ -56,7 +59,7 @@ public class AdminJsonController {
         System.out.println(MD5Utils.MD5Encode(password, "UTF-8"));
         AdminUser adminUser = adminUserService.getOne(queryWrapper);
         if (adminUser != null) {
-            String token = JwtUtil.sign(adminUser.getLoginUserName(),adminUser.getLoginPassword());
+            String token = JwtUtil.sign(adminUser.getLoginUserName(),adminUser.getAdminUserId());
 
             session.setAttribute(SessionConstants.LOGIN_USER, adminUser.getNickName());
             session.setAttribute(SessionConstants.LOGIN_USER_ID, adminUser.getAdminUserId());
@@ -110,13 +113,14 @@ public class AdminJsonController {
     }
 
     @GetMapping("/userInfo")
-    public Result getuserInfo(HttpSession session) {
+    public Result getuserInfo(HttpServletRequest request) {
         try {
-            Integer userId = (Integer) session.getAttribute(SessionConstants.LOGIN_USER_ID);
+           String token=request.getHeader("token");
+log.debug(token);
+log.info("token=...");
+     AdminUser user= (AdminUser) request.getAttribute("adminUser");
 
-            AdminUser currentUser = adminUserService.getById(userId);
-
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, currentUser);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, user);
         } catch (Exception e) {
             e.printStackTrace();
         }

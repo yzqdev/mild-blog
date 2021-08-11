@@ -41,9 +41,10 @@
 </template>
 
 <script>
-import {loginApi, regApi} from "@/utils/apiConfig";
+import { loginApi, regApi } from "@/utils/apiConfig";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
   name: "AdminLogin",
   data() {
     return {
@@ -52,25 +53,30 @@ export default {
       regForm: { username: "yzq", password: "123456", password2: "123456" },
     };
   },
+  created() {
+    localStorage.clear();
+  },
   methods: {
     login() {
-      loginApi(this.loginForm.username, this.loginForm.password).then(({ data }) => {
-        console.log(data)
-        if (data ) {
-          this.$message.success("成功")
-          this.$router.push({name:'adminWelcome'})
+      loginApi(this.loginForm.username, this.loginForm.password).then((res) => {
+        console.log(res);
+        if (res) {
+          this.$store.commit("setUserToken", res.data);
+          localStorage.token = res.data;
+          this.$message.success("成功");
+          this.$router.push({ name: "adminWelcome" });
         }
       });
     },
     reg() {
-      regApi(this.regForm.username,this.regForm.password).then(({data }) => {
-        if (data ) {
-          this.$message.success("成功")
+      regApi(this.regForm.username, this.regForm.password).then(({ data }) => {
+        if (data) {
+          this.$message.success("成功");
         }
-      })
+      });
     },
   },
-};
+});
 </script>
 
 <style lang="less" scoped>

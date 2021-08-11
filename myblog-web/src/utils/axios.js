@@ -7,9 +7,12 @@ axios.interceptors.request.use(
     console.log("requestUrl==", config.url);
 
     // if (process.client) {
-    //   if (localStorage.token) {
-    //     config.headers.token = localStorage.token;
-    //   }
+      if (localStorage.getItem("token")) {
+          console.log(`%c来阿里`,`color:red;font-size:16px;background:transparent`)
+          console.log(localStorage.getItem("token"))
+        config.headers['token'] = localStorage.getItem("token");
+      }
+      console.log(config)
     // }
     return config;
   },

@@ -5,10 +5,12 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author: Milogenius
@@ -36,7 +38,7 @@ public class JwtUtil {
      * @param userId
      * @return
      */
-    public static String sign(String username, String userId) {
+    public static String sign(String username, Integer userId) {
         //过期时间
         Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
         //私钥及加密算法
@@ -46,14 +48,18 @@ public class JwtUtil {
         header.put("typ", "JWT");
         header.put("alg", "HS256");
         //附带username和userID生成签名
-        return JWT.create().withHeader(header).withClaim("username", username)
+        return JWT.create().withClaim("username", username)
                 .withClaim("userId", userId).withExpiresAt(date).sign(algorithm);
     }
 
     public static String getUserId(String token) {
         try {
             DecodedJWT jwt = JWT.decode(token);
-            return jwt.getClaim("userId").asString();
+            Map<String, Claim> result;
+            System.out.println(jwt.getClaims());
+            result=jwt.getClaims();
+            System.out.println("userid="+result.get("userId"));
+            return result.get("userId").toString() ;
         } catch (JWTDecodeException e) {
             return null;
         }
@@ -65,9 +71,7 @@ public class JwtUtil {
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT jwt = verifier.verify(token);
             return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        } catch (JWTVerificationException e) {
+        } catch (IllegalArgumentException | JWTVerificationException e) {
             return false;
         }
 

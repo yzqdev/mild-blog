@@ -56,4 +56,17 @@ admin.setLoginPassword(MD5Utils.MD5Encode(admin.getLoginPassword(),"UTF-8"));
       int flag=  adminUserMappe.insert(admin);
         return flag;
     }
+
+    @Override
+    public AdminUser getAdminUserById(Integer id) {
+
+        try {
+            QueryWrapper<AdminUser> queryWrapper= new QueryWrapper<>();
+            queryWrapper.eq("admin_user_id",id);
+            return adminUserMappe.selectOne(queryWrapper);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

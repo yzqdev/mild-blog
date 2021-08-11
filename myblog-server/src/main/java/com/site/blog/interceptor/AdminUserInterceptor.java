@@ -1,5 +1,6 @@
 package com.site.blog.interceptor;
 
+import com.site.blog.constants.BaseConstants;
 import com.site.blog.model.entity.AdminUser;
 import com.site.blog.service.AdminUserService;
 import com.site.blog.util.JwtUtil;
@@ -35,15 +36,22 @@ public class AdminUserInterceptor implements HandlerInterceptor {
             System.out.println(headName+":"+request.getHeader(headName));
 
         }
-        String token = request.getHeader("token");
+        String token = request.getHeader(BaseConstants.TOKEN);
+        if (token==null){
+            token=request.getParameter(BaseConstants.TOKEN);
+        }
         System.out.println("to------------------------");
       log.info("token="+token);
         boolean flag = JwtUtil.verifyToken(token);
+        String userId=JwtUtil.getUserId(token);
+        log.info("userid="+userId);
         if (flag) {
-            AdminUser user = adminUserService.getById(JwtUtil.getUserId(token));
-            request.setAttribute("adminUser", user);
-        }
-        return HandlerInterceptor.super.preHandle(request, response, handler);
+            assert userId != null;
+            AdminUser user = adminUserService.getAdminUserById(Integer.valueOf(userId));
+            request.setAttribute(BaseConstants.USER_ATTR, user);
+         }
+
+        return true;
     }
 
     @Override
