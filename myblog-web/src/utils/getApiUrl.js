@@ -21,7 +21,7 @@ export const getApiUrl = (str='dev') => {
     }
 
     if (isDev) {
-      return "http://localhost:28000/v2";
+      return "http://localhost:2800/v2";
     }
 
     if (isProd) {

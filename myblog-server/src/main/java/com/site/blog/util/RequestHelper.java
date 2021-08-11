@@ -49,6 +49,10 @@ public class RequestHelper {
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
     }
 
+    /**
+     * 获取session中的用户,添加全局对象
+     * @return
+     */
     public static AdminUser getSessionUser() {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         AdminUser attribute = (AdminUser) requestAttributes.getAttribute(BaseConstants.USER_ATTR, RequestAttributes.SCOPE_REQUEST);

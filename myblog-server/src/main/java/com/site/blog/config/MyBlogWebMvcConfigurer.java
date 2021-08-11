@@ -1,11 +1,8 @@
 package com.site.blog.config;
 
-import com.site.blog.constants.UploadConstants;
 import com.site.blog.interceptor.AdminUserInterceptor;
-import com.site.blog.interceptor.AuthInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
