@@ -51,6 +51,9 @@ export const getTagList=( ) => {
 export const getCateList=( ) => {
   return axios.get(`/admin/category/list`)
 }
+export const getCatePaging=({page,limit} ) => {
+  return axios.get(`/admin/category/paging?page=${page}&limit=${limit}`)
+}
 export const addBlog=(params) => {
   return axios.post('/admin/blog/edit',params)
 }
