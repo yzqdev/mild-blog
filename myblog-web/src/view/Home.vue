@@ -12,7 +12,7 @@
   <router-view />
   <footer class="footer blog-footer">
     <div class="blog-text-center">
-      <article>&copy;{{ configs.sysAuthor }}singal blog.</article>
+      <article>&copy;{{ configs.sysAuthor }}个人博客.</article>
       <span class="ft-warn">&heartsuit;</span>&nbsp;{{ configs.sysCopyRight }}
       <a>浙ICP备 xxxxxx-x号</a><br />
       version: {{ configs.sysVersion }} Powered by
@@ -20,7 +20,7 @@
         href="#"
         target="_blank"
         th:text="${configurations.get('sysCopyRight')}"
-        >2019 南街</a
+        >2050 genshin</a
       ><span style="margin-left: 20px"
         >更新时间:{{ configs.sysUpdateTime }}</span
       >

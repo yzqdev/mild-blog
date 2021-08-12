@@ -10,7 +10,7 @@
         href="#"
         target="_blank"
         th:text="${configurations.get('sysCopyRight')}"
-        >2019 南街</a
+        >2050 genshin</a
       ><span style="margin-left: 20px;">更新时间:{{configs.sysUpdateTime}}</span>
     </div>
   </footer>
