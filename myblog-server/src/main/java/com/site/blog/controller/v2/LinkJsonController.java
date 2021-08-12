@@ -71,10 +71,13 @@ public class LinkJsonController {
     }
 
     @PostMapping("/link/isDel")
-    public Result<String> updateLinkStatus(BlogLink blogLink) {
+    public Result  updateLinkStatus(BlogLink blogLink) {
+        System.out.println(blogLink);
         boolean flag = blogLinkService.updateById(blogLink);
+
+        List<BlogLink> blogLinkList=blogLinkService.list();
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,blogLinkList);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
