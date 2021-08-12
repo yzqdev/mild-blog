@@ -26,10 +26,13 @@
     <el-table-column prop="linkType" label="当前状态">
       <template v-slot="{ row }">
         <el-switch
-          v-model="row.linkType"
-          @change="changeLinkType(row)"
+          v-model="row.isDeleted"
+          @change="changeLinkType($event,row)"
           active-text="已删除"
           inactive-text="未删除"
+          active-color="red"
+          :active-value="1"
+          :inactive-value="0"
         ></el-switch>
       </template>
     </el-table-column>
@@ -57,7 +60,7 @@
 <script>
 import { defineComponent } from "vue";
 import {
-  addSystemInfo,
+  addSystemInfo, delLink,
   delSystemInfo,
   editLink,
   getLinkList,
@@ -74,13 +77,13 @@ export default defineComponent({
         configName: "name",
         configField: "field",
         configValue: "value",
-      },
+      },linkType:''
     };
   },
   methods: {
-    changeLinkType(row) {
-      console.log(row);
-      editLink(row).then(({ data }) => {
+    changeLinkType(e,row) {
+      console.log(e);
+      delLink({linkId:row.linkId,isDeleted:e}).then(({ data }) => {
         console.log(data);
       });
     },

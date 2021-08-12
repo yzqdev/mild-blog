@@ -13,8 +13,7 @@
     <el-table-column prop="commentStatus" label="当前状态"></el-table-column>
     <el-table-column label="操作" width="250">
       <template v-slot="{ row }"
-        ><el-button type="primary" size="mini">编辑</el-button
-        ><el-button type="danger" size="mini">删除</el-button>
+        >
         <el-popconfirm
           title="确定删除吗？"
           confirmButtonText="好的"

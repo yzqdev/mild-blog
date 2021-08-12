@@ -9,7 +9,8 @@
           <template #title><i class="el-icon-menu"></i>文章管理</template>
           <el-menu-item index="/admin/home/article-edit">
             文章编辑
-          </el-menu-item>  <el-menu-item index="/admin/home/article-list">
+          </el-menu-item>
+          <el-menu-item index="/admin/home/article-list">
             文章列表
           </el-menu-item>
           <el-menu-item index="/admin/home/comment-list">
@@ -36,11 +37,14 @@
         <article class="logout">
           <el-dropdown>
             <span class="el-dropdown-link">
-              {{ `用户名` }}<i class="el-icon-arrow-down el-icon--right"></i>
+              {{ user.loginUserName
+              }}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item>账户信息</el-dropdown-item>
+                <el-dropdown-item @click="gotoUserInfo"
+                  >账户信息</el-dropdown-item
+                >
                 <el-dropdown-item>系统信息</el-dropdown-item>
                 <el-dropdown-item divided @click="logout"
                   >退出登录</el-dropdown-item
@@ -74,32 +78,24 @@ export default defineComponent({
     },
   },
   data() {
-    return { actMenu: "" };
+    return { actMenu: "", user: {} };
   },
   created() {
     // this.getToken()
     this.getUser();
   },
   methods: {
-    getToken() {
-      console.log(
-        `%cxinhaijioao`,
-        `color:red;font-size:16px;background:transparent`
-      );
-      axios
-        .get("http://localhost:8060/users", { headers: { token: "123456787" } })
-        .then((res) => {
-          console.log(res);
-        });
+    gotoUserInfo() {
+      this.$router.push({ name: "userInfo" });
     },
     logout() {
       localStorage.clear();
       this.$router.push("/admin");
     },
     getUser() {
-
       getUserInfo().then(({ data }) => {
         console.log(data);
+        this.user = data.user;
       });
     },
   },

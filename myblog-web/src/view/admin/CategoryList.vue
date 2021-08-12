@@ -1,17 +1,16 @@
 <template>
-  <el-table :data="data">
-    <el-table-column prop="linkName" label="链接名"></el-table-column>
-    <el-table-column prop="linkUrl" label="链接url"></el-table-column>
-    <el-table-column prop="linkDescription" label="链接描述"></el-table-column>
-    <el-table-column prop="linkRank" label="链接rank"></el-table-column>
-    <el-table-column prop="linkType" label="当前状态">
+  <el-table :data="cateData">
+    <el-table-column prop="categoryName" label="分类名"></el-table-column>
+    <el-table-column prop="categoryRank" label="排序值"></el-table-column>
+
+    <el-table-column prop="isDeleted" label="当前状态">
       <template v-slot="{ row }">
 
       </template>
     </el-table-column>
     <el-table-column label="操作">
       <template v-slot="{ row }">
-        <el-button type="primary">编辑</el-button>
+
         <el-popconfirm
             title="确定删除吗？"
             confirmButtonText="好的"
@@ -33,15 +32,17 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import {getCatePaging} from "@/utils/apiConfig";
+let cateData=ref([])
 function getData(){
-  getCatePaging({page:1,limit:30}).then(({data }) => {
-    this.data=data
+  getCatePaging({page:1,limit:30}).then(({data}) => {
+    console.log(data)
+    cateData.value=data
   })
 }
 function deleteRow(row){
   console.log(row)
 }
-const data=ref([])
+
 onMounted(() => {
   getData()
 })

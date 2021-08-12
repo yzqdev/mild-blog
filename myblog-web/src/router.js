@@ -16,6 +16,7 @@ import TagList from "@/view/admin/TagList.vue";
 import LinkList from "@/view/admin/LinkList.vue";
 import SystemInfo from "@/view/admin/SystemInfo.vue";
 import ArticleEdit from "@/view/admin/ArticleEdit.vue";
+import UserInfo from "@/view/admin/UserInfo.vue";
 
 const routes = [
   {
@@ -76,7 +77,8 @@ const routes = [
             path: "article-list",
             name: "articleList",
             component: ArticleList,
-          },  {
+          },
+          {
             path: "article-edit",
             name: "articleEdit",
             component: ArticleEdit,
@@ -95,14 +97,20 @@ const routes = [
             path: "tag-list",
             name: "tagList",
             component: TagList,
-          }, {
+          },
+          {
             path: "link-list",
             name: "linkList",
             component: LinkList,
-          }, {
+          },
+          {
             path: "system-info",
             name: "systemInfo",
             component: SystemInfo,
+          },  {
+            path: "user-info",
+            name: "userInfo",
+            component: UserInfo,
           },
         ],
       },

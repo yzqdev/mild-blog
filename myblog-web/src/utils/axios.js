@@ -1,5 +1,6 @@
 import { getApiUrl } from "@/utils/getApiUrl";
 import store from "@/store";
+import qs from "qs";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 axios.interceptors.request.use(
@@ -35,5 +36,10 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+axios.postForm = (url, data) => {
+  return axios.post(url, qs.stringify(data), {
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+  });
+};
 axios.defaults.baseURL = getApiUrl();
 export default axios;
