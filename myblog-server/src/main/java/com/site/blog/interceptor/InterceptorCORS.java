@@ -17,7 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 public class InterceptorCORS implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:2801");
+        response.setHeader("Access-Control-Allow-Origin", request.getHeader("origin") );
+        //response.setHeader("Access-Control-Allow-Origin", "http://192.168.72.132:2801" );
         response.setHeader("Access-Control-Allow-Methods", "*");
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Credentials", "true");

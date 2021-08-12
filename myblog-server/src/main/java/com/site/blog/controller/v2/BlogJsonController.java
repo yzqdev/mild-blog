@@ -135,6 +135,8 @@ public class BlogJsonController {
         blogInfo.setBlogTitle(blogInfoDo.getBlogTitle());
         blogInfo.setBlogTags(blogInfoDo.getBlogTags());
         blogInfo.setBlogSubUrl(blogInfoDo.getBlogSubUrl());
+        blogInfo.setEnableComment(blogInfoDo.getEnableComment());
+        blogInfo.setBlogStatus(blogInfoDo.getBlogStatus());
         blogInfo.setCreateTime(DateUtils.getLocalCurrentDate());
         blogInfo.setUpdateTime(DateUtils.getLocalCurrentDate());
         blogInfo.setBlogCategoryId(blogInfoDo.getBlogCategoryId());

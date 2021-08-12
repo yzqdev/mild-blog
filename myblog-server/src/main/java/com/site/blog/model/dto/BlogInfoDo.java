@@ -61,7 +61,7 @@ private String blogTags;
      * 0-草稿 1-发布
      */
     //@TableField("blog_status")
-    //private Integer blogStatus;
+    private Integer blogStatus;
 
     /**
      * 阅读量
@@ -72,7 +72,7 @@ private String blogTags;
      * 0-允许评论 1-不允许评论
      */
     //@TableField("enable_comment")
-    //private Integer enableComment;
+    private Integer enableComment;
 
     /**
      * 是否删除 0=否 1=是

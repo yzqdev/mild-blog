@@ -8,7 +8,10 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="自定义路径"
-        ><el-input v-model="articleForm.blogSubUrl" placeholder="输入文章标题"></el-input>
+        ><el-input
+          v-model="articleForm.blogSubUrl"
+          placeholder="输入文章标题"
+        ></el-input>
       </el-form-item>
     </div>
     <div class="d-flex">
@@ -44,13 +47,34 @@
         </el-select>
       </el-form-item>
     </div>
-    <el-form-item label="前言"
-      ><el-input
-        v-model="articleForm.blogPreface"
-        placeholder="输入文章标题"
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="前言">
+    <div
+      style="
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        align-items: center;
+      "
+    >
+      <el-form-item label="前言"
+        ><el-input
+          v-model="articleForm.blogPreface"
+          placeholder="输入文章标题"
+        ></el-input> </el-form-item
+      ><el-switch
+        active-text="草稿"
+        inactive-text="发布"
+        v-model="articleForm.blogStatus"
+        :active-value="1"
+        :inactive-value="0"
+      ></el-switch>
+      <el-switch
+        active-text="开启评论"
+        inactive-text="关闭评论"
+        :active-value="1"
+        :inactive-value="0"
+        v-model="articleForm.enableComment"
+      ></el-switch>
+    </div>
+    <el-form-item>
       <v-md-editor
         v-model="articleForm.blogContent"
         height="400px"
@@ -69,11 +93,13 @@ export default {
     return {
       articleForm: {
         blogTitle: "111",
-        blogTags: [141,140],
+        blogTags: [141, 140],
         blogCategoryId: 20,
         blogContent: "sdfdsfdsf",
         blogPreface: "asgsggs",
         blogSubUrl: "asgsggs",
+        blogStatus: 0,
+        enableComment: 0,
       },
       text: "",
       tagOptions: [],
@@ -93,9 +119,12 @@ export default {
     },
     submit() {
       console.log(this.articleForm);
-      this.articleForm.blogTags=this.articleForm.blogTags.join()
-      addBlog(this.articleForm).then(({ data }) => {
+      this.articleForm.blogTags = this.articleForm.blogTags.join();
+      addBlog(this.articleForm).then(( data ) => {
         console.log(data);
+        if (data) {
+          this.$message.success("成功")
+        }
       });
     },
   },

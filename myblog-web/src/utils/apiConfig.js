@@ -10,6 +10,11 @@ export const getConfigs = () => {
 export const getLinks = () => {
   return axios.get("/home/link");
 };
+export const listComments = (data) => {
+  return axios.get("/home/blog/listComment?" + qs.stringify(data));
+};export const  submitComment = (data) => {
+  return axios.postForm("/home/blog/comment"  ,data);
+};
 export const getBlogById = (data) => {
   return axios.get("/home/blog/" + data);
 };
@@ -27,7 +32,8 @@ export const getSystemInfo = () => {
 };
 export const addSystemInfo = (data) => {
   return axios.post("/admin/blogConfig/add", data);
-};export const editSystemInfo = (data) => {
+};
+export const editSystemInfo = (data) => {
   return axios.post("/admin/blogConfig/edit", data);
 };
 export const delSystemInfo = (data) => {
@@ -54,8 +60,9 @@ export const getCommentList = ({ page, limit }) => {
 };
 export const getTagList = () => {
   return axios.get(`/admin/tags/list`);
-};export const EditTagList = (data) => {
-  return axios.post(`/admin/tags/update`,data);
+};
+export const EditTagList = (data) => {
+  return axios.post(`/admin/tags/update`, data);
 };
 export const getCateList = () => {
   return axios.get(`/admin/category/list`);

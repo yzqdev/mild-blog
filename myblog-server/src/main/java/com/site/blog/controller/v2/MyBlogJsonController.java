@@ -289,6 +289,7 @@ public class MyBlogJsonController {
         String ref = request.getHeader("Referer");
         // 对非法字符进行转义，防止xss漏洞
         blogComment.setCommentBody(StringEscapeUtils.escapeHtml4(blogComment.getCommentBody()));
+        blogComment.setCommentStatus(1);
         if (StringUtils.isEmpty(ref)) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "非法请求");
         }
