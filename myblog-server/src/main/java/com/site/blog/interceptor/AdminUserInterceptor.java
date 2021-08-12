@@ -33,7 +33,7 @@ public class AdminUserInterceptor implements HandlerInterceptor {
         while (headNames.hasMoreElements()) {
             String headName = headNames.nextElement();
 
-            System.out.println(headName + ":" + request.getHeader(headName));
+            //System.out.println(headName + ":" + request.getHeader(headName));
 
         }
         String token = request.getHeader(BaseConstants.TOKEN);
@@ -41,11 +41,9 @@ public class AdminUserInterceptor implements HandlerInterceptor {
             token = request.getParameter(BaseConstants.TOKEN);
         }
 
-        System.out.println("to------------------------");
         log.info("token=" + token);
         boolean flag = JwtUtil.verifyToken(token);
         String userId = JwtUtil.getUserId(token);
-        log.info("userid=" + userId);
         if (flag) {
 
             AdminUser user = UserUtil.getUserByUserCode(Integer.parseInt(userId));

@@ -8,6 +8,7 @@ import com.site.blog.service.BlogConfigService;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
 import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/v2/admin")
 @Api(tags = "配置信息")
+@Slf4j
 public class ConfigJsonController {
 
     @Resource
@@ -56,8 +58,9 @@ public class ConfigJsonController {
      * @date 2019/8/29 19:45
      */
     @PostMapping("/blogConfig/edit")
-    public Result<String> updateBlogConfig(BlogConfig blogConfig){
+    public Result<String> updateBlogConfig(@RequestBody  BlogConfig blogConfig){
         blogConfig.setUpdateTime(DateUtils.getLocalCurrentDate());
+        System.out.println(DateUtils.getLocalCurrentDate());
         boolean flag = blogConfigService.updateById(blogConfig);
         if (flag){
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);

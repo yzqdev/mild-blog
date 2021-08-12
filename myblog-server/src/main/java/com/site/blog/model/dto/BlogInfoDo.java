@@ -31,7 +31,7 @@ public class BlogInfoDo {
      * 博客自定义路径url
      */
 
-
+private String blogSubUrl;
     /**
      * 博客前言
      */

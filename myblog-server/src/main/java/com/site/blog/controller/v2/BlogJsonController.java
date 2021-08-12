@@ -70,7 +70,7 @@ public class BlogJsonController {
             List<Integer> tags = null;
             if (!CollectionUtils.isEmpty(list)) {
                 tags = list.stream().map(
-                        BlogTagRelation::getTagId)
+                                BlogTagRelation::getTagId)
                         .collect(Collectors.toList());
             }
             model.addAttribute("blogTags", tags);
@@ -79,7 +79,6 @@ public class BlogJsonController {
         return "adminLayui/blog-edit";
     }
 
- 
 
     /**
      * 保存文章图片
@@ -89,7 +88,7 @@ public class BlogJsonController {
      * @return java.util.Map<java.lang.String, java.lang.Object>
      * @date 2019/8/26 13:57
      */
-    
+
     @PostMapping("/blog/uploadFile")
     public Map<String, Object> uploadFileByEditormd(HttpServletRequest request,
                                                     @RequestParam(name = "editormd-image-file") MultipartFile file) throws URISyntaxException {
@@ -124,17 +123,18 @@ public class BlogJsonController {
      * @return com.zhulin.blog.dto.Result
      * @date 2019/8/28 15:04
      */
-    
+
     @PostMapping("/blog/edit")
     public Result<String> saveBlog(@RequestBody BlogInfoDo blogInfoDo) {
 
         //if (ObjectUtils.isEmpty(blogInfoDo.getBlogTags()) || ObjectUtils.isEmpty(blogInfoDo)) {
         //    return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
         //}
-        BlogInfo blogInfo=new BlogInfo();
+        BlogInfo blogInfo = new BlogInfo();
         blogInfo.setBlogViews(blogInfoDo.getBlogViews());
-blogInfo.setBlogTitle(blogInfoDo.getBlogTitle());
-blogInfo.setBlogTags(blogInfoDo.getBlogTags());
+        blogInfo.setBlogTitle(blogInfoDo.getBlogTitle());
+        blogInfo.setBlogTags(blogInfoDo.getBlogTags());
+        blogInfo.setBlogSubUrl(blogInfoDo.getBlogSubUrl());
         blogInfo.setCreateTime(DateUtils.getLocalCurrentDate());
         blogInfo.setUpdateTime(DateUtils.getLocalCurrentDate());
         blogInfo.setBlogCategoryId(blogInfoDo.getBlogCategoryId());
@@ -159,7 +159,7 @@ blogInfo.setBlogTags(blogInfoDo.getBlogTags());
      * @return com.site.blog.pojo.dto.AjaxResultPage<com.site.blog.entity.BlogInfo>
      * @date 2019/8/28 16:43
      */
-    
+
     @GetMapping("/blog/list")
     public AjaxResultPage<BlogInfo> getContractList(AjaxPutPage<BlogInfo> ajaxPutPage, BlogInfo condition) {
         QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>(condition);
@@ -179,7 +179,7 @@ blogInfo.setBlogTags(blogInfoDo.getBlogTags());
      * @return com.site.blog.pojo.dto.Result
      * @date 2019/8/29 12:22
      */
-    
+
     @PostMapping("/blog/blogStatus")
     public Result<String> updateBlogStatus(BlogInfo blogInfo) {
         blogInfo.setUpdateTime(DateUtils.getLocalCurrentDate());
@@ -197,7 +197,7 @@ blogInfo.setBlogTags(blogInfoDo.getBlogTags());
      * @return com.site.blog.pojo.dto.Result
      * @date 2019/8/29 14:02
      */
-    
+
     @PostMapping("/blog/delete")
     public Result<String> deleteBlog(@RequestParam Long blogId) {
         BlogInfo blogInfo = new BlogInfo()
@@ -218,7 +218,7 @@ blogInfo.setBlogTags(blogInfoDo.getBlogTags());
      * @return com.site.blog.pojo.dto.Result
      * @date 2019/8/29 14:02
      */
-    
+
     @PostMapping("/blog/clear")
     public Result<String> clearBlog(@RequestParam Long blogId) {
         if (blogInfoService.clearBlogInfo(blogId)) {
@@ -234,7 +234,7 @@ blogInfo.setBlogTags(blogInfoDo.getBlogTags());
      * @return com.site.blog.pojo.dto.Result
      * @date 2019/8/29 16:36
      */
-    
+
     @PostMapping("/blog/restore")
     public Result<String> restoreBlog(@RequestParam Long blogId) {
         BlogInfo blogInfo = new BlogInfo()
@@ -248,7 +248,7 @@ blogInfo.setBlogTags(blogInfoDo.getBlogTags());
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
 
-    
+
     @GetMapping("v1/blog/select")
     public List<BlogInfo> getBlogInfoSelect() {
         return blogInfoService.list();

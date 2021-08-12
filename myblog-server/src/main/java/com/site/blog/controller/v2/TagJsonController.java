@@ -11,6 +11,7 @@ import com.site.blog.model.entity.BlogTag;
 import com.site.blog.service.BlogTagService;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import java.util.List;
  * @Description: 标签Controller
  * @create 2020/12/27
  */
+@Slf4j
 @RestController
 @RequestMapping("/v2/admin")
 public class TagJsonController {
@@ -45,7 +47,7 @@ public class TagJsonController {
     public Result<List<BlogTag>> tagsList(){
         QueryWrapper<BlogTag> queryWrapper = new QueryWrapper<BlogTag>();
         queryWrapper.lambda().eq(BlogTag::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
-        List<BlogTag> list = blogTagService.list(queryWrapper);
+        List<BlogTag> list = blogTagService.list( );
         if (CollectionUtils.isEmpty(list)){
             ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
         }
@@ -131,13 +133,14 @@ public class TagJsonController {
      */
      
     @PostMapping("/tags/update")
-    public Result<String> updateCategory(BlogTag blogTag) {
+    public Result<String> updateCategory(@RequestBody  BlogTag blogTag) {
         // TODO blogInfo的tags无实际意义，所以这里不再修改冗余的tags。
+        log.debug(String.valueOf(blogTag));
         BlogTag sqlBlogTag = blogTagService.getById(blogTag.getTagId());
         boolean flag = sqlBlogTag.getTagName().equals(blogTag.getTagName());
-        if (!flag) {
+
             blogTagService.updateById(blogTag);
-        }
+
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
     }
 }
