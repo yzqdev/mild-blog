@@ -85,6 +85,9 @@ export default defineComponent({
       console.log(e);
       delLink({linkId:row.linkId,isDeleted:e}).then(({ data }) => {
         console.log(data);
+        if (data ) {
+          this.$message.success("操作成功")
+        }
       });
     },
     deleteRow(row) {

@@ -2,7 +2,11 @@
   <el-table :data="data">
     <el-table-column prop="blogTitle" label="博客标题"></el-table-column>
     <el-table-column prop="blogCategoryName" label="博客分类"></el-table-column>
-    <el-table-column prop="blogTags" label="博客标签"></el-table-column>
+    <el-table-column prop="blogTags" label="博客标签">
+      <template v-slot="{row}">
+        <el-tag v-for="item in row.blogTags.split(`,`)">{{item}}</el-tag>
+      </template>
+    </el-table-column>
     <el-table-column prop="blogViews" label="阅读量"></el-table-column>
     <el-table-column prop="updateTime" label="修改时间"></el-table-column>
     <el-table-column prop="blogStatus" label="文章状态"></el-table-column>

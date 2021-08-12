@@ -27,6 +27,8 @@ export const getSystemInfo = () => {
 };
 export const addSystemInfo = (data) => {
   return axios.post("/admin/blogConfig/add", data);
+};export const editSystemInfo = (data) => {
+  return axios.post("/admin/blogConfig/edit", data);
 };
 export const delSystemInfo = (data) => {
   return axios.delete("/admin/blogConfig/del/" + data);
@@ -52,6 +54,8 @@ export const getCommentList = ({ page, limit }) => {
 };
 export const getTagList = () => {
   return axios.get(`/admin/tags/list`);
+};export const EditTagList = (data) => {
+  return axios.post(`/admin/tags/update`,data);
 };
 export const getCateList = () => {
   return axios.get(`/admin/category/list`);

@@ -8,7 +8,7 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="自定义路径"
-        ><el-input placeholder="输入文章标题"></el-input>
+        ><el-input v-model="articleForm.blogSubUrl" placeholder="输入文章标题"></el-input>
       </el-form-item>
     </div>
     <div class="d-flex">
@@ -73,6 +73,7 @@ export default {
         blogCategoryId: 20,
         blogContent: "sdfdsfdsf",
         blogPreface: "asgsggs",
+        blogSubUrl: "asgsggs",
       },
       text: "",
       tagOptions: [],
