@@ -112,6 +112,10 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
         <!--配合LEGACYHTML5使用-->
         <dependency>
             <groupId>net.sourceforge.nekohtml</groupId>

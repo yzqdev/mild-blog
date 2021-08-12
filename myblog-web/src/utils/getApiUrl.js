@@ -1,7 +1,7 @@
 export const getApiUrl = (str='dev') => {
 
     const devArr = ["test.researchstar.cn", "localhost"];
-    const apiArr = ["www.researchstar.cn"];
+    const apiArr = ["http://81.69.227.146:8080/"];
     let localUrl = "192.168.";
 
     let isDev =
@@ -25,7 +25,7 @@ export const getApiUrl = (str='dev') => {
     }
 
     if (isProd) {
-      return "https://api.researchstar.cn/dobell-research";
+      return "http://81.69.227.146:2800/v2";
     }
 
 };
