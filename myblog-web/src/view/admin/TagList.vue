@@ -18,6 +18,7 @@
       <el-button type="primary" @click="submitEdit">确定</el-button>
     </template>
   </el-dialog>
+  <el-button type="primary" @click="showAddForm">添加标签</el-button>
   <el-table :data="data">
     <el-table-column prop="tagId" label="标签id"></el-table-column>
     <el-table-column prop="tagName" label="标签名"></el-table-column>
@@ -52,14 +53,14 @@
 </template>
 
 <script>
-import { EditTagList, getCommentList, getTagList } from "@/utils/apiConfig";
+import {addTag, clearTagById, EditTagList, getCommentList, getTagList} from "@/utils/apiConfig";
 
 export default {
   name: "TagList",
   data() {
-    return {
+    return {isEdit:true,
       data: "",
-      editForm: {},
+      editForm: {tagName:'',isDeleted:false},
       editFormShow: false,
     };
   },
@@ -73,16 +74,40 @@ export default {
         this.data = data;
       });
     },
-    deleteRow(row) {},
-    submitEdit() {
-      EditTagList(this.editForm).then((data) => {
-        console.log(data);
-        if (data) {
-          this.$message.success("成功");
-          this.getData();
-          this.editFormShow = false;
+    deleteRow(row) {
+      clearTagById(row.tagId).then(({data }) => {
+        if (data ) {
+          this.getData()
         }
-      });
+      })
+    },
+    showAddForm(){
+      this.isEdit=false
+      this.editForm={tagName:'',isDeleted:false}
+      this.editFormShow=true
+    },
+    submitEdit() {
+      if (this.isEdit) {
+        EditTagList(this.editForm).then((data) => {
+          console.log(data);
+          if (data) {
+            this.$message.success("成功");
+            this.getData();
+            this.editFormShow = false;
+          }
+        });
+      }else {
+        addTag(this.editForm).then(({data}) => {
+          if (data ) {
+            this.$message.success("成功");
+            this.isEdit=true;
+            this.getData()
+            this.editFormShow = false;
+          }
+        })
+
+      }
+
     },
     editRow(row) {
       this.editForm = row;

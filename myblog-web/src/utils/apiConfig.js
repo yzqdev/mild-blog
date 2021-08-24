@@ -12,8 +12,9 @@ export const getLinks = () => {
 };
 export const listComments = (data) => {
   return axios.get("/home/blog/listComment?" + qs.stringify(data));
-};export const  submitComment = (data) => {
-  return axios.postForm("/home/blog/comment"  ,data);
+};
+export const submitComment = (data) => {
+  return axios.postForm("/home/blog/comment", data);
 };
 export const getBlogById = (data) => {
   return axios.get("/home/blog/" + data);
@@ -58,11 +59,25 @@ export const getBlogList = ({ page, limit }) => {
 export const getCommentList = ({ page, limit }) => {
   return axios.get(`/admin/comment/paging?page=${page}&limit=${limit}`);
 };
+export const deleteCommentById = (id) => {
+  return axios.delete(`/admin/comment/delete/${id}`);
+};
+export const checkCommentById = (id) => {
+  return axios.post(`/admin/comment/delete/${id}`);
+};export const hideCommentById = (id) => {
+  return axios.post(`/admin/comment/isDel/${id}`);
+};
 export const getTagList = () => {
   return axios.get(`/admin/tags/list`);
 };
+export const addTag = (data) => {
+  return axios.postForm(`/admin/tags/add`, data);
+};
 export const EditTagList = (data) => {
   return axios.post(`/admin/tags/update`, data);
+};
+export const clearTagById = (data) => {
+  return axios.post(`/admin/tags/clear/${data}`);
 };
 export const getCateList = () => {
   return axios.get(`/admin/category/list`);
@@ -72,4 +87,13 @@ export const getCatePaging = ({ page, limit }) => {
 };
 export const addBlog = (params) => {
   return axios.post("/admin/blog/edit", params);
+};
+export const clearBlog = (params) => {
+  return axios.post("/admin/blog/clear/" + params);
+};
+export const deleteBlog = (params) => {
+  return axios.post("/admin/blog/delete/" + params);
+};
+export const getAdminBlogById = (params) => {
+  return axios.get("/admin/blog/get/" + params);
 };

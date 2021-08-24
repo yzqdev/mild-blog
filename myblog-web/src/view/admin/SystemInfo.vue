@@ -124,25 +124,20 @@ export default defineComponent({
       this.columnIndex = column.index;
     },
     changeConfigName(val, row) {
-      console.log(val);
-      console.log(row);
       editSystemInfo(row).then(({ data }) => {
-        console.log(data);
       });
     },
     formatTime(time) {
-      console.log();
       let res = dayjs(new Date(time)).format("YYYY-MM-DD HH:mm:ss");
-      console.log(res);
       return res;
     },
     inputBlur(row) {
-      console.log(row);
+
       this.rowIndex = -1;
       this.columnIndex = -1;
     },
     deleteRow(row) {
-      console.log(row);
+
       delSystemInfo(row.configField).then(({ data }) => {
         this.getData();
         this.$message.success("成功");

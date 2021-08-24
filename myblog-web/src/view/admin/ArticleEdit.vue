@@ -24,7 +24,7 @@
         >
           <el-option
             v-for="item in tagOptions"
-            :key="item.tagId"
+            :key="+item.tagId"
             :label="item.tagName"
             :value="item.tagId"
           >
@@ -85,19 +85,25 @@
 </template>
 
 <script>
-import { addBlog, getCateList, getTagList } from "@/utils/apiConfig";
+import {
+  addBlog,
+  getAdminBlogById,
+  getCateList,
+  getTagList,
+} from "@/utils/apiConfig";
 
 export default {
   name: "ArticleEdit",
   data() {
     return {
       articleForm: {
-        blogTitle: "111",
-        blogTags: [141, 140],
-        blogCategoryId: 20,
-        blogContent: "sdfdsfdsf",
-        blogPreface: "asgsggs",
-        blogSubUrl: "asgsggs",
+        blogId: "",
+        blogTitle: "",
+        blogTags: [],
+        blogCategoryId: undefined,
+        blogContent: "",
+        blogPreface: "",
+        blogSubUrl: "",
         blogStatus: 0,
         enableComment: 0,
       },
@@ -107,6 +113,17 @@ export default {
     };
   },
   methods: {
+    getData() {
+      getAdminBlogById(this.$route.query.id).then(({ data }) => {
+        console.log(
+          `%c这是data`,
+          `color:red;font-size:16px;background:transparent`
+        );
+        console.log(data);
+        this.articleForm = data;
+        this.articleForm.blogTags = this.articleForm.blogTags.split(",");
+      });
+    },
     tagList() {
       getTagList().then(({ data }) => {
         this.tagOptions = data;
@@ -118,17 +135,26 @@ export default {
       });
     },
     submit() {
-      console.log(this.articleForm);
+      if (this.$route.query.id) {
+        this.articleForm.blogId = +this.$route.query.id;
+      }
+
       this.articleForm.blogTags = this.articleForm.blogTags.join();
-      addBlog(this.articleForm).then(( data ) => {
+      addBlog(this.articleForm).then((data) => {
         console.log(data);
         if (data) {
-          this.$message.success("成功")
+          this.$router.push({
+            name: "articleList",
+          });
+          this.$message.success("成功");
         }
       });
     },
   },
   created() {
+    if (this.$route.query.id) {
+      this.getData();
+    }
     this.tagList();
     this.cateList();
   },

@@ -12,8 +12,7 @@
     <el-table-column prop="enableComment" label="审核"></el-table-column>
     <el-table-column prop="commentStatus" label="当前状态"></el-table-column>
     <el-table-column label="操作" width="250">
-      <template v-slot="{ row }"
-        >
+      <template v-slot="{ row }">
         <el-popconfirm
           title="确定删除吗？"
           confirmButtonText="好的"
@@ -26,6 +25,18 @@
           <template #reference>
             <el-button type="danger" size="mini">删除</el-button>
           </template>
+        </el-popconfirm> <el-popconfirm
+          title="确定审核通过吗？"
+          confirmButtonText="好的"
+          cancelButtonText="不用了"
+          icon="el-icon-info"
+          placement="right"
+          iconColor="red"
+          @confirm="checkRow(row)"
+        >
+          <template #reference>
+            <el-button type="primary" size="mini">审核</el-button>
+          </template>
         </el-popconfirm>
       </template>
     </el-table-column>
@@ -33,7 +44,11 @@
 </template>
 
 <script>
-import { getBlogList, getCommentList } from "@/utils/apiConfig";
+import {
+  deleteCommentById,
+  getBlogList,
+  getCommentList, hideCommentById,
+} from "@/utils/apiConfig";
 
 export default {
   name: "ArticleList",
@@ -43,13 +58,26 @@ export default {
     };
   },
   created() {
-    getCommentList({ page: 1, limit: 30 }).then(({ data }) => {
-      console.log(data);
-      this.data = data;
-    });
+    this.getData();
   },
   methods: {
-    deleteRow(row) {},
+    getData() {
+      getCommentList({ page: 1, limit: 30 }).then(({ data }) => {
+        console.log(data);
+        this.data = data;
+      });
+    },
+    deleteRow(row) {
+      deleteCommentById(row.commentId).then(({ data }) => {
+        console.log(data);
+        this.getData();
+      });
+    }, checkRow(row) {
+      hideCommentById(row.commentId).then(({ data }) => {
+        console.log(data);
+        this.getData();
+      });
+    },
     clearRow(row) {},
   },
 };
