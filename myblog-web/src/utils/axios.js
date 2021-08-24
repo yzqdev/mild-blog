@@ -1,9 +1,14 @@
-import { getApiUrl } from "@/utils/getApiUrl";
 import store from "@/store";
 import qs from "qs";
 import axios from "axios";
-axios.defaults.withCredentials = true;
-axios.interceptors.request.use(
+
+ const instance=axios.create({
+     baseURL: import.meta.env.VITE_APP_URL, //接口统一域名
+     timeout: 6000, //设置超时
+ })
+
+instance.defaults.withCredentials = true;
+instance.interceptors.request.use(
   (config) => {
     console.log("requestUrl==", config.url);
 
@@ -24,7 +29,7 @@ axios.interceptors.request.use(
 );
 // 添加响应拦截器
 
-axios.interceptors.response.use(
+instance.interceptors.response.use(
   function (response) {
     // 对响应数据做点什么
     console.log("进入response");
@@ -36,11 +41,9 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-axios.postForm = (url, data) => {
-  return axios.post(url, qs.stringify(data), {
+instance.postForm = (url, data) => {
+  return instance.post(url, qs.stringify(data), {
     headers: { "content-type": "application/x-www-form-urlencoded" },
   });
 };
-// axios.defaults.baseURL = getApiUrl();
-axios.defaults.baseURL = 'http://81.69.227.146:2800/v2';
-export default axios;
+export default instance;

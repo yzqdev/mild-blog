@@ -75,6 +75,19 @@ class FetchApi {
         .catch((err) => reject(err));
     });
   }
+  static postForm(url, data) {
+    return new Promise((resolve, reject) => {
+      url = baseURL + url;
+      fetch(url, {
+        method: "POST",
+
+        body: data,
+      })
+        .then((res) => res.json())
+        .then((data) => resolve("删除成功"))
+        .catch((err) => reject(err));
+    });
+  }
 
   /**
    * 默认的fetch配置
