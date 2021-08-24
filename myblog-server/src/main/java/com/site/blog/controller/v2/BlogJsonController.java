@@ -79,6 +79,12 @@ public class BlogJsonController {
         return "adminLayui/blog-edit";
     }
 
+    @GetMapping("/blog/get/{id}")
+    public Result getBlogById(@PathVariable("id") String id) {
+
+        BlogInfo blogInfo = blogInfoService.getById(id);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogInfo);
+    }
 
     /**
      * 保存文章图片
@@ -125,12 +131,15 @@ public class BlogJsonController {
      */
 
     @PostMapping("/blog/edit")
-    public Result<String> saveBlog(@RequestBody BlogInfoDo blogInfoDo) {
+    public Result  saveBlog(@RequestBody BlogInfoDo blogInfoDo) {
 
         //if (ObjectUtils.isEmpty(blogInfoDo.getBlogTags()) || ObjectUtils.isEmpty(blogInfoDo)) {
         //    return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
         //}
         BlogInfo blogInfo = new BlogInfo();
+        if (null!=blogInfoDo.getBlogId()){
+            blogInfo.setBlogId(blogInfoDo.getBlogId());
+        }
         blogInfo.setBlogViews(blogInfoDo.getBlogViews());
         blogInfo.setBlogTitle(blogInfoDo.getBlogTitle());
         blogInfo.setBlogTags(blogInfoDo.getBlogTags());
@@ -144,8 +153,7 @@ public class BlogJsonController {
         blogInfo.setBlogPreface(blogInfoDo.getBlogPreface());
         blogInfo.setIsDeleted(0);
         blogInfo.setBlogStatus(1);
-        System.out.println(blogInfo);
-        System.out.println("----------------------blgofin");
+
         if (blogInfoService.saveOrUpdate(blogInfo)) {
             blogTagRelationService.removeAndsaveBatch(Arrays.asList(blogInfo.getBlogTags().split(",")), blogInfo);
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
@@ -200,15 +208,15 @@ public class BlogJsonController {
      * @date 2019/8/29 14:02
      */
 
-    @PostMapping("/blog/delete")
-    public Result<String> deleteBlog(@RequestParam Long blogId) {
+    @PostMapping("/blog/delete/{id}")
+    public Result deleteBlog(@PathVariable("id") Long blogId) {
         BlogInfo blogInfo = new BlogInfo()
                 .setBlogId(blogId)
                 .setIsDeleted(DeleteStatusEnum.DELETED.getStatus())
                 .setUpdateTime(DateUtils.getLocalCurrentDate());
         boolean flag = blogInfoService.updateById(blogInfo);
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogInfo);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
@@ -221,10 +229,10 @@ public class BlogJsonController {
      * @date 2019/8/29 14:02
      */
 
-    @PostMapping("/blog/clear")
-    public Result<String> clearBlog(@RequestParam Long blogId) {
+    @PostMapping("/blog/clear/{id}")
+    public Result clearBlog(@PathVariable("id") Long blogId) {
         if (blogInfoService.clearBlogInfo(blogId)) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogId);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }

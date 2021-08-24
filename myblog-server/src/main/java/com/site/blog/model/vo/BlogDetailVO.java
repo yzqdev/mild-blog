@@ -1,8 +1,11 @@
 package com.site.blog.model.vo;
 
+import lombok.Data;
+
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-
+@Data
 public class BlogDetailVO {
     private Long blogId;
 
@@ -10,7 +13,7 @@ public class BlogDetailVO {
 
     private Integer blogCategoryId;
 
-    private Integer commentCount;
+    private long commentCount;
 
     private String blogCategoryIcon;
 
@@ -26,101 +29,6 @@ public class BlogDetailVO {
 
     private Integer enableComment;
 
-    private Date createTime;
+    private Timestamp createTime;
 
-    public Long getBlogId() {
-        return blogId;
-    }
-
-    public void setBlogId(Long blogId) {
-        this.blogId = blogId;
-    }
-
-    public String getBlogTitle() {
-        return blogTitle;
-    }
-
-    public void setBlogTitle(String blogTitle) {
-        this.blogTitle = blogTitle;
-    }
-
-    public Integer getBlogCategoryId() {
-        return blogCategoryId;
-    }
-
-    public void setBlogCategoryId(Integer blogCategoryId) {
-        this.blogCategoryId = blogCategoryId;
-    }
-
-    public String getBlogCategoryIcon() {
-        return blogCategoryIcon;
-    }
-
-    public void setBlogCategoryIcon(String blogCategoryIcon) {
-        this.blogCategoryIcon = blogCategoryIcon;
-    }
-
-    public String getBlogCategoryName() {
-        return blogCategoryName;
-    }
-
-    public void setBlogCategoryName(String blogCategoryName) {
-        this.blogCategoryName = blogCategoryName;
-    }
-
-    public Long getBlogViews() {
-        return blogViews;
-    }
-
-    public void setBlogViews(Long blogViews) {
-        this.blogViews = blogViews;
-    }
-
-    public List<String> getBlogTags() {
-        return blogTags;
-    }
-
-    public void setBlogTags(List<String> blogTags) {
-        this.blogTags = blogTags;
-    }
-
-    public String getBlogContent() {
-        return blogContent;
-    }
-
-    public void setBlogContent(String blogContent) {
-        this.blogContent = blogContent;
-    }
-
-    public Integer getCommentCount() {
-        return commentCount;
-    }
-
-    public void setCommentCount(Integer commentCount) {
-        this.commentCount = commentCount;
-    }
-
-    public Integer getEnableComment() {
-        return enableComment;
-    }
-
-    public void setEnableComment(Integer enableComment) {
-        this.enableComment = enableComment;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getBlogCoverImage() {
-        return blogCoverImage;
-    }
-
-    public void setBlogCoverImage(String blogCoverImage) {
-        this.blogCoverImage = blogCoverImage;
-    }
 }

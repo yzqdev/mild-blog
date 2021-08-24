@@ -1,6 +1,8 @@
 package com.site.blog.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+
+import java.sql.Timestamp;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -70,7 +72,7 @@ private static final long serialVersionUID=1L;
      * 添加时间
      */
     @TableField("create_time")
-    private Date createTime;
+    private Timestamp createTime;
 
 
 }

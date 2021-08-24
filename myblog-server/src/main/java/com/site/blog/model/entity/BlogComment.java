@@ -1,6 +1,8 @@
 package com.site.blog.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+
+import java.sql.Timestamp;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -76,7 +78,7 @@ private static final long serialVersionUID=1L;
      */
     @TableField("comment_create_time")
     @JsonFormat(pattern = "yyyy/MM/dd", timezone = "GMT+8")    //将Date转换成String,一般后台传值给前台时
-    private Date commentCreateTime;
+    private Timestamp commentCreateTime;
 
     /**
      * 评论时的ip地址
@@ -95,7 +97,7 @@ private static final long serialVersionUID=1L;
      */
     @TableField("reply_create_time")
     @JsonFormat(pattern = "yyyy/MM/dd", timezone = "GMT+8")
-    private Date replyCreateTime;
+    private Timestamp replyCreateTime;
 
     /**
      * 是否审核通过 0-未审核 1-审核通过

@@ -86,7 +86,7 @@ public class TagJsonController {
     public Result<String> updateCategoryStatus(BlogTag blogTag){
         boolean flag = blogTagService.updateById(blogTag);
         if (flag){
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogTag.getTagName());
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
@@ -99,11 +99,11 @@ public class TagJsonController {
      */
      
     @PostMapping("/tags/add")
-    public Result<String> addTag(BlogTag blogTag){
+    public Result  addTag(BlogTag blogTag){
         blogTag.setCreateTime(DateUtils.getLocalCurrentDate());
         boolean flag = blogTagService.save(blogTag);
         if (flag){
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,blogTag);
         }else {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
         }
@@ -116,10 +116,12 @@ public class TagJsonController {
      * @date 2019/9/2 18:41
      */
      
-    @PostMapping("/tags/clear")
-    public Result<String> clearTag(Integer tagId) throws RuntimeException{
+    @PostMapping("/tags/clear/{id}")
+    public Result<String> clearTag(@PathVariable("id") Integer tagId) throws RuntimeException{
+
+        String name=blogTagService.getById(tagId).getTagName();
         if (blogTagService.clearTag(tagId)) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,name);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }

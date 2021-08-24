@@ -18,7 +18,6 @@ import com.site.blog.util.ResultGenerator;
 import io.swagger.annotations.Api;
 import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.sql.ResultSet;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -211,7 +209,7 @@ public class MyBlogJsonController {
         }
 
         // 关联评论的Count
-        Integer blogCommentCount = blogCommentService.count(new QueryWrapper<BlogComment>()
+        long blogCommentCount = blogCommentService.count(new QueryWrapper<BlogComment>()
                 .lambda()
                 .eq(BlogComment::getCommentStatus, CommentStatusEnum.ALLOW.getStatus())
                 .eq(BlogComment::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus())

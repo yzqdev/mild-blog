@@ -58,24 +58,26 @@ public class CommentJsonController {
      * @return com.site.blog.pojo.dto.Result<java.lang.String>
      * @date 2020/4/24 21:21
      */
-    @PostMapping(value = {"/comment/isDel","/comment/commentStatus"})
-    public Result<String> updateCommentStatus(BlogComment blogComment){
-        boolean flag = blogCommentService.updateById(blogComment);
+    @PostMapping( "/comment/isDel/{id}" )
+    public Result  updateCommentStatus(@PathVariable("id") String id){
+        BlogComment comment=blogCommentService.getById(id);
+        comment.setCommentStatus(0);
+        boolean flag = blogCommentService.updateById(comment);
         if (flag){
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,comment);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
 
     /**
      * 删除评论
-     * @param commentId
+     * @param id
      * @return com.site.blog.pojo.dto.Result<java.lang.String>
      * @date 2020/4/24 21:23
      */
-    @PostMapping("/comment/delete")
-    public Result<String> deleteComment(@RequestParam Long commentId){
-        boolean flag = blogCommentService.removeById(commentId);
+    @DeleteMapping("/comment/delete/{id}")
+    public Result<String> deleteComment(@PathVariable("id") Long id){
+        boolean flag = blogCommentService.removeById(id);
         if (flag){
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
         }
