@@ -41,5 +41,6 @@ axios.postForm = (url, data) => {
     headers: { "content-type": "application/x-www-form-urlencoded" },
   });
 };
-axios.defaults.baseURL = getApiUrl();
+// axios.defaults.baseURL = getApiUrl();
+axios.defaults.baseURL = 'http://81.69.227.146:2800/v2';
 export default axios;

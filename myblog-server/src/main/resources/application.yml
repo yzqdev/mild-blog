@@ -1,6 +1,8 @@
 server:
   port: 2800
 spring:
+
+
   datasource:
     name: myBlog
     url: jdbc:mysql://81.69.227.146:3306/my_blog_db?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false
@@ -51,6 +53,7 @@ spring:
         enabled: true
         login-username: admin
         login-password: z1320291471
+
   web:
     resources:
       static-locations: classpath:/resources/,classpath:/static/
