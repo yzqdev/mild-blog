@@ -6,10 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.site.blog.constants.*;
-import com.site.blog.model.dto.AjaxPutPage;
-import com.site.blog.model.dto.AjaxResultPage;
-import com.site.blog.model.dto.BlogPageCondition;
-import com.site.blog.model.dto.Result;
+import com.site.blog.model.dto.*;
 import com.site.blog.model.entity.*;
 import com.site.blog.model.vo.BlogDetailVO;
 import com.site.blog.service.*;
@@ -113,41 +110,28 @@ public class MyBlogJsonController {
      * @date 2019/9/6 7:04
      */
     @GetMapping({"/tag/{tagId}"})
-    public Result tag(@PathVariable("tagId") String tagId) {
+    public Result tag(@PathVariable("tagId") String tagId, @RequestBody PageDto pageDto) {
 
-        HashMap<String, Object> result = new HashMap<>();
-        Page<BlogInfo> page = new Page<>(condition.getPageNum(), condition.getPageSize());
+        Page<BlogInfo> page = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
         LambdaQueryWrapper<BlogInfo> sqlWrapper = Wrappers.<BlogInfo>lambdaQuery()
-                .like(Objects.nonNull(condition.getKeyword()), BlogInfo::getBlogTitle, condition.getKeyword())
-                .eq(Objects.nonNull(condition.getCategoryName()), BlogInfo::getBlogCategoryName, condition.getCategoryName())
+
                 .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
                 .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
         //获取tag下的文章
-        if (Objects.nonNull(condition.getTagId())) {
+        if (Objects.nonNull(tagId)) {
             List<BlogTagRelation> list = blogTagRelationService.list(new QueryWrapper<BlogTagRelation>()
-                    .lambda().eq(BlogTagRelation::getTagId, condition.getTagId()));
+                    .lambda().eq(BlogTagRelation::getTagId, tagId));
             if (!CollectionUtils.isEmpty(list)) {
                 sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogTagRelation::getBlogId).toArray());
             }
         }
         sqlWrapper.orderByDesc(BlogInfo::getCreateTime);
         blogInfoService.page(page, sqlWrapper);
-        PageResult blogPageResult = new PageResult(page.getRecords(), page.getTotal(), condition.getPageSize(), condition.getPageNum());
-        if (Objects.nonNull(condition.getKeyword())) {
-            result.put("keyword", condition.getKeyword());
-        }
-        if (Objects.nonNull(condition.getTagId())) {
-            result.put("tagId", condition.getTagId());
-        }
-        if (Objects.nonNull(condition.getCategoryName())) {
-            result.put("categoryName", condition.getCategoryName());
-        }
-        result.put("blogPageResult", blogPageResult);
-        result.put("pageName", condition.getPageName());
-        result.put("newBlogs", blogInfoService.getNewBlog());
-        result.put("hotBlogs", blogInfoService.getHotBlog());
-        result.put("hotTags", blogTagService.getBlogTagCountForIndex());
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, result);
+        PageResult blogPageResult = new PageResult(page.getRecords(), page.getTotal(), pageDto.getPageSize(), pageDto.getPageNum());
+
+
+
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogPageResult);
     }
 
     @GetMapping("/configs")
