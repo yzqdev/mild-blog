@@ -3,7 +3,7 @@ server:
 spring:
   datasource:
     name: myBlog
-    url: jdbc:mysql://81.69.227.146:3306/my_blog_db?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false
+    url: jdbc:mysql://81.69.227.146:3306/my_blog_db?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false
     username: root
     password: 123456
     type: com.alibaba.druid.pool.DruidDataSource

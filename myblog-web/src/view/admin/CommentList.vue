@@ -6,11 +6,19 @@
     <el-table-column
       prop="commentCreateTime"
       label="评论时间"
-    ></el-table-column>
+      width="180"
+    ><template v-slot="{row}">
+      {{$dayjs(row.commentCreateTime).format("YYYY-MM-DD HH:mm:ss")}}
+    </template>
+
+    </el-table-column>
     <el-table-column prop="replyBody" label="回复内容"></el-table-column>
     <el-table-column prop="replyCreateTime" label="回复时间"></el-table-column>
-    <el-table-column prop="enableComment" label="审核"></el-table-column>
-    <el-table-column prop="commentStatus" label="当前状态"></el-table-column>
+    <el-table-column prop="commentStatus" label="当前状态"
+      ><template v-slot="{ row }">{{
+        row.commentStatus == 1 ? `审核通过` : `不通过`
+      }}</template></el-table-column
+    >
     <el-table-column label="操作" width="250">
       <template v-slot="{ row }">
         <el-popconfirm
@@ -25,7 +33,8 @@
           <template #reference>
             <el-button type="danger" size="mini">删除</el-button>
           </template>
-        </el-popconfirm> <el-popconfirm
+        </el-popconfirm>
+        <el-popconfirm
           title="确定审核通过吗？"
           confirmButtonText="好的"
           cancelButtonText="不用了"
@@ -47,7 +56,8 @@
 import {
   deleteCommentById,
   getBlogList,
-  getCommentList, hideCommentById,
+  getCommentList,
+  hideCommentById,
 } from "@/utils/apiConfig";
 
 export default {
@@ -72,7 +82,8 @@ export default {
         console.log(data);
         this.getData();
       });
-    }, checkRow(row) {
+    },
+    checkRow(row) {
       hideCommentById(row.commentId).then(({ data }) => {
         console.log(data);
         this.getData();

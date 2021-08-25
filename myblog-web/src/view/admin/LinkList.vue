@@ -99,7 +99,12 @@ export default defineComponent({
       });
     },
     editLinkClick(row){
-      this.addForm=row
+      this.addForm= {
+        linkId:row.linkId,
+        linkName: row.linkName,
+        linkUrl:row.linkUrl,
+        linkDescription: row.linkDescription,
+      }
       this.addDialogVisible=true
     },
     deleteRow(row) {

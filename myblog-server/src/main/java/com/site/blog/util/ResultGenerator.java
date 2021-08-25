@@ -27,6 +27,13 @@ public class ResultGenerator {
         result.setMessage(constants.getContent());
         result.setData(data);
         return result;
+    }  public static <T> Result<T> getResultByHttp(HttpStatusEnum constants,boolean success, T data) {
+        Result<T> result = new Result<>();
+        result.setResultCode(constants.getStatus());
+        result.setMessage(constants.getContent());
+        result.setData(data);
+        result.setSuccess(success);
+        return result;
     }
 
     /**

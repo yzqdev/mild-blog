@@ -1,5 +1,8 @@
 package com.site.blog.model.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -7,11 +10,15 @@ import java.io.Serializable;
  * @author Linn-cn
  * @date 2020/12/7
  */
+@Data
+@AllArgsConstructor
+
 public class Result<T> implements Serializable {
     private static final long serialVersionUID = 1L;
     private int resultCode;
     private String message;
     private T data;
+    private boolean success;
 
     public Result() {
     }
@@ -21,36 +28,16 @@ public class Result<T> implements Serializable {
         this.message = message;
     }
 
-    public int getResultCode() {
-        return resultCode;
-    }
-
-    public void setResultCode(int resultCode) {
-        this.resultCode = resultCode;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
     @Override
     public String toString() {
         return "Result{" +
                 "resultCode=" + resultCode +
                 ", message='" + message + '\'' +
                 ", data=" + data +
+                ", success=" + success +
                 '}';
     }
+
+
+
 }

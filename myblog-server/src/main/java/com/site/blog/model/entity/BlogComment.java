@@ -77,7 +77,7 @@ private static final long serialVersionUID=1L;
      * 评论提交时间
      */
     @TableField("comment_create_time")
-    @JsonFormat(pattern = "yyyy/MM/dd", timezone = "GMT+8")    //将Date转换成String,一般后台传值给前台时
+    //@JsonFormat(pattern = "yyyy/MM/dd", timezone = "GMT+8")    //将Date转换成String,一般后台传值给前台时
     private Timestamp commentCreateTime;
 
     /**

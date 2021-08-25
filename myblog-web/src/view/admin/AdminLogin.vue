@@ -98,14 +98,16 @@ export default defineComponent({
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           loginApi(this.loginForm.username, this.loginForm.password).then(
-            ({ data }) => {
-              if (data) {
-                this.$store.commit("setUserToken", data);
-                localStorage.token = data;
+            (res) => {
+              console.log(res)
+              console.log(`%c看到雷锋`,`color:red;font-size:16px;background:transparent`)
+              if (res.success) {
+                this.$store.commit("setUserToken", res.data);
+                localStorage.token = res.data;
                 this.$message.success("成功");
                 this.$router.push({ name: "adminWelcome" });
               }else {
-                this.$message.fail("登录失败!")
+                this.$message.error("登录失败!")
               }
             }
           );

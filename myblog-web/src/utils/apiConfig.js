@@ -25,6 +25,14 @@ export const getArticleById = (data) => {
 export const loginApi = (username, password) => {
   return axios.post(`/admin/login?username=${username}&password=${password}`);
 };
+export const getUsers = () => {
+  return axios.get(`/admin/users`);
+};export const delUsers = (id) => {
+  return axios.post(`/admin/del/${id}`);
+};
+export const unlockUser = (id) => {
+  return axios.post(`/admin/unlock/${id}`);
+};
 export const regApi = (username, password) => {
   return axios.post(`/admin/reg?username=${username}&password=${password}`);
 };
@@ -64,7 +72,8 @@ export const deleteCommentById = (id) => {
 };
 export const checkCommentById = (id) => {
   return axios.post(`/admin/comment/delete/${id}`);
-};export const hideCommentById = (id) => {
+};
+export const hideCommentById = (id) => {
   return axios.post(`/admin/comment/isDel/${id}`);
 };
 export const getTagList = () => {

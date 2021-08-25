@@ -13,7 +13,8 @@ import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
 import '@kangc/v-md-editor/lib/theme/style/github.css';
 // highlightjs
 import hljs from 'highlight.js';
-
+import store from "@/store";
+import dayjs from "dayjs";
 VMdPreview.use(githubTheme, {
     Hljs: hljs,
 });
@@ -23,8 +24,8 @@ VMdEditor.use(githubTheme, {
 const app = createApp(App);
 app.use(VMdPreview);
 app.use(VMdEditor);
-import store from "@/store";
 
+app.config.globalProperties.$dayjs=dayjs
 app.use(ElementPlus);
 app.use(router);
 app.use(store);

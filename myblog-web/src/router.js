@@ -17,6 +17,7 @@ import LinkList from "@/view/admin/LinkList.vue";
 import SystemInfo from "@/view/admin/SystemInfo.vue";
 import ArticleEdit from "@/view/admin/ArticleEdit.vue";
 import UserInfo from "@/view/admin/UserInfo.vue";
+import AdminList from "@/view/admin/AdminList.vue";
 
 const routes = [
   {
@@ -111,6 +112,10 @@ const routes = [
             path: "user-info",
             name: "userInfo",
             component: UserInfo,
+          },{
+            path: "users",
+            name: "users",
+            component: AdminList,
           },
         ],
       },

@@ -26,6 +26,8 @@
           <template #title> <i class="el-icon-setting"></i>系统管理</template>
           <el-menu-item index="/admin/home/system-info">
             系统信息
+          </el-menu-item> <el-menu-item index="/admin/home/users">
+            用户列表
           </el-menu-item>
           <el-menu-item index="/admin/home/link-list"> 链接列表 </el-menu-item>
         </el-sub-menu>
@@ -107,7 +109,7 @@ export default defineComponent({
   height: 100vh;
   display: flex;
   .sidebar {
-    width: 300px;
+    width: 200px;
   }
   .right-content {
     flex: 1;

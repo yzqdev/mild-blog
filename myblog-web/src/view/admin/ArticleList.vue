@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="data">
+  <el-table :data="data" fit>
     <el-table-column prop="blogTitle" label="博客标题"></el-table-column>
     <el-table-column prop="blogCategoryName" label="博客分类"><template v-slot="{row}">
       {{row.blogCategoryId}}
@@ -10,7 +10,7 @@
       </template>
     </el-table-column>
     <el-table-column prop="blogViews" label="阅读量"></el-table-column>
-    <el-table-column prop="updateTime" label="修改时间"></el-table-column>
+    <el-table-column width="180" prop="updateTime" label="修改时间"></el-table-column>
     <el-table-column prop="blogStatus" label="文章状态"></el-table-column>
     <el-table-column prop="isDeleted" label="删除状态"
       ><template v-slot="{ row }">
