@@ -34,8 +34,8 @@ CategoryMapper categoryMapper;
     public boolean clearCategory(Integer id) {
         Category category = categoryMapper.selectById(id);
         BlogInfo blogInfo = new BlogInfo()
-                .setBlogCategoryId(Integer.valueOf(SysConfigConstants.DEFAULT_CATEGORY.getConfigField()))
-                .setBlogCategoryName(SysConfigConstants.DEFAULT_CATEGORY.getConfigName());
+                .setBlogCategoryId(Integer.valueOf(SysConfigConstants.DEFAULT_CATEGORY.getConfigField()));
+                //.setBlogCategoryName(SysConfigConstants.DEFAULT_CATEGORY.getConfigName());
         LambdaUpdateWrapper<BlogInfo> updateWrapper = Wrappers.<BlogInfo>lambdaUpdate()
                 .eq(BlogInfo::getBlogCategoryId, category.getCategoryId());
         blogInfoMapper.update(blogInfo, updateWrapper);

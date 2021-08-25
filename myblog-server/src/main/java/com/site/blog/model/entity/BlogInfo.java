@@ -65,13 +65,7 @@ public class BlogInfo implements Serializable {
      */
     @TableField("blog_category_id")
     private Integer blogCategoryId;
-
-    /**
-     * 博客分类(冗余字段)
-     */
-    @TableField("blog_category_name")
-    private String blogCategoryName;
-
+ 
 
     /**
      * 0-草稿 1-发布

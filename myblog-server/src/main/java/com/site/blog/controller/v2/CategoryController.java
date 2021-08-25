@@ -96,8 +96,8 @@ public class CategoryController {
         boolean flag = sqlCategory.getCategoryName().equals(category.getCategoryName());
         if (!flag) {
             BlogInfo blogInfo = new BlogInfo()
-                    .setBlogCategoryId(category.getCategoryId())
-                    .setBlogCategoryName(category.getCategoryName());
+                    .setBlogCategoryId(category.getCategoryId());
+
             UpdateWrapper<BlogInfo> updateWrapper = new UpdateWrapper<>();
             updateWrapper.lambda().eq(BlogInfo::getBlogCategoryId, category.getCategoryId());
             blogInfoService.update(blogInfo, updateWrapper);

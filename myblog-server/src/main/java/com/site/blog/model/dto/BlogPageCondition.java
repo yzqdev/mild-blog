@@ -22,6 +22,6 @@ public class BlogPageCondition {
 
     private String tagId;
 
-    private String categoryName;
+    private String categoryId;
 
 }

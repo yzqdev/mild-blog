@@ -83,7 +83,7 @@ public class HomeBlogController {
         return this.page(new BlogPageCondition()
                 .setPageNum(1)
                 .setPageName("分类")
-                .setCategoryName(categoryName));
+                .setCategoryId(categoryName));
     }
 
     /**
@@ -165,7 +165,7 @@ public class HomeBlogController {
         Page<BlogInfo> page = new Page<>(condition.getPageNum(), condition.getPageSize());
         LambdaQueryWrapper<BlogInfo> sqlWrapper = Wrappers.<BlogInfo>lambdaQuery()
                 .like(Objects.nonNull(condition.getKeyword()), BlogInfo::getBlogTitle, condition.getKeyword())
-                .eq(Objects.nonNull(condition.getCategoryName()), BlogInfo::getBlogCategoryName, condition.getCategoryName())
+                .eq(Objects.nonNull(condition.getCategoryId()), BlogInfo::getBlogCategoryId, condition.getCategoryId())
                 .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
                 .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
         //获取tag下的文章
@@ -185,8 +185,8 @@ public class HomeBlogController {
         if (Objects.nonNull(condition.getTagId())) {
             result.put("tagId", condition.getTagId());
         }
-        if (Objects.nonNull(condition.getCategoryName())) {
-            result.put("categoryName", condition.getCategoryName());
+        if (Objects.nonNull(condition.getCategoryId())) {
+            result.put("categoryName", condition.getCategoryId());
         }
         result.put("blogPageResult", blogPageResult);
         result.put("pageName", condition.getPageName());
