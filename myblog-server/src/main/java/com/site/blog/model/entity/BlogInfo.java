@@ -103,16 +103,16 @@ public class BlogInfo implements Serializable {
     private Integer isDeleted;
 
     /**
-     * 添加时间
+     * 添加时间,将Date转换成String,一般后台传值给前台时
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")    //将Date转换成String,一般后台传值给前台时
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField("create_time")
     private Timestamp createTime;
 
     /**
-     * 修改时间
+     * 修改时间//将Date转换成String,一般后台传值给前台时
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")    //将Date转换成String,一般后台传值给前台时
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField("update_time")
     private Timestamp updateTime;
 

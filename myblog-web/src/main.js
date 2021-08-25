@@ -26,7 +26,7 @@ app.use(VMdPreview);
 app.use(VMdEditor);
 
 app.config.globalProperties.$dayjs=dayjs
-app.use(ElementPlus);
+app.use(ElementPlus   );
 app.use(router);
 app.use(store);
 app.mount("#app");

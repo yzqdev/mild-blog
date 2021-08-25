@@ -54,6 +54,8 @@ private static final long serialVersionUID=1L;
      */
     @TableField("locked")
     private Integer locked;
-
-
+    /**
+     * 0  普通用户,1管理员
+     */
+    private Integer role;
 }

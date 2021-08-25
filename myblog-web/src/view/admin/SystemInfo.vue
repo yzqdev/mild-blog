@@ -25,6 +25,7 @@
     :row-class-name="tableRowClassName"
     :cell-class-name="tableCellClassName"
   >
+    <el-table-column prop="configField" label="字段名"></el-table-column>
     <el-table-column prop="configName" label="参数名">
       <template v-slot="scope"
         ><span

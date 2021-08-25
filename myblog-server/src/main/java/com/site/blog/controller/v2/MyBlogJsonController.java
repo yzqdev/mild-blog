@@ -109,7 +109,7 @@ public class MyBlogJsonController {
      * @return java.lang.String
      * @date 2019/9/6 7:04
      */
-    @GetMapping({"/tag/{tagId}"})
+    @PostMapping({"/tag/{tagId}"})
     public Result tag(@PathVariable("tagId") String tagId, @RequestBody PageDto pageDto) {
 
         Page<BlogInfo> page = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());

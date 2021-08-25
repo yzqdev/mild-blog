@@ -83,11 +83,11 @@ public class LinkJsonController {
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
 
-    @DeleteMapping("/link/clear")
-    public Result<String> clearLink(Integer linkId) {
+    @DeleteMapping("/link/clear/{id}")
+    public Result  clearLink(@PathVariable("id") Integer linkId) {
         boolean flag = blogLinkService.removeById(linkId);
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,linkId);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }

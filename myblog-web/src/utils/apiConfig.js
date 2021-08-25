@@ -19,8 +19,8 @@ export const submitComment = (data) => {
 export const getBlogById = (data) => {
   return axios.get("/home/blog/" + data);
 };
-export const getArticleByTag = (data) => {
-  return axios.get("/home/tag/" + data);
+export const getArticleByTag = (id,data) => {
+  return axios.post("/home/tag/" + id,data);
 };
 export const loginApi = (username, password) => {
   return axios.post(`/admin/login?username=${username}&password=${password}`);
@@ -56,6 +56,8 @@ export const editLink = (data) => {
 };
 export const delLink = (data) => {
   return axios.postForm("/admin/link/isDel", data);
+};export const clearLink = (data) => {
+  return axios.delete("/admin/link/clear/"+ data);
 };
 
 export const getUserInfo = () => {

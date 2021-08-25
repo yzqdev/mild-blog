@@ -3,6 +3,12 @@
     <el-table-column prop="loginUserName" label="用户名"></el-table-column>
 
     <el-table-column prop="nickName" label="昵称"></el-table-column>
+    <el-table-column prop="role" label="权限">
+
+      <template v-slot="{row}">
+        {{row.role==0?`普通用户`:`管理员`}}
+      </template>
+    </el-table-column>
     <el-table-column prop="locked" label="是否冻结"><template v-slot="{row}">
       {{row.locked==1?`已冻结`:`正常`}}
     </template></el-table-column>

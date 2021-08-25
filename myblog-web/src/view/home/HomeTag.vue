@@ -16,8 +16,8 @@ export default {
   },
   async created() {
     let id = this.$route.params.id;
-    const { data } = await getArticleByTag(id);
-    this.list = data.blogPageResult.list;
+    const { data } = await getArticleByTag(id, { pageNum: 1, pageSize: 30 });
+    this.list = data.list;
   },
 };
 </script>

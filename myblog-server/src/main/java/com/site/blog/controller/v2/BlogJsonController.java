@@ -11,6 +11,7 @@ import com.site.blog.model.dto.BlogInfoDo;
 import com.site.blog.model.dto.Result;
 import com.site.blog.model.entity.BlogInfo;
 import com.site.blog.model.entity.BlogTagRelation;
+import com.site.blog.model.vo.BlogDetailVO;
 import com.site.blog.service.BlogInfoService;
 import com.site.blog.service.BlogTagRelationService;
 import com.site.blog.util.DateUtils;
@@ -171,12 +172,12 @@ public class BlogJsonController {
      */
 
     @GetMapping("/blog/list")
-    public AjaxResultPage<BlogInfo> getContractList(AjaxPutPage<BlogInfo> ajaxPutPage, BlogInfo condition) {
+    public AjaxResultPage  getBlogList(AjaxPutPage<BlogInfo> ajaxPutPage, BlogInfo condition) {
         QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>(condition);
         queryWrapper.lambda().orderByDesc(BlogInfo::getUpdateTime);
-        Page<BlogInfo> page = ajaxPutPage.putPageToPage();
+        Page<BlogDetailVO> page = ajaxPutPage.putPageToPage();
         blogInfoService.page(page, queryWrapper);
-        AjaxResultPage<BlogInfo> result = new AjaxResultPage<>();
+        AjaxResultPage  result = new AjaxResultPage<>();
         result.setData(page.getRecords());
         result.setCount(page.getTotal());
         return result;

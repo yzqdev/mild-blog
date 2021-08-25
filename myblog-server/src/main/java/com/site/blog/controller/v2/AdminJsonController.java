@@ -108,6 +108,7 @@ public class AdminJsonController {
             regUser.setLoginUserName(username);
             regUser.setLoginPassword(password);
             regUser.setLocked(1);
+            regUser.setRole(0);
             adminUserService.register(regUser);
 
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, "/admin/v1/index");

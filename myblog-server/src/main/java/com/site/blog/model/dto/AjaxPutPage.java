@@ -1,6 +1,8 @@
 package com.site.blog.model.dto;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.Data;
+import lombok.ToString;
 
 /**
  * @program: FreeMarkeDemo
@@ -8,6 +10,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
  * @author: 南街
  * @create: 2019-01-03 11:40
  **/
+@Data
+@ToString
 public class AjaxPutPage<T> {
     /**
      * 当前页码
@@ -29,38 +33,6 @@ public class AjaxPutPage<T> {
      */
     T condition;
 
-    public Integer getPage() {
-        return page;
-    }
-
-    public void setPage(Integer page) {
-        this.page = page;
-        this.start = (this.page - 1) * this.limit;
-    }
-
-    public Integer getLimit() {
-        return limit;
-    }
-
-    public void setLimit(Integer limit) {
-        this.limit = limit;
-    }
-
-    public Integer getStart() {
-        return start;
-    }
-
-    public void setStart(Integer start) {
-        this.start = start;
-    }
-
-    public T getCondition() {
-        return condition;
-    }
-
-    public void setCondition(T condition) {
-        this.condition = condition;
-    }
 
     /**
      * 将符合Layui的格式转成mybtais-plus分页的page
@@ -71,13 +43,5 @@ public class AjaxPutPage<T> {
         return new Page<>(this.page, this.limit);
     }
 
-    @Override
-    public String toString() {
-        return "AjaxPutPage{" +
-                "page=" + page +
-                ", limit=" + limit +
-                ", start=" + start +
-                ", condition=" + condition +
-                '}';
-    }
+
 }
