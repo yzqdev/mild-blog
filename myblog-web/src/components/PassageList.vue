@@ -2,7 +2,7 @@
   <div class="passage-list">
     <article class="article" v-for="(item, index) in  list">
       <div class="article-top">
-        <span>{{ item.blogCategoryName }}</span
+        <span class="category-link">{{ item.blogCategoryName }}</span
         ><span class="right">{{ item.updateTime }}</span>
       </div>
       <h1 class="article-title" @click="gotoBlog(item)">
@@ -34,6 +34,13 @@ export default {
     border-bottom: 1px solid #e5e5e5;
     .article-top {
       display: flex;
+      .category-link{
+        cursor: pointer;
+        transition: all 0.3s;
+        &:hover{
+          color: #0d84ff;
+        }
+      }
       .right {
         flex: 1;
         text-align: right;

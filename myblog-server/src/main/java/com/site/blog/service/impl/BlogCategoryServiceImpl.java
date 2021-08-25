@@ -27,10 +27,12 @@ public class BlogCategoryServiceImpl extends ServiceImpl<BlogCategoryMapper, Blo
 
     @Resource
     private BlogInfoMapper blogInfoMapper;
-
+@Resource
+BlogCategoryMapper blogCategoryMapper;
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean clearCategory(BlogCategory blogCategory) {
+    public boolean clearCategory(Integer id) {
+        BlogCategory blogCategory=blogCategoryMapper.selectById(id);
         BlogInfo blogInfo = new BlogInfo()
                 .setBlogCategoryId(Integer.valueOf(SysConfigConstants.DEFAULT_CATEGORY.getConfigField()))
                 .setBlogCategoryName(SysConfigConstants.DEFAULT_CATEGORY.getConfigName());

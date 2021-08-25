@@ -114,10 +114,40 @@ public class MyBlogJsonController {
      */
     @GetMapping({"/tag/{tagId}"})
     public Result tag(@PathVariable("tagId") String tagId) {
-        return this.page(new BlogPageCondition()
-                .setPageNum(1)
-                .setPageName("标签")
-                .setTagId(tagId));
+
+        HashMap<String, Object> result = new HashMap<>();
+        Page<BlogInfo> page = new Page<>(condition.getPageNum(), condition.getPageSize());
+        LambdaQueryWrapper<BlogInfo> sqlWrapper = Wrappers.<BlogInfo>lambdaQuery()
+                .like(Objects.nonNull(condition.getKeyword()), BlogInfo::getBlogTitle, condition.getKeyword())
+                .eq(Objects.nonNull(condition.getCategoryName()), BlogInfo::getBlogCategoryName, condition.getCategoryName())
+                .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
+                .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
+        //获取tag下的文章
+        if (Objects.nonNull(condition.getTagId())) {
+            List<BlogTagRelation> list = blogTagRelationService.list(new QueryWrapper<BlogTagRelation>()
+                    .lambda().eq(BlogTagRelation::getTagId, condition.getTagId()));
+            if (!CollectionUtils.isEmpty(list)) {
+                sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogTagRelation::getBlogId).toArray());
+            }
+        }
+        sqlWrapper.orderByDesc(BlogInfo::getCreateTime);
+        blogInfoService.page(page, sqlWrapper);
+        PageResult blogPageResult = new PageResult(page.getRecords(), page.getTotal(), condition.getPageSize(), condition.getPageNum());
+        if (Objects.nonNull(condition.getKeyword())) {
+            result.put("keyword", condition.getKeyword());
+        }
+        if (Objects.nonNull(condition.getTagId())) {
+            result.put("tagId", condition.getTagId());
+        }
+        if (Objects.nonNull(condition.getCategoryName())) {
+            result.put("categoryName", condition.getCategoryName());
+        }
+        result.put("blogPageResult", blogPageResult);
+        result.put("pageName", condition.getPageName());
+        result.put("newBlogs", blogInfoService.getNewBlog());
+        result.put("hotBlogs", blogInfoService.getHotBlog());
+        result.put("hotTags", blogTagService.getBlogTagCountForIndex());
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, result);
     }
 
     @GetMapping("/configs")
@@ -154,6 +184,7 @@ public class MyBlogJsonController {
                 .eq(Objects.nonNull(condition.getCategoryName()), BlogInfo::getBlogCategoryName, condition.getCategoryName())
                 .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
                 .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
+        //获取tag下的文章
         if (Objects.nonNull(condition.getTagId())) {
             List<BlogTagRelation> list = blogTagRelationService.list(new QueryWrapper<BlogTagRelation>()
                     .lambda().eq(BlogTagRelation::getTagId, condition.getTagId()));

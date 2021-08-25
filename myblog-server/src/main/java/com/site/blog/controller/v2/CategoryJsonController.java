@@ -17,10 +17,7 @@ import com.site.blog.util.ResultGenerator;
 import io.swagger.annotations.Api;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -53,7 +50,7 @@ public class CategoryJsonController {
     @GetMapping("/category/list")
     public Result<List<BlogCategory>> categoryList() {
         QueryWrapper<BlogCategory> queryWrapper = new QueryWrapper<BlogCategory>();
-        queryWrapper.lambda().eq(BlogCategory::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
+        queryWrapper.lambda().eq(BlogCategory::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus()).orderByDesc(BlogCategory::getCreateTime) ;
         List<BlogCategory> list = blogCategoryService.list(queryWrapper);
         if (CollectionUtils.isEmpty(list)) {
             ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
@@ -129,15 +126,15 @@ public class CategoryJsonController {
     /**
      * 清除分类信息
      *
-     * @param blogCategory
+     * @param id category id
      * @return com.site.blog.pojo.dto.Result
      * @date 2019/9/1 15:48
      */
     @ResponseBody
-    @PostMapping("/category/clear")
-    public Result<String> clearCategory(BlogCategory blogCategory) {
-        if (blogCategoryService.clearCategory(blogCategory)) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+    @PostMapping("/category/clear/{id}")
+    public Result  clearCategory(@PathVariable("id") Integer id) {
+        if (blogCategoryService.clearCategory(id)) {
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,id);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
@@ -153,11 +150,11 @@ public class CategoryJsonController {
      */
     @ResponseBody
     @PostMapping("/category/add")
-    public Result<String> addCategory(BlogCategory blogCategory) {
+    public Result addCategory(BlogCategory blogCategory) {
         blogCategory.setCreateTime(DateUtils.getLocalCurrentDate());
         boolean flag = blogCategoryService.save(blogCategory);
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,blogCategory);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }

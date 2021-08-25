@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { getArticleById } from "@/utils/apiConfig";
+import { getArticleByTag } from "@/utils/apiConfig";
 import PassageList from "@/components/PassageList.vue";
 
 export default {
@@ -16,7 +16,7 @@ export default {
   },
   async created() {
     let id = this.$route.params.id;
-    const { data } = await getArticleById(id);
+    const { data } = await getArticleByTag(id);
     this.list = data.blogPageResult.list;
   },
 };

@@ -20,7 +20,7 @@
 
     <div class="blog-comment" v-if="blog.enableComment">
       <article>添加评论</article>
-      <el-form :model="comment" label-width="100px" :rules="commentRule">
+      <el-form :model="comment"  label-position="top" :rules="commentRule">
         <el-form-item prop="commentator">
           <el-input v-model="comment.commentator">
             <template #prepend>昵称</template></el-input

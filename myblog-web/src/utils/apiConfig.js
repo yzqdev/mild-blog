@@ -19,7 +19,7 @@ export const submitComment = (data) => {
 export const getBlogById = (data) => {
   return axios.get("/home/blog/" + data);
 };
-export const getArticleById = (data) => {
+export const getArticleByTag = (data) => {
   return axios.get("/home/tag/" + data);
 };
 export const loginApi = (username, password) => {
@@ -90,6 +90,10 @@ export const clearTagById = (data) => {
 };
 export const getCateList = () => {
   return axios.get(`/admin/category/list`);
+};export const addCateApi = (data) => {
+  return axios.postForm(`/admin/category/add`,data);
+};export const clearCateApi = (data) => {
+  return axios.post(`/admin/category/clear/${data}` );
 };
 export const getCatePaging = ({ page, limit }) => {
   return axios.get(`/admin/category/paging?page=${page}&limit=${limit}`);
