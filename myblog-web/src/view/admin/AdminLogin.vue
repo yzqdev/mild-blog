@@ -1,13 +1,22 @@
 <template>
   <div class="admin-login">
     <div class="admin-container">
+      <h3 class="text-center">{{title}}</h3>
       <el-tabs v-model="activeName" type="card">
         <el-tab-pane label="登录" name="first">
-          <el-form ref="form" :model="loginForm" label-width="80px"
-            ><el-form-item label="用户名">
-              <el-input v-model="loginForm.username"></el-input> </el-form-item
-            ><el-form-item label="密码">
+          <el-form
+            ref="loginForm"
+            :model="loginForm"
+            label-width="80px"
+            :rules="loginRules"
+            ><el-form-item prop="username" label="用户名">
               <el-input
+                v-model="loginForm.username"
+                placeholder="请输入用户名"
+              ></el-input> </el-form-item
+            ><el-form-item prop="password" label="密码">
+              <el-input
+                placeholder="请输入密码"
                 type="password"
                 v-model="loginForm.password"
               ></el-input> </el-form-item
@@ -17,16 +26,25 @@
           ></el-tab-pane
         >
         <el-tab-pane label="注册" name="reg"
-          ><el-form ref="form" :model="regForm" label-width="80px"
-            ><el-form-item label="用户名">
-              <el-input v-model="regForm.username"></el-input> </el-form-item
-            ><el-form-item label="密码">
+          ><el-form
+            ref="regForm"
+            :rules="regRule"
+            :model="regForm"
+            label-width="80px"
+            ><el-form-item prop="username" label="用户名">
               <el-input
+                placeholder="请输入用户名"
+                v-model="regForm.username"
+              ></el-input> </el-form-item
+            ><el-form-item prop="password" label="密码">
+              <el-input
+                placeholder="请输入密码"
                 type="password"
                 v-model="regForm.password"
               ></el-input> </el-form-item
-            ><el-form-item label="确认密码">
+            ><el-form-item prop="password2" label="确认密码">
               <el-input
+                placeholder="请输入密码"
                 type="password"
                 v-model="regForm.password2"
               ></el-input> </el-form-item
@@ -49,29 +67,61 @@ export default defineComponent({
   data() {
     return {
       activeName: "first",
-      loginForm: { username: "yzq", password: "123456" },
-      regForm: { username: "yzq", password: "123456", password2: "123456" },
+      title:'用户登录',
+      loginForm: { username: "", password: "" },
+      regForm: { username: "", password: "", password2: "" },
+      loginRules: {
+        username: [{ required: true, message: "请输入用户名" }],
+        password: [{ required: true, message: "请输入密码" }],
+      },
+      regRule: {
+        username: [{ required: true, message: "请输入用户名" }],
+        password: [{ required: true, message: "请输入密码" }],
+        password2: [{ required: true, message: "请输入确认密码" }],
+      },
     };
+  },
+  watch:{
+    activeName(val ){
+      if (val=='first') {
+        this.title='用户登录'
+      }else{
+        this.title='用户注册'
+      }
+    }
   },
   created() {
     localStorage.clear();
   },
   methods: {
     login() {
-      loginApi(this.loginForm.username, this.loginForm.password).then((res) => {
-        console.log(res);
-        if (res) {
-          this.$store.commit("setUserToken", res.data);
-          localStorage.token = res.data;
-          this.$message.success("成功");
-          this.$router.push({ name: "adminWelcome" });
+      this.$refs.loginForm.validate((valid) => {
+        if (valid) {
+          loginApi(this.loginForm.username, this.loginForm.password).then(
+            ({ data }) => {
+              if (data) {
+                this.$store.commit("setUserToken", data);
+                localStorage.token = data;
+                this.$message.success("成功");
+                this.$router.push({ name: "adminWelcome" });
+              }else {
+                this.$message.fail("登录失败!")
+              }
+            }
+          );
         }
       });
     },
     reg() {
-      regApi(this.regForm.username, this.regForm.password).then(({ data }) => {
-        if (data) {
-          this.$message.success("成功");
+      this.$refs.regForm.validate((valid) => {
+        if (valid) {
+          regApi(this.regForm.username, this.regForm.password).then(
+            ({ data }) => {
+              if (data) {
+                this.$message.success("成功");
+              }
+            }
+          );
         }
       });
     },

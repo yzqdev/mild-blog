@@ -44,7 +44,7 @@ export const getLinkList = ({ page, limit }) => {
   return axios.get(`/admin/link/paging?page=${page}&limit=${limit}`);
 };
 export const editLink = (data) => {
-  return axios.post("/admin/link/edit", data);
+  return axios.postForm("/admin/link/edit", data);
 };
 export const delLink = (data) => {
   return axios.postForm("/admin/link/isDel", data);

@@ -73,6 +73,8 @@ private static final long serialVersionUID=1L;
      */
     @TableField("create_time")
     private Timestamp createTime;
+   @TableField("update_time")
+    private Timestamp updateTime;
 
 
 }

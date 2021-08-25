@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,16 +97,17 @@ public class LinkJsonController {
 
 
     @PostMapping("/link/edit")
-    public Result<String> updateAndSaveLink(BlogLink blogLink) {
+    public Result updateAndSaveLink(BlogLink blogLink) {
         blogLink.setCreateTime(DateUtils.getLocalCurrentDate());
         boolean flag;
         if (blogLink.getLinkId() != null) {
+            blogLink.setUpdateTime(new Timestamp(System.currentTimeMillis()));
             flag = blogLinkService.updateById(blogLink);
         } else {
             flag = blogLinkService.save(blogLink);
         }
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,blogLink.getLinkId());
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }

@@ -1,13 +1,20 @@
 <template>
   <el-button type="primary" @click="addDialogShow">添加链接信息</el-button>
-  <el-dialog width="30%" v-model="addDialogVisible" title="添加系统信息">
+  <el-dialog width="30%" v-model="addDialogVisible" @close="closeAddDialog" title="添加系统信息">
     <el-form :model="addForm">
-      <el-form-item prop="configField" label="字段名"
-        ><el-input v-model="addForm.configField"></el-input> </el-form-item
-      ><el-form-item prop="configName" label="参数名"
-        ><el-input v-model="addForm.configName"></el-input> </el-form-item
-      ><el-form-item prop="configValue" label="参数值"
-        ><el-input v-model="addForm.configValue"></el-input>
+      <el-form-item prop="linkName" label="链接名"
+      >
+        <el-input v-model="addForm.linkName"></el-input>
+      </el-form-item
+      >
+      <el-form-item prop="linkUrl" label="链接url"
+      >
+        <el-input v-model="addForm.linkUrl"></el-input>
+      </el-form-item
+      >
+      <el-form-item prop="linkDescription" label="链接描述"
+      >
+        <el-input v-model="addForm.linkDescription"></el-input>
       </el-form-item>
     </el-form>
 
@@ -26,27 +33,27 @@
     <el-table-column prop="linkType" label="当前状态">
       <template v-slot="{ row }">
         <el-switch
-          v-model="row.isDeleted"
-          @change="changeLinkType($event,row)"
-          active-text="已删除"
-          inactive-text="未删除"
-          active-color="red"
-          :active-value="1"
-          :inactive-value="0"
+            v-model="row.isDeleted"
+            @change="changeLinkType($event,row)"
+            active-text="已删除"
+            inactive-text="未删除"
+            active-color="red"
+            :active-value="1"
+            :inactive-value="0"
         ></el-switch>
       </template>
     </el-table-column>
     <el-table-column label="操作">
       <template v-slot="{ row }">
-        <el-button type="primary">编辑</el-button>
+        <el-button type="primary" @click="editLinkClick(row)">编辑</el-button>
         <el-popconfirm
-          title="确定删除吗？"
-          confirmButtonText="好的"
-          cancelButtonText="不用了"
-          icon="el-icon-info"
-          placement="right"
-          iconColor="red"
-          @confirm="deleteRow(row)"
+            title="确定删除吗？"
+            confirmButtonText="好的"
+            cancelButtonText="不用了"
+            icon="el-icon-info"
+            placement="right"
+            iconColor="red"
+            @confirm="deleteRow(row)"
         >
           <template #reference>
             <el-button type="danger">删除</el-button>
@@ -58,7 +65,7 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
 import {
   addSystemInfo, delLink,
   delSystemInfo,
@@ -74,43 +81,61 @@ export default defineComponent({
       data: "",
       addDialogVisible: false,
       addForm: {
-        configName: "name",
-        configField: "field",
-        configValue: "value",
-      },linkType:''
+        linkId:null,
+        linkName: "",
+        linkUrl: "",
+        linkDescription: "",
+      }, linkType: ''
     };
   },
   methods: {
-    changeLinkType(e,row) {
+    changeLinkType(e, row) {
       console.log(e);
-      delLink({linkId:row.linkId,isDeleted:e}).then(({ data }) => {
+      delLink({linkId: row.linkId, isDeleted: e}).then(({data}) => {
         console.log(data);
-        if (data ) {
+        if (data) {
           this.$message.success("操作成功")
         }
       });
     },
+    editLinkClick(row){
+      this.addForm=row
+      this.addDialogVisible=true
+    },
     deleteRow(row) {
-      console.log(row);
-      delSystemInfo(row.configField).then(({ data }) => {
-        this.getData();
-        this.$message.success("成功");
-      });
+      this.addForm =  {
+        linkName: "",
+        linkUrl: "",
+        linkDescription: "",
+      };
+
+    },
+    closeAddDialog(){
+      this.addForm= {
+        linkId:null,
+        linkName: "",
+        linkUrl: "",
+        linkDescription: "",
+      }
+
     },
     addDialogShow() {
       this.addDialogVisible = true;
     },
     getData() {
-      getLinkList({ page: 1, limit: 30 }).then(({ data }) => {
+      getLinkList({page: 1, limit: 30}).then(({data}) => {
         console.log(data);
         this.data = data.data;
       });
     },
     confirmAdd() {
-      addSystemInfo(this.addForm).then(({ data }) => {
-        this.getData();
-        this.$message.success("成功");
-        this.addDialogVisible = false;
+
+      editLink(this.addForm).then(({data}) => {
+        if (data) {
+          this.getData();
+          this.$message.success("成功");
+          this.addDialogVisible = false;
+        }
       });
     },
   },

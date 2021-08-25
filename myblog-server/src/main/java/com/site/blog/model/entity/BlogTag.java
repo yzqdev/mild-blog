@@ -47,6 +47,7 @@ private static final long serialVersionUID=1L;
     /**
      * 创建时间
      */
+
     @TableField("create_time")
     private Timestamp createTime;
 

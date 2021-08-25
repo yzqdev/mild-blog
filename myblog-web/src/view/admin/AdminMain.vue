@@ -5,7 +5,7 @@
         <el-menu-item index="/admin/home/welcome">
           <template #title><i class="el-icon-menu"></i>系统信息</template>
         </el-menu-item>
-        <el-submenu index="2">
+        <el-sub-menu index="2">
           <template #title><i class="el-icon-menu"></i>文章管理</template>
           <el-menu-item index="/admin/home/article-edit">
             文章编辑
@@ -20,15 +20,15 @@
           <el-menu-item index="/admin/home/category-list">
             分类列表
           </el-menu-item>
-        </el-submenu>
+        </el-sub-menu>
 
-        <el-submenu index="4">
+        <el-sub-menu index="4">
           <template #title> <i class="el-icon-setting"></i>系统管理</template>
           <el-menu-item index="/admin/home/system-info">
             系统信息
           </el-menu-item>
           <el-menu-item index="/admin/home/link-list"> 链接列表 </el-menu-item>
-        </el-submenu>
+        </el-sub-menu>
       </el-menu>
     </aside>
     <div class="right-content">

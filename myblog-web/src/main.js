@@ -1,9 +1,9 @@
 import ElementPlus from "element-plus";
-import "element-plus/lib/theme-chalk/index.css";
+import "element-plus/dist/index.css";
 import { createApp } from "vue";
 import router from "./router";
 import App from "./App.vue";
-import "./index.css";
+import "./index.less";
 import VMdEditor from '@kangc/v-md-editor';
 import VMdPreview from '@kangc/v-md-editor/lib/preview';
 import '@kangc/v-md-editor/lib/style/preview.css';
