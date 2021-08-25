@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author yzq
@@ -31,7 +32,7 @@ public class BlogInfoDo {
      * 博客自定义路径url
      */
 
-private String blogSubUrl;
+    private String blogSubUrl;
     /**
      * 博客前言
      */
@@ -47,16 +48,12 @@ private String blogSubUrl;
      */
     private Integer blogCategoryId;
 
-    /**
-     * 博客分类(冗余字段)
-     */
-
 
     /**
-     * 博客标签(冗余字段)
+     * 博客标签ids
      */
 
-private String blogTags;
+    private List<Integer> blogTagIds;
     /**
      * 0-草稿 1-发布
      */

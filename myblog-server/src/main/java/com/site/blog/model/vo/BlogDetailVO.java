@@ -1,5 +1,6 @@
 package com.site.blog.model.vo;
 
+import io.swagger.models.auth.In;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -13,17 +14,17 @@ public class BlogDetailVO {
 
     private Integer blogCategoryId;
 
-    private long commentCount;
+    private Long commentCount;
 
     private String blogCategoryIcon;
 
-    private String blogCategoryName;
+
 
     private String blogCoverImage;
 
     private Long blogViews;
 
-    private List<String> blogTags;
+    private List<Integer> blogTagIds;
 
     private String blogContent;
 

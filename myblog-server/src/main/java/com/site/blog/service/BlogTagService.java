@@ -3,6 +3,7 @@ package com.site.blog.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.site.blog.model.entity.BlogCategory;
 import com.site.blog.model.entity.BlogConfig;
+import com.site.blog.model.entity.BlogTag;
 
 /**
  * @author yzq
@@ -10,5 +11,5 @@ import com.site.blog.model.entity.BlogConfig;
  * @date:Created time 2021/8/26 0:00
  * @modified By:
  */
-public interface BlogCategoryService extends IService<BlogCategory> {
+public interface BlogTagService extends IService<BlogTag> {
 }

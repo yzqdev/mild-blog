@@ -63,8 +63,8 @@ export const delLink = (data) => {
 export const getUserInfo = () => {
   return axios.get("/admin/getUser");
 };
-export const getBlogList = ({ page, limit }) => {
-  return axios.get(`/admin/blog/list?page=${page}&limit=${limit}`);
+export const getBlogList = ({  pageNum,pageSize }) => {
+  return axios.get(`/admin/blog/list?pageNum=${pageNum}&pageSize=${pageSize}`);
 };
 export const getCommentList = ({ page, limit }) => {
   return axios.get(`/admin/comment/paging?page=${page}&limit=${limit}`);

@@ -18,7 +18,7 @@
       <el-form-item label="标签"
         ><el-select
           style="width: 100%"
-          v-model="articleForm.blogTags"
+          v-model="articleForm.blogTagIds"
           multiple
           placeholder="请选择"
         >
@@ -98,12 +98,12 @@ export default {
     return {
       articleForm: {
         blogId: "",
-        blogTitle: "",
-        blogTags: [],
-        blogCategoryId: undefined,
-        blogContent: "",
-        blogPreface: "",
-        blogSubUrl: "",
+        blogTitle: "112",
+        blogTagIds: [],
+        blogCategoryId: 29,
+        blogContent: "1contet",
+        blogPreface: "22",
+        blogSubUrl: "33",
         blogStatus: 0,
         enableComment: 0,
       },
@@ -115,13 +115,9 @@ export default {
   methods: {
     getData() {
       getAdminBlogById(this.$route.query.id).then(({ data }) => {
-        console.log(
-          `%c这是data`,
-          `color:red;font-size:16px;background:transparent`
-        );
-        console.log(data);
+
         this.articleForm = data;
-        this.articleForm.blogTags = this.articleForm.blogTags.split(",");
+
       });
     },
     tagList() {
@@ -139,7 +135,6 @@ export default {
         this.articleForm.blogId = +this.$route.query.id;
       }
 
-      this.articleForm.blogTags = this.articleForm.blogTags.join();
       addBlog(this.articleForm).then((data) => {
         console.log(data);
         if (data) {

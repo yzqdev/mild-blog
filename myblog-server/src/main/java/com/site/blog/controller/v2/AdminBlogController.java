@@ -1,19 +1,18 @@
 package com.site.blog.controller.v2;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.site.blog.constants.DeleteStatusEnum;
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.constants.UploadConstants;
-import com.site.blog.model.dto.AjaxPutPage;
-import com.site.blog.model.dto.AjaxResultPage;
-import com.site.blog.model.dto.BlogInfoDo;
-import com.site.blog.model.dto.Result;
+import com.site.blog.model.dto.*;
 import com.site.blog.model.entity.BlogInfo;
 import com.site.blog.model.entity.BlogTag;
 import com.site.blog.model.vo.BlogDetailVO;
 import com.site.blog.service.BlogInfoService;
 import com.site.blog.service.BlogService;
+import com.site.blog.service.BlogTagService;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
 import com.site.blog.util.UploadFileUtils;
@@ -48,6 +47,8 @@ public class AdminBlogController {
     @Resource
     private BlogInfoService blogInfoService;
     @Resource
+    private BlogTagService blogTagService;
+            @Resource
     private BlogService blogService;
 
     /**
@@ -78,10 +79,18 @@ public class AdminBlogController {
     }
 
     @GetMapping("/blog/get/{id}")
-    public Result getBlogById(@PathVariable("id") String id) {
+    public Result getBlogById(@PathVariable("id") Integer id) {
 
         BlogInfo blogInfo = blogInfoService.getById(id);
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogInfo);
+        BlogDetailVO blogDetailVO=new BlogDetailVO();
+        blogDetailVO.setBlogContent(blogInfo.getBlogContent());
+        blogDetailVO.setBlogTitle(blogInfo.getBlogTitle());
+        blogDetailVO.setBlogViews(blogInfo.getBlogViews());
+        blogDetailVO.setBlogCategoryId(blogInfo.getBlogCategoryId());
+        QueryWrapper<BlogTag> queryWrapper=new QueryWrapper<BlogTag>().eq("blog_id",id);
+        List<Integer> ids=blogTagService.list(queryWrapper).stream().map(BlogTag::getTagId).collect(Collectors.toList());
+        blogDetailVO.setBlogTagIds(ids);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogDetailVO);
     }
 
     /**
@@ -152,6 +161,13 @@ public class AdminBlogController {
         blogInfo.setBlogStatus(1);
 
         if (blogInfoService.saveOrUpdate(blogInfo)) {
+           for (Integer tagId:blogInfoDo.getBlogTagIds()){
+               BlogTag blogTag=new BlogTag();
+               blogTag.setBlogId(blogInfo.getBlogId());
+               blogTag.setTagId(tagId);
+               blogTag.setCreateTime(DateUtils.getLocalCurrentDate());
+               blogTagService.save(blogTag);
+           }
             //blogService.removeAndsaveBatch(Arrays.asList(blogInfo.getBlogTags().split(",")), blogInfo);
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
         }
@@ -161,17 +177,17 @@ public class AdminBlogController {
     /**
      * 文章分页列表
      *
-     * @param ajaxPutPage 分页参数
+     * @param pageDto 分页参数
 
      * @return com.site.blog.pojo.dto.AjaxResultPage<com.site.blog.entity.BlogInfo>
      * @date 2019/8/28 16:43
      */
 
     @GetMapping("/blog/list")
-    public AjaxResultPage<BlogDetailVO>  getBlogList(AjaxPutPage  ajaxPutPage ) {
+    public AjaxResultPage<BlogDetailVO>  getBlogList(PageDto pageDto) {
         QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>( );
         queryWrapper.lambda().orderByDesc(BlogInfo::getUpdateTime);
-        Page<BlogInfo> page = ajaxPutPage.putPageToPage();
+        IPage<BlogInfo> page = new Page<>(pageDto.getPageNum(),pageDto.getPageSize());
         blogInfoService.page(page, queryWrapper);
         AjaxResultPage  result = new AjaxResultPage<>();
         result.setData(page.getRecords());

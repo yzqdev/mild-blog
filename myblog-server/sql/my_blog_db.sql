@@ -11,7 +11,7 @@
  Target Server Version : 80023
  File Encoding         : 65001
 
- Date: 25/08/2021 23:45:44
+ Date: 26/08/2021 00:13:45
 */
 
 SET NAMES utf8mb4;
@@ -36,6 +36,22 @@ CREATE TABLE `tb_admin_user`  (
 -- ----------------------------
 INSERT INTO `tb_admin_user` VALUES (1, 'admin', '670b14728ad9902aecba32e22fa4f6bd', '南街', 1, 1);
 INSERT INTO `tb_admin_user` VALUES (4, 'yzq', 'e10adc3949ba59abbe56e057f20f883e', NULL, 0, 1);
+
+-- ----------------------------
+-- Table structure for tb_blog_category
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_blog_category`;
+CREATE TABLE `tb_blog_category`  (
+  `relation_id` int NOT NULL,
+  `blog_id` int NULL DEFAULT NULL,
+  `category_id` int NULL DEFAULT NULL,
+  `create_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`relation_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tb_blog_category
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for tb_blog_config

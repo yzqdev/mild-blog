@@ -5,7 +5,7 @@
       {{row.blogCategoryId}}
     </template></el-table-column>
     <el-table-column prop="blogTags" label="博客标签">
-       
+
     </el-table-column>
     <el-table-column prop="blogViews" label="阅读量"></el-table-column>
     <el-table-column width="180" prop="updateTime" label="修改时间"></el-table-column>
@@ -88,7 +88,7 @@ export default defineComponent({
       });
     },
     getData() {
-      getBlogList({ page: 1, limit: 30 }).then(({ data }) => {
+      getBlogList({ pageNum: 1, pageSize: 30 }).then(({ data }) => {
         console.log(data);
         this.data = data;
       });
