@@ -72,11 +72,6 @@ public class BlogInfo implements Serializable {
     @TableField("blog_category_name")
     private String blogCategoryName;
 
-    /**
-     * 博客标签(冗余字段)
-     */
-    @TableField("blog_tags")
-    private String blogTags;
 
     /**
      * 0-草稿 1-发布

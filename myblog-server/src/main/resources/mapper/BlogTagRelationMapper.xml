@@ -3,7 +3,7 @@
 <mapper namespace="com.site.blog.dao.BlogTagRelationMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.site.blog.model.entity.BlogTagRelation">
+    <resultMap id="BaseResultMap" type="com.site.blog.model.entity.BlogTag">
         <id column="relation_id" property="relationId" />
         <result column="blog_id" property="blogId" />
         <result column="tag_id" property="tagId" />

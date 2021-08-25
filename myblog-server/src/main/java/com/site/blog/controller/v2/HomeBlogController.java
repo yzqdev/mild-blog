@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/v2/home")
 @Api(tags = "首页数据")
-public class MyBlogJsonController {
+public class HomeBlogController {
 
     public static String theme = "amaze";
 
@@ -43,19 +43,19 @@ public class MyBlogJsonController {
     private BlogInfoService blogInfoService;
 
     @Resource
-    private BlogTagService blogTagService;
+    private TagService tagService;
 
     @Resource
     private BlogConfigService blogConfigService;
 
     @Resource
-    private BlogTagRelationService blogTagRelationService;
+    private BlogService blogService;
 
     @Resource
-    private BlogCommentService blogCommentService;
+    private CommentService commentService;
 
     @Resource
-    private BlogLinkService blogLinkService;
+    private LinkService linkService;
 
     /**
      * 博客首页
@@ -119,10 +119,10 @@ public class MyBlogJsonController {
                 .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
         //获取tag下的文章
         if (Objects.nonNull(tagId)) {
-            List<BlogTagRelation> list = blogTagRelationService.list(new QueryWrapper<BlogTagRelation>()
-                    .lambda().eq(BlogTagRelation::getTagId, tagId));
+            List<BlogTag> list = blogService.list(new QueryWrapper<BlogTag>()
+                    .lambda().eq(BlogTag::getTagId, tagId));
             if (!CollectionUtils.isEmpty(list)) {
-                sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogTagRelation::getBlogId).toArray());
+                sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogTag::getBlogId).toArray());
             }
         }
         sqlWrapper.orderByDesc(BlogInfo::getCreateTime);
@@ -170,10 +170,10 @@ public class MyBlogJsonController {
                 .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
         //获取tag下的文章
         if (Objects.nonNull(condition.getTagId())) {
-            List<BlogTagRelation> list = blogTagRelationService.list(new QueryWrapper<BlogTagRelation>()
-                    .lambda().eq(BlogTagRelation::getTagId, condition.getTagId()));
+            List<BlogTag> list = blogService.list(new QueryWrapper<BlogTag>()
+                    .lambda().eq(BlogTag::getTagId, condition.getTagId()));
             if (!CollectionUtils.isEmpty(list)) {
-                sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogTagRelation::getBlogId).toArray());
+                sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogTag::getBlogId).toArray());
             }
         }
         sqlWrapper.orderByDesc(BlogInfo::getCreateTime);
@@ -192,7 +192,7 @@ public class MyBlogJsonController {
         result.put("pageName", condition.getPageName());
         result.put("newBlogs", blogInfoService.getNewBlog());
         result.put("hotBlogs", blogInfoService.getHotBlog());
-        result.put("hotTags", blogTagService.getBlogTagCountForIndex());
+        result.put("hotTags", tagService.getBlogTagCountForIndex());
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, result);
     }
 
@@ -207,28 +207,28 @@ public class MyBlogJsonController {
     public Result  detail(@PathVariable("blogId") Long blogId) {
         // 获得文章info
         BlogInfo blogInfo = blogInfoService.getById(blogId);
-        List<BlogTagRelation> blogTagRelations = blogTagRelationService.list(new QueryWrapper<BlogTagRelation>()
+        List<BlogTag> blogTags = blogService.list(new QueryWrapper<BlogTag>()
                 .lambda()
-                .eq(BlogTagRelation::getBlogId, blogId));
+                .eq(BlogTag::getBlogId, blogId));
         blogInfoService.updateById(new BlogInfo()
                 .setBlogId(blogInfo.getBlogId())
                 .setBlogViews(blogInfo.getBlogViews() + 1));
 
         // 获得关联的标签列表
         List<Integer> tagIds;
-        List<BlogTag> tagList = new ArrayList<>();
-        if (!blogTagRelations.isEmpty()) {
-            tagIds = blogTagRelations.stream()
-                    .map(BlogTagRelation::getTagId).collect(Collectors.toList());
-            tagList = blogTagService.list(new QueryWrapper<BlogTag>().lambda().in(BlogTag::getTagId, tagIds));
+        List<Tag> tagList = new ArrayList<>();
+        if (!blogTags.isEmpty()) {
+            tagIds = blogTags.stream()
+                    .map(BlogTag::getTagId).collect(Collectors.toList());
+            tagList = tagService.list(new QueryWrapper<Tag>().lambda().in(Tag::getTagId, tagIds));
         }
 
         // 关联评论的Count
-        long blogCommentCount = blogCommentService.count(new QueryWrapper<BlogComment>()
+        long blogCommentCount = commentService.count(new QueryWrapper<Comment>()
                 .lambda()
-                .eq(BlogComment::getCommentStatus, CommentStatusEnum.ALLOW.getStatus())
-                .eq(BlogComment::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus())
-                .eq(BlogComment::getBlogId, blogId));
+                .eq(Comment::getCommentStatus, CommentStatusEnum.ALLOW.getStatus())
+                .eq(Comment::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus())
+                .eq(Comment::getBlogId, blogId));
         HashMap<String, Object> result = new HashMap<>();
         BlogDetailVO blogDetailVO = new BlogDetailVO();
         BeanUtils.copyProperties(blogInfo, blogDetailVO);
@@ -249,15 +249,15 @@ public class MyBlogJsonController {
      */
     @GetMapping("/blog/listComment")
     @ResponseBody
-    public AjaxResultPage<BlogComment> listComment(AjaxPutPage<BlogComment> ajaxPutPage, Integer blogId) {
-        Page<BlogComment> page = ajaxPutPage.putPageToPage();
-        blogCommentService.page(page, new QueryWrapper<BlogComment>()
+    public AjaxResultPage<Comment> listComment(AjaxPutPage<Comment> ajaxPutPage, Integer blogId) {
+        Page<Comment> page = ajaxPutPage.putPageToPage();
+        commentService.page(page, new QueryWrapper<Comment>()
                 .lambda()
-                .eq(BlogComment::getBlogId, blogId)
-                .eq(BlogComment::getCommentStatus, CommentStatusEnum.ALLOW.getStatus())
-                .eq(BlogComment::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus())
-                .orderByDesc(BlogComment::getCommentCreateTime));
-        AjaxResultPage<BlogComment> ajaxResultPage = new AjaxResultPage<>();
+                .eq(Comment::getBlogId, blogId)
+                .eq(Comment::getCommentStatus, CommentStatusEnum.ALLOW.getStatus())
+                .eq(Comment::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus())
+                .orderByDesc(Comment::getCommentCreateTime));
+        AjaxResultPage<Comment> ajaxResultPage = new AjaxResultPage<>();
         ajaxResultPage.setCount(page.getTotal());
         ajaxResultPage.setData(page.getRecords());
         return ajaxResultPage;
@@ -271,14 +271,14 @@ public class MyBlogJsonController {
      */
     @GetMapping({"/link"})
     public Result link() {
-        List<BlogLink> favoriteLinks = blogLinkService.list(new QueryWrapper<BlogLink>()
-                .lambda().eq(BlogLink::getLinkType, LinkConstants.LINK_TYPE_FRIENDSHIP.getLinkTypeId())
+        List<Link> favoriteLinks = linkService.list(new QueryWrapper<Link>()
+                .lambda().eq(Link::getLinkType, LinkConstants.LINK_TYPE_FRIENDSHIP.getLinkTypeId())
         );
-        List<BlogLink> recommendLinks = blogLinkService.list(new QueryWrapper<BlogLink>()
-                .lambda().eq(BlogLink::getLinkType, LinkConstants.LINK_TYPE_RECOMMEND.getLinkTypeId())
+        List<Link> recommendLinks = linkService.list(new QueryWrapper<Link>()
+                .lambda().eq(Link::getLinkType, LinkConstants.LINK_TYPE_RECOMMEND.getLinkTypeId())
         );
-        List<BlogLink> personalLinks = blogLinkService.list(new QueryWrapper<BlogLink>()
-                .lambda().eq(BlogLink::getLinkType, LinkConstants.LINK_TYPE_PRIVATE.getLinkTypeId())
+        List<Link> personalLinks = linkService.list(new QueryWrapper<Link>()
+                .lambda().eq(Link::getLinkType, LinkConstants.LINK_TYPE_PRIVATE.getLinkTypeId())
         );
         //判断友链类别并封装数据 0-友链 1-推荐 2-个人网站
         HashMap<String, Object> result = new HashMap<>();
@@ -298,15 +298,15 @@ public class MyBlogJsonController {
     @PostMapping(value = "/blog/comment")
     @ResponseBody
     public Result<String> comment(HttpServletRequest request,
-                                  @Validated BlogComment blogComment) {
+                                  @Validated Comment comment) {
         String ref = request.getHeader("Referer");
         // 对非法字符进行转义，防止xss漏洞
-        blogComment.setCommentBody(StringEscapeUtils.escapeHtml4(blogComment.getCommentBody()));
-        blogComment.setCommentStatus(1);
+        comment.setCommentBody(StringEscapeUtils.escapeHtml4(comment.getCommentBody()));
+        comment.setCommentStatus(1);
         if (StringUtils.isEmpty(ref)) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "非法请求");
         }
-        boolean flag = blogCommentService.save(blogComment);
+        boolean flag = commentService.save(comment);
         if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
         }

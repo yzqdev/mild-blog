@@ -26,7 +26,7 @@ import javax.validation.constraints.*;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class BlogComment implements Serializable {
+public class Comment implements Serializable {
 
 private static final long serialVersionUID=1L;
 

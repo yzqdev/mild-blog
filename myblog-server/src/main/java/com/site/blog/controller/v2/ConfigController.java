@@ -26,7 +26,7 @@ import java.util.List;
 @RequestMapping("/v2/admin")
 @Api(tags = "配置信息")
 @Slf4j
-public class ConfigJsonController {
+public class ConfigController {
 
     @Resource
     private BlogConfigService blogConfigService;

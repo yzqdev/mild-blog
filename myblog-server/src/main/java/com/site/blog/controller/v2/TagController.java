@@ -7,12 +7,11 @@ import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.model.dto.AjaxPutPage;
 import com.site.blog.model.dto.AjaxResultPage;
 import com.site.blog.model.dto.Result;
-import com.site.blog.model.entity.BlogTag;
-import com.site.blog.service.BlogTagService;
+import com.site.blog.model.entity.Tag;
+import com.site.blog.service.TagService;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,10 +27,10 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/v2/admin")
-public class TagJsonController {
+public class TagController {
 
     @Resource
-    private BlogTagService blogTagService;
+    private TagService tagService;
 
 
      
@@ -39,15 +38,15 @@ public class TagJsonController {
     /**
      * @Description: 返回未删除状态下的所有标签
      * @Param: []
-     * @return: com.zhulin.blog.dto.Result<com.zhulin.blog.entity.BlogTag>
+     * @return: com.zhulin.blog.dto.Result<com.zhulin.blog.entity.Tag>
      * @date: 2019/8/26 10:13
      */
      
     @GetMapping("/tags/list")
-    public Result<List<BlogTag>> tagsList(){
-        QueryWrapper<BlogTag> queryWrapper = new QueryWrapper<BlogTag>();
-        queryWrapper.lambda().eq(BlogTag::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
-        List<BlogTag> list = blogTagService.list( );
+    public Result<List<Tag>> tagsList(){
+        QueryWrapper<Tag> queryWrapper = new QueryWrapper<Tag>();
+        queryWrapper.lambda().eq(Tag::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
+        List<Tag> list = tagService.list( );
         if (CollectionUtils.isEmpty(list)){
             ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
         }
@@ -58,18 +57,18 @@ public class TagJsonController {
      * 标签分页
      * @param ajaxPutPage
      * @param condition
-     * @return com.site.blog.pojo.dto.AjaxResultPage<com.site.blog.entity.BlogTag>
+     * @return com.site.blog.pojo.dto.AjaxResultPage<com.site.blog.entity.Tag>
      * @date 2019/9/1 11:20
      */
      
     @GetMapping("/tags/paging")
-    public AjaxResultPage<BlogTag> getCategoryList(AjaxPutPage<BlogTag> ajaxPutPage, BlogTag condition){
-        QueryWrapper<BlogTag> queryWrapper = new QueryWrapper<>(condition);
+    public AjaxResultPage<Tag> getCategoryList(AjaxPutPage<Tag> ajaxPutPage, Tag condition){
+        QueryWrapper<Tag> queryWrapper = new QueryWrapper<>(condition);
         queryWrapper.lambda()
-                .ne(BlogTag::getTagId,1);
-        Page<BlogTag> page = ajaxPutPage.putPageToPage();
-        blogTagService.page(page,queryWrapper);
-        AjaxResultPage<BlogTag> result = new AjaxResultPage<>();
+                .ne(Tag::getTagId,1);
+        Page<Tag> page = ajaxPutPage.putPageToPage();
+        tagService.page(page,queryWrapper);
+        AjaxResultPage<Tag> result = new AjaxResultPage<>();
         result.setData(page.getRecords());
         result.setCount(page.getTotal());
         return result;
@@ -77,33 +76,33 @@ public class TagJsonController {
 
     /**
      * 修改标签状态
-     * @param blogTag
+     * @param tag
      * @return com.site.blog.pojo.dto.Result
      * @date 2019/8/30 14:55
      */
      
     @PostMapping("/tags/isDel")
-    public Result<String> updateCategoryStatus(BlogTag blogTag){
-        boolean flag = blogTagService.updateById(blogTag);
+    public Result<String> updateCategoryStatus(Tag tag){
+        boolean flag = tagService.updateById(tag);
         if (flag){
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogTag.getTagName());
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, tag.getTagName());
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
     
     /**
      * 添加标签
-     * @param blogTag
+     * @param tag
      * @return com.site.blog.pojo.dto.Result
      * @date 2019/9/2 10:12 
      */
      
     @PostMapping("/tags/add")
-    public Result  addTag(BlogTag blogTag){
-        blogTag.setCreateTime(DateUtils.getLocalCurrentDate());
-        boolean flag = blogTagService.save(blogTag);
+    public Result  addTag(Tag tag){
+        tag.setCreateTime(DateUtils.getLocalCurrentDate());
+        boolean flag = tagService.save(tag);
         if (flag){
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,blogTag);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, tag);
         }else {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
         }
@@ -119,8 +118,8 @@ public class TagJsonController {
     @PostMapping("/tags/clear/{id}")
     public Result<String> clearTag(@PathVariable("id") Integer tagId) throws RuntimeException{
 
-        String name=blogTagService.getById(tagId).getTagName();
-        if (blogTagService.clearTag(tagId)) {
+        String name= tagService.getById(tagId).getTagName();
+        if (tagService.clearTag(tagId)) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,name);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
@@ -135,13 +134,13 @@ public class TagJsonController {
      */
      
     @PostMapping("/tags/update")
-    public Result<String> updateCategory(@RequestBody  BlogTag blogTag) {
+    public Result<String> updateCategory(@RequestBody Tag tag) {
         // TODO blogInfo的tags无实际意义，所以这里不再修改冗余的tags。
-        log.debug(String.valueOf(blogTag));
-        BlogTag sqlBlogTag = blogTagService.getById(blogTag.getTagId());
-        boolean flag = sqlBlogTag.getTagName().equals(blogTag.getTagName());
+        log.debug(String.valueOf(tag));
+        Tag sqlTag = tagService.getById(tag.getTagId());
+        boolean flag = sqlTag.getTagName().equals(tag.getTagName());
 
-            blogTagService.updateById(blogTag);
+            tagService.updateById(tag);
 
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
     }

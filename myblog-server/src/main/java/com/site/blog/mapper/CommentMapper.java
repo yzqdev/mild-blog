@@ -1,6 +1,6 @@
 package com.site.blog.mapper;
 
-import com.site.blog.model.entity.BlogComment;
+import com.site.blog.model.entity.Comment;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author zhulin
  * @since 2019-09-04
  */
-public interface BlogCommentMapper extends BaseMapper<BlogComment> {
+public interface CommentMapper extends BaseMapper<Comment> {
 
 }

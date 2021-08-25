@@ -1,6 +1,6 @@
 package com.site.blog.service;
 
-import com.site.blog.model.entity.BlogTag;
+import com.site.blog.model.entity.Tag;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.site.blog.model.entity.BlogTagCount;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * @author: 南街
  * @since 2019-08-28
  */
-public interface BlogTagService extends IService<BlogTag> {
+public interface TagService extends IService<Tag> {
 
     List<BlogTagCount> getBlogTagCountForIndex();
 

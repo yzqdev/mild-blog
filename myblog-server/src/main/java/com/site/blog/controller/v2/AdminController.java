@@ -33,21 +33,21 @@ import java.util.List;
 @RequestMapping("/v2/admin")
 @Api(value = "后台json", tags = "后台json")
 @Slf4j
-public class AdminJsonController {
+public class AdminController {
     @Resource
     private AdminUserService adminUserService;
     @Resource
     private BlogInfoService blogInfoService;
     @Resource
-    private BlogTagService blogTagService;
+    private TagService tagService;
     @Resource
-    private BlogCategoryService blogCategoryService;
+    private CategoryService categoryService;
     @Resource
-    private BlogCommentService blogCommentService;
+    private CommentService commentService;
     @Resource
     private BlogConfigService blogConfigService;
     @Resource
-    private BlogLinkService blogLinkService;
+    private LinkService linkService;
 
     @PostMapping(value = "/login")
     public Result login(String username, String password,

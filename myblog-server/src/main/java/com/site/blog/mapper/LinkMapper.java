@@ -1,6 +1,6 @@
 package com.site.blog.mapper;
 
-import com.site.blog.model.entity.BlogLink;
+import com.site.blog.model.entity.Link;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author zhulin
  * @since 2019-09-02
  */
-public interface BlogLinkMapper extends BaseMapper<BlogLink> {
+public interface LinkMapper extends BaseMapper<Link> {
 
 }

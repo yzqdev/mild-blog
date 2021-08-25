@@ -1,7 +1,7 @@
 package com.site.blog.service;
 
 import com.site.blog.model.entity.BlogInfo;
-import com.site.blog.model.entity.BlogTagRelation;
+import com.site.blog.model.entity.BlogTag;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  * @author: 南街
  * @since 2019-08-28
  */
-public interface BlogTagRelationService extends IService<BlogTagRelation> {
+public interface BlogService extends IService<BlogTag> {
 
     /**
      * 移除本来的标签保存新标签

@@ -1,8 +1,6 @@
 package com.site.blog.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-
-import java.sql.Timestamp;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -13,7 +11,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 标签表
+ * 博客跟标签的关系表
  * </p>
  *
  * @author: 南街
@@ -27,29 +25,28 @@ public class BlogTag implements Serializable {
 private static final long serialVersionUID=1L;
 
     /**
-     * 标签表主键id
+     * 关系表id
      */
-    @TableId(value = "tag_id", type = IdType.AUTO)
+    @TableId(value = "relation_id", type = IdType.AUTO)
+    private Long relationId;
+
+    /**
+     * 博客id
+     */
+    @TableField("blog_id")
+    private Long blogId;
+
+    /**
+     * 标签id
+     */
+    @TableField("tag_id")
     private Integer tagId;
 
     /**
-     * 标签名称
+     * 添加时间
      */
-    @TableField("tag_name")
-    private String tagName;
-
-    /**
-     * 是否删除 0=否 1=是
-     */
-    @TableField("is_deleted")
-    private Integer isDeleted;
-
-    /**
-     * 创建时间
-     */
-
     @TableField("create_time")
-    private Timestamp createTime;
+    private Date createTime;
 
 
 }

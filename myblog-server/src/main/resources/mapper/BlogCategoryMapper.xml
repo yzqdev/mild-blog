@@ -3,7 +3,7 @@
 <mapper namespace="com.site.blog.dao.BlogCategoryMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.site.blog.model.entity.BlogCategory">
+    <resultMap id="BaseResultMap" type="com.site.blog.model.entity.Category">
         <id column="category_id" property="categoryId" />
         <result column="category_name" property="categoryName" />
         <result column="category_icon" property="categoryIcon" />

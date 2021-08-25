@@ -7,12 +7,12 @@ import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.site.blog.constants.BlogStatusEnum;
 import com.site.blog.constants.DeleteStatusEnum;
 import com.site.blog.model.vo.SimpleBlogListVO;
-import com.site.blog.mapper.BlogCommentMapper;
+import com.site.blog.mapper.CommentMapper;
 import com.site.blog.mapper.BlogInfoMapper;
-import com.site.blog.mapper.BlogTagRelationMapper;
-import com.site.blog.model.entity.BlogComment;
+import com.site.blog.mapper.BlogTagMapper;
+import com.site.blog.model.entity.Comment;
 import com.site.blog.model.entity.BlogInfo;
-import com.site.blog.model.entity.BlogTagRelation;
+import com.site.blog.model.entity.BlogTag;
 import com.site.blog.service.BlogInfoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -37,10 +37,10 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
     private BlogInfoMapper blogInfoMapper;
 
     @Resource
-    private BlogTagRelationMapper blogTagRelationMapper;
+    private BlogTagMapper blogTagMapper;
 
     @Resource
-    private BlogCommentMapper blogCommentMapper;
+    private CommentMapper commentMapper;
 
     @Override
     public List<SimpleBlogListVO> getNewBlog() {
@@ -80,12 +80,12 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
     @Override
     public boolean clearBlogInfo(Long blogId) {
         if (SqlHelper.retBool(blogInfoMapper.deleteById(blogId))){
-            QueryWrapper<BlogTagRelation> tagRelationWrapper = new QueryWrapper<>();
-            tagRelationWrapper.lambda().eq(BlogTagRelation::getBlogId,blogId);
-            blogTagRelationMapper.delete(tagRelationWrapper);
-            QueryWrapper<BlogComment> commentWrapper = new QueryWrapper<>();
-            commentWrapper.lambda().eq(BlogComment::getBlogId,blogId);
-            blogCommentMapper.delete(commentWrapper);
+            QueryWrapper<BlogTag> tagRelationWrapper = new QueryWrapper<>();
+            tagRelationWrapper.lambda().eq(BlogTag::getBlogId,blogId);
+            blogTagMapper.delete(tagRelationWrapper);
+            QueryWrapper<Comment> commentWrapper = new QueryWrapper<>();
+            commentWrapper.lambda().eq(Comment::getBlogId,blogId);
+            commentMapper.delete(commentWrapper);
             return true;
         }
         return false;

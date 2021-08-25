@@ -3,7 +3,7 @@
 <mapper namespace="com.site.blog.dao.BlogCommentMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.site.blog.model.entity.BlogComment">
+    <resultMap id="BaseResultMap" type="com.site.blog.model.entity.Comment">
         <id column="comment_id" property="commentId" />
         <result column="blog_id" property="blogId" />
         <result column="commentator" property="commentator" />

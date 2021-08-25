@@ -6,13 +6,12 @@ import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.model.dto.AjaxPutPage;
 import com.site.blog.model.dto.AjaxResultPage;
 import com.site.blog.model.dto.Result;
-import com.site.blog.model.entity.BlogComment;
-import com.site.blog.service.BlogCommentService;
+import com.site.blog.model.entity.Comment;
+import com.site.blog.service.CommentService;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
 import io.swagger.annotations.Api;
 import org.apache.commons.text.StringEscapeUtils;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -27,10 +26,10 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/v2/admin")
 @Api(tags = "评论json")
-public class CommentJsonController {
+public class CommentController {
 
     @Resource
-    private BlogCommentService blogCommentService;
+    private CommentService commentService;
 
 
 
@@ -42,11 +41,11 @@ public class CommentJsonController {
      * @date 2020/4/24 21:23
      */
     @GetMapping("/comment/paging")
-    public AjaxResultPage<BlogComment> getCommentList(AjaxPutPage<BlogComment> ajaxPutPage, BlogComment condition){
-        QueryWrapper<BlogComment> queryWrapper = new QueryWrapper<>(condition);
-        Page<BlogComment> page = ajaxPutPage.putPageToPage();
-        blogCommentService.page(page,queryWrapper);
-        AjaxResultPage<BlogComment> result = new AjaxResultPage<>();
+    public AjaxResultPage<Comment> getCommentList(AjaxPutPage<Comment> ajaxPutPage, Comment condition){
+        QueryWrapper<Comment> queryWrapper = new QueryWrapper<>(condition);
+        Page<Comment> page = ajaxPutPage.putPageToPage();
+        commentService.page(page,queryWrapper);
+        AjaxResultPage<Comment> result = new AjaxResultPage<>();
         result.setData(page.getRecords());
         result.setCount(page.getTotal());
         return result;
@@ -60,9 +59,9 @@ public class CommentJsonController {
      */
     @PostMapping( "/comment/isDel/{id}" )
     public Result  updateCommentStatus(@PathVariable("id") String id){
-        BlogComment comment=blogCommentService.getById(id);
+        Comment comment= commentService.getById(id);
         comment.setCommentStatus(0);
-        boolean flag = blogCommentService.updateById(comment);
+        boolean flag = commentService.updateById(comment);
         if (flag){
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,comment);
         }
@@ -77,7 +76,7 @@ public class CommentJsonController {
      */
     @DeleteMapping("/comment/delete/{id}")
     public Result<String> deleteComment(@PathVariable("id") Long id){
-        boolean flag = blogCommentService.removeById(id);
+        boolean flag = commentService.removeById(id);
         if (flag){
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
         }
@@ -87,15 +86,15 @@ public class CommentJsonController {
 
     /**
      * 编辑评论
-     * @param blogComment
+     * @param comment
      * @return com.site.blog.pojo.dto.Result<java.lang.String>
      * @date 2020/4/24 21:21
      */
     @PostMapping("/comment/edit")
-    public Result<String> editComment(BlogComment blogComment){
-        blogComment.setReplyCreateTime(DateUtils.getLocalCurrentDate());
-        blogComment.setCommentBody(StringEscapeUtils.escapeHtml4(blogComment.getCommentBody()));
-        boolean flag = blogCommentService.updateById(blogComment);
+    public Result<String> editComment(Comment comment){
+        comment.setReplyCreateTime(DateUtils.getLocalCurrentDate());
+        comment.setCommentBody(StringEscapeUtils.escapeHtml4(comment.getCommentBody()));
+        boolean flag = commentService.updateById(comment);
         if (flag){
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
         }else{

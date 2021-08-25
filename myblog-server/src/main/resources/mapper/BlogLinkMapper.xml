@@ -3,7 +3,7 @@
 <mapper namespace="com.site.blog.dao.BlogLinkMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.site.blog.model.entity.BlogLink">
+    <resultMap id="BaseResultMap" type="com.site.blog.model.entity.Link">
         <id column="link_id" property="linkId" />
         <result column="link_type" property="linkType" />
         <result column="link_name" property="linkName" />

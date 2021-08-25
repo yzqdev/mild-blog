@@ -1,18 +1,14 @@
 package com.site.blog.service;
 
-import com.site.blog.model.entity.BlogCategory;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.site.blog.model.entity.BlogCategory;
+import com.site.blog.model.entity.BlogConfig;
 
 /**
- * <p>
- * 博客分类 服务类
- * </p>
- *
- * @author: 南街
- * @since 2019-08-30
+ * @author yzq
+ * @description
+ * @date:Created time 2021/8/26 0:00
+ * @modified By:
  */
 public interface BlogCategoryService extends IService<BlogCategory> {
-
-    public boolean clearCategory(Integer id);
-
 }

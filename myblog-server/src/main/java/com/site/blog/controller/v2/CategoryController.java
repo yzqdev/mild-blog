@@ -8,9 +8,9 @@ import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.model.dto.AjaxPutPage;
 import com.site.blog.model.dto.AjaxResultPage;
 import com.site.blog.model.dto.Result;
-import com.site.blog.model.entity.BlogCategory;
+import com.site.blog.model.entity.Category;
 import com.site.blog.model.entity.BlogInfo;
-import com.site.blog.service.BlogCategoryService;
+import com.site.blog.service.CategoryService;
 import com.site.blog.service.BlogInfoService;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
@@ -31,10 +31,10 @@ import java.util.List;
 @Controller
 @RequestMapping("/v2/admin")
 @Api(tags = "分类json")
-public class CategoryJsonController {
+public class CategoryController {
 
     @Resource
-    private BlogCategoryService blogCategoryService;
+    private CategoryService categoryService;
 
     @Resource
     private BlogInfoService blogInfoService;
@@ -48,10 +48,10 @@ public class CategoryJsonController {
      */
     @ResponseBody
     @GetMapping("/category/list")
-    public Result<List<BlogCategory>> categoryList() {
-        QueryWrapper<BlogCategory> queryWrapper = new QueryWrapper<BlogCategory>();
-        queryWrapper.lambda().eq(BlogCategory::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus()).orderByDesc(BlogCategory::getCreateTime) ;
-        List<BlogCategory> list = blogCategoryService.list(queryWrapper);
+    public Result<List<Category>> categoryList() {
+        QueryWrapper<Category> queryWrapper = new QueryWrapper<Category>();
+        queryWrapper.lambda().eq(Category::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus()).orderByDesc(Category::getCreateTime) ;
+        List<Category> list = categoryService.list(queryWrapper);
         if (CollectionUtils.isEmpty(list)) {
             ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
         }
@@ -70,14 +70,14 @@ public class CategoryJsonController {
      */
     @ResponseBody
     @GetMapping("/category/paging")
-    public AjaxResultPage<BlogCategory> getCategoryList(AjaxPutPage<BlogCategory> ajaxPutPage, BlogCategory condition) {
-        QueryWrapper<BlogCategory> queryWrapper = new QueryWrapper<>(condition);
+    public AjaxResultPage<Category> getCategoryList(AjaxPutPage<Category> ajaxPutPage, Category condition) {
+        QueryWrapper<Category> queryWrapper = new QueryWrapper<>(condition);
         queryWrapper.lambda()
-                .orderByAsc(BlogCategory::getCategoryRank)
-                .ne(BlogCategory::getCategoryId, 1);
-        Page<BlogCategory> page = ajaxPutPage.putPageToPage();
-        blogCategoryService.page(page, queryWrapper);
-        AjaxResultPage<BlogCategory> result = new AjaxResultPage<>();
+                .orderByAsc(Category::getCategoryRank)
+                .ne(Category::getCategoryId, 1);
+        Page<Category> page = ajaxPutPage.putPageToPage();
+        categoryService.page(page, queryWrapper);
+        AjaxResultPage<Category> result = new AjaxResultPage<>();
         result.setData(page.getRecords());
         result.setCount(page.getTotal());
         return result;
@@ -91,17 +91,17 @@ public class CategoryJsonController {
      */
     @ResponseBody
     @PostMapping("/category/update")
-    public Result<String> updateCategory(BlogCategory blogCategory) {
-        BlogCategory sqlCategory = blogCategoryService.getById(blogCategory.getCategoryId());
-        boolean flag = sqlCategory.getCategoryName().equals(blogCategory.getCategoryName());
+    public Result<String> updateCategory(Category category) {
+        Category sqlCategory = categoryService.getById(category.getCategoryId());
+        boolean flag = sqlCategory.getCategoryName().equals(category.getCategoryName());
         if (!flag) {
             BlogInfo blogInfo = new BlogInfo()
-                    .setBlogCategoryId(blogCategory.getCategoryId())
-                    .setBlogCategoryName(blogCategory.getCategoryName());
+                    .setBlogCategoryId(category.getCategoryId())
+                    .setBlogCategoryName(category.getCategoryName());
             UpdateWrapper<BlogInfo> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.lambda().eq(BlogInfo::getBlogCategoryId, blogCategory.getCategoryId());
+            updateWrapper.lambda().eq(BlogInfo::getBlogCategoryId, category.getCategoryId());
             blogInfoService.update(blogInfo, updateWrapper);
-            blogCategoryService.updateById(blogCategory);
+            categoryService.updateById(category);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
     }
@@ -109,14 +109,14 @@ public class CategoryJsonController {
     /**
      * 修改分类状态
      *
-     * @param blogCategory
+     * @param category
      * @return com.site.blog.pojo.dto.Result
      * @date 2019/8/30 14:55
      */
     @ResponseBody
     @PostMapping("/category/isDel")
-    public Result<String> updateCategoryStatus(BlogCategory blogCategory) {
-        boolean flag = blogCategoryService.updateById(blogCategory);
+    public Result<String> updateCategoryStatus(Category category) {
+        boolean flag = categoryService.updateById(category);
         if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
         }
@@ -133,7 +133,7 @@ public class CategoryJsonController {
     @ResponseBody
     @PostMapping("/category/clear/{id}")
     public Result  clearCategory(@PathVariable("id") Integer id) {
-        if (blogCategoryService.clearCategory(id)) {
+        if (categoryService.clearCategory(id)) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,id);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
@@ -144,17 +144,17 @@ public class CategoryJsonController {
     /**
      * 新增分类信息
      *
-     * @param blogCategory
+     * @param category
      * @return com.site.blog.pojo.dto.Result
      * @date 2019/9/1 15:48
      */
     @ResponseBody
     @PostMapping("/category/add")
-    public Result addCategory(BlogCategory blogCategory) {
-        blogCategory.setCreateTime(DateUtils.getLocalCurrentDate());
-        boolean flag = blogCategoryService.save(blogCategory);
+    public Result addCategory(Category category) {
+        category.setCreateTime(DateUtils.getLocalCurrentDate());
+        boolean flag = categoryService.save(category);
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,blogCategory);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, category);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }

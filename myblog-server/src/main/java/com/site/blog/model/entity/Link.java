@@ -24,7 +24,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class BlogLink implements Serializable {
+public class Link implements Serializable {
 
 private static final long serialVersionUID=1L;
 

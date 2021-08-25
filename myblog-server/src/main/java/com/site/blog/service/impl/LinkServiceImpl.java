@@ -1,8 +1,8 @@
 package com.site.blog.service.impl;
 
-import com.site.blog.model.entity.BlogLink;
-import com.site.blog.mapper.BlogLinkMapper;
-import com.site.blog.service.BlogLinkService;
+import com.site.blog.model.entity.Link;
+import com.site.blog.mapper.LinkMapper;
+import com.site.blog.service.LinkService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2019-09-02
  */
 @Service
-public class BlogLinkServiceImpl extends ServiceImpl<BlogLinkMapper, BlogLink> implements BlogLinkService {
+public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements LinkService {
 
 }

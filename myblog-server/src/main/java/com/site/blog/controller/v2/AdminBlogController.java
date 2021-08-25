@@ -10,18 +10,16 @@ import com.site.blog.model.dto.AjaxResultPage;
 import com.site.blog.model.dto.BlogInfoDo;
 import com.site.blog.model.dto.Result;
 import com.site.blog.model.entity.BlogInfo;
-import com.site.blog.model.entity.BlogTagRelation;
+import com.site.blog.model.entity.BlogTag;
 import com.site.blog.model.vo.BlogDetailVO;
 import com.site.blog.service.BlogInfoService;
-import com.site.blog.service.BlogTagRelationService;
+import com.site.blog.service.BlogService;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
 import com.site.blog.util.UploadFileUtils;
 import io.swagger.annotations.Api;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,12 +43,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/v2/admin")
 @Api(tags = "博客json")
-public class BlogJsonController {
+public class AdminBlogController {
 
     @Resource
     private BlogInfoService blogInfoService;
     @Resource
-    private BlogTagRelationService blogTagRelationService;
+    private BlogService blogService;
 
     /**
      * 跳转博客编辑界面
@@ -63,15 +60,15 @@ public class BlogJsonController {
     public String gotoBlogEdit(@RequestParam(required = false) Long blogId, Model model) {
         if (blogId != null) {
             BlogInfo blogInfo = blogInfoService.getById(blogId);
-            List<BlogTagRelation> list = blogTagRelationService.list(
-                    new QueryWrapper<BlogTagRelation>()
+            List<BlogTag> list = blogService.list(
+                    new QueryWrapper<BlogTag>()
                             .lambda()
-                            .eq(BlogTagRelation::getBlogId, blogId)
+                            .eq(BlogTag::getBlogId, blogId)
             );
             List<Integer> tags = null;
             if (!CollectionUtils.isEmpty(list)) {
                 tags = list.stream().map(
-                                BlogTagRelation::getTagId)
+                                BlogTag::getTagId)
                         .collect(Collectors.toList());
             }
             model.addAttribute("blogTags", tags);
@@ -143,7 +140,6 @@ public class BlogJsonController {
         }
         blogInfo.setBlogViews(blogInfoDo.getBlogViews());
         blogInfo.setBlogTitle(blogInfoDo.getBlogTitle());
-        blogInfo.setBlogTags(blogInfoDo.getBlogTags());
         blogInfo.setBlogSubUrl(blogInfoDo.getBlogSubUrl());
         blogInfo.setEnableComment(blogInfoDo.getEnableComment());
         blogInfo.setBlogStatus(blogInfoDo.getBlogStatus());
@@ -156,7 +152,7 @@ public class BlogJsonController {
         blogInfo.setBlogStatus(1);
 
         if (blogInfoService.saveOrUpdate(blogInfo)) {
-            blogTagRelationService.removeAndsaveBatch(Arrays.asList(blogInfo.getBlogTags().split(",")), blogInfo);
+            //blogService.removeAndsaveBatch(Arrays.asList(blogInfo.getBlogTags().split(",")), blogInfo);
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
@@ -166,16 +162,16 @@ public class BlogJsonController {
      * 文章分页列表
      *
      * @param ajaxPutPage 分页参数
-     * @param condition   筛选条件
+
      * @return com.site.blog.pojo.dto.AjaxResultPage<com.site.blog.entity.BlogInfo>
      * @date 2019/8/28 16:43
      */
 
     @GetMapping("/blog/list")
-    public AjaxResultPage  getBlogList(AjaxPutPage<BlogInfo> ajaxPutPage, BlogInfo condition) {
-        QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>(condition);
+    public AjaxResultPage<BlogDetailVO>  getBlogList(AjaxPutPage  ajaxPutPage ) {
+        QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>( );
         queryWrapper.lambda().orderByDesc(BlogInfo::getUpdateTime);
-        Page<BlogDetailVO> page = ajaxPutPage.putPageToPage();
+        Page<BlogInfo> page = ajaxPutPage.putPageToPage();
         blogInfoService.page(page, queryWrapper);
         AjaxResultPage  result = new AjaxResultPage<>();
         result.setData(page.getRecords());

@@ -7,12 +7,11 @@ import com.site.blog.constants.LinkConstants;
 import com.site.blog.model.dto.AjaxPutPage;
 import com.site.blog.model.dto.AjaxResultPage;
 import com.site.blog.model.dto.Result;
-import com.site.blog.model.entity.BlogLink;
-import com.site.blog.service.BlogLinkService;
+import com.site.blog.model.entity.Link;
+import com.site.blog.service.LinkService;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
 import io.swagger.annotations.Api;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -29,20 +28,20 @@ import java.util.List;
 @RestController
 @RequestMapping("/v2/admin")
 @Api(tags = "链接json")
-public class LinkJsonController {
+public class LinkController {
 
     @Resource
-    private BlogLinkService blogLinkService;
+    private LinkService linkService;
 
 
     @GetMapping("/linkType/list")
-    public Result<List<BlogLink>> linkTypeList() {
-        List<BlogLink> links = new ArrayList<>();
-        links.add(new BlogLink().setLinkType(LinkConstants.LINK_TYPE_FRIENDSHIP.getLinkTypeId())
+    public Result<List<Link>> linkTypeList() {
+        List<Link> links = new ArrayList<>();
+        links.add(new Link().setLinkType(LinkConstants.LINK_TYPE_FRIENDSHIP.getLinkTypeId())
                 .setLinkName(LinkConstants.LINK_TYPE_FRIENDSHIP.getLinkTypeName()));
-        links.add(new BlogLink().setLinkType(LinkConstants.LINK_TYPE_RECOMMEND.getLinkTypeId())
+        links.add(new Link().setLinkType(LinkConstants.LINK_TYPE_RECOMMEND.getLinkTypeId())
                 .setLinkName(LinkConstants.LINK_TYPE_RECOMMEND.getLinkTypeName()));
-        links.add(new BlogLink().setLinkType(LinkConstants.LINK_TYPE_PRIVATE.getLinkTypeId())
+        links.add(new Link().setLinkType(LinkConstants.LINK_TYPE_PRIVATE.getLinkTypeId())
                 .setLinkName(LinkConstants.LINK_TYPE_PRIVATE.getLinkTypeName()));
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, links);
     }
@@ -54,15 +53,15 @@ public class LinkJsonController {
      * @return
      */
     @GetMapping("/link/paging")
-    public Result getLinkList(AjaxPutPage<BlogLink> ajaxPutPage) {
-        BlogLink condition = new BlogLink();
-        QueryWrapper<BlogLink> queryWrapper = new QueryWrapper<>(condition);
+    public Result getLinkList(AjaxPutPage<Link> ajaxPutPage) {
+        Link condition = new Link();
+        QueryWrapper<Link> queryWrapper = new QueryWrapper<>(condition);
         queryWrapper.lambda()
-                .orderByAsc(BlogLink::getLinkRank);
+                .orderByAsc(Link::getLinkRank);
         if (ajaxPutPage != null) {
-            Page<BlogLink> page = ajaxPutPage.putPageToPage();
-            blogLinkService.page(page, queryWrapper);
-            AjaxResultPage<BlogLink> result = new AjaxResultPage<>();
+            Page<Link> page = ajaxPutPage.putPageToPage();
+            linkService.page(page, queryWrapper);
+            AjaxResultPage<Link> result = new AjaxResultPage<>();
             result.setData(page.getRecords());
             result.setCount(page.getTotal());
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, result);
@@ -72,20 +71,20 @@ public class LinkJsonController {
     }
 
     @PostMapping("/link/isDel")
-    public Result  updateLinkStatus(BlogLink blogLink) {
-        System.out.println(blogLink);
-        boolean flag = blogLinkService.updateById(blogLink);
+    public Result  updateLinkStatus(Link link) {
+        System.out.println(link);
+        boolean flag = linkService.updateById(link);
 
-        List<BlogLink> blogLinkList=blogLinkService.list();
+        List<Link> linkList = linkService.list();
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,blogLinkList);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, linkList);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
 
     @DeleteMapping("/link/clear/{id}")
     public Result  clearLink(@PathVariable("id") Integer linkId) {
-        boolean flag = blogLinkService.removeById(linkId);
+        boolean flag = linkService.removeById(linkId);
         if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,linkId);
         }
@@ -97,17 +96,17 @@ public class LinkJsonController {
 
 
     @PostMapping("/link/edit")
-    public Result updateAndSaveLink(BlogLink blogLink) {
-        blogLink.setCreateTime(DateUtils.getLocalCurrentDate());
+    public Result updateAndSaveLink(Link link) {
+        link.setCreateTime(DateUtils.getLocalCurrentDate());
         boolean flag;
-        if (blogLink.getLinkId() != null) {
-            blogLink.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-            flag = blogLinkService.updateById(blogLink);
+        if (link.getLinkId() != null) {
+            link.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+            flag = linkService.updateById(link);
         } else {
-            flag = blogLinkService.save(blogLink);
+            flag = linkService.save(link);
         }
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,blogLink.getLinkId());
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, link.getLinkId());
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }

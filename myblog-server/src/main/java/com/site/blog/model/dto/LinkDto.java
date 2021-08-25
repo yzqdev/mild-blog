@@ -1,6 +1,6 @@
 package com.site.blog.model.dto;
 
-import com.site.blog.model.entity.BlogLink;
+import com.site.blog.model.entity.Link;
 import lombok.Data;
 
 import java.util.List;
@@ -12,9 +12,9 @@ import java.util.List;
  * @Modified By:
  */
 @Data
-public class BlogLinkDto {
-    List<BlogLink> favoriteLinks;
-    List<BlogLink> recommendLinks ;
-    List<BlogLink> personalLinks;
+public class LinkDto {
+    List<Link> favoriteLinks;
+    List<Link> recommendLinks ;
+    List<Link> personalLinks;
 
 }

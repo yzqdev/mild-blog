@@ -1,68 +1,25 @@
 package com.site.blog.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-
-import java.sql.Timestamp;
-import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
-
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+
+import java.sql.Timestamp;
 
 /**
- * <p>
- * 博客分类
- * </p>
- *
- * @author: 南街
- * @since 2019-08-30
+ * @author yzq
+ * @description
+ * @date:Created time 2021/8/25 23:57
+ * @modified By:
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-public class BlogCategory extends Model<BlogCategory> implements Serializable {
-
-private static final long serialVersionUID=1L;
-
-    /**
-     * 分类表主键
-     */
-    @TableId(value = "category_id", type = IdType.AUTO)
+public class BlogCategory  extends Model<BlogCategory> {
+    @TableId(type = IdType.AUTO)
+    private Integer relationId;
+    private Integer blogId;
     private Integer categoryId;
-
-    /**
-     * 分类的名称
-     */
-    @TableField("category_name")
-    private String categoryName;
-
-    /**
-     * 分类的图标
-     */
-    @TableField("category_icon")
-    private String categoryIcon;
-
-    /**
-     * 分类的排序值 被使用的越多数值越大
-     */
-    @TableField("category_rank")
-    private Integer categoryRank;
-
-    /**
-     * 是否删除 0=否 1=是
-     */
-    @TableField("is_deleted")
-    private Integer isDeleted;
-
-    /**
-     * 创建时间
-     */
-    @TableField("create_time")
     private Timestamp createTime;
-
-
 }
