@@ -13,6 +13,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
@@ -26,6 +27,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
+@ToString
 public class BlogInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -60,12 +62,6 @@ public class BlogInfo implements Serializable {
     @TableField("blog_content")
     private String blogContent;
 
-    /**
-     * 博客分类id
-     */
-    @TableField("blog_category_id")
-    private Integer blogCategoryId;
- 
 
     /**
      * 0-草稿 1-发布

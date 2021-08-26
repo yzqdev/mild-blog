@@ -3,7 +3,7 @@
     <article class="article" v-for="(item, index) in  list">
       <div class="article-top">
         <span class="category-link">{{ item.blogCategoryName }}</span
-        ><span class="right">{{ item.updateTime }}</span>
+        ><span class="right">{{ $dayjs(item.updateTime).format("YYYY-MM-DD HH:mm:ss") }}</span>
       </div>
       <h1 class="article-title" @click="gotoBlog(item)">
         {{ item.blogTitle }}

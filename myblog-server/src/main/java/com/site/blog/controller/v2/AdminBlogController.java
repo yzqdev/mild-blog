@@ -1,24 +1,22 @@
 package com.site.blog.controller.v2;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.site.blog.constants.DeleteStatusEnum;
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.constants.UploadConstants;
-import com.site.blog.model.dto.*;
+import com.site.blog.model.dto.BlogInfoDo;
+import com.site.blog.model.dto.PageDto;
+import com.site.blog.model.dto.Result;
+import com.site.blog.model.entity.BlogCategory;
 import com.site.blog.model.entity.BlogInfo;
 import com.site.blog.model.entity.BlogTag;
 import com.site.blog.model.vo.BlogDetailVO;
-import com.site.blog.service.BlogInfoService;
-import com.site.blog.service.BlogService;
-import com.site.blog.service.BlogTagService;
+import com.site.blog.model.vo.BlogEditVO;
+import com.site.blog.service.*;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
 import com.site.blog.util.UploadFileUtils;
 import io.swagger.annotations.Api;
-import org.springframework.ui.Model;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +24,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,10 +42,16 @@ import java.util.stream.Collectors;
 public class AdminBlogController {
 
     @Resource
+    BlogCategoryService blogCategoryService;
+    @Resource
+    CategoryService categoryService;
+    @Resource
     private BlogInfoService blogInfoService;
     @Resource
     private BlogTagService blogTagService;
-            @Resource
+    @Resource
+    private TagService tagService;
+    @Resource
     private BlogService blogService;
 
     /**
@@ -57,38 +60,19 @@ public class AdminBlogController {
      * @return java.lang.String
      * @date 2019/8/28 15:03
      */
-    @GetMapping("/blog/edit")
-    public String gotoBlogEdit(@RequestParam(required = false) Long blogId, Model model) {
-        if (blogId != null) {
-            BlogInfo blogInfo = blogInfoService.getById(blogId);
-            List<BlogTag> list = blogService.list(
-                    new QueryWrapper<BlogTag>()
-                            .lambda()
-                            .eq(BlogTag::getBlogId, blogId)
-            );
-            List<Integer> tags = null;
-            if (!CollectionUtils.isEmpty(list)) {
-                tags = list.stream().map(
-                                BlogTag::getTagId)
-                        .collect(Collectors.toList());
-            }
-            model.addAttribute("blogTags", tags);
-            model.addAttribute("blogInfo", blogInfo);
-        }
-        return "adminLayui/blog-edit";
-    }
+
 
     @GetMapping("/blog/get/{id}")
     public Result getBlogById(@PathVariable("id") Integer id) {
 
         BlogInfo blogInfo = blogInfoService.getById(id);
-        BlogDetailVO blogDetailVO=new BlogDetailVO();
+        BlogEditVO blogDetailVO = new BlogEditVO();
         blogDetailVO.setBlogContent(blogInfo.getBlogContent());
         blogDetailVO.setBlogTitle(blogInfo.getBlogTitle());
         blogDetailVO.setBlogViews(blogInfo.getBlogViews());
-        blogDetailVO.setBlogCategoryId(blogInfo.getBlogCategoryId());
-        QueryWrapper<BlogTag> queryWrapper=new QueryWrapper<BlogTag>().eq("blog_id",id);
-        List<Integer> ids=blogTagService.list(queryWrapper).stream().map(BlogTag::getTagId).collect(Collectors.toList());
+        blogDetailVO.setBlogCategoryId(blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", blogInfo.getBlogId())).getCategoryId());
+        QueryWrapper<BlogTag> queryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", id);
+        List<Integer> ids = blogTagService.list(queryWrapper).stream().map(BlogTag::getTagId).collect(Collectors.toList());
         blogDetailVO.setBlogTagIds(ids);
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogDetailVO);
     }
@@ -104,7 +88,7 @@ public class AdminBlogController {
 
     @PostMapping("/blog/uploadFile")
     public Map<String, Object> uploadFileByEditormd(HttpServletRequest request,
-                                                    @RequestParam(name = "editormd-image-file") MultipartFile file) throws URISyntaxException {
+                                                    @RequestParam(name = "editormd-image-file") MultipartFile file) {
         String suffixName = UploadFileUtils.getSuffixName(file);
         //生成文件名称通用方法
         String newFileName = UploadFileUtils.getNewFileName(suffixName);
@@ -138,13 +122,13 @@ public class AdminBlogController {
      */
 
     @PostMapping("/blog/edit")
-    public Result  saveBlog(@RequestBody BlogInfoDo blogInfoDo) {
+    public Result saveBlog(@RequestBody BlogInfoDo blogInfoDo) {
 
         //if (ObjectUtils.isEmpty(blogInfoDo.getBlogTags()) || ObjectUtils.isEmpty(blogInfoDo)) {
         //    return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
         //}
         BlogInfo blogInfo = new BlogInfo();
-        if (null!=blogInfoDo.getBlogId()){
+        if (null != blogInfoDo.getBlogId()) {
             blogInfo.setBlogId(blogInfoDo.getBlogId());
         }
         blogInfo.setBlogViews(blogInfoDo.getBlogViews());
@@ -154,22 +138,40 @@ public class AdminBlogController {
         blogInfo.setBlogStatus(blogInfoDo.getBlogStatus());
         blogInfo.setCreateTime(DateUtils.getLocalCurrentDate());
         blogInfo.setUpdateTime(DateUtils.getLocalCurrentDate());
-        blogInfo.setBlogCategoryId(blogInfoDo.getBlogCategoryId());
+
+
         blogInfo.setBlogContent(blogInfoDo.getBlogContent());
         blogInfo.setBlogPreface(blogInfoDo.getBlogPreface());
         blogInfo.setIsDeleted(0);
-        blogInfo.setBlogStatus(1);
+        blogInfo.setBlogStatus(blogInfoDo.getBlogStatus());
 
         if (blogInfoService.saveOrUpdate(blogInfo)) {
-           for (Integer tagId:blogInfoDo.getBlogTagIds()){
-               BlogTag blogTag=new BlogTag();
-               blogTag.setBlogId(blogInfo.getBlogId());
-               blogTag.setTagId(tagId);
-               blogTag.setCreateTime(DateUtils.getLocalCurrentDate());
-               blogTagService.save(blogTag);
-           }
+            BlogCategory blogCategory = new BlogCategory();
+            blogCategory.setBlogId(blogInfo.getBlogId());
+            System.out.println(blogInfo);
+            //添加blog和分类映射关系
+            if (blogInfoDo.getBlogCategoryId() == null) {
+                //blogCategoryService.save()
+                blogCategory.setCategoryId(1);
+
+            } else {
+                blogCategoryService.remove(new QueryWrapper<BlogCategory>().eq("blog_id", blogInfo.getBlogId()));
+                blogCategory.setCategoryId(blogInfoDo.getBlogCategoryId());
+            }
+            blogCategory.setCreateTime(DateUtils.getLocalCurrentDate());
+            blogCategoryService.save(blogCategory);
+
+            //添加blog和标签映射关系
+            blogTagService.remove(new QueryWrapper<BlogTag>().eq("blog_id", blogInfo.getBlogId()));
+            for (Integer tagId : blogInfoDo.getBlogTagIds()) {
+                BlogTag blogTag = new BlogTag();
+                blogTag.setBlogId(blogInfo.getBlogId());
+                blogTag.setTagId(tagId);
+                blogTag.setCreateTime(DateUtils.getLocalCurrentDate());
+                blogTagService.save(blogTag);
+            }
             //blogService.removeAndsaveBatch(Arrays.asList(blogInfo.getBlogTags().split(",")), blogInfo);
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogInfo);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
@@ -178,21 +180,20 @@ public class AdminBlogController {
      * 文章分页列表
      *
      * @param pageDto 分页参数
-
      * @return com.site.blog.pojo.dto.AjaxResultPage<com.site.blog.entity.BlogInfo>
      * @date 2019/8/28 16:43
      */
 
     @GetMapping("/blog/list")
-    public AjaxResultPage<BlogDetailVO>  getBlogList(PageDto pageDto) {
-        QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>( );
-        queryWrapper.lambda().orderByDesc(BlogInfo::getUpdateTime);
-        IPage<BlogInfo> page = new Page<>(pageDto.getPageNum(),pageDto.getPageSize());
-        blogInfoService.page(page, queryWrapper);
-        AjaxResultPage  result = new AjaxResultPage<>();
-        result.setData(page.getRecords());
-        result.setCount(page.getTotal());
-        return result;
+    public Result  getBlogList(PageDto pageDto) {
+        try {
+             List<BlogDetailVO> blogDetailVOS=blogInfoService.getBlogs(pageDto);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogDetailVOS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, "error");
+        }
+
     }
 
     /**
@@ -223,10 +224,8 @@ public class AdminBlogController {
 
     @PostMapping("/blog/delete/{id}")
     public Result deleteBlog(@PathVariable("id") Long blogId) {
-        BlogInfo blogInfo = new BlogInfo()
-                .setBlogId(blogId)
-                .setIsDeleted(DeleteStatusEnum.DELETED.getStatus())
-                .setUpdateTime(DateUtils.getLocalCurrentDate());
+        BlogInfo blogInfo = blogInfoService.getOne(new QueryWrapper<BlogInfo>().eq("blog_id", blogId));
+        blogInfo.setIsDeleted(DeleteStatusEnum.DELETED.getStatus()).setUpdateTime(DateUtils.getLocalCurrentDate());
         boolean flag = blogInfoService.updateById(blogInfo);
         if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogInfo);
@@ -271,10 +270,5 @@ public class AdminBlogController {
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
 
-
-    @GetMapping("v1/blog/select")
-    public List<BlogInfo> getBlogInfoSelect() {
-        return blogInfoService.list();
-    }
 
 }

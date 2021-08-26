@@ -1,7 +1,11 @@
 package com.site.blog.mapper;
 
+import com.site.blog.model.dto.PageDto;
 import com.site.blog.model.entity.BlogInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.site.blog.model.vo.BlogDetailVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface BlogInfoMapper extends BaseMapper<BlogInfo> {
 
+    List<BlogDetailVO> getBlogDetail( );
 }

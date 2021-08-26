@@ -25,11 +25,7 @@ public class ResponseHelper {
     }
 
 
-
-
-
-
-    public static void response(String result,HttpServletResponse response ){
+    public static void response(String result, HttpServletResponse response) {
         PrintWriter out = null;
         try {
             out = response.getWriter();
@@ -42,8 +38,8 @@ public class ResponseHelper {
         }
     }
 
-    public static void response(String result){
-        response(result,getHttpServletResponse());
+    public static void response(String result) {
+        response(result, getHttpServletResponse());
     }
 
     /**
@@ -51,10 +47,9 @@ public class ResponseHelper {
      */
 
 
-
-    public static void sendRedirect(HttpServletResponse httpServletResponse, String url) throws IOException  {
+    public static void sendRedirect(HttpServletResponse httpServletResponse, String url) throws IOException {
         try {
-            log.info("正在跳转路径:"+url);
+            log.info("正在跳转路径:" + url);
             httpServletResponse.sendRedirect(url);
         } catch (Exception e) {
             e.printStackTrace();

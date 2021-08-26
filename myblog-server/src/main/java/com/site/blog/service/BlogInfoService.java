@@ -1,7 +1,9 @@
 package com.site.blog.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.site.blog.model.dto.PageDto;
 import com.site.blog.model.entity.BlogInfo;
+import com.site.blog.model.vo.BlogDetailVO;
 import com.site.blog.model.vo.SimpleBlogListVO;
 
 import java.util.List;
@@ -42,5 +44,5 @@ public interface BlogInfoService extends IService<BlogInfo> {
      * @date 2020/1/29 21:54
      */
     boolean clearBlogInfo(Long blogId);
-
+    List<BlogDetailVO> getBlogs(PageDto pageDto );
 }

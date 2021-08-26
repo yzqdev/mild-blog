@@ -19,7 +19,7 @@ import java.sql.Timestamp;
 public class BlogCategory  extends Model<BlogCategory> {
     @TableId(type = IdType.AUTO)
     private Integer relationId;
-    private Integer blogId;
+    private Long blogId;
     private Integer categoryId;
     private Timestamp createTime;
 }

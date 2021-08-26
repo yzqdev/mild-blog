@@ -1,26 +1,45 @@
 <template>
-  <el-table :data="data" fit>
+  <el-table v-loading="loading" :data="data" fit>
+    <el-table-column prop="blogId" label="博客id"></el-table-column>
     <el-table-column prop="blogTitle" label="博客标题"></el-table-column>
-    <el-table-column prop="blogCategoryName" label="博客分类"><template v-slot="{row}">
-      {{row.blogCategoryId}}
-    </template></el-table-column>
+    <el-table-column prop="blogCategoryName" label="博客分类">
+      <template v-slot="{ row }">
+        {{ row.blogCategory.categoryName }}
+      </template>
+    </el-table-column>
     <el-table-column prop="blogTags" label="博客标签">
-
+      <template v-slot="{ row }">
+        <el-tag type="primary" v-for="(item, index) in row.blogTags"
+          >{{ item.tagName }}
+        </el-tag>
+      </template>
     </el-table-column>
     <el-table-column prop="blogViews" label="阅读量"></el-table-column>
-    <el-table-column width="180" prop="updateTime" label="修改时间"></el-table-column>
-    <el-table-column prop="blogStatus" label="文章状态"></el-table-column>
-    <el-table-column prop="isDeleted" label="删除状态"
-      ><template v-slot="{ row }">
-        {{ row.isDeleted == 1 ? `已删除` : `未删除` }}
-      </template></el-table-column
+    <el-table-column width="180" prop="updateTime" label="修改时间">
+      <template v-slot="{ row }">
+        {{ $dayjs(row.updateTime).format("YYYY-MM-DD HH:mm:ss") }}
+      </template>
+    </el-table-column>
+    <el-table-column prop="blogStatus" label="文章状态"
+      ><template v-slot="{ row }">{{
+        row.blogStatus == 1 ? `发布` : `草稿`
+      }}</template></el-table-column
     >
-    <el-table-column prop="enableComment" label="评论"></el-table-column>
+    <el-table-column prop="isDeleted" label="隐藏状态">
+      <template v-slot="{ row }">
+        {{ row.isDeleted == 1 ? `隐藏` : `显示` }}
+      </template>
+    </el-table-column>
+    <el-table-column prop="enableComment" label="评论">
+      <template v-slot="{ row }">{{
+        row.enableComment == 1 ? `允许` : `禁止`
+      }}</template>
+    </el-table-column>
     <el-table-column label="操作" width="250">
-      <template v-slot="{ row }"
-        ><el-button type="primary" size="mini" @click="editArticle(row)"
-          >编辑</el-button
-        >
+      <template v-slot="{ row }">
+        <el-button type="primary" size="mini" @click="editArticle(row)"
+          >编辑
+        </el-button>
         <el-popconfirm
           title="确定删除吗？"
           confirmButtonText="好的"
@@ -31,7 +50,7 @@
           @confirm="deleteRow(row)"
         >
           <template #reference>
-            <el-button type="warning" size="mini">删除</el-button>
+            <el-button type="warning" size="mini">隐藏</el-button>
           </template>
         </el-popconfirm>
         <el-popconfirm
@@ -44,7 +63,7 @@
           @confirm="clearRow(row)"
         >
           <template #reference>
-            <el-button type="danger" size="mini">清除</el-button>
+            <el-button type="danger" size="mini">删除</el-button>
           </template>
         </el-popconfirm>
       </template>
@@ -67,6 +86,7 @@ export default defineComponent({
   data() {
     return {
       data: "",
+      loading: true,
       cateList: [],
       tagList: [],
     };
@@ -91,6 +111,7 @@ export default defineComponent({
       getBlogList({ pageNum: 1, pageSize: 30 }).then(({ data }) => {
         console.log(data);
         this.data = data;
+        this.loading = false;
       });
     },
     editArticle(row) {
@@ -104,14 +125,16 @@ export default defineComponent({
     deleteRow(row) {
       deleteBlog(row.blogId).then(({ data }) => {
         if (data) {
-          this.getData();this.$message.success("成功");
+          this.getData();
+          this.$message.success("成功");
         }
       });
     },
     clearRow(row) {
       clearBlog(row.blogId).then(({ data }) => {
         if (data) {
-          this.getData();this.$message.success("成功");
+          this.getData();
+          this.$message.success("成功");
         }
       });
     },

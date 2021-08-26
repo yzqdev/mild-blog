@@ -54,7 +54,7 @@
             <div style="display: flex">
               <span>{{ item.commentator }}</span>
               <span style="flex: 1; text-align: right">{{
-                item.commentCreateTime
+                $dayjs(item.commentCreateTime) .format("YYYY-MM-DD HH:mm:ss")
               }}</span>
             </div>
           </template>

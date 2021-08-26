@@ -32,10 +32,6 @@ public class RequestHelper {
     private static final String protocol = "Sec-WebSocket-Protocol";
 
 
-
-
-
-
     public static String getProtocol() {
         return protocol;
     }
@@ -46,11 +42,12 @@ public class RequestHelper {
 
 
     public static HttpServletRequest getRequest() {
-        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        return ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
     }
 
     /**
      * 获取session中的用户,添加全局对象
+     *
      * @return
      */
     public static AdminUser getSessionUser() {
@@ -125,8 +122,6 @@ public class RequestHelper {
         StringBuilder parameters = new StringBuilder();
         return getRequestMessage(request, parameters);
     }
-
-
 
 
     private static String getRequestMessage(HttpServletRequest request, StringBuilder parameters) throws
@@ -223,7 +218,7 @@ public class RequestHelper {
         Map heads = new HashMap();
         List<String> list = new ArrayList<>();
         list.add(type);
-        heads.put( "type", list);
+        heads.put("type", list);
         return heads;
     }
 

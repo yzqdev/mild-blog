@@ -63,8 +63,8 @@
         active-text="草稿"
         inactive-text="发布"
         v-model="articleForm.blogStatus"
-        :active-value="1"
-        :inactive-value="0"
+        :active-value="0"
+        :inactive-value="1"
       ></el-switch>
       <el-switch
         active-text="开启评论"
@@ -98,12 +98,12 @@ export default {
     return {
       articleForm: {
         blogId: "",
-        blogTitle: "112",
+        blogTitle: "",
         blogTagIds: [],
-        blogCategoryId: 29,
-        blogContent: "1contet",
-        blogPreface: "22",
-        blogSubUrl: "33",
+        blogCategoryId: undefined,
+        blogContent: "",
+        blogPreface: "",
+        blogSubUrl: "",
         blogStatus: 0,
         enableComment: 0,
       },

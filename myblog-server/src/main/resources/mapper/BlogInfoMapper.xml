@@ -23,4 +23,5 @@
         blog_id, blog_title, blog_sub_url, blog_preface, blog_content, blog_category_id , blog_tags, blog_status, blog_views, enable_comment, is_deleted, create_time, update_time
     </sql>
 
+
 </mapper>

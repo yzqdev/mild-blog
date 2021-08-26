@@ -11,6 +11,7 @@ import com.site.blog.model.entity.*;
 import com.site.blog.model.vo.BlogDetailVO;
 import com.site.blog.service.*;
 import com.site.blog.util.PageResult;
+import com.site.blog.util.RequestHelper;
 import com.site.blog.util.ResultGenerator;
 import io.swagger.annotations.Api;
 import org.apache.commons.text.StringEscapeUtils;
@@ -22,7 +23,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -130,7 +134,6 @@ public class HomeBlogController {
         PageResult blogPageResult = new PageResult(page.getRecords(), page.getTotal(), pageDto.getPageSize(), pageDto.getPageNum());
 
 
-
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogPageResult);
     }
 
@@ -163,9 +166,12 @@ public class HomeBlogController {
         }
         HashMap<String, Object> result = new HashMap<>();
         Page<BlogInfo> page = new Page<>(condition.getPageNum(), condition.getPageSize());
+        PageDto pageDto=new PageDto();
+        pageDto.setPageNum(condition.getPageNum());
+        pageDto.setPageSize(condition.getPageSize());
         LambdaQueryWrapper<BlogInfo> sqlWrapper = Wrappers.<BlogInfo>lambdaQuery()
                 .like(Objects.nonNull(condition.getKeyword()), BlogInfo::getBlogTitle, condition.getKeyword())
-                .eq(Objects.nonNull(condition.getCategoryId()), BlogInfo::getBlogCategoryId, condition.getCategoryId())
+
                 .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
                 .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
         //获取tag下的文章
@@ -188,7 +194,7 @@ public class HomeBlogController {
         if (Objects.nonNull(condition.getCategoryId())) {
             result.put("categoryName", condition.getCategoryId());
         }
-        result.put("blogPageResult", blogPageResult);
+        result.put("blogPageResult", blogInfoService.getBlogs(pageDto));
         result.put("pageName", condition.getPageName());
         result.put("newBlogs", blogInfoService.getNewBlog());
         result.put("hotBlogs", blogInfoService.getHotBlog());
@@ -204,7 +210,7 @@ public class HomeBlogController {
      * @date 2019/9/6 13:09
      */
     @GetMapping({"/blog/{blogId}", "/article/{blogId}"})
-    public Result  detail(@PathVariable("blogId") Long blogId) {
+    public Result detail(@PathVariable("blogId") Long blogId) {
         // 获得文章info
         BlogInfo blogInfo = blogInfoService.getById(blogId);
         List<BlogTag> blogTags = blogService.list(new QueryWrapper<BlogTag>()
@@ -236,7 +242,7 @@ public class HomeBlogController {
         result.put("blogDetailVO", blogDetailVO);
         result.put("tagList", tagList);
         result.put("pageName", "详情");
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,result);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, result);
     }
 
     /**
@@ -300,10 +306,14 @@ public class HomeBlogController {
     public Result<String> comment(HttpServletRequest request,
                                   @Validated Comment comment) {
         String ref = request.getHeader("Referer");
+
+
         // 对非法字符进行转义，防止xss漏洞
         comment.setCommentBody(StringEscapeUtils.escapeHtml4(comment.getCommentBody()));
         comment.setCommentStatus(1);
-        if (StringUtils.isEmpty(ref)) {
+        comment.setCommentatorIp(RequestHelper.getRequestIp());
+        comment.setUserAgent(RequestHelper.getUserAgentHeader());
+        if (!StringUtils.hasText(ref)) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "非法请求");
         }
         boolean flag = commentService.save(comment);

@@ -8,8 +8,10 @@ import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.model.dto.AjaxPutPage;
 import com.site.blog.model.dto.AjaxResultPage;
 import com.site.blog.model.dto.Result;
+import com.site.blog.model.entity.BlogCategory;
 import com.site.blog.model.entity.Category;
 import com.site.blog.model.entity.BlogInfo;
+import com.site.blog.service.BlogCategoryService;
 import com.site.blog.service.CategoryService;
 import com.site.blog.service.BlogInfoService;
 import com.site.blog.util.DateUtils;
@@ -37,7 +39,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @Resource
-    private BlogInfoService blogInfoService;
+    private BlogCategoryService blogCategoryService;
 
     /**
      * 分类的集合数据[用于下拉框]
@@ -95,12 +97,8 @@ public class CategoryController {
         Category sqlCategory = categoryService.getById(category.getCategoryId());
         boolean flag = sqlCategory.getCategoryName().equals(category.getCategoryName());
         if (!flag) {
-            BlogInfo blogInfo = new BlogInfo()
-                    .setBlogCategoryId(category.getCategoryId());
 
-            UpdateWrapper<BlogInfo> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.lambda().eq(BlogInfo::getBlogCategoryId, category.getCategoryId());
-            blogInfoService.update(blogInfo, updateWrapper);
+//todo;
             categoryService.updateById(category);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);

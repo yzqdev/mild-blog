@@ -1,19 +1,20 @@
 package com.site.blog.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-
-import java.sql.Timestamp;
-import java.util.Date;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
-
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
-import javax.validation.constraints.*;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
  * <p>
@@ -28,7 +29,7 @@ import javax.validation.constraints.*;
 @Accessors(chain = true)
 public class Comment implements Serializable {
 
-private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 主键id
@@ -41,7 +42,7 @@ private static final long serialVersionUID=1L;
      */
     @TableField("blog_id")
     @NotNull(message = "非法请求")
-    @Min(value = 0,message = "非法请求")
+    @Min(value = 0, message = "非法请求")
     private Long blogId;
 
     /**
@@ -49,7 +50,7 @@ private static final long serialVersionUID=1L;
      */
     @TableField("commentator")
     @NotBlank(message = "请输入称呼")
-    @Length(min = 1,max = 6,message = "名称过长或过短")
+    @Length(min = 1, max = 6, message = "名称过长或过短")
     private String commentator;
 
     /**
@@ -70,7 +71,7 @@ private static final long serialVersionUID=1L;
      */
     @TableField("comment_body")
     @NotBlank(message = "请输入评论内容")
-    @Length(min = 1,max = 200,message = "评论内容过长或过短")
+    @Length(min = 1, max = 200, message = "评论内容过长或过短")
     private String commentBody;
 
     /**
@@ -85,7 +86,8 @@ private static final long serialVersionUID=1L;
      */
     @TableField("commentator_ip")
     private String commentatorIp;
-
+    @TableField("user_agent")
+    private String userAgent;
     /**
      * 回复内容
      */
