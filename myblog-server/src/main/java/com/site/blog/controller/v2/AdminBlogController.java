@@ -1,6 +1,7 @@
 package com.site.blog.controller.v2;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.site.blog.constants.DeleteStatusEnum;
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.constants.UploadConstants;
@@ -10,9 +11,11 @@ import com.site.blog.model.dto.Result;
 import com.site.blog.model.entity.BlogCategory;
 import com.site.blog.model.entity.BlogInfo;
 import com.site.blog.model.entity.BlogTag;
+import com.site.blog.model.entity.Tag;
 import com.site.blog.model.vo.BlogDetailVO;
 import com.site.blog.model.vo.BlogEditVO;
 import com.site.blog.service.*;
+import com.site.blog.util.BeanMapUtil;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
 import com.site.blog.util.UploadFileUtils;
@@ -187,7 +190,23 @@ public class AdminBlogController {
     @GetMapping("/blog/list")
     public Result  getBlogList(PageDto pageDto) {
         try {
-             List<BlogDetailVO> blogDetailVOS=blogInfoService.getBlogs(pageDto);
+            QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.lambda().orderByDesc(BlogInfo::getUpdateTime);
+            Page<BlogInfo> page = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
+            Page<BlogInfo> blogInfoPage = blogInfoService.page(page, queryWrapper);
+
+            List<BlogDetailVO> blogDetailVOS = blogInfoPage.getRecords().stream().map(BeanMapUtil::copyBlog).collect(Collectors.toList());
+
+            blogDetailVOS.forEach(post -> {
+
+                QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
+                List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).collect(Collectors.toList());
+                post.setBlogTags(tags);
+                Integer cateId = blogCategoryService.getById(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
+                if (cateId != null) {
+                    post.setBlogCategory(categoryService.getById(cateId));
+                }
+            });
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogDetailVOS);
         } catch (Exception e) {
             e.printStackTrace();

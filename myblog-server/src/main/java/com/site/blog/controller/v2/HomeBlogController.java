@@ -10,6 +10,7 @@ import com.site.blog.model.dto.*;
 import com.site.blog.model.entity.*;
 import com.site.blog.model.vo.BlogDetailVO;
 import com.site.blog.service.*;
+import com.site.blog.util.BeanMapUtil;
 import com.site.blog.util.PageResult;
 import com.site.blog.util.RequestHelper;
 import com.site.blog.util.ResultGenerator;
@@ -48,7 +49,12 @@ public class HomeBlogController {
 
     @Resource
     private TagService tagService;
-
+    @Resource
+    BlogCategoryService blogCategoryService;
+    @Resource
+    CategoryService categoryService;
+    @Resource
+    private BlogTagService blogTagService;
     @Resource
     private BlogConfigService blogConfigService;
 
@@ -194,7 +200,26 @@ public class HomeBlogController {
         if (Objects.nonNull(condition.getCategoryId())) {
             result.put("categoryName", condition.getCategoryId());
         }
-        result.put("blogPageResult", blogInfoService.getBlogs(pageDto));
+        //start
+        QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().orderByDesc(BlogInfo::getUpdateTime);
+        Page<BlogInfo> ipage = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
+        Page<BlogInfo> blogInfoPage = blogInfoService.page(ipage, queryWrapper);
+
+        List<BlogDetailVO> blogDetailVOS = blogInfoPage.getRecords().stream().map(BeanMapUtil::copyBlog).collect(Collectors.toList());
+
+        blogDetailVOS.forEach(post -> {
+
+            QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
+            List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).collect(Collectors.toList());
+            post.setBlogTags(tags);
+            Integer cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
+            if (cateId != null) {
+                post.setBlogCategory(categoryService.getById(cateId));
+            }
+        });
+
+        result.put("blogPageResult", blogDetailVOS);
         result.put("pageName", condition.getPageName());
         result.put("newBlogs", blogInfoService.getNewBlog());
         result.put("hotBlogs", blogInfoService.getHotBlog());

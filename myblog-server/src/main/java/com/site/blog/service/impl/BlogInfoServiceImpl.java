@@ -37,13 +37,8 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
     private BlogInfoMapper blogInfoMapper;
 
     @Resource
-    private BlogTagService blogTagMapper;
-    @Resource
-    private BlogCategoryService blogCategoryMapper;
-    @Resource
-    private CategoryService categoryMapper;
-    @Resource
-    private TagService tagMapper;
+    private BlogTagMapper blogTagMapper;
+
     @Resource
     private CommentMapper commentMapper;
 
@@ -87,7 +82,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
         if (SqlHelper.retBool(blogInfoMapper.deleteById(blogId))) {
             QueryWrapper<BlogTag> tagRelationWrapper = new QueryWrapper<>();
             tagRelationWrapper.lambda().eq(BlogTag::getBlogId, blogId);
-            blogTagMapper.remove(tagRelationWrapper);
+            blogTagMapper.deleteById(tagRelationWrapper);
             QueryWrapper<Comment> commentWrapper = new QueryWrapper<>();
             commentWrapper.lambda().eq(Comment::getBlogId, blogId);
             commentMapper.delete(commentWrapper);
@@ -98,23 +93,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
 
     @Override
     public List<BlogDetailVO> getBlogs(PageDto pageDto) {
-        QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().orderByDesc(BlogInfo::getUpdateTime);
-        Page<BlogInfo> page = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
-        Page<BlogInfo> blogInfoPage = blogInfoMapper.selectPage(page, queryWrapper);
 
-        List<BlogDetailVO> blogDetailVOS = blogInfoPage.getRecords().stream().map(BeanMapUtil::copyBlog).collect(Collectors.toList());
-
-        blogDetailVOS.forEach(post -> {
-
-            QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
-            List<Tag> tags = blogTagMapper.list(tagQueryWrapper).stream().map(item -> tagMapper.getById(item.getTagId())).collect(Collectors.toList());
-            post.setBlogTags(tags);
-            Integer cateId = blogCategoryMapper.getById(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
-            if (cateId != null) {
-                post.setBlogCategory(categoryMapper.getById(cateId));
-            }
-        });
         return blogInfoMapper.getBlogDetail();
     }
 }
