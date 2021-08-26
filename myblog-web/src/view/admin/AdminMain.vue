@@ -16,20 +16,21 @@
           <el-menu-item index="/admin/home/comment-list">
             评论列表
           </el-menu-item>
-          <el-menu-item index="/admin/home/tag-list"> 标签列表 </el-menu-item>
+          <el-menu-item index="/admin/home/tag-list"> 标签列表</el-menu-item>
           <el-menu-item index="/admin/home/category-list">
             分类列表
           </el-menu-item>
         </el-sub-menu>
 
         <el-sub-menu index="4">
-          <template #title> <i class="el-icon-setting"></i>系统管理</template>
+          <template #title><i class="el-icon-setting"></i>系统管理</template>
           <el-menu-item index="/admin/home/system-info">
             系统信息
-          </el-menu-item> <el-menu-item index="/admin/home/users">
+          </el-menu-item>
+          <el-menu-item index="/admin/home/users">
             用户列表
           </el-menu-item>
-          <el-menu-item index="/admin/home/link-list"> 链接列表 </el-menu-item>
+          <el-menu-item index="/admin/home/link-list"> 链接列表</el-menu-item>
         </el-sub-menu>
       </el-menu>
     </aside>
@@ -39,17 +40,20 @@
         <article class="logout">
           <el-dropdown>
             <span class="el-dropdown-link">
-              {{ user.loginUserName
+              {{
+                user.loginUserName
               }}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item @click="gotoUserInfo"
-                  >账户信息</el-dropdown-item
+                >账户信息
+                </el-dropdown-item
                 >
                 <el-dropdown-item>系统信息</el-dropdown-item>
                 <el-dropdown-item divided @click="logout"
-                  >退出登录</el-dropdown-item
+                >退出登录
+                </el-dropdown-item
                 >
               </el-dropdown-menu>
             </template>
@@ -57,15 +61,15 @@
         </article>
       </header>
       <div class="admin-content">
-        <router-view />
+        <router-view/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import { getUserInfo } from "@/utils/apiConfig";
+import {defineComponent} from "vue";
+import {getUserInfo} from "@/utils/apiConfig";
 import axios from "axios";
 
 export default defineComponent({
@@ -80,7 +84,7 @@ export default defineComponent({
     },
   },
   data() {
-    return { actMenu: "", user: {} };
+    return {actMenu: "", user: {}};
   },
   created() {
     // this.getToken()
@@ -88,16 +92,19 @@ export default defineComponent({
   },
   methods: {
     gotoUserInfo() {
-      this.$router.push({ name: "userInfo" });
+      this.$router.push({name: "userInfo"});
     },
     logout() {
       localStorage.clear();
       this.$router.push("/admin");
     },
     getUser() {
-      getUserInfo().then(({ data }) => {
-        console.log(data);
-        this.user = data.user;
+      getUserInfo().then((res) => {
+        if (res.success) {
+          this.user = res.data.user;
+        } else {
+          this.$router.push({name: 'adminLogin'})
+        }
       });
     },
   },
@@ -108,24 +115,30 @@ export default defineComponent({
 .admin-main {
   height: 100vh;
   display: flex;
+
   .sidebar {
     width: 200px;
   }
+
   .right-content {
     flex: 1;
+
     .admin-header {
       padding: 20px;
       background-color: #eee;
       display: flex;
       align-items: center;
+
       span {
         cursor: pointer;
       }
+
       .logout {
         flex: 1;
         text-align: right;
       }
     }
+
     .admin-content {
       padding: 20px;
     }

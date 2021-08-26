@@ -9,6 +9,12 @@ export const getConfigs = () => {
 };
 export const getLinks = () => {
   return axios.get("/home/link");
+};export const getHomeTags = () => {
+  return axios.get("/home/tags");
+};export const getHomeCates = () => {
+  return axios.get("/home/categories");
+};export const getTimeline = ({pageNum,pageSize}) => {
+  return axios.post("/home/timeline", {pageNum,pageSize});
 };
 export const listComments = (data) => {
   return axios.get("/home/blog/listComment?" + qs.stringify(data));

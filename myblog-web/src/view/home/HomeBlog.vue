@@ -1,8 +1,8 @@
 <template>
-  <div class="home-blog">
+  <div class="home-blog" v-loading="loading">
     <h1>{{ blog.blogTitle }}</h1>
-    <div>
-      <span>{{ formatTime(blog.createTime) }}</span
+    <div class="home-blog-head">
+      <span>发表于{{ formatTime(blog.createTime) }}</span
       ><span>共有{{ blog.commentCount }}条评论</span
       ><span>{{ blog.blogViews }}浏览</span>
     </div>
@@ -19,24 +19,28 @@
     </article>
 
     <div class="blog-comment" v-if="blog.enableComment">
-      <article>添加评论</article>
-      <el-form :model="comment"  label-position="top" :rules="commentRule">
+      <article class="blog-title">添加评论</article>
+      <el-form :model="comment" label-position="top" :rules="commentRule">
         <el-form-item prop="commentator">
-          <el-input v-model="comment.commentator">
+          <el-input :input-style="commentInput" v-model="comment.commentator">
             <template #prepend>昵称</template></el-input
           >
         </el-form-item>
         <el-form-item prop="email">
-          <el-input type="email" v-model="comment.email">
+          <el-input
+            :input-style="commentInput"
+            type="email"
+            v-model="comment.email"
+          >
             <template #prepend>邮箱 </template></el-input
           >
         </el-form-item>
         <el-form-item prop="website">
-          <el-input v-model="comment.website">
+          <el-input :input-style="commentInput" v-model="comment.website">
             <template #prepend>网站地址 </template></el-input
           >
         </el-form-item>
-        评论内容
+        <article class="blog-title">评论内容</article>
         <el-form-item prop="commentBody">
           <div :class="active ? `active` : ``">
             <v-md-editor
@@ -47,14 +51,14 @@
         </el-form-item>
         <el-button type="primary" @click="commentYou">提交</el-button>
       </el-form>
-      <article>全部留言</article>
-      <article>
+      <article class="blog-title">全部留言</article>
+      <article v-if="commentList && commentList.length > 0">
         <el-card style="margin-top: 20px" v-for="item in commentList">
           <template #header>
             <div style="display: flex">
               <span>{{ item.commentator }}</span>
               <span style="flex: 1; text-align: right">{{
-                $dayjs(item.commentCreateTime) .format("YYYY-MM-DD HH:mm:ss")
+                $dayjs(item.commentCreateTime).format("YYYY-MM-DD HH:mm:ss")
               }}</span>
             </div>
           </template>
@@ -65,6 +69,7 @@
           </div>
         </el-card>
       </article>
+      <span v-else>暂无内容</span>
     </div>
   </div>
 </template>
@@ -72,11 +77,15 @@
 <script>
 import { getBlogById, listComments, submitComment } from "@/utils/apiConfig";
 import dayjs from "dayjs";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
   name: "HomeBlog",
+  components: {},
   data() {
     return {
+      loading: true,
+      commentInput: { width: "50%" },
       blog: {},
       tags: [],
       comment: {},
@@ -101,6 +110,16 @@ export default {
     this.getComments();
   },
   computed: {},
+  watch: {
+    comment: {
+      handler: function (val) {
+        if (val.commentBody) {
+          this.active = false;
+        }
+      },
+      deep: true,
+    },
+  },
   methods: {
     commentYou() {
       if (!this.comment.commentBody) {
@@ -113,13 +132,14 @@ export default {
         console.log(res);
         if (res) {
           this.getComments();
+          this.comment = {};
           this.$message.success("成功");
         }
       });
     },
     formatTime(time) {
       console.log();
-      let res = dayjs(new Date(time)).format("YYYY-MM-DD");
+      let res = dayjs(new Date(time)).format("YYYY-MM-DD HH:mm:ss");
       console.log(res);
       return res;
     },
@@ -129,12 +149,13 @@ export default {
     getComments() {
       listComments({ page: 1, limit: 30, blogId: this.blog.blogId }).then(
         (res) => {
+          this.loading = false;
           this.commentList = res.data;
         }
       );
     },
   },
-};
+});
 </script>
 
 <style lang="less" scoped>
@@ -142,10 +163,22 @@ export default {
   flex: 1;
 
   padding: 20px 100px;
+  .home-blog-head{
+    span{
+      margin: 0 5px;
+    }
+  }
+  .blog-tags{
+    margin: 10px 0;
+  }
   .active {
     border: 1px solid red;
   }
   .blog-comment {
+    .blog-title {
+      margin: 10px;
+      font-weight: 600;
+    }
   }
 }
 </style>

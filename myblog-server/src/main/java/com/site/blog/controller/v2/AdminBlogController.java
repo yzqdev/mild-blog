@@ -202,12 +202,12 @@ public class AdminBlogController {
                 QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
                 List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).collect(Collectors.toList());
                 post.setBlogTags(tags);
-                Integer cateId = blogCategoryService.getById(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
+                Integer cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
                 if (cateId != null) {
                     post.setBlogCategory(categoryService.getById(cateId));
                 }
             });
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogDetailVOS);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, blogDetailVOS);
         } catch (Exception e) {
             e.printStackTrace();
             return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, "error");

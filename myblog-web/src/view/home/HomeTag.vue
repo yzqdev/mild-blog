@@ -1,5 +1,5 @@
 <template>
-  <div class="home-tag"><PassageList :list="list"></PassageList></div>
+  <div class="home-tag"><PassageList :list="list" :loading="loading"></PassageList></div>
 </template>
 
 <script>
@@ -11,13 +11,14 @@ export default {
   components: { PassageList },
   data() {
     return {
-      list: null,
+      list: null,loading:true
     };
   },
   async created() {
     let id = this.$route.params.id;
     const { data } = await getArticleByTag(id, { pageNum: 1, pageSize: 30 });
-    this.list = data.list;
+    this.list = data ;
+    this.loading=false
   },
 };
 </script>

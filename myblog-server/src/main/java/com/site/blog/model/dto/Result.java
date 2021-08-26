@@ -15,10 +15,10 @@ import java.io.Serializable;
 
 public class Result<T> implements Serializable {
     private static final long serialVersionUID = 1L;
-    private int resultCode;
+    private Integer resultCode;
     private String message;
     private T data;
-    private boolean success;
+    private Boolean success;
 
     public Result() {
     }

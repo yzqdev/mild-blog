@@ -82,6 +82,88 @@ public class HomeBlogController {
     }
 
     /**
+     * 标签
+     *
+     * @param tagId
+     * @return java.lang.String
+     * @date 2019/9/6 7:04
+     */
+    @PostMapping({"/tag/{tagId}"})
+    public Result tag(@PathVariable("tagId") String tagId, @RequestBody PageDto pageDto) {
+
+        Page<BlogInfo> page = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
+        LambdaQueryWrapper<BlogInfo> sqlWrapper = Wrappers.<BlogInfo>lambdaQuery()
+
+
+                .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
+                .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
+        //获取tag下的文章
+        if (Objects.nonNull(tagId)) {
+            List<BlogTag> list = blogService.list(new QueryWrapper<BlogTag>()
+                    .lambda().eq(BlogTag::getTagId, tagId));
+            if (!CollectionUtils.isEmpty(list)) {
+                sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogTag::getBlogId).toArray());
+            }
+        }
+        sqlWrapper.orderByDesc(BlogInfo::getCreateTime);
+        Page<BlogInfo> blogInfoPage = blogInfoService.page(page, sqlWrapper);
+        List<BlogDetailVO> blogDetailVOS = toBlogVo(blogInfoPage);
+
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, blogDetailVOS);
+    }
+
+    /**
+     * bloginfo转blogdetailvo
+     *
+     * @param blogInfoPage
+     * @return
+     */
+    public List<BlogDetailVO> toBlogVo(Page<BlogInfo> blogInfoPage) {
+
+        List<BlogDetailVO> blogDetailVOS = blogInfoPage.getRecords().stream().map(BeanMapUtil::copyBlog).collect(Collectors.toList());
+
+        blogDetailVOS.forEach(post -> {
+
+            QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
+            List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).collect(Collectors.toList());
+            post.setBlogTags(tags);
+            Integer cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
+            if (cateId != null) {
+                post.setBlogCategory(categoryService.getById(cateId));
+            }
+        });
+        return blogDetailVOS;
+    }
+
+    @PostMapping("/timeline")
+    public Result timeline(@RequestBody PageDto pageDto) {
+        try {
+            QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.lambda().orderByDesc(BlogInfo::getUpdateTime);
+            Page<BlogInfo> ipage = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
+            Page<BlogInfo> blogInfoPage = blogInfoService.page(ipage, queryWrapper);
+
+            List<BlogDetailVO> blogDetailVOS = blogInfoPage.getRecords().stream().map(BeanMapUtil::copyBlog).collect(Collectors.toList());
+
+            blogDetailVOS.forEach(post -> {
+
+                QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
+                List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).collect(Collectors.toList());
+                post.setBlogTags(tags);
+                Integer cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
+                if (cateId != null) {
+                    post.setBlogCategory(categoryService.getById(cateId));
+                }
+            });
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, blogDetailVOS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, "失败了");
+        }
+
+    }
+
+    /**
      * 分类
      *
      * @param categoryName
@@ -112,36 +194,28 @@ public class HomeBlogController {
         );
     }
 
-    /**
-     * 标签
-     *
-     * @param tagId
-     * @return java.lang.String
-     * @date 2019/9/6 7:04
-     */
-    @PostMapping({"/tag/{tagId}"})
-    public Result tag(@PathVariable("tagId") String tagId, @RequestBody PageDto pageDto) {
-
-        Page<BlogInfo> page = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
-        LambdaQueryWrapper<BlogInfo> sqlWrapper = Wrappers.<BlogInfo>lambdaQuery()
-
-                .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
-                .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
-        //获取tag下的文章
-        if (Objects.nonNull(tagId)) {
-            List<BlogTag> list = blogService.list(new QueryWrapper<BlogTag>()
-                    .lambda().eq(BlogTag::getTagId, tagId));
-            if (!CollectionUtils.isEmpty(list)) {
-                sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogTag::getBlogId).toArray());
-            }
+    @GetMapping("/tags")
+    public Result getTags() {
+        QueryWrapper<Tag> queryWrapper = new QueryWrapper<Tag>();
+        queryWrapper.lambda().eq(Tag::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
+        List<Tag> list = tagService.list();
+        if (CollectionUtils.isEmpty(list)) {
+            ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
         }
-        sqlWrapper.orderByDesc(BlogInfo::getCreateTime);
-        blogInfoService.page(page, sqlWrapper);
-        PageResult blogPageResult = new PageResult(page.getRecords(), page.getTotal(), pageDto.getPageSize(), pageDto.getPageNum());
-
-
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogPageResult);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, list);
     }
+
+    @GetMapping("/categories")
+    public Result getCate() {
+        QueryWrapper<Category> queryWrapper = new QueryWrapper<Category>();
+        queryWrapper.lambda().eq(Category::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus()).orderByDesc(Category::getCreateTime);
+        List<Category> list = categoryService.list(queryWrapper);
+        if (CollectionUtils.isEmpty(list)) {
+            ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
+        }
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, list);
+    }
+
 
     @GetMapping("/configs")
     public Result getConfigs() {
@@ -172,7 +246,7 @@ public class HomeBlogController {
         }
         HashMap<String, Object> result = new HashMap<>();
         Page<BlogInfo> page = new Page<>(condition.getPageNum(), condition.getPageSize());
-        PageDto pageDto=new PageDto();
+        PageDto pageDto = new PageDto();
         pageDto.setPageNum(condition.getPageNum());
         pageDto.setPageSize(condition.getPageSize());
         LambdaQueryWrapper<BlogInfo> sqlWrapper = Wrappers.<BlogInfo>lambdaQuery()
@@ -206,18 +280,7 @@ public class HomeBlogController {
         Page<BlogInfo> ipage = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
         Page<BlogInfo> blogInfoPage = blogInfoService.page(ipage, queryWrapper);
 
-        List<BlogDetailVO> blogDetailVOS = blogInfoPage.getRecords().stream().map(BeanMapUtil::copyBlog).collect(Collectors.toList());
-
-        blogDetailVOS.forEach(post -> {
-
-            QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
-            List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).collect(Collectors.toList());
-            post.setBlogTags(tags);
-            Integer cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
-            if (cateId != null) {
-                post.setBlogCategory(categoryService.getById(cateId));
-            }
-        });
+        List<BlogDetailVO> blogDetailVOS =toBlogVo(blogInfoPage);
 
         result.put("blogPageResult", blogDetailVOS);
         result.put("pageName", condition.getPageName());

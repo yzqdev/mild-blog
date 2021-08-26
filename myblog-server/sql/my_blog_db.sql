@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 腾讯
+ Source Server         : tencent
  Source Server Type    : MySQL
  Source Server Version : 80023
  Source Host           : 81.69.227.146:3306
@@ -11,7 +11,7 @@
  Target Server Version : 80023
  File Encoding         : 65001
 
- Date: 26/08/2021 11:47:45
+ Date: 26/08/2021 21:56:28
 */
 
 SET NAMES utf8mb4;
@@ -29,7 +29,7 @@ CREATE TABLE `tb_admin_user`  (
   `locked` tinyint NULL DEFAULT 0 COMMENT '是否锁定 0未锁定 1已锁定无法登陆',
   `role` tinyint NULL DEFAULT NULL COMMENT '0普通用户,1管理员',
   PRIMARY KEY (`admin_user_id`, `login_user_name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '后台管理员信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '后台管理员信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tb_admin_user
@@ -47,13 +47,16 @@ CREATE TABLE `tb_blog_category`  (
   `category_id` int NULL DEFAULT NULL,
   `create_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`relation_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_blog_category
 -- ----------------------------
-INSERT INTO `tb_blog_category` VALUES (1, 40, 1, '2021-08-26 11:33:30');
-INSERT INTO `tb_blog_category` VALUES (2, 41, 1, '2021-08-26 11:33:30');
+INSERT INTO `tb_blog_category` VALUES (9, 1, 1, NULL);
+INSERT INTO `tb_blog_category` VALUES (10, 43, 22, NULL);
+INSERT INTO `tb_blog_category` VALUES (12, 44, 1, NULL);
+INSERT INTO `tb_blog_category` VALUES (13, 46, 33, '2021-08-26 13:23:40');
+INSERT INTO `tb_blog_category` VALUES (17, 45, 22, '2021-08-26 13:43:26');
 
 -- ----------------------------
 -- Table structure for tb_blog_config
@@ -90,7 +93,6 @@ CREATE TABLE `tb_blog_info`  (
   `blog_sub_url` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '博客自定义路径url',
   `blog_preface` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '博客前言',
   `blog_content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '博客内容',
-  `blog_category_id` int NOT NULL COMMENT '博客分类id',
   `blog_status` tinyint NOT NULL DEFAULT 0 COMMENT '0-草稿 1-发布',
   `blog_views` bigint NOT NULL DEFAULT 0 COMMENT '阅读量',
   `enable_comment` tinyint NOT NULL DEFAULT 0 COMMENT '0-允许评论 1-不允许评论',
@@ -98,13 +100,16 @@ CREATE TABLE `tb_blog_info`  (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
   `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`blog_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '博客信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 47 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '博客信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tb_blog_info
 -- ----------------------------
-INSERT INTO `tb_blog_info` VALUES (40, '第一篇文章', '', 'asdasd', '啊啊', 1, 1, 9, 1, 0, '2021-08-26 11:33:56', '2021-08-26 11:33:56');
-INSERT INTO `tb_blog_info` VALUES (41, '第二篇', '', '啊啊', '使对方的负担', 1, 1, 0, 1, 0, '2021-08-26 11:37:00', '2021-08-26 11:37:00');
+INSERT INTO `tb_blog_info` VALUES (1, 'aa', '', 'a', 'dfdsf', 1, 1, 0, 0, '2021-08-26 12:50:46', '2021-08-26 12:50:46');
+INSERT INTO `tb_blog_info` VALUES (43, '啊啊啊', '', '水电费地方 ', 'sdf', 1, 1, 0, 0, '2021-08-26 13:11:45', '2021-08-26 13:11:45');
+INSERT INTO `tb_blog_info` VALUES (44, '123', '', 'sfd', 'sdfsfdfsf', 1, 0, 0, 0, '2021-08-26 13:15:42', '2021-08-26 13:15:42');
+INSERT INTO `tb_blog_info` VALUES (45, 'adasd', '', 'sdfds', 'fddf', 0, 1, 1, 0, '2021-08-26 13:43:26', '2021-08-26 13:43:26');
+INSERT INTO `tb_blog_info` VALUES (46, 'vue3使用', '', '阿斯蒂芬', '撒旦福多', 1, 2, 1, 1, '2021-08-26 13:23:40', '2021-08-26 13:34:41');
 
 -- ----------------------------
 -- Table structure for tb_blog_tag
@@ -116,20 +121,16 @@ CREATE TABLE `tb_blog_tag`  (
   `tag_id` int NOT NULL COMMENT '标签id',
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
   PRIMARY KEY (`relation_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 142 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '博客跟标签的关系表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 445 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '博客跟标签的关系表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tb_blog_tag
 -- ----------------------------
-INSERT INTO `tb_blog_tag` VALUES (331, 8, 141, '2021-08-12 12:45:22');
-INSERT INTO `tb_blog_tag` VALUES (332, 8, 140, '2021-08-12 12:45:22');
-INSERT INTO `tb_blog_tag` VALUES (333, 9, 141, '2021-08-12 12:46:12');
-INSERT INTO `tb_blog_tag` VALUES (334, 9, 140, '2021-08-12 12:46:12');
-INSERT INTO `tb_blog_tag` VALUES (335, 10, 58, '2021-08-12 14:19:51');
-INSERT INTO `tb_blog_tag` VALUES (336, 10, 139, '2021-08-12 14:19:51');
-INSERT INTO `tb_blog_tag` VALUES (429, 40, 139, '2021-08-26 11:33:56');
-INSERT INTO `tb_blog_tag` VALUES (430, 41, 141, '2021-08-26 11:37:00');
-INSERT INTO `tb_blog_tag` VALUES (431, 41, 140, '2021-08-26 11:37:00');
+INSERT INTO `tb_blog_tag` VALUES (436, 1, 1, '2021-08-26 12:50:46');
+INSERT INTO `tb_blog_tag` VALUES (437, 43, 144, '2021-08-26 13:11:45');
+INSERT INTO `tb_blog_tag` VALUES (438, 44, 144, '2021-08-26 13:15:42');
+INSERT INTO `tb_blog_tag` VALUES (440, 46, 145, '2021-08-26 13:23:40');
+INSERT INTO `tb_blog_tag` VALUES (444, 45, 1, '2021-08-26 13:43:26');
 
 -- ----------------------------
 -- Table structure for tb_category
@@ -150,7 +151,7 @@ CREATE TABLE `tb_category`  (
 -- ----------------------------
 INSERT INTO `tb_category` VALUES (1, '默认分类', '', 1, 0, '2019-08-30 15:07:02');
 INSERT INTO `tb_category` VALUES (22, 'Java进阶', '', 22, 0, '2018-11-12 10:42:25');
-INSERT INTO `tb_category` VALUES (24, '日常随笔', '', 23, 0, '2018-11-12 10:43:21');
+INSERT INTO `tb_category` VALUES (33, '前端', NULL, 1, 0, '2021-08-26 13:23:23');
 
 -- ----------------------------
 -- Table structure for tb_comment
@@ -176,9 +177,6 @@ CREATE TABLE `tb_comment`  (
 -- ----------------------------
 -- Records of tb_comment
 -- ----------------------------
-INSERT INTO `tb_comment` VALUES (33, 40, '1', '1', '', '1', '2021-08-26 10:55:36', '0:0:0:0:0:0:0:1', '', NULL, 1, 0, NULL);
-INSERT INTO `tb_comment` VALUES (34, 40, '1212', '1', '', '111', '2021-08-26 11:01:04', '60.173.247.143', '', NULL, 1, 0, NULL);
-INSERT INTO `tb_comment` VALUES (35, 40, '12112', '1', '', '2121', '2021-08-26 11:05:27', '0:0:0:0:0:0:0:1', '', NULL, 1, 0, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 Edg/92.0.902.78');
 
 -- ----------------------------
 -- Table structure for tb_link
@@ -220,10 +218,8 @@ CREATE TABLE `tb_tag`  (
 -- ----------------------------
 -- Records of tb_tag
 -- ----------------------------
-INSERT INTO `tb_tag` VALUES (58, '标签22', 1, '2018-11-12 00:31:15');
-INSERT INTO `tb_tag` VALUES (139, 'NoSQL', 0, '2019-08-06 21:23:38');
-INSERT INTO `tb_tag` VALUES (140, 'aaa', 0, '2021-08-24 15:04:32');
-INSERT INTO `tb_tag` VALUES (141, 'bbb', 0, '2021-08-24 15:05:14');
-INSERT INTO `tb_tag` VALUES (142, '标签', 0, '2021-08-25 20:36:01');
+INSERT INTO `tb_tag` VALUES (1, '默认tag', 0, '2021-08-26 13:05:01');
+INSERT INTO `tb_tag` VALUES (144, '第一个标签', 0, '2021-08-26 13:11:33');
+INSERT INTO `tb_tag` VALUES (145, '技术', 0, '2021-08-26 13:23:10');
 
 SET FOREIGN_KEY_CHECKS = 1;

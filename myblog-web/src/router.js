@@ -1,4 +1,8 @@
-import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
+import {
+  createRouter,
+  createWebHashHistory,
+  createWebHistory,
+} from "vue-router";
 import Home from "@/view/Home.vue";
 import HomeMain from "@/view/home/HomeMain.vue";
 import HomeLink from "@/view/home/HomeLink.vue";
@@ -18,6 +22,7 @@ import SystemInfo from "@/view/admin/SystemInfo.vue";
 import ArticleEdit from "@/view/admin/ArticleEdit.vue";
 import UserInfo from "@/view/admin/UserInfo.vue";
 import AdminList from "@/view/admin/AdminList.vue";
+import HomeComponent from "@/view/home/HomeComponent.vue";
 
 const routes = [
   {
@@ -27,13 +32,32 @@ const routes = [
     children: [
       {
         path: "main",
-        name: "HomeMain",
+        name: "homeMain",
         component: HomeMain,
       },
       {
         path: "link",
-        name: "HomeLink",
+        name: "homeLink",
         component: HomeLink,
+      },
+      {
+        path: "timeline",
+        name: "homeTimeline",
+        component: HomeComponent,
+      },  {
+        path: "search",
+        name: "homeSearch",
+        component: HomeComponent,
+      },
+      {
+        path: "categories",
+        name: "homeCategories",
+        component: HomeComponent,
+      },
+      {
+        path: "tags",
+        name: "homeTags",
+        component: HomeComponent,
       },
       {
         path: "tag/:id",
@@ -108,11 +132,13 @@ const routes = [
             path: "system-info",
             name: "systemInfo",
             component: SystemInfo,
-          },  {
+          },
+          {
             path: "user-info",
             name: "userInfo",
             component: UserInfo,
-          },{
+          },
+          {
             path: "users",
             name: "users",
             component: AdminList,

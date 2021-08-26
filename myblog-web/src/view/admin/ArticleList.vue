@@ -7,9 +7,9 @@
         {{ row.blogCategory.categoryName }}
       </template>
     </el-table-column>
-    <el-table-column prop="blogTags" label="博客标签">
+    <el-table-column prop="blogTags" width="250" label="博客标签">
       <template v-slot="{ row }">
-        <el-tag type="primary" v-for="(item, index) in row.blogTags"
+        <el-tag style="margin:0 5px;" type="primary" v-for="(item, index) in row.blogTags"
           >{{ item.tagName }}
         </el-tag>
       </template>

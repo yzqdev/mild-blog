@@ -37,8 +37,11 @@ export default {
     return {
       navs: [
         { text: "主页", id: 1, link: "/home/main" },
-        { text: "友情链接", id: 2, link: "/home/link" },
-        { text: "关于", id: 3, link: "/home/about" },
+        { text: "标签", id: 2, link: "/home/tags" },
+        { text: "分类", id: 3, link: "/home/categories" },
+        { text: "时间线", id: 6, link: "/home/timeline" },
+        { text: "友情链接", id: 4, link: "/home/link" },
+        { text: "关于", id: 5, link: "/home/about" },
       ],
       activeRoute: "",
       configs: {

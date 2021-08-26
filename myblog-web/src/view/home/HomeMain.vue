@@ -1,7 +1,7 @@
 <template>
   <div class="home-img"><img src="" /></div>
   <div class="home-main">
-     <PassageList :list="passages.list"></PassageList>
+    <PassageList :list="passages" :loading="loading"></PassageList>
     <div class="sidebar">
       <el-card
         ><template #header>搜索文章</template>
@@ -9,7 +9,7 @@
           type="text"
           placeholder="搜索"
           v-model="searchText"
-          @click="search"
+          @keyup.enter="search"
         >
           <template #append>
             <el-button
@@ -19,7 +19,8 @@
         ></el-input>
       </el-card>
       <el-card style="margin: 20px 0"
-        ><template #header><span class="link-title" @click="gotoTags">标签</span> </template
+        ><template #header
+          ><span class="link-title" @click="gotoTags">标签</span> </template
         ><el-tag
           class="tag-style"
           v-for="item in hotTag"
@@ -43,26 +44,29 @@
 <script setup>
 import { getIndex } from "@/utils/apiConfig";
 let searchText = ref("");
-function search() {}
+
 const msg = "aaaaaasdda";
 import { onBeforeMount, onMounted, reactive, ref } from "vue";
-import {useRoute, useRouter} from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import PassageList from "@/components/PassageList.vue";
-
+let loading = ref(true);
 const color = ref("red");
 let passages = ref([]);
 let newBlog = ref([]);
 let hotTag = ref([]);
-const router=useRouter()
-const route=useRoute()
+const router = useRouter();
+const route = useRoute();
 function gotoRoute(item) {
-  router.push("/home/tag/"+item.tagId)
+  router.push("/home/tag/" + item.tagId);
 }
-function gotoTags(){
-  router.push("/home/tag")
+function search() {
+  router.push("/home/search?text=" + searchText.value);
 }
-function gotoBlog(item ) {
-  router.push("/home/blog/"+item.blogId)
+function gotoTags() {
+  router.push("/home/tag");
+}
+function gotoBlog(item) {
+  router.push("/home/blog/" + item.blogId);
 }
 function getData() {
   getIndex().then((res) => {
@@ -71,7 +75,9 @@ function getData() {
       res.data;
     newBlog.value = newBlogs;
     passages.value = blogPageResult;
+
     hotTag.value = hotTags;
+    loading.value = false;
   });
 }
 onBeforeMount(() => {
@@ -80,7 +86,7 @@ onBeforeMount(() => {
 </script>
 
 <style lang="less" scoped>
-.link-title{
+.link-title {
   cursor: pointer;
 }
 .home-main {

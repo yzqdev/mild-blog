@@ -5,6 +5,7 @@ spring:
 
   datasource:
     name: myBlog
+#    81.69.227.146
     url: jdbc:mysql://81.69.227.146:3306/my_blog_db?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false
     username: root
     password: 123456

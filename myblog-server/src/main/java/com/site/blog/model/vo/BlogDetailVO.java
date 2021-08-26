@@ -18,7 +18,7 @@ public class BlogDetailVO {
     private Long commentCount;
 
     private String blogCategoryIcon;
-
+private String blogPreface;
 
     private String blogCoverImage;
 

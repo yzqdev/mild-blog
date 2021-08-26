@@ -143,7 +143,7 @@ public class AdminController {
     public Result unlock(@PathVariable("id") String id) {
         AdminUser user = adminUserService.getAdminUserById(Integer.valueOf(id));
         AdminUser currentUser= RequestHelper.getSessionUser();
-        if (user.getAdminUserId()== currentUser.getAdminUserId()){
+        if (user.getAdminUserId().equals(currentUser.getAdminUserId())){
             return  ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR,"不能冻结自己");
         }
         if (user.getLocked()==0){
@@ -162,9 +162,12 @@ public class AdminController {
 
             System.out.println("心如这里");
             HashMap<String, Object> res = new HashMap<>(1);
+            if (user==null){
+                return  ResultGenerator.getResultByHttp(HttpStatusEnum.UNAUTHORIZED,false,"请重新登录");
+            }
             res.put("user", user);
-
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, res);
+            System.out.println("user="+user);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, res);
         } catch (Exception e) {
             e.printStackTrace();
         }
