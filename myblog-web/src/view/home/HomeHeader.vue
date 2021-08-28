@@ -26,7 +26,7 @@ export default {
         { text: "关于", id: 3 },
       ],
       activeRoute: 1,
-      config:{}
+      config: {},
     };
   },
   methods: {
@@ -35,8 +35,8 @@ export default {
     },
   },
   async created() {
-    let {data} = await getConfigs();
-    this.config=data
+    let { data } = await getConfigs();
+    this.config = data;
   },
 };
 </script>
