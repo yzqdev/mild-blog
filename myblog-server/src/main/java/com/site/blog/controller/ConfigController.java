@@ -1,4 +1,4 @@
-package com.site.blog.controller.v2;
+package com.site.blog.controller;
 
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.model.dto.AjaxResultPage;

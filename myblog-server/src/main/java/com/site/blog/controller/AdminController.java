@@ -1,4 +1,4 @@
-package com.site.blog.controller.v2;
+package com.site.blog.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.site.blog.constants.BaseConstants;
