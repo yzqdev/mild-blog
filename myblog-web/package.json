@@ -9,6 +9,7 @@
   "dependencies": {
     "@kangc/v-md-editor": "^2.3.7",
     "@vitejs/plugin-vue": "^1.6.0",
+    "@vueuse/core": "^6.3.2",
     "axios": "^0.21.1",
     "dayjs": "^1.10.6",
     "element-plus": "1.1.0-beta.4",

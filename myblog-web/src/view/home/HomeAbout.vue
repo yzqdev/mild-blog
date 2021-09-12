@@ -1,5 +1,6 @@
 <template>
   <div style="flex: 1" class="home-about">
+    <a href="https://vueuse.org/" >vueuse</a>
 <img src="@/assets/img/keqing.png" /><br>
     我是刻晴，璃月七星中的玉衡<br>
     耽误的时间太多，事情可就做不完了<br>
