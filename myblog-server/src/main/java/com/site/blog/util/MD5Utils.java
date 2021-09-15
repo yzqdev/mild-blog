@@ -8,9 +8,10 @@ import java.security.MessageDigest;
 public class MD5Utils {
 
     private static String byteArrayToHexString(byte b[]) {
-        StringBuffer resultSb = new StringBuffer();
-        for (int i = 0; i < b.length; i++)
+        StringBuilder resultSb = new StringBuilder();
+        for (int i = 0; i < b.length; i++) {
             resultSb.append(byteToHexString(b[i]));
+        }
 
         return resultSb.toString();
     }
