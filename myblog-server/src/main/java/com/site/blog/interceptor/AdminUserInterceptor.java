@@ -29,7 +29,7 @@ public class AdminUserInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Enumeration<String> headNames = request.getHeaderNames();
-
+//打印头部
         while (headNames.hasMoreElements()) {
             String headName = headNames.nextElement();
 

@@ -18,7 +18,7 @@ public class MarkDownUtils {
      * @return
      */
     public static String mdToHtml(String markdownString) {
-        if (StringUtils.isEmpty(markdownString)) {
+        if (!StringUtils.hasText(markdownString)) {
             return "";
         }
         List<Extension> extensions = Arrays.asList(TablesExtension.create());

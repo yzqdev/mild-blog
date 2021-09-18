@@ -25,6 +25,7 @@ public class UploadFileUtils {
      */
     public static String getSuffixName(MultipartFile file){
         String fileName = file.getOriginalFilename();
+        assert fileName != null;
         return fileName.substring(fileName.lastIndexOf("."));
     }
     
