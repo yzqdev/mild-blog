@@ -59,7 +59,11 @@ spring:
     resources:
       static-locations: classpath:/resources/,classpath:/static/
   thymeleaf:
-    prefix: classpath:/static
+#    prefix: classpath:/static
+
+    cache: false
+    encoding: utf-8
+    mode: HTML
 mybatis-plus:
   type-aliases-package: com.site.blog.entity
   mapper-locations: classpath*:mapper/*.xml
