@@ -18,4 +18,6 @@ import java.util.List;
 public interface BlogInfoMapper extends BaseMapper<BlogInfo> {
 
     List<BlogDetailVO> getBlogDetail( );
+
+    List<BlogInfo> searchBlog(String keyword);
 }

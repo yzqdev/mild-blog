@@ -14,7 +14,7 @@ public class UploadConstants {
     // 用户头像默认上传路径
     public static String UPLOAD_AUTHOR_IMG = "/tmp/myblog/authorImg/";
     // 文章图片默认上传路径
-    public static String FILE_UPLOAD_DIC = "/tmp/myblog/";
+    public static String FILE_UPLOAD_DIC = "/tmp/myblog";
     // 用户头像数据库路径
     public static String SQL_AUTHOR_IMG = "/authorImg/";
     // 文章图片数据库路径

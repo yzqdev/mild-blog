@@ -26,12 +26,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/v2/img")
 public class ImgController {
-@Resource
-private ImgService imgService;
+    @Resource
+    private ImgService imgService;
+
     /**
      * 保存文章图片
      *
-
      * @param file
      * @return java.util.Map<java.lang.String, java.lang.Object>
      * @date 2019/8/26 13:57
@@ -54,45 +54,55 @@ private ImgService imgService;
             }
 
             file.transferTo(destFile);
-            Img img=new Img();
+            Img img = new Img();
             img.setImgName(destFile.getName());
-            img.setImgPath(UploadConstants.FILE_UPLOAD_DIC+File.separator+newFileName);
+            img.setImgPath(UploadConstants.FILE_UPLOAD_DIC + newFileName);
             img.setUploadTime(DateUtils.getLocalCurrentDate());
-            img.setImgUrl("http://localhost:2801/"+newFileName);
+            img.setImgUrl("http://localhost:2801/" + newFileName);
             img.setImgSize(destFile.length());
-            img.setImgType(destFile.getName().substring( destFile.getName().indexOf(".")+1) );
+            img.setImgType(destFile.getName().substring(destFile.getName().indexOf(".") + 1));
             img.setMd5(DigestUtils.md5DigestAsHex(new FileInputStream(destFile)));
             imgService.save(img);
             String fileUrl = UploadConstants.FILE_SQL_DIC + newFileName;
             result.put("success", 1);
             result.put("message", "上传成功");
-            result.put("url", "http://localhost:2801/"+newFileName);
+            result.put("url", "http://localhost:2801/" + newFileName);
+            result.put("img",img);
         } catch (IOException e) {
-            result.put("success", 0);
+
+            e.printStackTrace();
         }
         return result;
     }
+
     @GetMapping("/list")
-    public Result<Object> listFiles(){
-        List<Img> imgs=imgService.list();
+    public Result<Object> listFiles() {
+        List<Img> imgs = imgService.list();
 
 
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,imgs);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, imgs);
     }
+
     @DeleteMapping("/del/{id}")
-    public Result delImg(@PathVariable String id){
+    public Result delImg(@PathVariable String id) {
         try {
-
-            boolean flag=imgService.removeById(id);
-
-            if (flag){
-                return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,null);
+            Img img = imgService.getById(id);
+            File file = new File(img.getImgPath());
+            if (file.exists()) {
+                file.delete();
             }
-        }catch (Exception e){
+            boolean flag = imgService.removeById(id);
+            System.out.println(img.getImgPath());
+
+            System.out.println("是否删除");
+            if (flag) {
+                return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, img);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,null);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, null);
     }
 }

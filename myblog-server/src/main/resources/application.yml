@@ -39,8 +39,8 @@ logging:
     path: logs
 #访问静态资源
 upload:
-  uploadAuthorImg: "D:/tmp/myblog/authorImg/"
-  fileUploadDic: "D:/tmp/myblog/upload/"
+  uploadAuthorImg: ${user.home}/.myblog/authorImg/
+  fileUploadDic: ${user.home}/.myblog/upload/
   sqlAuthorImg: "/authorImg/"
   fileSqlDic: "/upload/"
 

@@ -45,4 +45,6 @@ public interface BlogInfoService extends IService<BlogInfo> {
      */
     boolean clearBlogInfo(Long blogId);
     List<BlogDetailVO> getBlogs(PageDto pageDto );
+
+    List<BlogInfo> searchBlog(String keyword);
 }

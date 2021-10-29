@@ -96,4 +96,9 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
 
         return blogInfoMapper.getBlogDetail();
     }
+
+    @Override
+    public List<BlogInfo> searchBlog(String keyword) {
+        return blogInfoMapper.searchBlog(keyword);
+    }
 }

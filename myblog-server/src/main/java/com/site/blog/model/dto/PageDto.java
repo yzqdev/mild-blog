@@ -1,6 +1,8 @@
 package com.site.blog.model.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author yzq
@@ -9,6 +11,8 @@ import lombok.Data;
  * @modified By:
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PageDto {
     private Integer pageNum;
     private Integer pageSize;

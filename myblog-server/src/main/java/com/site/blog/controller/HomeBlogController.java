@@ -187,16 +187,26 @@ public class HomeBlogController {
      */
     @GetMapping({"/search/{keyword}"})
     public Result search(@PathVariable("keyword") String keyword) {
-        return this.page(new BlogPageCondition()
-                .setPageNum(1)
-                .setPageName("首页")
-                .setKeyword(keyword)
-        );
+        try {
+            PageDto pageDto = new PageDto(0, 10);
+            Page<BlogInfo> ipage = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
+
+            QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.lambda().like(BlogInfo::getBlogTitle,keyword).or().like(BlogInfo::getBlogContent,keyword);
+            Page<BlogInfo> blogInfos = blogInfoService.page(ipage,queryWrapper);
+
+
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, toBlogVo(blogInfos));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, null);
     }
 
     @GetMapping("/tags")
     public Result getTags() {
-        QueryWrapper<Tag> queryWrapper = new QueryWrapper<Tag>();
+        QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(Tag::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
         List<Tag> list = tagService.list();
         if (CollectionUtils.isEmpty(list)) {
@@ -207,7 +217,7 @@ public class HomeBlogController {
 
     @GetMapping("/categories")
     public Result getCate() {
-        QueryWrapper<Category> queryWrapper = new QueryWrapper<Category>();
+        QueryWrapper<Category> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(Category::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus()).orderByDesc(Category::getCreateTime);
         List<Category> list = categoryService.list(queryWrapper);
         if (CollectionUtils.isEmpty(list)) {
@@ -218,7 +228,7 @@ public class HomeBlogController {
 
 
     @GetMapping("/configs")
-    public Result getConfigs() {
+    public Result<Object> getConfigs() {
         try {
 
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogConfigService.getAllConfigs());
@@ -264,10 +274,8 @@ public class HomeBlogController {
         }
         sqlWrapper.orderByDesc(BlogInfo::getCreateTime);
         blogInfoService.page(page, sqlWrapper);
-        PageResult blogPageResult = new PageResult(page.getRecords(), page.getTotal(), condition.getPageSize(), condition.getPageNum());
-        if (Objects.nonNull(condition.getKeyword())) {
-            result.put("keyword", condition.getKeyword());
-        }
+
+
         if (Objects.nonNull(condition.getTagId())) {
             result.put("tagId", condition.getTagId());
         }
@@ -280,7 +288,7 @@ public class HomeBlogController {
         Page<BlogInfo> ipage = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
         Page<BlogInfo> blogInfoPage = blogInfoService.page(ipage, queryWrapper);
 
-        List<BlogDetailVO> blogDetailVOS =toBlogVo(blogInfoPage);
+        List<BlogDetailVO> blogDetailVOS = toBlogVo(blogInfoPage);
 
         result.put("blogPageResult", blogDetailVOS);
         result.put("pageName", condition.getPageName());
@@ -298,7 +306,7 @@ public class HomeBlogController {
      * @date 2019/9/6 13:09
      */
     @GetMapping({"/blog/{blogId}", "/article/{blogId}"})
-    public Result detail(@PathVariable("blogId") Long blogId) {
+    public Result<Object> detail(@PathVariable("blogId") Long blogId) {
         // 获得文章info
         BlogInfo blogInfo = blogInfoService.getById(blogId);
         List<BlogTag> blogTags = blogService.list(new QueryWrapper<BlogTag>()

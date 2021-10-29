@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.annotation.Resource;
+import java.io.File;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith({SpringExtension.class})
@@ -20,5 +21,7 @@ public class MyBlogApplicationTests {
 		AdminUser u=adminUserService.getAdminUserById(4);
 		System.out.println(u);
 	}
+
+
 
 }

@@ -1,5 +1,4 @@
-server:
-  port: 2800
+
 spring:
   datasource:
     name: myBlog
@@ -69,9 +68,4 @@ logging:
   level.com.site.blog: debug
 #访问静态资源
 
-upload:
-  uploadAuthorImg: "D:/tmp/myblog/authorImg/"
-  fileUploadDic: "D:/tmp/myblog/upload/"
-  sqlAuthorImg: "/authorImg/"
-  fileSqlDic: "/upload/"
 
