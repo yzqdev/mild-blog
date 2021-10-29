@@ -16,6 +16,7 @@
               ></el-input> </el-form-item
             ><el-form-item prop="password" label="密码">
               <el-input
+                  @keydown.enter="login"
                 placeholder="请输入密码"
                 type="password"
                 v-model="loginForm.password"
