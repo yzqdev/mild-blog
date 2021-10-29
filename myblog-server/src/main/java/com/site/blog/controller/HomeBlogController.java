@@ -24,10 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -103,6 +100,8 @@ public class HomeBlogController {
                     .lambda().eq(BlogTag::getTagId, tagId));
             if (!CollectionUtils.isEmpty(list)) {
                 sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogTag::getBlogId).toArray());
+            }else {
+                return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, Collections.emptyList());
             }
         }
         sqlWrapper.orderByDesc(BlogInfo::getCreateTime);
@@ -166,16 +165,32 @@ public class HomeBlogController {
     /**
      * 分类
      *
-     * @param categoryName
+     * @param categoryId
      * @author Linn-cn
      * @date 2020/12/7
      */
-    @GetMapping({"/category/{categoryName}"})
-    public Result category(@PathVariable("categoryName") String categoryName) {
-        return this.page(new BlogPageCondition()
-                .setPageNum(1)
-                .setPageName("分类")
-                .setCategoryId(categoryName));
+    @PostMapping({"/category/{categoryId}"})
+    public Result category(@PathVariable("categoryId") String categoryId,@RequestBody PageDto pageDto) {
+
+        Page<BlogInfo> page = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
+        LambdaQueryWrapper<BlogInfo> sqlWrapper = Wrappers.<BlogInfo>lambdaQuery()
+
+
+                .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
+                .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
+        //获取tag下的文章
+        if (Objects.nonNull(categoryId)) {
+            List<BlogCategory> list = blogCategoryService.list(new QueryWrapper<BlogCategory>()
+                    .lambda().eq(BlogCategory::getCategoryId, categoryId));
+            //if (!CollectionUtils.isEmpty(list)) {
+            //    sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogCategory::getBlogId).toArray());
+            //}
+        }
+        sqlWrapper.orderByDesc(BlogInfo::getCreateTime);
+        Page<BlogInfo> blogInfoPage = blogInfoService.page(page, sqlWrapper);
+        List<BlogDetailVO> blogDetailVOS = toBlogVo(blogInfoPage);
+
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, blogDetailVOS);
     }
 
     /**

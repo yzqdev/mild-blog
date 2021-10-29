@@ -4,7 +4,7 @@
     <PassageList :list="passages" :loading="loading"></PassageList>
     <div class="sidebar">
       <el-card
-        ><template #header>搜索文章</template>
+        ><template #header>搜索文章<strong>(根据标题和内容搜索)</strong></template>
         <el-input
           type="text"
           placeholder="搜索"

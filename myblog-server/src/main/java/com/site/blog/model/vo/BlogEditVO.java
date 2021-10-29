@@ -18,8 +18,8 @@ public class BlogEditVO {
 
     private String blogCategoryIcon;
 
-
-
+    private Integer blogStatus;
+    private String blogPreface;
     private String blogCoverImage;
 
     private Long blogViews;

@@ -33,6 +33,8 @@ export const getBlogById = (data) => {
 };
 export const getArticleByTag = (id, data) => {
     return axios.post("/home/tag/" + id, data);
+};export const getArticleByCate = (id, data) => {
+    return axios.post("/home/category/" + id, data);
 };
 export const loginApi = (username, password) => {
     return axios.post(`/admin/login?username=${username}&password=${password}`);

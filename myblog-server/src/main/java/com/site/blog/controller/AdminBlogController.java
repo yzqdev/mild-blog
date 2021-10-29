@@ -73,6 +73,8 @@ public class AdminBlogController {
         blogDetailVO.setBlogContent(blogInfo.getBlogContent());
         blogDetailVO.setBlogTitle(blogInfo.getBlogTitle());
         blogDetailVO.setBlogViews(blogInfo.getBlogViews());
+        blogDetailVO.setBlogStatus(blogInfo.getBlogStatus());
+        blogDetailVO.setBlogPreface(blogInfo.getBlogPreface());
         blogDetailVO.setBlogCategoryId(blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", blogInfo.getBlogId())).getCategoryId());
         QueryWrapper<BlogTag> queryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", id);
         List<Integer> ids = blogTagService.list(queryWrapper).stream().map(BlogTag::getTagId).collect(Collectors.toList());

@@ -24,8 +24,11 @@ import UserInfo from "@/view/admin/UserInfo.vue";
 import AdminList from "@/view/admin/AdminList.vue";
 import HomeComponent from "@/view/home/HomeComponent.vue";
 import ImgList from "@/view/admin/ImgList.vue";
-
+import NotFound from "@/components/NotFound.vue";
+import HomeCategory from "@/view/home/HomeCategory.vue";
 const routes = [
+  { path: '/:pathMatch(.*)*', name: 'NotFound', component:  NotFound },
+  {path:'/home',redirect: "/home/main"},
   {
     path: "/home",
     name: "home",
@@ -64,6 +67,10 @@ const routes = [
         path: "tag/:id",
         name: "homeTag",
         component: HomeTag,
+      },  {
+        path: "category/:id",
+        name: "homeCategory",
+        component: HomeCategory,
       },
       {
         path: "blog/:id",

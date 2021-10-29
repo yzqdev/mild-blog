@@ -16,6 +16,7 @@
           class="cate-span"
           v-for="(item, index) in data"
           :key="`cate${index}`"
+          @click="gotoCate(item)"
       >{{ item.categoryName }}
       </el-button
       >
@@ -71,6 +72,8 @@ export default defineComponent({
     },
     gotoTag(item) {
       this.$router.push("/home/tag/" + item.tagId);
+    },gotoCate(item) {
+      this.$router.push("/home/category/" + item.categoryId);
     },
   },
   watch: {
@@ -101,7 +104,7 @@ export default defineComponent({
             });
 
             break;
-          default:
+          case 'homeSearch':
             this.routeName = "search";
             getSearch(this.$route.query.text).then(({data}) => {
               console.log(data)
@@ -110,6 +113,8 @@ export default defineComponent({
 
             this.loading = false
             break;
+            default:
+              break;
         }
       },
       immediate: true,
