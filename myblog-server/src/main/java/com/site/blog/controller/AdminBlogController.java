@@ -80,41 +80,6 @@ public class AdminBlogController {
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogDetailVO);
     }
 
-    /**
-     * 保存文章图片
-     *
-     * @param request
-     * @param file
-     * @return java.util.Map<java.lang.String, java.lang.Object>
-     * @date 2019/8/26 13:57
-     */
-
-    @PostMapping("/blog/uploadFile")
-    public Map<String, Object> uploadFileByEditormd(HttpServletRequest request,
-                                                    @RequestParam(name = "editormd-image-file") MultipartFile file) {
-        String suffixName = UploadFileUtils.getSuffixName(file);
-        //生成文件名称通用方法
-        String newFileName = UploadFileUtils.getNewFileName(suffixName);
-        File fileDirectory = new File(UploadConstants.FILE_UPLOAD_DIC);
-        //创建文件
-        File destFile = new File(UploadConstants.FILE_UPLOAD_DIC + newFileName);
-        Map<String, Object> result = new HashMap<>();
-        try {
-            if (!fileDirectory.exists()) {
-                if (!fileDirectory.mkdirs()) {
-                    throw new IOException("文件夹创建失败,路径为：" + fileDirectory);
-                }
-            }
-            file.transferTo(destFile);
-            String fileUrl = UploadConstants.FILE_SQL_DIC + newFileName;
-            result.put("success", 1);
-            result.put("message", "上传成功");
-            result.put("url", fileUrl);
-        } catch (IOException e) {
-            result.put("success", 0);
-        }
-        return result;
-    }
 
     /**
      * 保存文章内容
@@ -126,7 +91,7 @@ public class AdminBlogController {
 
     @PostMapping("/blog/edit")
     public Result saveBlog(@RequestBody BlogInfoDo blogInfoDo) {
-
+//todo 当然这里可以直接用sql语句,不过我为了学习方便用了DO
         //if (ObjectUtils.isEmpty(blogInfoDo.getBlogTags()) || ObjectUtils.isEmpty(blogInfoDo)) {
         //    return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
         //}
@@ -188,7 +153,7 @@ public class AdminBlogController {
      */
 
     @GetMapping("/blog/list")
-    public Result  getBlogList(PageDto pageDto) {
+    public Result getBlogList(PageDto pageDto) {
         try {
             QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>();
             queryWrapper.lambda().orderByDesc(BlogInfo::getUpdateTime);
@@ -207,7 +172,7 @@ public class AdminBlogController {
                     post.setBlogCategory(categoryService.getById(cateId));
                 }
             });
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, blogDetailVOS);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, blogDetailVOS);
         } catch (Exception e) {
             e.printStackTrace();
             return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, "error");

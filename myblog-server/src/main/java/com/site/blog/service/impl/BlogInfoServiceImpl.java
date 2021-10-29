@@ -82,7 +82,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
         if (SqlHelper.retBool(blogInfoMapper.deleteById(blogId))) {
             QueryWrapper<BlogTag> tagRelationWrapper = new QueryWrapper<>();
             tagRelationWrapper.lambda().eq(BlogTag::getBlogId, blogId);
-            blogTagMapper.deleteById(tagRelationWrapper);
+            blogTagMapper.delete(tagRelationWrapper);
             QueryWrapper<Comment> commentWrapper = new QueryWrapper<>();
             commentWrapper.lambda().eq(Comment::getBlogId, blogId);
             commentMapper.delete(commentWrapper);

@@ -13,6 +13,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -29,6 +30,7 @@ import java.sql.Timestamp;
 @Accessors(chain = true)
 public class Comment implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
