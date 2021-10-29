@@ -19,6 +19,8 @@
           <el-menu-item index="/admin/home/tag-list"> 标签列表</el-menu-item>
           <el-menu-item index="/admin/home/category-list">
             分类列表
+          </el-menu-item> <el-menu-item index="/admin/home/img-list">
+            图片列表
           </el-menu-item>
         </el-sub-menu>
 
