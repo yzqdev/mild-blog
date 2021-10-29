@@ -1,23 +1,25 @@
 <template>
   <div class="passage-list" v-loading="loading">
-    <article class="article" v-for="(item, index) in list">
-      <div class="article-top">
+ <template v-for="(item, index) in list">
+   <article class="article" v-if="item.blogStatus&&item.blogStatus>0" >
+     <div class="article-top">
         <span class="category-link" @click="gotoCate(item)">{{
-          item.blogCategory.categoryName
-        }}</span>
-        <span class="category-link">
+            item.blogCategory.categoryName
+          }}</span>
+       <span class="category-link">
           <el-tag type="primary" @click="gotoTagRoute(tag)" v-for="tag in item.blogTags">{{
-            tag.tagName
-          }}</el-tag> </span
-        ><span class="right">{{
-          $dayjs(item.updateTime).format("YYYY-MM-DD HH:mm:ss")
-        }}</span>
-      </div>
-      <h1 class="article-title" @click="gotoBlog(item)">
-        {{ item.blogTitle }}
-      </h1>
-      <div>{{ item.blogPreface }}</div>
-    </article>
+              tag.tagName
+            }}</el-tag> </span
+       ><span class="right">{{
+         $dayjs(item.updateTime).format("YYYY-MM-DD HH:mm:ss")
+       }}</span>
+     </div>
+     <h1 class="article-title" @click="gotoBlog(item)">
+       {{ item.blogTitle }}
+     </h1>
+     <div>{{ item.blogPreface }}</div>
+   </article>
+ </template>
   </div>
 </template>
 

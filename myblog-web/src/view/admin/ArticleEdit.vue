@@ -57,7 +57,7 @@
         >
           <el-input
               v-model="articleForm.blogPreface"
-              placeholder="输入文章标题"
+              placeholder="输入文章前言"
           ></el-input>
         </el-form-item>
         <div class="inner-flex">
@@ -135,7 +135,7 @@ export default {
         insertImage({
           url:
               res.url,
-          desc: '七龙珠',
+          desc: res.imgName,
           // width: 'auto',
           // height: 'auto',
         });

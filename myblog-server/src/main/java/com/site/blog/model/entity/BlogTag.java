@@ -1,5 +1,6 @@
 package com.site.blog.model.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -39,7 +40,7 @@ private static final long serialVersionUID=1L;
     /**
      * 标签id
      */
-    @TableField("tag_id")
+    @TableField(value = "tag_id" )
     private Integer tagId;
 
     /**

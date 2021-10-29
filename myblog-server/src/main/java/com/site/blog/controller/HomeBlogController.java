@@ -182,9 +182,13 @@ public class HomeBlogController {
         if (Objects.nonNull(categoryId)) {
             List<BlogCategory> list = blogCategoryService.list(new QueryWrapper<BlogCategory>()
                     .lambda().eq(BlogCategory::getCategoryId, categoryId));
-            //if (!CollectionUtils.isEmpty(list)) {
-            //    sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogCategory::getBlogId).toArray());
-            //}
+            System.out.println(list);
+            System.out.println("这是list");
+            if (!CollectionUtils.isEmpty(list)) {
+                sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogCategory::getBlogId).toArray());
+            }else {
+                return  ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,Collections.emptyList());
+            }
         }
         sqlWrapper.orderByDesc(BlogInfo::getCreateTime);
         Page<BlogInfo> blogInfoPage = blogInfoService.page(page, sqlWrapper);

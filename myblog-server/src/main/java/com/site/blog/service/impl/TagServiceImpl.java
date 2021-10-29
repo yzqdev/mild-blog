@@ -8,7 +8,6 @@ import com.site.blog.constants.DeleteStatusEnum;
 import com.site.blog.constants.SysConfigConstants;
 import com.site.blog.mapper.BlogInfoMapper;
 import com.site.blog.mapper.TagMapper;
-import com.site.blog.model.entity.BlogInfo;
 import com.site.blog.model.entity.BlogTag;
 import com.site.blog.model.entity.BlogTagCount;
 import com.site.blog.model.entity.Tag;
@@ -65,33 +64,18 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     public boolean clearTag(Integer tagId) {
         LambdaQueryWrapper<BlogTag> queryWrapper = Wrappers.<BlogTag>lambdaQuery()
                 .eq(BlogTag::getTagId, tagId);
-        List<BlogTag> tagRelationList = blogTagService.list(queryWrapper);
-       //如果存在tag和blog的对应关系
-        if (tagRelationList.isEmpty()) {
+        List<BlogTag> blogTagList = blogTagService.list(queryWrapper);
+        //如果存在不tag和blog的对应关系
+        if (blogTagList.isEmpty()) {
             tagService.remove(new QueryWrapper<Tag>().eq("tag_id", tagId));
-            return  true;
+            return true;
         } else {
-            // 批量更新的BlogInfo信息
-            List<BlogInfo> infoList = tagRelationList.stream()
-                    .map(tagRelation -> new BlogInfo()
-                                    .setBlogId(tagRelation.getBlogId())
-                            //.setBlogTags(SysConfigConstants.DEFAULT_TAG.getConfigName())
-                    ).collect(Collectors.toList());
-            List<Long> blogIds = infoList.stream().map(BlogInfo::getBlogId).collect(Collectors.toList());
-            // 批量更新的tagRelation信息
-            List<BlogTag> tagRelations = tagRelationList.stream()
-                    .map(tagRelation -> new BlogTag()
-                            .setBlogId(tagRelation.getBlogId())
-                            .setTagId(Integer.valueOf(SysConfigConstants.DEFAULT_CATEGORY.getConfigField())))
+          blogTagList=  blogTagList.stream()
+                    .map(tagRelation -> blogTagService.getById(tagRelation.getRelationId()).setTagId(Integer.valueOf(SysConfigConstants.DEFAULT_TAG.getConfigField())))
                     .collect(Collectors.toList());
-            blogInfoService.updateBatchById(infoList);
+            blogTagService.updateBatchById(blogTagList);
 
-            blogTagService.remove(new QueryWrapper<BlogTag>()
-                    .lambda()
-                    .in(BlogTag::getBlogId, blogIds));
-            blogTagService.saveBatch(tagRelations);
-            //return retBool(baseMapper.deleteById(tagId));
-            return tagService.removeById(tagId);
+            return tagService.removeById(tagId) ;
         }
     }
 }
