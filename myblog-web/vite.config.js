@@ -2,8 +2,11 @@ const resolve = path.resolve;
 import { defineConfig } from "vite";
 import vue from '@vitejs/plugin-vue'
 import path from "path";
+import prismjs from 'vite-plugin-prismjs';
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [vue(), prismjs({
+    languages: "all",
+  }), ],
   hmr: { overlay: false },
   // publicDir:'/myblog',
   // base:'/myblog/',
@@ -21,6 +24,6 @@ export default defineConfig({
     // minify: false,
   },
   server: {
-    port: 2801,
+    port: 2800,
   },
 });

@@ -1,29 +1,45 @@
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
-import { createApp } from "vue";
+import {createApp} from "vue";
 import router from "./router";
 import App from "./App.vue";
 import "./index.less";
-import VMdEditor from "@kangc/v-md-editor";
+import VueMarkdownEditor from "@kangc/v-md-editor";
 import VMdPreview from "@kangc/v-md-editor/lib/preview";
 import "@kangc/v-md-editor/lib/style/preview.css";
-import "@kangc/v-md-editor/lib/theme/style/github.css";
+
 import "@kangc/v-md-editor/lib/style/base-editor.css";
-import githubTheme from "@kangc/v-md-editor/lib/theme/github.js";
-import "@kangc/v-md-editor/lib/theme/style/github.css";
-// highlightjs
-import hljs from "highlight.js";
+import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
+import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
+
+import createEmojiPlugin from '@kangc/v-md-editor/lib/plugins/emoji/index';
+import '@kangc/v-md-editor/lib/plugins/emoji/emoji.css';
+import createTipPlugin from '@kangc/v-md-editor/lib/plugins/tip/index';
+import '@kangc/v-md-editor/lib/plugins/tip/tip.css';
+
+import Prism from 'prismjs'
 import store from "@/store";
 import dayjs from "dayjs";
-VMdPreview.use(githubTheme, {
-  Hljs: hljs,
+
+VMdPreview.use(vuepressTheme, {
+    Prism
 });
-VMdEditor.use(githubTheme, {
-  Hljs: hljs,
+VueMarkdownEditor.use(vuepressTheme, {
+    Prism
 });
+import '@kangc/v-md-editor/lib/plugins/mermaid/mermaid.css';
+import createTodoListPlugin from '@kangc/v-md-editor/lib/plugins/todo-list/index';
+import '@kangc/v-md-editor/lib/plugins/todo-list/todo-list.css';
+
+VueMarkdownEditor.use(createTodoListPlugin());
+VueMarkdownEditor.use(createTipPlugin());
+VueMarkdownEditor.use(createEmojiPlugin());
+VMdPreview.use(createEmojiPlugin())
+VMdPreview.use(createTipPlugin())
+VMdPreview.use(createTodoListPlugin());
 const app = createApp(App);
 app.use(VMdPreview);
-app.use(VMdEditor);
+app.use(VueMarkdownEditor);
 
 app.config.globalProperties.$dayjs = dayjs;
 app.use(ElementPlus);

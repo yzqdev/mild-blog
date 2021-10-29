@@ -1,5 +1,5 @@
 {
-  "name": "bpass-web-vue",
+  "name": "myblog",
   "version": "0.0.1",
   "scripts": {
     "dev": "yarn &&vite --host",
@@ -15,6 +15,7 @@
     "element-plus": "1.1.0-beta.24",
     "less": "^4.1.2",
     "prettier": "^2.4.1",
+    "prismjs": "^1.25.0",
     "qs": "^6.10.1",
     "sass": "^1.43.4",
     "vue": "^3.2.16",
@@ -24,6 +25,7 @@
   "devDependencies": {
     "@vue/compiler-sfc": "^3.2.20",
     "highlight.js": "^11.3.1",
-    "vite": "^2.6.13"
+    "vite": "^2.6.13",
+    "vite-plugin-prismjs": "^0.0.8"
   }
 }

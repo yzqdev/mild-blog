@@ -45,6 +45,7 @@
           <div :class="active ? `active` : ``">
             <v-md-editor
               v-model="comment.commentBody"
+              left-toolbar="undo redo | tip todo-list emoji h h1 h2 h3 h4 h5 h6 bold italic strikethrough quote ul ol table hr link image imageLink uploadImage code save "
               height="400px"
             ></v-md-editor>
           </div>

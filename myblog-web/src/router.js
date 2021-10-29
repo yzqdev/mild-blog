@@ -23,6 +23,7 @@ import ArticleEdit from "@/view/admin/ArticleEdit.vue";
 import UserInfo from "@/view/admin/UserInfo.vue";
 import AdminList from "@/view/admin/AdminList.vue";
 import HomeComponent from "@/view/home/HomeComponent.vue";
+import ImgList from "@/view/admin/ImgList.vue";
 
 const routes = [
   {
@@ -127,6 +128,10 @@ const routes = [
             path: "link-list",
             name: "linkList",
             component: LinkList,
+          }, {
+            path: "img-list",
+            name: "imgList",
+            component: ImgList,
           },
           {
             path: "system-info",
