@@ -19,6 +19,8 @@ export const getHomeCates = () => {
 };
 export const getTimeline = ({pageNum, pageSize}) => {
     return axios.post("/home/timeline", {pageNum, pageSize});
+};export const getSearch = (keyword) => {
+    return axios.get("/home/search/"+ keyword);
 };
 export const listComments = (data) => {
     return axios.get("/home/blog/listComment?" + qs.stringify(data));

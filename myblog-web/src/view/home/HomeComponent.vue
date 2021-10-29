@@ -2,29 +2,31 @@
   <div class="home-component" v-loading="loading">
     <div v-if="routeName == `tags`" class="d-flex">
       <el-tag
-        style="margin: 0 10px;cursor: pointer"
-        v-for="(item, index) in data"
-        @click="gotoTag(item)"
-        :key="`tags${index}`"
-        >{{ item.tagName }}</el-tag
+          style="margin: 0 10px;cursor: pointer"
+          v-for="(item, index) in data"
+          @click="gotoTag(item)"
+          :key="`tags${index}`"
+      >{{ item.tagName }}
+      </el-tag
       >
     </div>
     <div v-if="routeName == `cates`" class="d-flex">
       <el-button
-        type="plain"
-        class="cate-span"
-        v-for="(item, index) in data"
-        :key="`cate${index}`"
-        >{{ item.categoryName }}</el-button
+          type="plain"
+          class="cate-span"
+          v-for="(item, index) in data"
+          :key="`cate${index}`"
+      >{{ item.categoryName }}
+      </el-button
       >
     </div>
     <div v-if="routeName == `timeline`" class="timeline">
       <el-timeline>
         <el-timeline-item
-          v-for="(item, index) in timelines"
-          :key="`timeline${index}`"
-          :timestamp="formatTime(item.updateTime)"
-          placement="top"
+            v-for="(item, index) in timelines"
+            :key="`timeline${index}`"
+            :timestamp="formatTime(item.updateTime)"
+            placement="top"
         >
           <el-card @click="gotoBlog(item)">
             <h4>{{ item.blogTitle }}</h4>
@@ -36,16 +38,19 @@
     <div v-if="routeName=='search'">
 
       这是搜索结果
+      <passage-list :list="keywordList"  :loading="false"></passage-list>
     </div>
   </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import { getHomeCates, getHomeTags, getTimeline } from "@/utils/apiConfig";
+import {defineComponent} from "vue";
+import {getHomeCates, getHomeTags, getSearch, getTimeline} from "@/utils/apiConfig";
+import PassageList from "@/components/PassageList.vue";
 
 export default defineComponent({
   name: "HomeComponent",
+  components: {PassageList},
   data() {
     return {
       loading: true,
@@ -54,6 +59,7 @@ export default defineComponent({
       pageNum: 1,
       pageSize: 55,
       timelines: [],
+      keywordList:[]
     };
   },
   methods: {
@@ -74,7 +80,7 @@ export default defineComponent({
         switch (route) {
           case "homeTags":
             this.routeName = "tags";
-            let { data } = await getHomeTags();
+            let {data} = await getHomeTags();
             this.data = data;
             this.loading = false;
             break;
@@ -95,12 +101,15 @@ export default defineComponent({
             });
 
             break;
-            default:
-              this.routeName = "search";
+          default:
+            this.routeName = "search";
+            getSearch(this.$route.query.text).then(({data}) => {
+              console.log(data)
+              this.keywordList=data
+            })
 
-
-              this.loading=false
-              break;
+            this.loading = false
+            break;
         }
       },
       immediate: true,
@@ -116,18 +125,22 @@ export default defineComponent({
   padding: 20px;
   border: 1px solid #f5f5f5;
   border-radius: 5px;
+
   .cate-span {
     border: 1px solid #53a8ff;
   }
-  ::v-deep(.el-card){
-    &:hover{
+
+  ::v-deep(.el-card) {
+    &:hover {
       cursor: pointer;
     }
   }
+
   .timeline {
     width: 80%;
     padding: 10px 50px;
   }
+
   .d-flex {
     display: flex;
     justify-content: center;

@@ -51,15 +51,19 @@ export default {
     }
   },
   mounted() {
-    getImgs().then(({data}) => {
-      this.Imgs = data
-      console.log(this.Imgs)
-    })
+    this.getList()
   }, methods: {
+    getList() {
+      getImgs().then(({data}) => {
+        this.Imgs = data
+        console.log(this.Imgs)
+      })
+    },
     convertSize,
     deleteRow(row) {
       delImg(row.id).then(({data}) => {
         console.log(data)
+        this.getList()
       })
     }
   }
