@@ -1,0 +1,23 @@
+{
+  "properties": [
+    {
+      "name": "upload.fileUploadDic",
+      "type": "java.lang.String",
+      "description": "Description for upload.fileUploadDic."
+    },
+    {
+      "name": "upload.sqlAuthorImg",
+      "type": "java.lang.String",
+      "description": "Description for upload.sqlAuthorImg."
+    },
+    {
+      "name": "upload.uploadAuthorImg",
+      "type": "java.lang.String",
+      "description": "Description for upload.uploadAuthorImg."
+    },
+    {
+      "name": "upload.fileSqlDic",
+      "type": "java.lang.String",
+      "description": "Description for upload.fileSqlDic."
+    }
+  ] }
