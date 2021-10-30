@@ -41,10 +41,10 @@
         <el-link href="/home/main">七月飞雪</el-link>
         <article class="logout">
           <el-dropdown>
-            <span class="el-dropdown-link">
-              {{
+            <span class="dropdown-link">
+              <img :src="user.avatar" style="height: 30px" />{{
                 user.loginUserName
-              }}<i class="el-icon-arrow-down el-icon--right"></i>
+              }} <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <template #dropdown>
               <el-dropdown-menu>
@@ -126,7 +126,7 @@ export default defineComponent({
     flex: 1;
 
     .admin-header {
-      padding: 20px;
+      padding:10px 20px;
       background-color: #eee;
       display: flex;
       align-items: center;
@@ -138,6 +138,10 @@ export default defineComponent({
       .logout {
         flex: 1;
         text-align: right;
+        .dropdown-link{
+          display: flex;
+          align-items: center;
+        }
       }
     }
 

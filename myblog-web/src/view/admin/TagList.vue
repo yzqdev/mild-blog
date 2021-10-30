@@ -84,7 +84,7 @@ export default {
     },
     showAddForm(){
       this.isEdit=false
-      this.editForm={tagName:'',isDeleted:false}
+      this.editForm={tagName:'',isDeleted:0}
       this.editFormShow=true
     },
     submitEdit() {

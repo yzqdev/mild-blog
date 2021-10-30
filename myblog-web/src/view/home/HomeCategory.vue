@@ -1,6 +1,7 @@
 <template>
   <div class="home-tag">
-    <PassageList :list="list" :loading="loading"></PassageList>
+    <PassageList v-if="list&&list.length>0" :list="list" :loading="loading"></PassageList>
+    <el-empty v-else description="暂无内容"></el-empty>
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 <template>
   <div class="passage-list" v-loading="loading">
  <template v-for="(item, index) in list">
-   <article class="article" v-if="item.blogStatus&&item.blogStatus>0" >
+   <article class="article" v-if="item.blogStatus&&item.blogStatus>0&&!item.isDeleted " >
      <div class="article-top">
         <span class="category-link" @click="gotoCate(item)">{{
             item.blogCategory.categoryName

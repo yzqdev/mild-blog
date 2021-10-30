@@ -1,7 +1,7 @@
 <template>
   <header class="home-header">
-    <div>
-      <el-link href="/home/main">{{ configs.websiteName }}</el-link>
+    <div style="display: flex;align-items: center">
+      <el-link href="/home/main">{{ configs.websiteName }}</el-link><img src="https://i0.hdslb.com/bfs/album/0a75a254e639e7ce606099e1d6c2b75582dc4e8a.jpg" style="height: 20px" />
     </div>
     <div class="nav">
       <router-link class="nav-link" v-for="item in navs" :to="item.link">{{

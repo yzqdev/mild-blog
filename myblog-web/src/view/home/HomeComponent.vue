@@ -38,7 +38,7 @@
     </div>
     <div v-if="routeName=='search'">
 
-      这是搜索结果
+
       <passage-list :list="keywordList"  :loading="false"></passage-list>
     </div>
   </div>
