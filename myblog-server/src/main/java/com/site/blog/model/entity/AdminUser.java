@@ -3,6 +3,8 @@ package com.site.blog.model.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
+
+import java.io.Serial;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -23,6 +25,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class AdminUser extends Model<AdminUser> implements Serializable {
 
+@Serial
 private static final long serialVersionUID=1L;
 
     /**
@@ -58,4 +61,5 @@ private static final long serialVersionUID=1L;
      * 0  普通用户,1管理员
      */
     private Integer role;
+    private String avatar;
 }
