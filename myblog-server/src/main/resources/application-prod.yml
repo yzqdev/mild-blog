@@ -50,9 +50,7 @@ spring:
         enabled: true
         login-username: admin
         login-password: z1320291471
-  web:
-    resources:
-      static-locations: classpath:/resources/,classpath:/static/
+
   thymeleaf:
     prefix: classpath:/static
 mybatis-plus:

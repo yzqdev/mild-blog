@@ -421,16 +421,17 @@ public class HomeBlogController {
     public Result<String> comment(HttpServletRequest request,
                                   @Validated Comment comment) {
         String ref = request.getHeader("Referer");
-
+        System.out.println(ref);
+        System.out.println("这是ref");
 
         // 对非法字符进行转义，防止xss漏洞
         comment.setCommentBody(StringEscapeUtils.escapeHtml4(comment.getCommentBody()));
         comment.setCommentStatus(1);
         comment.setCommentatorIp(RequestHelper.getRequestIp());
         comment.setUserAgent(RequestHelper.getUserAgentHeader());
-        if (!StringUtils.hasText(ref)) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "非法请求");
-        }
+        //if (!StringUtils.hasText(ref)) {
+        //    return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "非法请求");
+        //}
         boolean flag = commentService.save(comment);
         if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
