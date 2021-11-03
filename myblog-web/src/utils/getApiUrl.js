@@ -1,7 +1,7 @@
 export const getApiUrl = (str='dev') => {
 
     const devArr = [  "localhost"];
-    const apiArr = ["http://81.69.227.146:8080/"];
+    const apiArr = ["http://49.234.131.170:8080/"];
     let localUrl = "192.168.";
 
     let isDev =
@@ -15,7 +15,7 @@ export const getApiUrl = (str='dev') => {
     }
 
     if (isProd) {
-      return "http://81.69.227.146:2800/v2";
+      return "http://49.234.131.170:2800/v2";
     }
 
 
