@@ -1,16 +1,24 @@
 package com.site.blog.config;
 
-import io.swagger.v3.oas.models.Components;
-import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.ExternalDocumentation;
-import io.swagger.v3.oas.models.OpenAPI;
 
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.License;
-import io.swagger.v3.oas.models.security.SecurityRequirement;
-import io.swagger.v3.oas.models.security.SecurityScheme;
+
+
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -20,31 +28,27 @@ import org.springframework.context.annotation.Configuration;
  * @date 2021/11/21
  */
 @Configuration
+@OpenAPIDefinition(
+        info = @Info(
+                title = "我的博客",
+                version = "1.0",
+                description = "我的博客",
+                contact = @Contact(name = "TOM")
+        ),
+        security = @SecurityRequirement(name = "token")
+)
+@SecurityScheme(type = SecuritySchemeType.APIKEY, name = "token",in = SecuritySchemeIn.HEADER)
 
 public class SwaggerConfig {
     @Bean
     public GroupedOpenApi docker() {
         return GroupedOpenApi.builder()
                 .packagesToScan("com.site.blog.controller")
-                .group("api").addOperationCustomizer((operation, handlerMethod) -> {
-                    operation.addSecurityItem(new SecurityRequirement().addList("basicScheme"));
-                    return operation;
-                })
+                .group("api")
                 .pathsToMatch("/**").build();
 
 
     }
 
 
-    @Bean
-    public OpenAPI blogAPI() {
-        return new OpenAPI().components(new Components().addSecuritySchemes("basicScheme",
-                        new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic")))
-                .info(new Info().title("我的blogapi")
-                        .description("个人博客")
-                        .version("v0.0.1")
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org")))
-                .externalDocs(new ExternalDocumentation());
-
-    }
 }

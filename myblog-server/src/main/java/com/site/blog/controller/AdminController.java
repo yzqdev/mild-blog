@@ -12,6 +12,8 @@ import com.site.blog.util.JwtUtil;
 import com.site.blog.util.MD5Utils;
 import com.site.blog.util.RequestHelper;
 import com.site.blog.util.ResultGenerator;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
@@ -32,6 +34,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/v2/admin")
 @Tag(name = "后台json", description= "后台json")
+
+
 @Slf4j
 public class AdminController {
     @Resource

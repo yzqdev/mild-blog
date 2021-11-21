@@ -20,7 +20,7 @@ public class AppListener implements ApplicationListener<WebServerInitializedEven
         InetAddress address = null;
         try {
             address = InetAddress.getLocalHost();
-            System.out.println("http://" + address.getHostAddress() + ":" + port + "/swagger-ui/");
+            System.out.println("http://" + address.getHostAddress() + ":" + port + "/swagger-ui.html");
             System.out.println("http://" + address.getHostAddress() + ":" + port);
         } catch (UnknownHostException e) {
             e.printStackTrace();
