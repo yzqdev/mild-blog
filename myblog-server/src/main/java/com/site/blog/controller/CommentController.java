@@ -10,7 +10,7 @@ import com.site.blog.model.entity.Comment;
 import com.site.blog.service.CommentService;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +25,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("/v2/admin")
-@Api(tags = "评论json")
+@Tag(name = "评论json")
 public class CommentController {
 
     @Resource
@@ -52,8 +52,10 @@ public class CommentController {
     }
 
     /**
+     * 更新评论状态
      * 修改评论状态
-     * @param blogComment
+     *
+     * @param id id
      * @return com.site.blog.pojo.dto.Result<java.lang.String>
      * @date 2020/4/24 21:21
      */

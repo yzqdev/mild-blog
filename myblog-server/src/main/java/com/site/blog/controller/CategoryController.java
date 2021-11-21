@@ -16,7 +16,7 @@ import com.site.blog.service.CategoryService;
 import com.site.blog.service.BlogInfoService;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +32,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/v2/admin")
-@Api(tags = "分类json")
+@Tag(name= "分类json")
 public class CategoryController {
 
     @Resource

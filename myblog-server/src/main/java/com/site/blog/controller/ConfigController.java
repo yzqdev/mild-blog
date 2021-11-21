@@ -7,7 +7,7 @@ import com.site.blog.model.entity.BlogConfig;
 import com.site.blog.service.BlogConfigService;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/v2/admin")
-@Api(tags = "配置信息")
+@Tag(name = "配置信息")
 @Slf4j
 public class ConfigController {
 

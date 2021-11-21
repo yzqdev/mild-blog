@@ -3,6 +3,7 @@ package com.site.blog.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.site.blog.constants.*;
@@ -11,14 +12,10 @@ import com.site.blog.model.entity.*;
 import com.site.blog.model.vo.BlogDetailVO;
 import com.site.blog.service.*;
 import com.site.blog.util.BeanMapUtil;
-import com.site.blog.util.PageResult;
 import com.site.blog.util.RequestHelper;
 import com.site.blog.util.ResultGenerator;
-import io.swagger.annotations.Api;
 import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +23,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
-
 
 /**
  * 博客前台
@@ -36,7 +32,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/v2/home")
-@Api(tags = "首页数据")
+@io.swagger.v3.oas.annotations.tags.Tag(name = "首页数据",description = "首页")
 public class HomeBlogController {
 
     public static String theme = "amaze";

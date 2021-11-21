@@ -27,7 +27,9 @@ public class ResultGenerator {
         result.setMessage(constants.getContent());
         result.setData(data);
         return result;
-    }  public static <T> Result<T> getResultByHttp(HttpStatusEnum constants,boolean success, T data) {
+    }
+
+    public static <T> Result<T> getResultByHttp(HttpStatusEnum constants, boolean success, T data) {
         Result<T> result = new Result<>();
         result.setResultCode(constants.getStatus());
         result.setMessage(constants.getContent());
@@ -38,8 +40,9 @@ public class ResultGenerator {
 
     /**
      * 自定义提示消息
+     *
      * @param constants Http枚举
-     * @param msg 提示消息
+     * @param msg       提示消息
      */
     public static Result<String> getResultByMsg(HttpStatusEnum constants, String msg) {
         Result<String> result = new Result<>();

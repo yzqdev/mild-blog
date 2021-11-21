@@ -6,12 +6,10 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.site.blog.constants.DeleteStatusEnum;
 import com.site.blog.constants.SysConfigConstants;
-import com.site.blog.mapper.BlogInfoMapper;
 import com.site.blog.mapper.TagMapper;
 import com.site.blog.model.entity.BlogTag;
 import com.site.blog.model.entity.BlogTagCount;
 import com.site.blog.model.entity.Tag;
-import com.site.blog.service.BlogInfoService;
 import com.site.blog.service.BlogTagService;
 import com.site.blog.service.TagService;
 import org.springframework.stereotype.Service;
@@ -35,12 +33,8 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     @Resource
     private BlogTagService blogTagService;
 
-    @Resource
-    private BlogInfoMapper blogInfoMapper;
-    @Resource
-    private TagService tagService;
-    @Resource
-    private BlogInfoService blogInfoService;
+ @Resource
+ private TagMapper tagMapper;
 
     @Override
     public List<BlogTagCount> getBlogTagCountForIndex() {
@@ -61,14 +55,15 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean clearTag(Integer tagId) {
+    public int clearTag(Integer tagId) {
         LambdaQueryWrapper<BlogTag> queryWrapper = Wrappers.<BlogTag>lambdaQuery()
                 .eq(BlogTag::getTagId, tagId);
         List<BlogTag> blogTagList = blogTagService.list(queryWrapper);
         //如果存在不tag和blog的对应关系
         if (blogTagList.isEmpty()) {
-            tagService.remove(new QueryWrapper<Tag>().eq("tag_id", tagId));
-            return true;
+          return   tagMapper.delete(new LambdaQueryWrapper<Tag>().eq(Tag::getTagId, tagId));
+
+
         } else {
             blogTagList = blogTagList.stream()
                     .peek(blogTag -> {
@@ -83,7 +78,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
                     .collect(Collectors.toList());
           //blogTagService.updateBatchById(blogTagList);
 
-            return tagService.removeById(tagId);
+            return tagMapper.deleteById(tagId);
         }
     }
 }

@@ -12,7 +12,7 @@ import com.site.blog.util.JwtUtil;
 import com.site.blog.util.MD5Utils;
 import com.site.blog.util.RequestHelper;
 import com.site.blog.util.ResultGenerator;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +31,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/v2/admin")
-@Api(value = "后台json", tags = "后台json")
+@Tag(name = "后台json", description= "后台json")
 @Slf4j
 public class AdminController {
     @Resource

@@ -19,7 +19,6 @@ import com.site.blog.util.BeanMapUtil;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
 import com.site.blog.util.UploadFileUtils;
-import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,7 +40,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/v2/admin")
-@Api(tags = "博客json")
+@io.swagger.v3.oas.annotations.tags.Tag(name = "博客json")
 public class AdminBlogController {
 
     @Resource

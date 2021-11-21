@@ -16,8 +16,19 @@ import java.util.List;
  */
 public interface TagService extends IService<Tag> {
 
+    /**
+     * 让博客标签数指数
+     *
+     * @return {@link List}<{@link BlogTagCount}>
+     */
     List<BlogTagCount> getBlogTagCountForIndex();
 
-    boolean clearTag(Integer tagId);
+    /**
+     * 清除标签
+     *
+     * @param tagId 标签id
+     * @return boolean
+     */
+    int clearTag(Integer tagId);
 
 }

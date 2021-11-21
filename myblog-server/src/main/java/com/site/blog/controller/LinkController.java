@@ -11,7 +11,7 @@ import com.site.blog.model.entity.Link;
 import com.site.blog.service.LinkService;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -27,7 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/v2/admin")
-@Api(tags = "链接json")
+@Tag(name = "链接json")
 public class LinkController {
 
     @Resource

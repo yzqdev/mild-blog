@@ -118,7 +118,7 @@ public class TagController {
     public Result<String> clearTag(@PathVariable("id") Integer tagId) throws RuntimeException {
 
         String name = tagService.getById(tagId).getTagName();
-        if (tagService.clearTag(tagId)) {
+        if (tagService.clearTag(tagId)==1) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, name);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
