@@ -133,10 +133,8 @@ public class AdminBlogController {
             //添加blog和标签映射关系
             blogTagService.remove(new QueryWrapper<BlogTag>().eq("blog_id", blogInfo.getBlogId()));
             for (Integer tagId : blogInfoDo.getBlogTagIds()) {
-                BlogTag blogTag = new BlogTag();
-                blogTag.setBlogId(blogInfo.getBlogId());
-                blogTag.setTagId(tagId);
-                blogTag.setCreateTime(DateUtils.getLocalCurrentDate());
+                BlogTag blogTag = BlogTag.builder().blogId(blogInfo.getBlogId()).tagId(tagId).createTime(DateUtils.getLocalCurrentDate()).build();
+
                 blogTagService.save(blogTag);
             }
             //blogService.removeAndsaveBatch(Arrays.asList(blogInfo.getBlogTags().split(",")), blogInfo);

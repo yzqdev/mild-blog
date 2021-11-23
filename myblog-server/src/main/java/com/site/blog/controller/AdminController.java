@@ -33,7 +33,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/v2/admin")
-@Tag(name = "后台json", description= "后台json")
+@Tag(name = "后台json", description = "后台json")
 
 
 @Slf4j
@@ -66,7 +66,7 @@ public class AdminController {
         System.out.println(MD5Utils.MD5Encode(password, "UTF-8"));
         AdminUser adminUser = adminUserService.getOne(queryWrapper);
         if (adminUser != null) {
-            if (adminUser.getLocked()==0){
+            if (adminUser.getLocked() == 0) {
                 String token = JwtUtil.sign(adminUser.getLoginUserName(), adminUser.getAdminUserId());
 
                 session.setAttribute(SessionConstants.LOGIN_USER, adminUser.getNickName());
@@ -75,9 +75,9 @@ public class AdminController {
                 session.setAttribute(SessionConstants.AUTHOR_IMG, blogConfigService.getById(
                         SysConfigConstants.SYS_AUTHOR_IMG.getConfigField()));
 
-                return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, token);
-            }else {
-                return  ResultGenerator.getResultByHttp(HttpStatusEnum.UNAUTHORIZED,false,"账户已被冻结");
+                return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, token);
+            } else {
+                return ResultGenerator.getResultByHttp(HttpStatusEnum.UNAUTHORIZED, false, "账户已被冻结");
             }
         } else {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.UNAUTHORIZED);
@@ -108,11 +108,8 @@ public class AdminController {
         if (adminUser != null) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST, "用户名已存在");
         } else {
-            AdminUser regUser = new AdminUser();
-            regUser.setLoginUserName(username);
-            regUser.setLoginPassword(password);
-            regUser.setLocked(1);
-            regUser.setRole(0);
+            AdminUser regUser = AdminUser.builder().loginUserName(username).loginPassword(password).locked(1).role(0).build();
+
             adminUserService.register(regUser);
 
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, "/admin/v1/index");
@@ -146,13 +143,13 @@ public class AdminController {
     @PostMapping("/unlock/{id}")
     public Result unlock(@PathVariable("id") String id) {
         AdminUser user = adminUserService.getAdminUserById(Integer.valueOf(id));
-        AdminUser currentUser= RequestHelper.getSessionUser();
-        if (user.getAdminUserId().equals(currentUser.getAdminUserId())){
-            return  ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR,"不能冻结自己");
+        AdminUser currentUser = RequestHelper.getSessionUser();
+        if (user.getAdminUserId().equals(currentUser.getAdminUserId())) {
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "不能冻结自己");
         }
-        if (user.getLocked()==0){
+        if (user.getLocked() == 0) {
             user.setLocked(1);
-        }else{
+        } else {
             user.setLocked(0);
         }
         adminUserService.updateById(user);
@@ -166,12 +163,12 @@ public class AdminController {
 
             System.out.println("心如这里");
             HashMap<String, Object> res = new HashMap<>(1);
-            if (user==null){
-                return  ResultGenerator.getResultByHttp(HttpStatusEnum.UNAUTHORIZED,false,"请重新登录");
+            if (user == null) {
+                return ResultGenerator.getResultByHttp(HttpStatusEnum.UNAUTHORIZED, false, "请重新登录");
             }
             res.put("user", user);
-            System.out.println("user="+user);
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, res);
+            System.out.println("user=" + user);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, res);
         } catch (Exception e) {
             e.printStackTrace();
         }
