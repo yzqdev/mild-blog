@@ -8,6 +8,7 @@ import java.io.Serial;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -21,6 +22,7 @@ import lombok.experimental.Accessors;
  * @since 2019-08-25
  */
 @Data
+@Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 public class AdminUser extends Model<AdminUser> implements Serializable {

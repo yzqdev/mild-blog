@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
  * @Modified By:
  */
 @Component
-public class InterceptorCORS implements HandlerInterceptor {
+public class CorsInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         response.setHeader("Access-Control-Allow-Origin", request.getHeader("origin") );
