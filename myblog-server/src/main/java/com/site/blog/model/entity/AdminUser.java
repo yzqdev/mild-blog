@@ -27,8 +27,8 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 public class AdminUser extends Model<AdminUser> implements Serializable {
 
-@Serial
-private static final long serialVersionUID=1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 管理员id

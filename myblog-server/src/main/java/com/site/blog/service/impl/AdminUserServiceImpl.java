@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.site.blog.util.MD5Utils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -35,13 +36,13 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
      */
     @Override
     public boolean validatePassword(Integer userId, String oldPwd) {
-        QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<AdminUser>(
+        QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<>(
                 new AdminUser().setAdminUserId(userId)
                         .setLoginPassword(MD5Utils.MD5Encode(oldPwd, "UTF-8"))
         );
 
         AdminUser adminUser = adminUserMappe.selectOne(queryWrapper);
-        return !StringUtils.isEmpty(adminUser);
+        return !ObjectUtils.isEmpty(adminUser);
     }
 
     @Transactional
@@ -52,8 +53,8 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
 
     @Override
     public int register(AdminUser admin) {
-admin.setLoginPassword(MD5Utils.MD5Encode(admin.getLoginPassword(),"UTF-8"));
-      int flag=  adminUserMappe.insert(admin);
+        admin.setLoginPassword(MD5Utils.MD5Encode(admin.getLoginPassword(), "UTF-8"));
+        int flag = adminUserMappe.insert(admin);
         return flag;
     }
 
@@ -61,10 +62,10 @@ admin.setLoginPassword(MD5Utils.MD5Encode(admin.getLoginPassword(),"UTF-8"));
     public AdminUser getAdminUserById(Integer id) {
 
         try {
-            QueryWrapper<AdminUser> queryWrapper= new QueryWrapper<>();
-            queryWrapper.eq("admin_user_id",id);
+            QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("admin_user_id", id);
             return adminUserMappe.selectOne(queryWrapper);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

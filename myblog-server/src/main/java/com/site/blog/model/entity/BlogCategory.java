@@ -3,8 +3,7 @@ package com.site.blog.model.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.sql.Timestamp;
 
@@ -16,10 +15,25 @@ import java.sql.Timestamp;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class BlogCategory  extends Model<BlogCategory> {
+    /**
+     * 关系id
+     */
     @TableId(type = IdType.AUTO)
     private Integer relationId;
+    /**
+     * 博客id
+     */
     private Long blogId;
+    /**
+     * 类别id
+     */
     private Integer categoryId;
+    /**
+     * 创建时间
+     */
     private Timestamp createTime;
 }

@@ -14,14 +14,21 @@ import java.io.File;
 @ExtendWith({SpringExtension.class})
 
 public class MyBlogApplicationTests {
-@Resource
-	AdminUserService adminUserService;
-	@Test
-	public void contextLoads() {
-		AdminUser u=adminUserService.getAdminUserById(4);
-		System.out.println(u);
-	}
+    @Resource
+    AdminUserService adminUserService;
 
+    @Test
+    public void contextLoads() {
+        AdminUser u = adminUserService.getAdminUserById(4);
+        System.out.println(u);
+    }
+
+    @Test
+    public String getUserById() {
+        AdminUser u = adminUserService.getAdminUserById(4);
+        System.out.println(u);
+        return "aaa";
+    }
 
 
 }
