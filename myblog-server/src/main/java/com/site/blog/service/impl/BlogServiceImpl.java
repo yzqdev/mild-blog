@@ -34,7 +34,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogTagMapper, BlogTag> impleme
         Long blogId = blogInfo.getBlogId();
         List<BlogTag> list = blogTagIds.stream().map(blogTagId -> new BlogTag()
                 .setTagId(Integer.valueOf(blogTagId))
-                .setBlogId(blogId)).collect(Collectors.toList());
+                .setBlogId(blogId)).toList();
         blogTagMapper.delete(new QueryWrapper<BlogTag>()
                 .lambda()
                 .eq(BlogTag::getBlogId, blogInfo.getBlogId()));
