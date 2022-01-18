@@ -19,6 +19,7 @@ import com.site.blog.util.BeanMapUtil;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
 import com.site.blog.util.UploadFileUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,20 +42,21 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/v2/admin")
 @io.swagger.v3.oas.annotations.tags.Tag(name = "博客json")
+@RequiredArgsConstructor
 public class AdminBlogController {
 
-    @Resource
-    BlogCategoryService blogCategoryService;
-    @Resource
-    CategoryService categoryService;
-    @Resource
-    private BlogInfoService blogInfoService;
-    @Resource
-    private BlogTagService blogTagService;
-    @Resource
-    private TagService tagService;
-    @Resource
-    private BlogService blogService;
+     
+    private final BlogCategoryService blogCategoryService;
+     
+  private final   CategoryService categoryService;
+     
+     private final BlogInfoService blogInfoService;
+     
+     private final BlogTagService blogTagService;
+     
+     private final TagService tagService;
+     
+     private final BlogService blogService;
 
     /**
      * 跳转博客编辑界面

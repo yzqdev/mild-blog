@@ -17,6 +17,7 @@ import com.site.blog.service.BlogInfoService;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -25,21 +26,25 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ * 类别控制器
+ *
+ * @author yanni
  * @qq交流群 796794009
  * @qq 1320291471
  * @Description: 分类Controller
  * @date: 2019/8/6 17:24
+ * @date 2022/01/19
  */
 @Controller
 @RequestMapping("/v2/admin")
 @Tag(name= "分类json")
+@RequiredArgsConstructor
 public class CategoryController {
 
-    @Resource
-    private CategoryService categoryService;
 
-    @Resource
-    private BlogCategoryService blogCategoryService;
+    private final CategoryService categoryService;
+
+
 
     /**
      * 分类的集合数据[用于下拉框]

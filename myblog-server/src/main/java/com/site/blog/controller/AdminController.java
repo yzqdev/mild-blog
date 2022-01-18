@@ -15,6 +15,7 @@ import com.site.blog.util.ResultGenerator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -37,21 +38,22 @@ import java.util.List;
 
 
 @Slf4j
+@RequiredArgsConstructor
 public class AdminController {
-    @Resource
-    private AdminUserService adminUserService;
-    @Resource
-    private BlogInfoService blogInfoService;
-    @Resource
-    private TagService tagService;
-    @Resource
-    private CategoryService categoryService;
-    @Resource
-    private CommentService commentService;
-    @Resource
-    private BlogConfigService blogConfigService;
-    @Resource
-    private LinkService linkService;
+     
+    private final AdminUserService adminUserService;
+     
+    private final BlogInfoService blogInfoService;
+     
+    private final TagService tagService;
+     
+    private final CategoryService categoryService;
+     
+    private final CommentService commentService;
+     
+    private final BlogConfigService blogConfigService;
+     
+    private final LinkService linkService;
 
     @PostMapping(value = "/login")
     public Result login(String username, String password,

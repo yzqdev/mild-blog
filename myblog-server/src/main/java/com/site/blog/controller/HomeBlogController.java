@@ -14,6 +14,7 @@ import com.site.blog.service.*;
 import com.site.blog.util.BeanMapUtil;
 import com.site.blog.util.RequestHelper;
 import com.site.blog.util.ResultGenerator;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.validation.annotation.Validated;
@@ -32,33 +33,34 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/v2/home")
-@io.swagger.v3.oas.annotations.tags.Tag(name = "首页数据",description = "首页")
+@io.swagger.v3.oas.annotations.tags.Tag(name = "首页数据", description = "首页")
+@RequiredArgsConstructor
 public class HomeBlogController {
 
     public static String theme = "amaze";
 
-    @Resource
-    private BlogInfoService blogInfoService;
 
-    @Resource
-    private TagService tagService;
-    @Resource
-    BlogCategoryService blogCategoryService;
-    @Resource
-    CategoryService categoryService;
-    @Resource
-    private BlogTagService blogTagService;
-    @Resource
-    private BlogConfigService blogConfigService;
+    private final BlogInfoService blogInfoService;
 
-    @Resource
-    private BlogService blogService;
 
-    @Resource
-    private CommentService commentService;
+    private final TagService tagService;
 
-    @Resource
-    private LinkService linkService;
+    private final BlogCategoryService blogCategoryService;
+
+    private final CategoryService categoryService;
+
+    private final BlogTagService blogTagService;
+
+    private final BlogConfigService blogConfigService;
+
+
+    private final BlogService blogService;
+
+
+    private final CommentService commentService;
+
+
+    private final LinkService linkService;
 
     /**
      * 博客首页
@@ -96,8 +98,8 @@ public class HomeBlogController {
                     .lambda().eq(BlogTag::getTagId, tagId));
             if (!CollectionUtils.isEmpty(list)) {
                 sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogTag::getBlogId).toArray());
-            }else {
-                return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, Collections.emptyList());
+            } else {
+                return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, Collections.emptyList());
             }
         }
         sqlWrapper.orderByDesc(BlogInfo::getCreateTime);
@@ -166,7 +168,7 @@ public class HomeBlogController {
      * @date 2020/12/7
      */
     @PostMapping({"/category/{categoryId}"})
-    public Result category(@PathVariable("categoryId") String categoryId,@RequestBody PageDto pageDto) {
+    public Result category(@PathVariable("categoryId") String categoryId, @RequestBody PageDto pageDto) {
 
         Page<BlogInfo> page = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
         LambdaQueryWrapper<BlogInfo> sqlWrapper = Wrappers.<BlogInfo>lambdaQuery()
@@ -182,8 +184,8 @@ public class HomeBlogController {
             System.out.println("这是list");
             if (!CollectionUtils.isEmpty(list)) {
                 sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogCategory::getBlogId).toArray());
-            }else {
-                return  ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,Collections.emptyList());
+            } else {
+                return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, Collections.emptyList());
             }
         }
         sqlWrapper.orderByDesc(BlogInfo::getCreateTime);
@@ -207,8 +209,8 @@ public class HomeBlogController {
             Page<BlogInfo> ipage = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
 
             QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>();
-            queryWrapper.lambda().like(BlogInfo::getBlogTitle,keyword).or().like(BlogInfo::getBlogContent,keyword);
-            Page<BlogInfo> blogInfos = blogInfoService.page(ipage,queryWrapper);
+            queryWrapper.lambda().like(BlogInfo::getBlogTitle, keyword).or().like(BlogInfo::getBlogContent, keyword);
+            Page<BlogInfo> blogInfos = blogInfoService.page(ipage, queryWrapper);
 
 
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, toBlogVo(blogInfos));
