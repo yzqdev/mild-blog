@@ -3,9 +3,7 @@ package com.site.blog.model.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -19,6 +17,9 @@ import java.sql.Timestamp;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @ToString
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Img extends Model<Img>  implements Serializable {
     @Serial
     private static final long serialVersionUID=1L;

@@ -50,6 +50,8 @@
             <v-md-editor
                 v-model="comment.commentBody"
                 left-toolbar="undo redo | tip todo-list emoji h h1 h2 h3 h4 h5 h6 bold italic strikethrough quote ul ol table hr link image imageLink uploadImage code save "
+                :disabled-menus="[]"
+                @upload-image="handleUploadImage"
                 height="400px"
             ></v-md-editor>
           </div>
@@ -80,7 +82,7 @@
 </template>
 
 <script setup>
-import {getBlogById, listComments, submitComment} from "@/utils/apiConfig";
+import {getBlogById, listComments, submitComment, uploadImg} from "@/utils/apiConfig";
 import dayjs from "dayjs";
 import {onMounted, reactive, ref, toRefs, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
@@ -116,7 +118,22 @@ onMounted(async () => {
 
   getComments();
 })
+function handleUploadImage(event, insertImage, files) {
+  console.log(files);
+  let formData=new FormData();
+  formData.append('img',files[0])
+  uploadImg(formData).then((res) => {
+    console.log(res)
+    insertImage({
+      url:
+      res.url,
+      desc: res.imgName,
+      // width: 'auto',
+      // height: 'auto',
+    });
+  })
 
+}
 function commentYou() {
   if (!state.comment.commentBody) {
     active.value = true;

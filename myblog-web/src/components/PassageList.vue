@@ -7,7 +7,7 @@
             item.blogCategory.categoryName
           }}</span>
           <span class="category-link">
-          <el-tag type="info" @click="gotoTagRoute(tag)" v-for="tag in item.blogTags">{{
+          <el-tag   @click="gotoTagRoute(tag)" v-for="tag in item.blogTags">{{
               tag.tagName
             }}</el-tag> </span
           ><span class="right">{{

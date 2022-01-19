@@ -1,7 +1,7 @@
 import {
-  createRouter,
-  createWebHashHistory,
-  createWebHistory,
+    createRouter,
+    createWebHashHistory,
+    createWebHistory,
 } from "vue-router";
 import Home from "@/view/Home.vue";
 import HomeMain from "@/view/home/HomeMain.vue";
@@ -26,143 +26,150 @@ import HomeComponent from "@/view/home/HomeComponent.vue";
 import ImgList from "@/view/admin/ImgList.vue";
 import NotFound from "@/components/NotFound.vue";
 import HomeCategory from "@/view/home/HomeCategory.vue";
-const routes = [
-  { path: '/:pathMatch(.*)*', name: 'NotFound', component:  NotFound },
-  {path:'/home',redirect: "/home/main"},
-  {
-    path: "/home",
-    name: "home",
-    component: Home,
-    children: [
-      {
-        path: "main",
-        name: "homeMain",
-        component: HomeMain,
-      },
-      {
-        path: "link",
-        name: "homeLink",
-        component: HomeLink,
-      },
-      {
-        path: "timeline",
-        name: "homeTimeline",
-        component: HomeComponent,
-      },  {
-        path: "search",
-        name: "homeSearch",
-        component: HomeComponent,
-      },
-      {
-        path: "categories",
-        name: "homeCategories",
-        component: HomeComponent,
-      },
-      {
-        path: "tags",
-        name: "homeTags",
-        component: HomeComponent,
-      },
-      {
-        path: "tag/:id",
-        name: "homeTag",
-        component: HomeTag,
-      },  {
-        path: "category/:id",
-        name: "homeCategory",
-        component: HomeCategory,
-      },
-      {
-        path: "blog/:id",
-        name: "homeBlog",
-        component: HomeBlog,
-      },
-      {
-        path: "about",
-        name: "HomeAbout",
-        component: HomeAbout,
-      },
-    ],
-  },
-  { path: "/", redirect: "/home/main" },
-  { path: "/admin", redirect: "/admin/login" },
-  {
-    path: "/admin",
-    name: "admin",
-    component: AdminPage,
-    children: [
-      {
-        path: "login",
-        name: "adminLogin",
-        component: AdminLogin,
-      },
-      {
-        path: "home",
+import {setDocumentTitle, domTitle} from "@/utils/meta";
 
-        component: AdminMain,
+const routes = [
+    {path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound},
+    {path: '/home', redirect: "/home/main"},
+    {
+        path: "/home",
+        name: "home",
+        component: Home,
         children: [
-          {
-            path: "welcome",
-            name: "adminWelcome",
-            component: AdminWelcome,
-          },
-          {
-            path: "article-list",
-            name: "articleList",
-            component: ArticleList,
-          },
-          {
-            path: "article-edit",
-            name: "articleEdit",
-            component: ArticleEdit,
-          },
-          {
-            path: "comment-list",
-            name: "commentList",
-            component: CommentList,
-          },
-          {
-            path: "category-list",
-            name: "categoryList",
-            component: CategoryList,
-          },
-          {
-            path: "tag-list",
-            name: "tagList",
-            component: TagList,
-          },
-          {
-            path: "link-list",
-            name: "linkList",
-            component: LinkList,
-          }, {
-            path: "img-list",
-            name: "imgList",
-            component: ImgList,
-          },
-          {
-            path: "system-info",
-            name: "systemInfo",
-            component: SystemInfo,
-          },
-          {
-            path: "user-info",
-            name: "userInfo",
-            component: UserInfo,
-          },
-          {
-            path: "users",
-            name: "users",
-            component: AdminList,
-          },
+            {
+                path: "main",
+                name: "homeMain",
+                component: HomeMain, meta: {title: '主页' }
+            },
+            {
+                path: "link",
+                name: "homeLink",
+                component: HomeLink,
+                meta: {title: '链接', keepAlive: true /* permission: [ 'dashboard' ] */}
+            },
+            {
+                path: "timeline",
+                name: "homeTimeline",
+                component: HomeComponent, meta: {title: '时间线' }
+            }, {
+                path: "search",
+                name: "homeSearch",
+                component: HomeComponent,
+            },
+            {
+                path: "categories",
+                name: "homeCategories",
+                component: HomeComponent, meta: {title: '分类' }
+            },
+            {
+                path: "tags",
+                name: "homeTags",
+                component: HomeComponent, meta: {title: '标签' }
+            },
+            {
+                path: "tag/:id",
+                name: "homeTag",
+                component: HomeTag,
+            }, {
+                path: "category/:id",
+                name: "homeCategory",
+                component: HomeCategory,
+            },
+            {
+                path: "blog/:id",
+                name: "homeBlog",
+                component: HomeBlog,
+            },
+            {
+                path: "about",
+                name: "HomeAbout",
+                component: HomeAbout,
+            },
         ],
-      },
-    ],
-  },
+    },
+    {path: "/", redirect: "/home/main"},
+    {path: "/admin", redirect: "/admin/login"},
+    {
+        path: "/admin",
+        name: "admin",
+        component: AdminPage,
+        children: [
+            {
+                path: "login",
+                name: "adminLogin",
+                component: AdminLogin,
+            },
+            {
+                path: "home",
+
+                component: AdminMain,
+                children: [
+                    {
+                        path: "welcome",
+                        name: "adminWelcome",
+                        component: AdminWelcome,
+                    },
+                    {
+                        path: "article-list",
+                        name: "articleList",
+                        component: ArticleList,
+                    },
+                    {
+                        path: "article-edit",
+                        name: "articleEdit",
+                        component: ArticleEdit,
+                    },
+                    {
+                        path: "comment-list",
+                        name: "commentList",
+                        component: CommentList,
+                    },
+                    {
+                        path: "category-list",
+                        name: "categoryList",
+                        component: CategoryList,
+                    },
+                    {
+                        path: "tag-list",
+                        name: "tagList",
+                        component: TagList,
+                    },
+                    {
+                        path: "link-list",
+                        name: "linkList",
+                        component: LinkList,
+                    }, {
+                        path: "img-list",
+                        name: "imgList",
+                        component: ImgList,
+                    },
+                    {
+                        path: "system-info",
+                        name: "systemInfo",
+                        component: SystemInfo,
+                    },
+                    {
+                        path: "user-info",
+                        name: "userInfo",
+                        component: UserInfo,
+                    },
+                    {
+                        path: "users",
+                        name: "users",
+                        component: AdminList,
+                    },
+                ],
+            },
+        ],
+    },
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes,
+    history: createWebHistory(),
+    routes,
 });
+router.beforeEach((to, from, next) => {
+    to.meta && (typeof to.meta.title !== 'undefined' && setDocumentTitle(`${to.meta.title} `))
+    next()
+})
 export default router;

@@ -26,11 +26,13 @@ spring:
         cache: false
         encoding: utf-8
         mode: HTML
-    web:
-        resources:
-            static-locations: classpath:/resources/,classpath:/static/,file:${upload.fileUploadDic}
-upload:
-    fileSqlDic: /upload/
-    fileUploadDic: ${user.home}/.myblog/upload/
-    sqlAuthorImg: /authorImg/
-    uploadAuthorImg: ${user.home}/.myblog/authorImg/
+
+myblog:
+    site:
+        ip: http://localhost:2801
+        name: 我的博客
+    upload:
+        file-url: ${user.home}/.myblog/upload/
+        pic-url: ${user.home}/.myblog/pic/
+        avatar: ${user.home}/.myblog/authorImg/
+
