@@ -4,6 +4,7 @@ import com.site.blog.model.entity.BlogConfig;
 import com.site.blog.mapper.BlogConfigMapper;
 import com.site.blog.service.BlogConfigService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,10 +21,11 @@ import java.util.stream.Collectors;
  * @since 2019-08-30
  */
 @Service
+@RequiredArgsConstructor
 public class BlogConfigServiceImpl extends ServiceImpl<BlogConfigMapper, BlogConfig> implements BlogConfigService {
 
-    @Resource
-    private BlogConfigMapper blogConfigMapper;
+
+    private final BlogConfigMapper blogConfigMapper;
 
 
     @Override

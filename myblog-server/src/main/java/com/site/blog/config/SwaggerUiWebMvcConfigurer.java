@@ -36,13 +36,5 @@ public class SwaggerUiWebMvcConfigurer implements WebMvcConfigurer {
                 .setViewName("forward:" + baseUrl + "/swagger-ui/index.html");
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry
-                .addMapping("/api/pet")
-                .allowedOrigins("http://editor.swagger.io");
-        registry
-                .addMapping("/v2/api-docs.*")
-                .allowedOrigins("http://editor.swagger.io");
-    }
+
 }

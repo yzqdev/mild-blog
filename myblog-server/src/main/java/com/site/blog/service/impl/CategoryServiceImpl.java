@@ -12,6 +12,7 @@ import com.site.blog.model.entity.BlogInfo;
 import com.site.blog.model.entity.Category;
 import com.site.blog.service.BlogCategoryService;
 import com.site.blog.service.CategoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,14 +27,13 @@ import javax.annotation.Resource;
  * @since 2019-08-30
  */
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements CategoryService {
 
-    @Resource
-    CategoryMapper categoryMapper;
-    @Resource
-    private BlogInfoMapper blogInfoMapper;
-@Resource
-    BlogCategoryService blogCategoryService;
+
+  private final   CategoryMapper categoryMapper;
+
+    private  final BlogCategoryService blogCategoryService;
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean clearCategory(Integer id) {

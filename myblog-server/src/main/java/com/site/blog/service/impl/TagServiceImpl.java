@@ -12,6 +12,7 @@ import com.site.blog.model.entity.BlogTagCount;
 import com.site.blog.model.entity.Tag;
 import com.site.blog.service.BlogTagService;
 import com.site.blog.service.TagService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,13 +29,14 @@ import java.util.stream.Collectors;
  * @since 2019-08-28
  */
 @Service
+@RequiredArgsConstructor
 public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagService {
 
-    @Resource
-    private BlogTagService blogTagService;
 
- @Resource
- private TagMapper tagMapper;
+    private final BlogTagService blogTagService;
+
+
+    private final TagMapper tagMapper;
 
     @Override
     public List<BlogTagCount> getBlogTagCountForIndex() {
@@ -61,7 +63,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         List<BlogTag> blogTagList = blogTagService.list(queryWrapper);
         //如果存在不tag和blog的对应关系
         if (blogTagList.isEmpty()) {
-          return   tagMapper.delete(new LambdaQueryWrapper<Tag>().eq(Tag::getTagId, tagId));
+            return tagMapper.delete(new LambdaQueryWrapper<Tag>().eq(Tag::getTagId, tagId));
 
 
         } else {
@@ -76,7 +78,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
                         }
                     })
                     .collect(Collectors.toList());
-          //blogTagService.updateBatchById(blogTagList);
+            //blogTagService.updateBatchById(blogTagList);
 
             return tagMapper.deleteById(tagId);
         }

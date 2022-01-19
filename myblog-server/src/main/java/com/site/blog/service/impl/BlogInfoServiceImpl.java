@@ -13,6 +13,7 @@ import com.site.blog.model.vo.BlogDetailVO;
 import com.site.blog.model.vo.SimpleBlogListVO;
 import com.site.blog.service.*;
 import com.site.blog.util.BeanMapUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,16 +32,17 @@ import java.util.stream.Collectors;
  * @since 2019-08-27
  */
 @Service
+@RequiredArgsConstructor
 public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> implements BlogInfoService {
 
-    @Resource
-    private BlogInfoMapper blogInfoMapper;
 
-    @Resource
-    private BlogTagMapper blogTagMapper;
+    private final BlogInfoMapper blogInfoMapper;
 
-    @Resource
-    private CommentMapper commentMapper;
+
+    private final BlogTagMapper blogTagMapper;
+
+
+    private final   CommentMapper commentMapper;
 
     @Override
     public List<SimpleBlogListVO> getNewBlog() {

@@ -13,7 +13,7 @@ import java.io.File;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith({SpringExtension.class})
 
-public class MyBlogApplicationTests {
+public class BlogAppTests {
     @Resource
     AdminUserService adminUserService;
 

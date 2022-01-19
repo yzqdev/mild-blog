@@ -6,6 +6,7 @@ import com.site.blog.model.entity.BlogTag;
 import com.site.blog.mapper.BlogTagMapper;
 import com.site.blog.service.BlogService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +23,11 @@ import java.util.stream.Collectors;
  * @since 2019-08-28
  */
 @Service
+@RequiredArgsConstructor
 public class BlogServiceImpl extends ServiceImpl<BlogTagMapper, BlogTag> implements BlogService {
 
-    @Resource
-    private BlogTagMapper blogTagMapper;
+
+    private final BlogTagMapper blogTagMapper;
 
 
     @Transactional(rollbackFor = Exception.class)

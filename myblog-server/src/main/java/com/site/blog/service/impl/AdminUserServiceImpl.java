@@ -7,6 +7,7 @@ import com.site.blog.mapper.AdminUserMapper;
 import com.site.blog.service.AdminUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.site.blog.util.MD5Utils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -23,10 +24,11 @@ import javax.annotation.Resource;
  * @since 2019-08-25
  */
 @Service
+@RequiredArgsConstructor
 public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser> implements AdminUserService {
 
-    @Resource
-    private AdminUserMapper adminUserMappe;
+
+    private final AdminUserMapper adminUserMappe;
 
     /**
      * @Description: 验证密码
