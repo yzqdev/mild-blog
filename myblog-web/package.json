@@ -1,32 +1,35 @@
 {
-  "name": "myblog",
+  "name": "mild-blog",
   "version": "0.0.1",
   "scripts": {
-    "dev": "yarn &&vite --host",
+    "dev": "vite --host",
     "build": "vite build",
-    "serve": "vite preview"
+    "build:ts": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "lint": "prettier --write src/**/*.{vue,js,jsx,ts,tsx,json,html}"
   },
   "dependencies": {
-    "@kangc/v-md-editor": "^2.3.7",
-    "@vitejs/plugin-vue": "^2.0.1",
-    "@vueuse/core": "^7.4.0",
-    "axios": "^0.24.0",
-    "dayjs": "^1.10.7",
-    "element-plus": "1.2.0-beta.6",
-    "less": "^4.1.2",
-    "prettier": "^2.5.1",
-    "prismjs": "^1.25.0",
-    "qs": "^6.10.2",
-    "sass": "^1.45.1",
-    "vue": "^3.2.22",
+    "@element-plus/icons-vue": "^1.1.4",
+    "@types/lodash": "^4.14.182",
+    "@vitejs/plugin-vue": "^2.3.3",
+    "@vueuse/core": "^8.4.2",
+    "axios": "^0.27.2",
+    "dayjs": "^1.11.2",
+    "element-plus": "2.2.0",
+    "sass": "latest",
+    "md-editor-v3": "^1.11.13",
+    "prettier": "^2.6.2",
+    "qs": "^6.10.3",
+    "typescript": "^4.6.4",
+    "unplugin-auto-import": "^0.7.1",
+    "unplugin-vue-components": "^0.19.5",
+    "vue": "^3.2.33",
     "vue-cropper": "^1.0.2",
-    "vue-router": "^4.0.10",
+    "vue-router": "^4.0.15",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "@vue/compiler-sfc": "^3.2.26",
-    "highlight.js": "^11.3.1",
-    "vite": "^2.7.6",
-    "vite-plugin-prismjs": "^0.0.8"
+    "@types/node": "^17.0.33",
+    "vite": "^2.9.9"
   }
 }

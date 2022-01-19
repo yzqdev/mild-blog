@@ -39,91 +39,89 @@
     <div v-if="routeName=='search'">
 
 
-      <passage-list :list="keywordList"  :loading="false"></passage-list>
+      <passage-list :list="keywordList" :loading="false"></passage-list>
     </div>
   </div>
 </template>
 
-<script>
-import {defineComponent} from "vue";
+<script setup>
+import {  reactive, toRefs, watch} from "vue";
 import {getHomeCates, getHomeTags, getSearch, getTimeline} from "@/utils/apiConfig";
 import PassageList from "@/components/PassageList.vue";
+import {useRoute, useRouter} from "vue-router";
+import dayjs from "dayjs";
 
-export default defineComponent({
-  name: "HomeComponent",
-  components: {PassageList},
-  data() {
-    return {
-      loading: true,
-      routeName: "tags",
-      data: [],
-      pageNum: 1,
-      pageSize: 55,
-      timelines: [],
-      keywordList:[]
-    };
-  },
-  methods: {
-    gotoBlog(item) {
-      this.$router.push("/home/blog/" + item.blogId);
-    },
-    formatTime(time) {
-      return this.$dayjs(time).format("YYYY-MM-DD HH:mm:ss");
-    },
-    gotoTag(item) {
-      this.$router.push("/home/tag/" + item.tagId);
-    },gotoCate(item) {
-      this.$router.push("/home/category/" + item.categoryId);
-    },
-  },
-  watch: {
-    $route: {
-      handler: async function (val) {
-        let route = val.name;
-        switch (route) {
-          case "homeTags":
-            this.routeName = "tags";
-            let {data} = await getHomeTags();
-            this.data = data;
-            this.loading = false;
-            break;
-          case "homeCategories":
-            this.routeName = "cates";
-            let res = await getHomeCates();
-            this.data = res.data;
-            this.loading = false;
-            break;
-          case "homeTimeline":
-            this.routeName = "timeline";
-            getTimeline({
-              pageNum: this.pageNum,
-              pageSize: this.pageSize,
-            }).then((res) => {
-              this.timelines = res.data;
-              this.loading = false;
-            });
+let state = reactive({
+  loading: true,
+  routeName: "tags",
+  data: [],
+  pageNum: 1,
+  pageSize: 55,
+  timelines: [],
+  keywordList: []
+})
+const router = useRouter()
+const route=useRoute()
+let {loading, routeName, data, pageNum, pageSize, timelines, keywordList} = toRefs(state)
 
-            break;
-          case 'homeSearch':
-            this.routeName = "search";
-            getSearch(this.$route.query.text).then(({data}) => {
-              console.log(data)
-              this.keywordList=data
-            })
+function gotoBlog(item) {
+  router.push("/home/blog/" + item.blogId);
+}
 
-            this.loading = false
-            break;
-            default:
-              break;
-        }
-      },
-      immediate: true,
-    },
-  },
-});
+function formatTime(time) {
+  return dayjs(time).format("YYYY-MM-DD HH:mm:ss");
+}
+
+function gotoTag(item) {
+  router.push("/home/tag/" + item.tagId);
+}
+
+function gotoCate(item) {
+  router.push("/home/category/" + item.categoryId);
+}
+
+watch(() => route , async (val, preVal) => {
+
+  switch (val.name) {
+    case "homeTags":
+      state.routeName = "tags";
+      let {data} = await getHomeTags();
+      state.data = data;
+      state.loading = false;
+      break;
+    case "homeCategories":
+      state.routeName = "cates";
+      let res = await getHomeCates();
+      state.data = res.data;
+      state.loading = false;
+      break;
+    case "homeTimeline":
+      state.routeName = "timeline";
+      getTimeline({
+        pageNum: state.pageNum,
+        pageSize: state.pageSize,
+      }).then((res) => {
+        state.timelines = res.data;
+        state.loading = false;
+      });
+
+      break;
+    case 'homeSearch':
+      state.routeName = "search";
+      getSearch(route.query.text).then(({data}) => {
+        console.log(data)
+        state.keywordList = data
+      })
+
+      state.loading = false
+      break;
+    default:
+      break;
+  }
+}, {immediate: true,deep:true})
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .home-component {
   height: 100%;
   margin: 20px;
@@ -135,7 +133,7 @@ export default defineComponent({
     border: 1px solid #53a8ff;
   }
 
-  ::v-deep(.el-card) {
+  :deep(.el-card) {
     &:hover {
       cursor: pointer;
     }

@@ -1,6 +1,8 @@
 package com.site.blog.util;
 
 
+import cn.hutool.http.useragent.UserAgent;
+import cn.hutool.http.useragent.UserAgentUtil;
 import com.site.blog.constants.BaseConstants;
 import com.site.blog.model.entity.AdminUser;
 import org.apache.commons.lang3.StringUtils;
@@ -117,6 +119,10 @@ public class RequestHelper {
         return getRequestHeader(REQUEST_HEADER_USER_AGENT);
     }
 
+    public static UserAgent getUa( ) {
+       return UserAgentUtil.parse(getUserAgentHeader());
+
+    }
 
     public static String getRequestMessage(HttpServletRequest request) throws IOException {
         StringBuilder parameters = new StringBuilder();

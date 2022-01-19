@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.site.blog.constants.DeleteStatusEnum;
 import com.site.blog.constants.HttpStatusEnum;
-import com.site.blog.constants.UploadConstants;
 import com.site.blog.model.dto.BlogInfoDo;
 import com.site.blog.model.dto.PageDto;
 import com.site.blog.model.dto.Result;
@@ -18,18 +17,11 @@ import com.site.blog.service.*;
 import com.site.blog.util.BeanMapUtil;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
-import com.site.blog.util.UploadFileUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -93,6 +85,7 @@ public class AdminBlogController {
      */
 
     @PostMapping("/blog/edit")
+    @Transactional(rollbackFor = Exception.class)
     public Result saveBlog(@RequestBody BlogInfoDo blogInfoDo) {
 //todo 当然这里可以直接用sql语句,不过我为了学习方便用了DO
         //if (ObjectUtils.isEmpty(blogInfoDo.getBlogTags()) || ObjectUtils.isEmpty(blogInfoDo)) {

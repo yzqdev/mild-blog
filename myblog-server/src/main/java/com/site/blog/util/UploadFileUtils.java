@@ -18,22 +18,26 @@ import java.util.Random;
 public class UploadFileUtils {
 
     /**
-     * @Description: 获取图片后缀
-     * @Param: [file]
-     * @return: java.lang.String
-     * @date: 2019/8/24 15:27
+     *
+     * 获取图片后缀
+     *
+     * @param file 文件
+     * @return {@link String}
+     * @since 2019/8/24 15:27
      */
     public static String getSuffixName(MultipartFile file){
         String fileName = file.getOriginalFilename();
         assert fileName != null;
         return fileName.substring(fileName.lastIndexOf("."));
     }
-    
+
     /**
-     * @Description: 生成文件名称通用方法
-     * @Param: [suffixName] 图片后缀
-     * @return: java.lang.String
-     * @date: 2019/8/24 15:29 
+     * 获得新文件名
+     * 生成文件名称通用方法
+     *
+     * @param suffixName 后缀名
+     * @return {@link String}
+     * @since  2019/8/24 15:29
      */
     public static String getNewFileName(String suffixName){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");

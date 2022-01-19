@@ -1,36 +1,41 @@
 logging:
-    file:
-        path: logs
-    level:
-        com:
-            site:
-                blog: debug
+  file:
+    path: logs
+  level:
+    com:
+      site:
+        blog: debug
 mybatis-plus:
-    configuration:
-        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    global-config:
-        db-config:
-            table-prefix: tb_
-    mapper-locations: classpath*:mapper/*.xml
-    type-aliases-package: com.site.blog.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      table-prefix: tb_
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.site.blog.entity
 server:
-    port: 2801
+  port: 2801
 spring:
-    profiles:
-        active: @activatedProperties@
-    servlet:
-        multipart:
-            max-file-size: 10MB
-            max-request-size: 100MB
-    thymeleaf:
-        cache: false
-        encoding: utf-8
-        mode: HTML
-    web:
-        resources:
-            static-locations: classpath:/resources/,classpath:/static/,file:${upload.fileUploadDic}
-upload:
-    fileSqlDic: /upload/
-    fileUploadDic: ${user.home}/.myblog/upload/
-    sqlAuthorImg: /authorImg/
-    uploadAuthorImg: ${user.home}/.myblog/authorImg/
+  profiles:
+    active: @activatedProperties@
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+  thymeleaf:
+    cache: false
+    encoding: utf-8
+    mode: HTML
+
+myblog:
+  site:
+    ip: http://localhost:2801/
+    name: 我的博客
+  upload:
+    file-url: ${user.home}/.myblog/upload/
+    file-prefix: upload/
+
+    pic-url: ${user.home}/.myblog/pic/
+    pic-prefix: pic/
+    avatar: ${user.home}/.myblog/authorImg/
+

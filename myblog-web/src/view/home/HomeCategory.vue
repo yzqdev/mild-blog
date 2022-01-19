@@ -5,29 +5,27 @@
   </div>
 </template>
 
-<script>
-import {getArticleByCate } from "@/utils/apiConfig";
+<script setup>
+import {getArticleByCate} from "@/utils/apiConfig";
 import PassageList from "@/components/PassageList.vue";
+import {onBeforeMount, reactive, toRefs} from "vue";
+import {useRoute} from "vue-router";
 
-export default {
-  name: "HomeCategory",
-  components: { PassageList },
-  data() {
-    return {
-      list: null,
-      loading: true,
-    };
-  },
-  async created() {
-    let id = this.$route.params.id;
-    const { data } = await getArticleByCate(id, { pageNum: 1, pageSize: 30 });
-    this.list = data;
-    this.loading = false;
-  },
-};
+const route = useRoute()
+let state = reactive({
+  list: null,
+  loading: false
+})
+let {list, loading} = toRefs(state)
+onBeforeMount(async () => {
+  let id = route.params.id;
+  const {data} = await getArticleByCate(id, {pageNum: 1, pageSize: 30});
+  state.list = data;
+  state.loading = false;
+})
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .home-tag {
   flex: 1;
   padding: 20px 100px;

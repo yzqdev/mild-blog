@@ -3,17 +3,22 @@ package com.site.blog.utils;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.nio.file.Paths;
 
 /**
  * @author yanni
  * @date time 2021/10/29 14:44
  * @modified By:
  */
-public class FileTest {
+class FileTest {
     @Test
-    public void removeFile(){
-        File file=new File("D:/tmp/myblog/upload/20211029_14480916.png");
+    void removeFile(){
+        File file=new File("C:\\Users\\yanni/.myblog/pic/20220213_14162033.jpg");
         boolean flag=file.delete();
         System.out.println(flag);
+    }
+    @Test
+    void getFile(){
+        Paths.get("C:\\Users\\yanni/.myblog/pic/20220213_14162033.jpg");
     }
 }

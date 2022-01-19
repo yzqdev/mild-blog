@@ -1,61 +1,61 @@
 logging:
-    level:
-        com:
-            site:
-                blog: debug
+  level:
+    com:
+      site:
+        blog: debug
 mybatis-plus:
-    configuration:
-        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    global-config:
-        db-config:
-            table-prefix: tb_
-    mapper-locations: classpath*:mapper/*.xml
-    type-aliases-package: com.site.blog.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      table-prefix: tb_
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.site.blog.entity
 spring:
-    datasource:
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        druid:
-            filter:
-                slf4j:
-                    connection-log-enabled: false
-                    data-source-log-enabled: false
-                    enabled: true
-                    result-set-log-enabled: false
-                    statement-log-enabled: false
-                stat:
-                    enabled: true
-                    log-slow-sql: true
-                    slow-sql-millis: 1000
-                wall:
-                    config:
-                        delete-where-none-check: true
-                    enabled: true
-                    log-violation: true
-                    throw-exception: false
-            initialSize: 1
-            maxActive: 20
-            maxOpenPreparedStatements: 20
-            maxWait: 60000
-            minEvictableIdleTimeMillis: 300000
-            minIdle: 1
-            poolPreparedStatements: false
-            stat-view-servlet:
-                enabled: true
-                login-password: z1320291471
-                login-username: admin
-            testOnBorrow: false
-            testOnReturn: false
-            testWhileIdle: true
-            timeBetweenEvictionRunsMillis: 60000
-            validationQuery: select 'x'
-            web-stat-filter:
-                enabled: true
-                exclusions: /druid/*,*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico
-                url-pattern: /*
-        name: myBlog
-        password: 123456
-        type: com.alibaba.druid.pool.DruidDataSource
-        url: jdbc:mysql://49.234.131.170:3306/my_blog_db?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false
-        username: root
-    thymeleaf:
-        prefix: classpath:/static
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      filter:
+        slf4j:
+          connection-log-enabled: false
+          data-source-log-enabled: false
+          enabled: true
+          result-set-log-enabled: false
+          statement-log-enabled: false
+        stat:
+          enabled: true
+          log-slow-sql: true
+          slow-sql-millis: 1000
+        wall:
+          config:
+            delete-where-none-check: true
+          enabled: true
+          log-violation: true
+          throw-exception: false
+      initialSize: 1
+      maxActive: 20
+      maxOpenPreparedStatements: 20
+      maxWait: 60000
+      minEvictableIdleTimeMillis: 300000
+      minIdle: 1
+      poolPreparedStatements: false
+      stat-view-servlet:
+        enabled: true
+        login-password: z1320291471
+        login-username: admin
+      testOnBorrow: false
+      testOnReturn: false
+      testWhileIdle: true
+      timeBetweenEvictionRunsMillis: 60000
+      validationQuery: select 'x'
+      web-stat-filter:
+        enabled: true
+        exclusions: /druid/*,*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico
+        url-pattern: /*
+    name: myBlog
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://49.234.131.170:3306/my_blog_db?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false
+    username: root
+  thymeleaf:
+    prefix: classpath:/static

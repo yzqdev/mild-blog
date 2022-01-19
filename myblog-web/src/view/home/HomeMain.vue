@@ -13,7 +13,7 @@
         >
           <template #append>
             <el-button
-              icon="el-icon-search"
+              :icon="Search"
               @click="search"
             ></el-button> </template
         ></el-input>
@@ -44,9 +44,16 @@
 <script setup>
 import { getIndex } from "@/utils/apiConfig";
 let searchText = ref("");
-
+import {
+  Search,
+  Edit,
+  Check,
+  Message,
+  Star,
+  Delete,
+} from '@element-plus/icons-vue'
 const msg = "aaaaaasdda";
-import { onBeforeMount, onMounted, reactive, ref } from "vue";
+import {onBeforeMount, onMounted, reactive, ref} from "vue";
 import { useRoute, useRouter } from "vue-router";
 import PassageList from "@/components/PassageList.vue";
 let loading = ref(true);
@@ -54,6 +61,7 @@ const color = ref("red");
 let passages = ref([]);
 let newBlog = ref([]);
 let hotTag = ref([]);
+let state=reactive({name:''})
 const router = useRouter();
 const route = useRoute();
 function gotoRoute(item) {
@@ -85,7 +93,7 @@ onBeforeMount(() => {
 });
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .link-title {
   cursor: pointer;
 }

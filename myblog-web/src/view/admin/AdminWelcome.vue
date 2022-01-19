@@ -3,10 +3,8 @@
   欢迎来到后台
 </template>
 
-<script>
-export default {
-  name: "AdminWelcome",
-};
+<script setup>
+
 </script>
 
-<style lang="less" scoped></style>
+<style lang="scss" scoped></style>

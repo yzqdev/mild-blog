@@ -79,114 +79,111 @@
         </div>
       </div>
       <el-form-item>
-        <v-md-editor
+        <md-editor-v3
             v-model="articleForm.blogContent"
             height="400px"
-            left-toolbar="undo redo | tip todo-list emoji h h1 h2 h3 h4 h5 h6 bold italic strikethrough quote ul ol table hr link image imageLink uploadImage code save "
+
             @copy-code-success="handleCopyCodeSuccess"
-            :disabled-menus="[]"
-            @upload-image="handleUploadImage"
-        ></v-md-editor>
+            @on-upload-img="handleUploadImage"
+        ></md-editor-v3>
       </el-form-item>
       <el-button type="primary" @click="submit">提交</el-button>
     </el-form>
   </div>
 </template>
 
-<script>
+<script setup>
 import {
   addBlog,
   getAdminBlogById,
   getCateList,
   getTagList, uploadImg,
 } from "@/utils/apiConfig";
+import {onBeforeMount, reactive, toRefs} from "vue";
+import {useRoute, useRouter} from "vue-router";
 
-export default {
-  name: "ArticleEdit",
-  data() {
-    return {
-      articleForm: {
-        blogId: "",
-        blogTitle: "",
-        blogTagIds: [],
-        blogCategoryId: undefined,
-        blogContent: "",
-        blogPreface: "",
-        blogSubUrl: "",
-        blogStatus: 0,
-        enableComment: 0,
-      },
-      text: "",
-      tagOptions: [],
-      cateOptions: [],
-    };
+let state = reactive({
+  articleForm: {
+    blogId: "",
+    blogTitle: "",
+    blogTagIds: [],
+    blogCategoryId: undefined,
+    blogContent: "",
+    blogPreface: "",
+    blogSubUrl: "",
+    blogStatus: 0,
+    enableComment: 0,
   },
-  methods: {
-    handleCopyCodeSuccess(code) {
-      console.log(code);
-    },
-    handleUploadImage(event, insertImage, files) {
-      // 拿到 files 之后上传到文件服务器，然后向编辑框中插入对应的内容
-      console.log(files);
-      let formData=new FormData();
-      formData.append('img',files[0])
-      uploadImg(formData).then((res) => {
-        console.log(res)
-        insertImage({
-          url:
-              res.url,
-          desc: res.imgName,
-          // width: 'auto',
-          // height: 'auto',
-        });
-      })
-      // 此处只做示例
+  text: "",
+  tagOptions: [],
+  cateOptions: [],
+})
+let {articleForm, text, tagOptions, cateOptions} = toRefs(state)
+const route = useRoute()
+const router = useRouter()
 
-    },
-    getData() {
-      getAdminBlogById(this.$route.query.id).then(({data}) => {
-        this.articleForm = data;
-      });
-    },
-    tagList() {
-      getTagList().then(({data}) => {
-        this.tagOptions = data;
-      });
-    },
-    cateList() {
-      getCateList().then(({data}) => {
-        this.cateOptions = data;
-      });
-    },
-    submit() {
-      if (this.$route.query.id) {
-        this.articleForm.blogId = +this.$route.query.id;
-      }
+function handleCopyCodeSuccess(code) {
+  console.log(code);
+}
 
-      addBlog(this.articleForm).then((data) => {
-        console.log(data);
-        if (data) {
-          this.$router.push({
-            name: "articleList",
-          });
-          this.$message.success("成功");
-        }
+function handleUploadImage( files,callback) {
+  console.log(files);
+  let formData = new FormData();
+  formData.append('img', files[0])
+  uploadImg(formData).then((res) => {
+    console.log(res)
+    callback(  [res.url] );
+  })
+
+}
+
+function getData() {
+  getAdminBlogById(route.query.id).then(({data}) => {
+    state.articleForm = data;
+  });
+}
+
+function tagList() {
+  getTagList().then(({data}) => {
+    state.tagOptions = data;
+  });
+}
+
+function cateList() {
+  getCateList().then(({data}) => {
+    state.cateOptions = data;
+  });
+}
+
+function submit() {
+  if (route.query.id) {
+    state.articleForm.blogId = +route.query.id;
+  }
+
+  addBlog(state.articleForm).then((data) => {
+    console.log(data);
+    if (data) {
+      router.push({
+        name: "articleList",
       });
-    },
-  },
-  created() {
-    if (this.$route.query.id) {
-      this.getData();
+      this.$message.success("成功");
     }
-    this.tagList();
-    this.cateList();
-  },
-};
+  });
+}
+
+onBeforeMount(() => {
+  if (route.query.id) {
+    getData();
+  }
+  tagList();
+  cateList();
+})
+
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .article-edit {
-  ::v-deep(.el-form-item) {
+  :deep(.el-form-item) {
     margin: 10px;
   }
 

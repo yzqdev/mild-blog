@@ -416,8 +416,8 @@ public class HomeBlogController {
      */
     @PostMapping(value = "/blog/comment")
     @ResponseBody
-    public Result<String> comment(HttpServletRequest request,
-                                  @Validated Comment comment) {
+    public Result<String> comment(Comment comment) {
+        HttpServletRequest request = RequestHelper.getHttpServletRequest();
         String ref = request.getHeader("Referer");
         System.out.println(ref);
         System.out.println("这是ref");
@@ -426,7 +426,8 @@ public class HomeBlogController {
         comment.setCommentBody(StringEscapeUtils.escapeHtml4(comment.getCommentBody()));
         comment.setCommentStatus(1);
         comment.setCommentatorIp(RequestHelper.getRequestIp());
-        comment.setUserAgent(RequestHelper.getUserAgentHeader());
+        comment.setUserAgent(RequestHelper.getUa().getBrowser()+RequestHelper.getUa().getVersion());
+        comment.setOs(RequestHelper.getUa().getOs().toString());
         //if (!StringUtils.hasText(ref)) {
         //    return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "非法请求");
         //}

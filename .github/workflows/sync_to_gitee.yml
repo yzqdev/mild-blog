@@ -1,0 +1,20 @@
+name: github to gitee
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  docs-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: sync-gitee-mirror
+        uses: abersheeran/sync-gitee-mirror@v1-beta
+        with:
+          repository: yzqdev/mild-blog
+          username: yzqdev
+          password: ${{ secrets.PASSWORD }}

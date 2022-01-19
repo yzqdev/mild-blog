@@ -2,15 +2,17 @@
   <el-dialog v-model="editFormShow" width="30%">
     <el-form :model="editForm">
       <el-form-item label="标签名"
-        ><el-input v-model="editForm.tagName"></el-input>
+      >
+        <el-input v-model="editForm.tagName"></el-input>
       </el-form-item>
       <el-form-item label="当前状态"
-        ><el-switch
-          v-model="editForm.isDeleted"
-          :active-value="1"
-          :inactive-value="0"
-          active-text="已删除"
-          inactive-text="未删除"
+      >
+        <el-switch
+            v-model="editForm.isDeleted"
+            :active-value="1"
+            :inactive-value="0"
+            active-text="已删除"
+            inactive-text="未删除"
         ></el-switch>
       </el-form-item>
     </el-form>
@@ -24,7 +26,7 @@
     <el-table-column prop="tagName" label="标签名"></el-table-column>
     <el-table-column prop="isDeleted" label="当前状态">
       <template v-slot="{ row }"
-        >
+      >
         {{ row.isDeleted == 1 ? `已删除` : `未删除` }}
       </template>
     </el-table-column>
@@ -32,16 +34,17 @@
     <el-table-column label="操作" width="250">
       <template v-slot="{ row }">
         <el-button type="primary" size="mini" @click="editRow(row)"
-          >编辑</el-button
+        >编辑
+        </el-button
         >
         <el-popconfirm
-          title="确定删除吗？"
-          confirmButtonText="好的"
-          cancelButtonText="不用了"
-          icon="el-icon-info"
-          placement="right"
-          iconColor="red"
-          @confirm="deleteRow(row)"
+            title="确定删除吗？"
+            confirmButtonText="好的"
+            cancelButtonText="不用了"
+            icon="el-icon-info"
+            placement="right"
+            iconColor="red"
+            @confirm="deleteRow(row)"
         >
           <template #reference>
             <el-button type="danger" size="mini">删除</el-button>
@@ -52,71 +55,81 @@
   </el-table>
 </template>
 
-<script>
+<script setup>
 import {addTag, clearTagById, EditTagList, getCommentList, getTagList} from "@/utils/apiConfig";
+import {onBeforeMount, reactive, toRefs} from "vue";
+import {ElMessage} from "element-plus";
 
-export default {
-  name: "TagList",
-  data() {
-    return {isEdit:true,
-      data: "",
-      editForm: {tagName:'',isDeleted:false},
-      editFormShow: false,
-    };
-  },
-  created() {
-    this.getData();
-  },
-  methods: {
-    getData() {
-      getTagList().then(({ data }) => {
-        console.log(data);
-        this.data = data;
-      });
-    },
-    deleteRow(row) {
-      clearTagById(row.tagId).then(({data }) => {
-        if (data ) {
-          this.getData()
-          this.$message.success('成功')
-        }
+let state = reactive({
+  isEdit: true,
+  data: "",
+  editForm: {tagName: '', isDeleted: false},
+  editFormShow: false,
+})
+let {isEdit, data, editForm, editFormShow} = toRefs(state)
+onBeforeMount(() => {
+  getData()
+})
+
+function getData() {
+  getTagList().then(({data}) => {
+    console.log(data);
+    state.data = data;
+  });
+}
+
+function deleteRow(row) {
+  clearTagById(row.tagId).then(({data}) => {
+    if (data) {
+      getData()
+      ElMessage({
+        message: "成功",
+        type: "success"
       })
-    },
-    showAddForm(){
-      this.isEdit=false
-      this.editForm={tagName:'',isDeleted:0}
-      this.editFormShow=true
-    },
-    submitEdit() {
-      if (this.isEdit) {
-        EditTagList(this.editForm).then((data) => {
-          console.log(data);
-          if (data) {
-            this.$message.success("成功");
-            this.getData();
-            this.editFormShow = false;
-          }
-        });
-      }else {
-        addTag(this.editForm).then(({data}) => {
-          if (data ) {
-            this.$message.success("成功");
-            this.isEdit=true;
-            this.getData()
-            this.editFormShow = false;
-          }
+    }
+  })
+}
+
+function showAddForm() {
+  state.isEdit = false
+  state.editForm = {tagName: '', isDeleted: 0}
+  state.editFormShow = true
+}
+
+function submitEdit() {
+  if (state.isEdit) {
+    EditTagList(state.editForm).then((data) => {
+      console.log(data);
+      if (data) {
+        ElMessage({
+          message: "成功",
+          type: "success"
         })
-
+        getData();
+        state.editFormShow = false;
       }
+    });
+  } else {
+    addTag(state.editForm).then(({data}) => {
+      if (data) {
+        ElMessage({
+          message: "成功",
+          type: "success"
+        })
+        state.isEdit = true;
+        getData()
+        state.editFormShow = false;
+      }
+    })
 
-    },
-    editRow(row) {
-      this.editForm = row;
-      this.editFormShow = true;
-    },
-    clearRow(row) {},
-  },
-};
+  }
+
+}
+
+function editRow(row) {
+  state.editForm = row;
+  state.editFormShow = true;
+}
 </script>
 
 <style scoped></style>

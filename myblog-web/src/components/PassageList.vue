@@ -7,7 +7,7 @@
             item.blogCategory.categoryName
           }}</span>
           <span class="category-link">
-          <el-tag type="primary" @click="gotoTagRoute(tag)" v-for="tag in item.blogTags">{{
+          <el-tag   @click="gotoTagRoute(tag)" v-for="tag in item.blogTags">{{
               tag.tagName
             }}</el-tag> </span
           ><span class="right">{{
@@ -23,37 +23,32 @@
   </div>
 </template>
 
-<script>
-import {defineComponent} from "vue";
+<script setup>
+import {useRouter} from "vue-router";
 
-export default defineComponent({
-  name: "PassageList",
-  data() {
-    return {};
-  },
-  props: {
-    list: {type: Array},
-    loading: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  mounted() {
-  },
-  methods: {
-    gotoCate(item) {
-    },
-    gotoTagRoute(item) {
-      this.$router.push("/home/tag/" + item.tagId);
-    },
-    gotoBlog(item) {
-      this.$router.push("/home/blog/" + item.blogId);
-    },
-  },
-});
+const router = useRouter()
+const props = defineProps({
+  list: Array,
+  loading: {
+    type: Boolean,
+    default: true
+  }
+})
+
+function gotoCate(item) {
+}
+
+function gotoTagRoute(item) {
+  router.push("/home/tag/" + item.tagId);
+}
+
+function gotoBlog(item) {
+  router.push("/home/blog/" + item.blogId);
+}
+
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .passage-list {
   .article {
     padding: 20px;

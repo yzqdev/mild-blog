@@ -1,5 +1,6 @@
 package com.site.blog.model.entity;
 
+import java.io.Serial;
 import java.sql.Timestamp;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -25,6 +26,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 public class BlogConfig implements Serializable {
 
+@Serial
 private static final long serialVersionUID=1L;
 
     /**

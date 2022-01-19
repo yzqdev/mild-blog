@@ -13,35 +13,29 @@
   </header>
 </template>
 
-<script>
+<script setup>
 import { getConfigs } from "@/utils/apiConfig";
-
-export default {
-  name: "HomeHeader",
-  data() {
-    return {
-      navs: [
-        { text: "主页", id: 1 },
-        { text: "友情链接", id: 2 },
-        { text: "关于", id: 3 },
-      ],
-      activeRoute: 1,
-      config: {},
-    };
-  },
-  methods: {
-    gotoRoute(item) {
-      this.activeRoute = item.id;
-    },
-  },
-  async created() {
-    let { data } = await getConfigs();
-    this.config = data;
-  },
-};
+import {onBeforeMount, reactive, toRefs} from "vue";
+let state=reactive({
+  navs: [
+    { text: "主页", id: 1 },
+    { text: "友情链接", id: 2 },
+    { text: "关于", id: 3 },
+  ],
+  activeRoute: 1,
+  config: {},
+})
+let {navs,activeRoute,config}=toRefs(state)
+function  gotoRoute(item) {
+  state.activeRoute = item.id;
+}
+onBeforeMount(async () => {
+  let { data } = await getConfigs();
+  state.config = data;
+})
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .home-header {
   background-color: #f5f5f5;
   padding: 0 20px;

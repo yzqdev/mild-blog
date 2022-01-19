@@ -60,7 +60,7 @@ public class CommentController {
      * @date 2020/4/24 21:21
      */
     @PostMapping( "/comment/isDel/{id}" )
-    public Result  updateCommentStatus(@PathVariable("id") String id){
+    public Result   updateCommentStatus(@PathVariable("id") String id){
         Comment comment= commentService.getById(id);
         comment.setCommentStatus(0);
         boolean flag = commentService.updateById(comment);

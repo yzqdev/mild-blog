@@ -1,23 +1,18 @@
 {
   "properties": [
     {
-      "name": "upload.fileUploadDic",
+      "name": "myblog.upload.file-url",
       "type": "java.lang.String",
-      "description": "Description for upload.fileUploadDic."
+      "description": "Description for myblog.upload.file-url."
     },
     {
-      "name": "upload.sqlAuthorImg",
+      "name": "myblog.upload.pic-url",
       "type": "java.lang.String",
-      "description": "Description for upload.sqlAuthorImg."
+      "description": "Description for myblog.upload.pic-url."
     },
     {
-      "name": "upload.uploadAuthorImg",
+      "name": "myblog.upload.avatar",
       "type": "java.lang.String",
-      "description": "Description for upload.uploadAuthorImg."
-    },
-    {
-      "name": "upload.fileSqlDic",
-      "type": "java.lang.String",
-      "description": "Description for upload.fileSqlDic."
+      "description": "Description for myblog.upload.avatar."
     }
   ] }

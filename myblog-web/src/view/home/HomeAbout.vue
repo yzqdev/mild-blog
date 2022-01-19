@@ -8,13 +8,11 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "HomeAbout",
-};
+<script setup>
+
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .home-about{
   padding: 40px;
 }
