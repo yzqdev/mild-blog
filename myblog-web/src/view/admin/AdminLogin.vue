@@ -165,7 +165,7 @@ export default defineComponent({
     padding: 20px 40px;
     background-color: white;
 
-    ::v-deep .el-tabs__nav-scroll {
+    :deep .el-tabs__nav-scroll {
       display: flex;
       justify-content: center;
     }

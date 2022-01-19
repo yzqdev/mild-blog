@@ -135,7 +135,7 @@ export default defineComponent({
     border: 1px solid #53a8ff;
   }
 
-  ::v-deep(.el-card) {
+  :deep(.el-card) {
     &:hover {
       cursor: pointer;
     }

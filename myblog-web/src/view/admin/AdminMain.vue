@@ -19,7 +19,8 @@
           <el-menu-item index="/admin/home/tag-list"> 标签列表</el-menu-item>
           <el-menu-item index="/admin/home/category-list">
             分类列表
-          </el-menu-item> <el-menu-item index="/admin/home/img-list">
+          </el-menu-item>
+          <el-menu-item index="/admin/home/img-list">
             图片列表
           </el-menu-item>
         </el-sub-menu>
@@ -42,7 +43,7 @@
         <article class="logout">
           <el-dropdown>
             <span class="dropdown-link">
-              <img :src="user.avatar" style="height: 30px" />{{
+              <img :src="user.avatar" style="height: 30px"/>{{
                 user.loginUserName
               }} <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
@@ -69,48 +70,46 @@
   </div>
 </template>
 
-<script>
-import {defineComponent} from "vue";
+<script setup>
+import {defineComponent, onBeforeMount, reactive, toRefs, watch} from "vue";
 import {getUserInfo} from "@/utils/apiConfig";
+
+const router = useRouter()
 import axios from "axios";
+import {useRouter} from "vue-router";
 
-export default defineComponent({
-  name: "AdminMain",
+let state = reactive({
+  user: {},
+  actMenu: []
+})
+let {user, actMenu} = toRefs(state)
 
-  watch: {
-    $route: {
-      handler: function (newVal) {
-        this.actMenu = newVal.path;
-      },
-      immediate: true,
-    },
-  },
-  data() {
-    return {actMenu: "", user: {}};
-  },
-  created() {
-    // this.getToken()
-    this.getUser();
-  },
-  methods: {
-    gotoUserInfo() {
-      this.$router.push({name: "userInfo"});
-    },
-    logout() {
-      localStorage.clear();
-      this.$router.push("/admin");
-    },
-    getUser() {
-      getUserInfo().then((res) => {
-        if (res.success) {
-          this.user = res.data.user;
-        } else {
-          this.$router.push({name: 'adminLogin'})
-        }
-      });
-    },
-  },
-});
+function getUser() {
+  getUserInfo().then((res) => {
+    if (res.success) {
+      this.user = res.data.user;
+    } else {
+      router.push({name: 'adminLogin'})
+    }
+  });
+}
+
+watch(() => router, (val, preVal) => {
+  state.actMenu = val.path
+})
+
+function gotoUserInfo() {
+  router.push({name: "userInfo"});
+}
+
+function logout() {
+  localStorage.clear();
+  router.push("/admin");
+}
+
+onBeforeMount(() => {
+  getUser()
+})
 </script>
 
 <style lang="less" scoped>
@@ -126,7 +125,7 @@ export default defineComponent({
     flex: 1;
 
     .admin-header {
-      padding:10px 20px;
+      padding: 10px 20px;
       background-color: #eee;
       display: flex;
       align-items: center;
@@ -138,7 +137,8 @@ export default defineComponent({
       .logout {
         flex: 1;
         text-align: right;
-        .dropdown-link{
+
+        .dropdown-link {
           display: flex;
           align-items: center;
         }

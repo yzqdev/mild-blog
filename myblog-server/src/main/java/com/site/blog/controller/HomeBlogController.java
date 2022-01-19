@@ -416,8 +416,9 @@ public class HomeBlogController {
      */
     @PostMapping(value = "/blog/comment")
     @ResponseBody
-    public Result<String> comment(HttpServletRequest request,
-                                  @Validated Comment comment) {
+    public Result<String> comment(
+                                    Comment comment) {
+        HttpServletRequest request=RequestHelper.getHttpServletRequest();
         String ref = request.getHeader("Referer");
         System.out.println(ref);
         System.out.println("这是ref");

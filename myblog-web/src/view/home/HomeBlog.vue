@@ -4,14 +4,15 @@
     <div class="home-blog-head">
       <span>发表于{{ formatTime(blog.createTime) }}</span
       ><span>共有{{ blog.commentCount }}条评论</span
-      ><span>{{ blog.blogViews }}浏览</span>
+    ><span>{{ blog.blogViews }}浏览</span>
     </div>
     <div class="blog-tags">
       <el-tag
-        style="margin-left: 10px; cursor: pointer"
-        v-for="item in tags"
-        @click="gotoTag(item)"
-        >{{ item.tagName }}</el-tag
+          style="margin-left: 10px; cursor: pointer"
+          v-for="item in tags"
+          @click="gotoTag(item)"
+      >{{ item.tagName }}
+      </el-tag
       >
     </div>
     <article class="blog-content">
@@ -20,33 +21,36 @@
 
     <div class="blog-comment" v-if="blog.enableComment">
       <article class="blog-title">添加评论</article>
-      <el-form :model="comment" label-position="top" :rules="commentRule">
+      <el-form ref="commentForm" :model="comment" label-position="top" :rules="commentRule">
         <el-form-item prop="commentator">
           <el-input :input-style="commentInput" v-model="comment.commentator">
-            <template #prepend>昵称</template></el-input
+            <template #prepend>昵称</template>
+          </el-input
           >
         </el-form-item>
         <el-form-item prop="email">
           <el-input
-            :input-style="commentInput"
-            type="email"
-            v-model="comment.email"
+              :input-style="commentInput"
+              type="email"
+              v-model="comment.email"
           >
-            <template #prepend>邮箱 </template></el-input
+            <template #prepend>邮箱</template>
+          </el-input
           >
         </el-form-item>
         <el-form-item prop="website">
           <el-input :input-style="commentInput" v-model="comment.website">
-            <template #prepend>网站地址 </template></el-input
+            <template #prepend>网站地址</template>
+          </el-input
           >
         </el-form-item>
         <article class="blog-title">评论内容</article>
         <el-form-item prop="commentBody">
-          <div :class="active ? `active` : ``">
+          <div :class="active ? `active` : ``" style="width: 100%">
             <v-md-editor
-              v-model="comment.commentBody"
-              left-toolbar="undo redo | tip todo-list emoji h h1 h2 h3 h4 h5 h6 bold italic strikethrough quote ul ol table hr link image imageLink uploadImage code save "
-              height="400px"
+                v-model="comment.commentBody"
+                left-toolbar="undo redo | tip todo-list emoji h h1 h2 h3 h4 h5 h6 bold italic strikethrough quote ul ol table hr link image imageLink uploadImage code save "
+                height="400px"
             ></v-md-editor>
           </div>
         </el-form-item>
@@ -59,8 +63,8 @@
             <div style="display: flex">
               <span>{{ item.commentator }}</span>
               <span style="flex: 1; text-align: right">{{
-                $dayjs(item.commentCreateTime).format("YYYY-MM-DD HH:mm:ss")
-              }}</span>
+                  formatTime(item.commentCreateTime)
+                }}</span>
             </div>
           </template>
           <v-md-preview :text="item.commentBody"></v-md-preview>
@@ -75,88 +79,93 @@
   </div>
 </template>
 
-<script>
-import { getBlogById, listComments, submitComment } from "@/utils/apiConfig";
+<script setup>
+import {getBlogById, listComments, submitComment} from "@/utils/apiConfig";
 import dayjs from "dayjs";
-import { defineComponent } from "vue";
+import {onMounted, reactive, ref, toRefs, watch} from "vue";
+import {useRoute, useRouter} from "vue-router";
+import {ElMessage} from "element-plus";
 
-export default defineComponent({
-  name: "HomeBlog",
-  components: {},
-  data() {
-    return {
-      loading: true,
-      commentInput: { width: "50%" },
-      blog: {},
-      tags: [],
-      comment: {},
-      commentList: [],
-      active: false,
-      commentRule: {
-        commentator: [
-          { required: true, message: "请输入网名", trigger: "blur" },
-          { min: 1, max: 20, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        ],
-        commentBody: [{ required: true, message: "请输入评论内容" }],
-      },
-    };
-  },
-  async created() {
-    let id = this.$route.params.id;
-    const { data } = await getBlogById(id);
+const router = useRouter()
+const route = useRoute()
 
-    this.blog = data.blogDetailVO;
-    this.tags = data.tagList;
+let state = reactive({
+  commentRule: {
+    commentator: [
+      {required: true, message: "请输入网名", trigger: "blur"},
+      {min: 1, max: 20, message: "长度在 3 到 5 个字符", trigger: "blur"},
+    ],
+    commentBody: [{required: true, message: "请输入评论内容"}],
+  }, commentInput: {width: "50%"},
+  blog: {},
+  tags: {},
+  comment: {commentBody: ''},
+  commentList: [],
 
-    this.getComments();
-  },
-  computed: {},
-  watch: {
-    comment: {
-      handler: function (val) {
-        if (val.commentBody) {
-          this.active = false;
-        }
-      },
-      deep: true,
-    },
-  },
-  methods: {
-    commentYou() {
-      if (!this.comment.commentBody) {
-        this.active = true;
-        this.$message.error("请输入评论内容!");
-        return;
-      }
-      this.comment.blogId = this.blog.blogId;
-      submitComment(this.comment).then((res) => {
-        console.log(res);
-        if (res) {
-          this.getComments();
-          this.comment = {};
-          this.$message.success("成功");
-        }
+})
+let active = ref(false)
+let loading = ref(true)
+let {commentRule, blog, tags, comment, commentList, commentInput} = toRefs(state)
+let commentForm = ref(null)
+onMounted(async () => {
+  let id = route.params.id;
+  const {data} = await getBlogById(id);
+
+  blog.value = data.blogDetailVO;
+  tags.value = data.tagList;
+
+  getComments();
+})
+
+function commentYou() {
+  if (!comment.commentBody) {
+    active.value = true;
+    ElMessage({
+      message: '请输入评论内容!',
+      grouping: true,
+      type: 'error',
+    })
+
+    return;
+  }
+  comment.blogId = blog.blogId;
+  commentForm.value.validate((valid) => {
+    if (valid) {
+      submitComment(comment).then((data) => {
+        ElMessage({message: "成功", type: 'success'})
       });
-    },
-    formatTime(time) {
-      console.log();
-      let res = dayjs(new Date(time)).format("YYYY-MM-DD HH:mm:ss");
-      console.log(res);
-      return res;
-    },
-    gotoTag(item) {
-      this.$router.push("/home/tag/" + item.tagId);
-    },
-    getComments() {
-      listComments({ page: 1, limit: 30, blogId: this.blog.blogId }).then(
-        (res) => {
-          this.loading = false;
-          this.commentList = res.data;
-        }
-      );
-    },
-  },
-});
+    }
+  })
+}
+
+function formatTime(time) {
+
+  let res = dayjs(new Date(time)).format("YYYY-MM-DD HH:mm:ss");
+  console.log(res);
+  return res;
+}
+
+function gotoTag(item) {
+  router.push("/home/tag/" + item.tagId);
+}
+
+function getComments() {
+  listComments({page: 1, limit: 30, blogId: blog.value.blogId}).then(
+      (res) => {
+        loading.value = false;
+        commentList.value = res.data;
+      }
+  );
+}
+
+
+watch(() => comment.value, (val, preVal) => {
+  if (val.commentBody) {
+    active.value = false;
+  }
+})
+
+
 </script>
 
 <style lang="less" scoped>
@@ -164,17 +173,21 @@ export default defineComponent({
   flex: 1;
 
   padding: 20px 100px;
-  .home-blog-head{
-    span{
+
+  .home-blog-head {
+    span {
       margin: 0 5px;
     }
   }
-  .blog-tags{
+
+  .blog-tags {
     margin: 10px 0;
   }
+
   .active {
     border: 1px solid red;
   }
+
   .blog-comment {
     .blog-title {
       margin: 10px;

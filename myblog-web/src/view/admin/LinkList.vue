@@ -25,7 +25,7 @@
       </span>
     </template>
   </el-dialog>
-  <el-table :data="data">
+  <el-table :data="linkData">
     <el-table-column prop="linkName" label="链接名"></el-table-column>
     <el-table-column prop="linkUrl" label="链接url"></el-table-column>
     <el-table-column prop="linkDescription" label="链接描述"></el-table-column>
@@ -80,7 +80,7 @@ export default defineComponent({
   name: "LinkList",
   data() {
     return {
-      data: "",
+      linkData: "",
       addDialogVisible: false,
       addForm: {
         linkId: null,
@@ -139,7 +139,7 @@ export default defineComponent({
     getData() {
       getLinkList({ page: 1, limit: 30 }).then(({ data }) => {
         console.log(data);
-        this.data = data.data;
+        this.linkData = data.data;
       });
     },
     confirmAdd() {

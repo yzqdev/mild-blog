@@ -186,7 +186,7 @@ export default {
 
 <style lang="less" scoped>
 .article-edit {
-  ::v-deep(.el-form-item) {
+  :deep(.el-form-item) {
     margin: 10px;
   }
 
