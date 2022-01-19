@@ -81,10 +81,8 @@ function gotoCate(item) {
 }
 
 watch(() => route , async (val, preVal) => {
-  console.log(`%croute`,`color:red;font-size:16px;background:transparent`)
-  console.log(val)
-  let route = val.name;
-  switch (route) {
+
+  switch (val.name) {
     case "homeTags":
       state.routeName = "tags";
       let {data} = await getHomeTags();

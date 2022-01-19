@@ -118,7 +118,7 @@ onMounted(async () => {
 })
 
 function commentYou() {
-  if (!comment.commentBody) {
+  if (!state.comment.commentBody) {
     active.value = true;
     ElMessage({
       message: '请输入评论内容!',
@@ -128,11 +128,12 @@ function commentYou() {
 
     return;
   }
-  comment.blogId = blog.blogId;
+  state.comment.blogId = state.blog.blogId;
   commentForm.value.validate((valid) => {
     if (valid) {
-      submitComment(comment).then((data) => {
+      submitComment(state.comment).then((data) => {
         ElMessage({message: "成功", type: 'success'})
+        getComments()
       });
     }
   })

@@ -116,6 +116,8 @@ public class Comment implements Serializable {
      */
     @TableField("is_deleted")
     private Integer isDeleted;
+    @TableField("os")
+    private String os;
 
 
 }

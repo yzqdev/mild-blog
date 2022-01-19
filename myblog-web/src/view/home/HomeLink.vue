@@ -19,7 +19,7 @@ let state = reactive({
   links: null,
   favoriteLinks: [], recommendLinks: []
 })
-let {links, favoriteLinks} = toRefs(state)
+let {links, favoriteLinks,recommendLinks} = toRefs(state)
 onBeforeMount(async () => {
   let {data} = await getLinks();
   state.favoriteLinks = data.favoriteLinks;
