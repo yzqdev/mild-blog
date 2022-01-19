@@ -8,10 +8,8 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "HomeAbout",
-};
+<script setup>
+
 </script>
 
 <style lang="less" scoped>

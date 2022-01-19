@@ -2,12 +2,8 @@
   <exception-page type="404" />
 </template>
 
-<script>
+<script setup>
 import ExceptionPage from './ExceptionPage.vue'
 
-export default {
-  components: {
-    ExceptionPage
-  }
-}
+
 </script>

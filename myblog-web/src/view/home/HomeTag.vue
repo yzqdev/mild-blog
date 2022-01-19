@@ -5,26 +5,25 @@
   </div>
 </template>
 
-<script>
-import { getArticleByTag } from "@/utils/apiConfig";
+<script setup>
+import {getArticleByTag} from "@/utils/apiConfig";
 import PassageList from "@/components/PassageList.vue";
+import {onBeforeMount, reactive, toRefs} from "vue";
+import {useRoute} from "vue-router";
 
-export default {
-  name: "HomeTag",
-  components: { PassageList },
-  data() {
-    return {
-      list: null,
-      loading: true,
-    };
-  },
-  async created() {
-    let id = this.$route.params.id;
-    const { data } = await getArticleByTag(id, { pageNum: 1, pageSize: 30 });
-    this.list = data;
-    this.loading = false;
-  },
-};
+let state = reactive({
+  list: null,
+  loading: true
+})
+let {list, loading} = toRefs(state)
+const route = useRoute()
+onBeforeMount(async () => {
+  let id = route.params.id;
+  const {data} = await getArticleByTag(id, {pageNum: 1, pageSize: 30});
+  state.list = data;
+  state.loading = false;
+})
+
 </script>
 
 <style lang="less" scoped>

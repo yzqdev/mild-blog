@@ -11,23 +11,20 @@
   </div>
 </template>
 
-<script>
-import { getIndex, getLinks } from "@/utils/apiConfig";
+<script setup>
+import {getIndex, getLinks} from "@/utils/apiConfig";
+import {onBeforeMount, reactive, toRefs} from "vue";
 
-export default {
-  name: "HomeLink",
-  data() {
-    return {
-      links: null,
-      favoriteLinks: [],recommendLinks:[]
-    };
-  },
-  async created() {
-    let { data } = await getLinks();
-    this.favoriteLinks = data.favoriteLinks;
-    this.recommendLinks=data.recommendLinks
-  },
-};
+let state = reactive({
+  links: null,
+  favoriteLinks: [], recommendLinks: []
+})
+let {links, favoriteLinks} = toRefs(state)
+onBeforeMount(async () => {
+  let {data} = await getLinks();
+  state.favoriteLinks = data.favoriteLinks;
+  state.recommendLinks = data.recommendLinks
+})
 </script>
 
 <style lang="less" scoped>

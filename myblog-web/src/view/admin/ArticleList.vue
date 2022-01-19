@@ -10,7 +10,7 @@
     <el-table-column prop="blogTags" width="250" label="博客标签">
       <template v-slot="{ row }">
         <el-tag style="margin:0 5px;" type="primary" v-for="(item, index) in row.blogTags"
-          >{{ item.tagName }}
+        >{{ item.tagName }}
         </el-tag>
       </template>
     </el-table-column>
@@ -21,9 +21,12 @@
       </template>
     </el-table-column>
     <el-table-column prop="blogStatus" label="文章状态"
-      ><template v-slot="{ row }">{{
-        row.blogStatus == 1 ? `发布` : `草稿`
-      }}</template></el-table-column
+    >
+      <template v-slot="{ row }">{{
+          row.blogStatus == 1 ? `发布` : `草稿`
+        }}
+      </template>
+    </el-table-column
     >
     <el-table-column prop="isDeleted" label="隐藏状态">
       <template v-slot="{ row }">
@@ -32,35 +35,36 @@
     </el-table-column>
     <el-table-column prop="enableComment" label="评论">
       <template v-slot="{ row }">{{
-        row.enableComment == 1 ? `允许` : `禁止`
-      }}</template>
+          row.enableComment == 1 ? `允许` : `禁止`
+        }}
+      </template>
     </el-table-column>
     <el-table-column label="操作" width="250">
       <template v-slot="{ row }">
         <el-button type="primary" size="mini" @click="editArticle(row)"
-          >编辑
+        >编辑
         </el-button>
         <el-popconfirm
-          title="确定删除吗？"
-          confirmButtonText="好的"
-          cancelButtonText="不用了"
-          icon="el-icon-info"
-          placement="right"
-          iconColor="red"
-          @confirm="deleteRow(row)"
+            title="确定删除吗？"
+            confirmButtonText="好的"
+            cancelButtonText="不用了"
+            icon="el-icon-info"
+            placement="right"
+            iconColor="red"
+            @confirm="deleteRow(row)"
         >
           <template #reference>
             <el-button type="warning" size="mini">隐藏</el-button>
           </template>
         </el-popconfirm>
         <el-popconfirm
-          title="确定删除吗？"
-          confirmButtonText="好的"
-          cancelButtonText="不用了"
-          icon="el-icon-info"
-          placement="right"
-          iconColor="red"
-          @confirm="clearRow(row)"
+            title="确定删除吗？"
+            confirmButtonText="好的"
+            cancelButtonText="不用了"
+            icon="el-icon-info"
+            placement="right"
+            iconColor="red"
+            @confirm="clearRow(row)"
         >
           <template #reference>
             <el-button type="danger" size="mini">删除</el-button>
@@ -71,8 +75,8 @@
   </el-table>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import {defineComponent, onBeforeMount, reactive, toRefs} from "vue";
 import {
   clearBlog,
   deleteBlog,
@@ -80,66 +84,76 @@ import {
   getCateList,
   getTagList,
 } from "@/utils/apiConfig";
+import {useRoute, useRouter} from "vue-router";
+import {ElMessage} from "element-plus";
 
-export default defineComponent({
-  name: "ArticleList",
-  data() {
-    return {
-      data: "",
-      loading: true,
-      cateList: [],
-      tagList: [],
-    };
-  },
-  created() {
-    this.getCate();
-    this.getTags();
-    this.getData();
-  },
-  methods: {
-    getCate() {
-      getCateList().then(({ data }) => {
-        this.cateList = data;
-      });
+let state = reactive({
+  data: "",
+  loading: true,
+  cateList: [],
+  tagList: [],
+})
+const router = useRouter()
+const route = useRoute()
+let {data, loading, cateList, tagList} = toRefs(state)
+onBeforeMount(() => {
+  getCate();
+  getTags();
+  getData();
+})
+
+function getCate() {
+  getCateList().then(({data}) => {
+    state.cateList = data;
+  });
+}
+
+function getTags() {
+  getTagList().then(({data}) => {
+    state.tagList = data;
+  });
+}
+
+function getData() {
+  getBlogList({pageNum: 1, pageSize: 30}).then(({data}) => {
+    console.log(data);
+    state.data = data;
+    state.loading = false;
+  });
+}
+
+function editArticle(row) {
+  router.push({
+    name: "articleEdit",
+    query: {
+      id: row.blogId,
     },
-    getTags() {
-      getTagList().then(({ data }) => {
-        this.tagList = data;
-      });
-    },
-    getData() {
-      getBlogList({ pageNum: 1, pageSize: 30 }).then(({ data }) => {
-        console.log(data);
-        this.data = data;
-        this.loading = false;
-      });
-    },
-    editArticle(row) {
-      this.$router.push({
-        name: "articleEdit",
-        query: {
-          id: row.blogId,
-        },
-      });
-    },
-    deleteRow(row) {
-      deleteBlog(row.blogId).then(({ data }) => {
-        if (data) {
-          this.getData();
-          this.$message.success("成功");
-        }
-      });
-    },
-    clearRow(row) {
-      clearBlog(row.blogId).then(({ data }) => {
-        if (data) {
-          this.getData();
-          this.$message.success("成功");
-        }
-      });
-    },
-  },
-});
+  });
+}
+
+function deleteRow(row) {
+  deleteBlog(row.blogId).then(({data}) => {
+    if (data) {
+      getData();
+      ElMessage({
+        message: "成功",
+        type: "success"
+      })
+    }
+  });
+}
+
+function clearRow(row) {
+  clearBlog(row.blogId).then(({data}) => {
+    if (data) {
+      getData();
+      ElMessage({
+        message: "成功",
+        type: "success"
+      })
+    }
+  });
+}
 </script>
 
 <style scoped></style>

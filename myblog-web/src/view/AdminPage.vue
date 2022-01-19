@@ -2,18 +2,23 @@
   <router-view />
 </template>
 
-<script>
-export default {
-  name: "AdminPage",
-  created() {
-    let token = localStorage.getItem("token");
-    if (token && token !== "undefined") {
-      this.$store.commit("setUserToken", localStorage.getItem("token"));
-    } else {
-      this.$router.push("/admin");
-    }
-  },
-};
+<script  setup>
+
+import {useStore} from "vuex";
+import {onMounted} from "vue";
+import {useRouter} from "vue-router";
+
+const store=useStore()
+const router=useRouter()
+onMounted(() => {
+  let token = localStorage.getItem("token");
+  if (token && token !== "undefined") {
+     store.commit("setUserToken", localStorage.getItem("token"));
+  } else {
+     router.push("/admin");
+  }
+})
+
 </script>
 
 <style scoped></style>
