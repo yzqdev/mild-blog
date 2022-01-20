@@ -15,7 +15,7 @@ import javax.annotation.Resource;
  * @author yanni
  */
 @Configuration
-public class MyBlogWebMvcConfigurer implements WebMvcConfigurer {
+public class WebConfig implements WebMvcConfigurer {
     @Resource
     CorsInterceptor corsInterceptor;
     @Value("${myblog.upload.pic-url}")

@@ -40,34 +40,33 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import {delImg, getImgs} from "@/utils/apiConfig";
 import {convertSize} from "@/utils/utils";
+import {onBeforeMount, reactive, toRefs} from "vue";
 
-export default {
-  name: "ImgList", data() {
-    return {
-      Imgs: []
-    }
-  },
-  mounted() {
-    this.getList()
-  }, methods: {
-    getList() {
-      getImgs().then(({data}) => {
-        this.Imgs = data
-        console.log(this.Imgs)
-      })
-    },
-    convertSize,
-    deleteRow(row) {
-      delImg(row.id).then(({data}) => {
-        console.log(data)
-        this.getList()
-      })
-    }
-  }
+let state = reactive({
+  Imgs: []
+})
+let {Imgs} = toRefs(state)
+onBeforeMount(() => {
+  getList()
+})
+
+function getList() {
+  getImgs().then(({data}) => {
+    state.Imgs = data
+
+  })
 }
+
+function deleteRow(row) {
+  delImg(row.id).then(({data}) => {
+    console.log(data)
+    getList()
+  })
+}
+
 </script>
 
 <style scoped>

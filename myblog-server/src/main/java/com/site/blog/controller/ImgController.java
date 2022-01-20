@@ -32,8 +32,14 @@ public class ImgController {
 
     @Value("${myblog.upload.file-url}")
     private String fileUrl;
+    @Value("${myblog.upload.file-prefix}")
+    private String filePref;
     @Value("${myblog.upload.pic-url}")
     private String picUrl;
+    @Value("${myblog.upload.pic-prefix}")
+    private String picPrefix;
+    @Value("${myblog.site.ip}")
+    private String ip;
 
     @PostMapping("/upload")
     public Map<String, Object> uploadFileByEditormd(@RequestParam(name = "img") MultipartFile file) {
@@ -56,14 +62,14 @@ public class ImgController {
             img.setImgName(destFile.getName());
             img.setImgPath(picUrl + newFileName);
             img.setUploadTime(DateUtils.getLocalCurrentDate());
-            img.setImgUrl("http://localhost:2801/" + newFileName);
+            img.setImgUrl(ip + picPrefix + newFileName);
             img.setImgSize(destFile.length());
             img.setImgType(destFile.getName().substring(destFile.getName().indexOf(".") + 1));
             img.setMd5(DigestUtils.md5DigestAsHex(new FileInputStream(destFile)));
             imgService.save(img);
             result.put("success", 1);
             result.put("message", "上传成功");
-            result.put("url", "http://localhost:2801/" + newFileName);
+            result.put("url", ip+picPrefix + newFileName);
             result.put("img", img);
         } catch (IOException e) {
 

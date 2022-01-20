@@ -55,6 +55,7 @@ const routes = [
                 path: "search",
                 name: "homeSearch",
                 component: HomeComponent,
+                meta:{title:'搜索'}
             },
             {
                 path: "categories",

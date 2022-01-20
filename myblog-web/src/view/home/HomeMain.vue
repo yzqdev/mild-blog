@@ -13,7 +13,7 @@
         >
           <template #append>
             <el-button
-              icon="el-icon-search"
+              :icon="Search"
               @click="search"
             ></el-button> </template
         ></el-input>
@@ -44,7 +44,14 @@
 <script setup>
 import { getIndex } from "@/utils/apiConfig";
 let searchText = ref("");
-
+import {
+  Search,
+  Edit,
+  Check,
+  Message,
+  Star,
+  Delete,
+} from '@element-plus/icons-vue'
 const msg = "aaaaaasdda";
 import { onBeforeMount, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";

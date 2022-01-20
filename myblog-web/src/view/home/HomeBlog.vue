@@ -56,7 +56,7 @@
             ></v-md-editor>
           </div>
         </el-form-item>
-        <el-button type="primary" @click="commentYou">提交</el-button>
+        <el-button type="primary" @click="commentYou(commentForm)">提交</el-button>
       </el-form>
       <article class="blog-title">全部留言</article>
       <article v-if="commentList && commentList.length > 0">
@@ -92,22 +92,33 @@ const router = useRouter()
 const route = useRoute()
 
 let state = reactive({
-  commentRule: {
-    commentator: [
-      {required: true, message: "请输入网名", trigger: "blur"},
-      {min: 1, max: 20, message: "长度在 3 到 5 个字符", trigger: "blur"},
-    ],
-    commentBody: [{required: true, message: "请输入评论内容"}],
-  }, commentInput: {width: "50%"},
+
+  commentInput: {width: "50%"},
   blog: {},
   tags: {},
-  comment: {commentBody: ''},
+  comment: {commentator: null, email: null, commentBody: ""},
   commentList: [],
 
 })
+let commentRule = reactive({
+  commentator: [
+    {required: true, message: "请输入网名", trigger: "blur"},
+    {min: 1, max: 20, message: "长度在 3 到 5 个字符", trigger: "blur"},
+  ],
+  email: [
+    { pattern: /^\\s*\\w+(?:\\.{0,1}[\\w-]+)*@[a-zA-Z0-9]+(?:[-.][a-zA-Z0-9]+)*\\.[a-zA-Z]+\\s*$/,
+      require: true,
+      message: '请输入邮箱',
+      trigger: 'blur',
+
+    },
+    {min: 1, max: 20, message: "长度在 3 到 5 个字符", trigger: "blur"},
+  ],
+  commentBody: [{required: true, message: "请输入评论内容"}],
+})
 let active = ref(false)
 let loading = ref(true)
-let {commentRule, blog, tags, comment, commentList, commentInput} = toRefs(state)
+let {blog, tags, comment, commentList, commentInput} = toRefs(state)
 let commentForm = ref(null)
 onMounted(async () => {
   let id = route.params.id;
@@ -118,10 +129,11 @@ onMounted(async () => {
 
   getComments();
 })
+
 function handleUploadImage(event, insertImage, files) {
   console.log(files);
-  let formData=new FormData();
-  formData.append('img',files[0])
+  let formData = new FormData();
+  formData.append('img', files[0])
   uploadImg(formData).then((res) => {
     console.log(res)
     insertImage({
@@ -134,9 +146,10 @@ function handleUploadImage(event, insertImage, files) {
   })
 
 }
-function commentYou() {
+
+function commentYou(formRef) {
   if (!state.comment.commentBody) {
-    active.value = true;
+
     ElMessage({
       message: '请输入评论内容!',
       grouping: true,
@@ -146,7 +159,9 @@ function commentYou() {
     return;
   }
   state.comment.blogId = state.blog.blogId;
-  commentForm.value.validate((valid) => {
+  formRef.validate((valid) => {
+    console.log(state.comment)
+    console.log(`%c看看是大幅度蓝山咖啡`,`color:red;font-size:16px;background:transparent`)
     if (valid) {
       submitComment(state.comment).then((data) => {
         ElMessage({message: "成功", type: 'success'})
@@ -159,7 +174,6 @@ function commentYou() {
 function formatTime(time) {
 
   let res = dayjs(new Date(time)).format("YYYY-MM-DD HH:mm:ss");
-  console.log(res);
   return res;
 }
 
@@ -180,6 +194,8 @@ function getComments() {
 watch(() => comment.value, (val, preVal) => {
   if (val.commentBody) {
     active.value = false;
+  }else {
+    active.value=true
   }
 })
 

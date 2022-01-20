@@ -29,10 +29,13 @@ spring:
 
 myblog:
     site:
-        ip: http://localhost:2801
+        ip: http://localhost:2801/
         name: 我的博客
     upload:
         file-url: ${user.home}/.myblog/upload/
+        file-prefix: upload/
+
         pic-url: ${user.home}/.myblog/pic/
+        pic-prefix: pic/
         avatar: ${user.home}/.myblog/authorImg/
 

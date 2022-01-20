@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "myblog.upload")
 public class UploadProperty {
     private String fileUrl;
+    private String filePrefix;
     private String picUrl;
+    private String picPrefix;
     private String avatar;
 }
