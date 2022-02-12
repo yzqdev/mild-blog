@@ -1,4 +1,4 @@
-package com.site.blog.interceptor;
+package com.site.blog.config.interceptor;
 
 import com.site.blog.constants.BaseConstants;
 import com.site.blog.model.entity.AdminUser;

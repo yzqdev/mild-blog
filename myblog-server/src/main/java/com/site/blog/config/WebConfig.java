@@ -1,7 +1,7 @@
 package com.site.blog.config;
 
-import com.site.blog.interceptor.AdminUserInterceptor;
-import com.site.blog.interceptor.CorsInterceptor;
+import com.site.blog.config.interceptor.AdminUserInterceptor;
+import com.site.blog.config.interceptor.CorsInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

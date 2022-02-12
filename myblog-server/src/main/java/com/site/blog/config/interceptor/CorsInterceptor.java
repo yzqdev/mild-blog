@@ -1,4 +1,4 @@
-package com.site.blog.interceptor;
+package com.site.blog.config.interceptor;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;

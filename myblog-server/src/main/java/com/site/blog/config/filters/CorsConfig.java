@@ -1,4 +1,4 @@
-package com.site.blog.filters;
+package com.site.blog.config.filters;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

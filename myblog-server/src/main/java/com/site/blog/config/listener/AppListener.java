@@ -1,4 +1,4 @@
-package com.site.blog.listener;
+package com.site.blog.config.listener;
 
 import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.context.ApplicationListener;
