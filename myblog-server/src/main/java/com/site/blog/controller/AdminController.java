@@ -12,15 +12,12 @@ import com.site.blog.util.JwtUtil;
 import com.site.blog.util.MD5Utils;
 import com.site.blog.util.RequestHelper;
 import com.site.blog.util.ResultGenerator;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -61,7 +58,7 @@ public class AdminController {
         if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
         }
-        QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<AdminUser>(
+        QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<>(
                 new AdminUser().setLoginUserName(username)
                         .setLoginPassword(MD5Utils.MD5Encode(password, "UTF-8"))
         );

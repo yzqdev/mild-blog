@@ -173,8 +173,7 @@ function commentYou(formRef) {
 
 function formatTime(time) {
 
-  let res = dayjs(new Date(time)).format("YYYY-MM-DD HH:mm:ss");
-  return res;
+  return dayjs(new Date(time)).format("YYYY-MM-DD HH:mm:ss");
 }
 
 function gotoTag(item) {
@@ -192,11 +191,7 @@ function getComments() {
 
 
 watch(() => comment.value, (val, preVal) => {
-  if (val.commentBody) {
-    active.value = false;
-  }else {
-    active.value=true
-  }
+  active.value = !val.commentBody;
 })
 
 
