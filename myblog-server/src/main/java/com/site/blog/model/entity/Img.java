@@ -26,6 +26,9 @@ public class Img extends Model<Img>  implements Serializable {
     @TableId(  type = IdType.AUTO)
     private Integer id;
     private String imgName;
+    /**
+     * 图片系统路径
+     */
     private String imgPath;
     private Long imgSize;
     private String imgUrl;
