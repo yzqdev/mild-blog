@@ -16,7 +16,7 @@
       >
     </div>
     <article class="blog-content">
-      <v-md-preview :text="blog.blogContent"></v-md-preview>
+      <md-editor-v3 v-model="blog.blogContent" preview-only></md-editor-v3>
     </article>
 
     <div class="blog-comment" v-if="blog.enableComment">
@@ -47,16 +47,10 @@
         <article class="blog-title">评论内容</article>
         <el-form-item prop="commentBody">
           <div :class="active ? `active` : ``" style="width: 100%">
-            <v-md-editor
-                v-model="comment.commentBody"
-                left-toolbar="undo redo | tip todo-list emoji h h1 h2 h3 h4 h5 h6 bold italic strikethrough quote ul ol table hr link image imageLink uploadImage code save "
-                :disabled-menus="[]"
-                @upload-image="handleUploadImage"
-                height="400px"
-            ></v-md-editor>
+            <md-editor-v3   v-model=" comment.commentBody" @on-upload-img="handleUploadImage"></md-editor-v3>
           </div>
         </el-form-item>
-        <el-button type="primary" @click="commentYou(commentForm)">提交</el-button>
+        <el-button type="primary" @click="commentYou ">提交</el-button>
       </el-form>
       <article class="blog-title">全部留言</article>
       <article v-if="commentList && commentList.length > 0">
@@ -69,7 +63,7 @@
                 }}</span>
             </div>
           </template>
-          <v-md-preview :text="item.commentBody"></v-md-preview>
+          <md-editor-v3 preview-only v-model="item.commentBody"></md-editor-v3>
           <div v-if="item.replyBody" style="text-indent: 40px">
             回复:
             {{ item.replyBody }}
@@ -106,7 +100,7 @@ let commentRule = reactive({
     {min: 1, max: 20, message: "长度在 3 到 5 个字符", trigger: "blur"},
   ],
   email: [
-    { pattern: /^\\s*\\w+(?:\\.{0,1}[\\w-]+)*@[a-zA-Z0-9]+(?:[-.][a-zA-Z0-9]+)*\\.[a-zA-Z]+\\s*$/,
+    { pattern: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
       require: true,
       message: '请输入邮箱',
       trigger: 'blur',
@@ -130,24 +124,18 @@ onMounted(async () => {
   getComments();
 })
 
-function handleUploadImage(event, insertImage, files) {
+function handleUploadImage( files,callback) {
   console.log(files);
   let formData = new FormData();
   formData.append('img', files[0])
   uploadImg(formData).then((res) => {
     console.log(res)
-    insertImage({
-      url:
-      res.url,
-      desc: res.imgName,
-      // width: 'auto',
-      // height: 'auto',
-    });
+    callback(  [res.url] );
   })
 
 }
 
-function commentYou(formRef) {
+function commentYou( ) {
   if (!state.comment.commentBody) {
 
     ElMessage({
@@ -159,7 +147,7 @@ function commentYou(formRef) {
     return;
   }
   state.comment.blogId = state.blog.blogId;
-  formRef.validate((valid) => {
+  commentForm.value.validate((valid) => {
     console.log(state.comment)
     console.log(`%c看看是大幅度蓝山咖啡`,`color:red;font-size:16px;background:transparent`)
     if (valid) {

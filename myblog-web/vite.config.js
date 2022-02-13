@@ -2,11 +2,16 @@ const resolve = path.resolve;
 import { defineConfig } from "vite";
 import vue from '@vitejs/plugin-vue'
 import path from "path";
-import prismjs from 'vite-plugin-prismjs';
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 export default defineConfig({
-  plugins: [vue(), prismjs({
-    languages: "all",
-  }), ],
+  plugins: [vue() ,  AutoImport({
+    resolvers: [ElementPlusResolver()],
+  }),
+    Components({
+      resolvers: [ElementPlusResolver()],
+    }), ],
   hmr: { overlay: false },
   // publicDir:'/myblog',
   // base:'/myblog/',

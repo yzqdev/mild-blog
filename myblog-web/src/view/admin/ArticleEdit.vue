@@ -79,14 +79,13 @@
         </div>
       </div>
       <el-form-item>
-        <v-md-editor
+        <md-editor-v3
             v-model="articleForm.blogContent"
             height="400px"
-            left-toolbar="undo redo | tip todo-list emoji h h1 h2 h3 h4 h5 h6 bold italic strikethrough quote ul ol table hr link image imageLink uploadImage code save "
+
             @copy-code-success="handleCopyCodeSuccess"
-            :disabled-menus="[]"
-            @upload-image="handleUploadImage"
-        ></v-md-editor>
+            @on-upload-img="handleUploadImage"
+        ></md-editor-v3>
       </el-form-item>
       <el-button type="primary" @click="submit">提交</el-button>
     </el-form>
@@ -127,22 +126,14 @@ function handleCopyCodeSuccess(code) {
   console.log(code);
 }
 
-function handleUploadImage(event, insertImage, files) {
-  // 拿到 files 之后上传到文件服务器，然后向编辑框中插入对应的内容
+function handleUploadImage( files,callback) {
   console.log(files);
   let formData = new FormData();
   formData.append('img', files[0])
   uploadImg(formData).then((res) => {
     console.log(res)
-    insertImage({
-      url:
-      res.url,
-      desc: res.imgName,
-      // width: 'auto',
-      // height: 'auto',
-    });
+    callback(  [res.url] );
   })
-  // 此处只做示例
 
 }
 

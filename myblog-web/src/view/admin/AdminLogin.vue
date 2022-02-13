@@ -87,7 +87,6 @@ let store=useStore()
 let state=reactive({
   activeName: "first",
   title: '用户登录',
-  loginForm: {username: "", password: ""},
   regForm: {username: "", password: "", password2: ""},
   loginRules: {
     username: [{required: true, message: "请输入用户名"}],
@@ -99,9 +98,10 @@ let state=reactive({
     password2: [{required: true, message: "请输入确认密码"}],
   },
 })
+let loginForm=reactive({username: "", password: ""})
 let loginFormRef=ref(null)
 let regFormRef=ref(null)
-let {activeName,title,loginForm,regForm,loginRules,regRule}=toRefs(state)
+let {activeName,title, regForm,loginRules,regRule}=toRefs(state)
 function login() {
    loginFormRef.value.validate((valid) => {
     if (valid) {
