@@ -53,7 +53,7 @@ import {
   Delete,
 } from '@element-plus/icons-vue'
 const msg = "aaaaaasdda";
-import { onBeforeMount, onMounted, reactive, ref } from "vue";
+import {onBeforeMount, onMounted, reactive, ref} from "vue";
 import { useRoute, useRouter } from "vue-router";
 import PassageList from "@/components/PassageList.vue";
 let loading = ref(true);
@@ -61,6 +61,7 @@ const color = ref("red");
 let passages = ref([]);
 let newBlog = ref([]);
 let hotTag = ref([]);
+let state=reactive({name:''})
 const router = useRouter();
 const route = useRoute();
 function gotoRoute(item) {
