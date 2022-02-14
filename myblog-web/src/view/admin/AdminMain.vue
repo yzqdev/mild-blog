@@ -86,8 +86,10 @@ let {user, actMenu} = toRefs(state)
 
 function getUser() {
   getUserInfo().then((res) => {
+    console.log(`%c用户信息`,`color:red;font-size:16px;background:transparent`)
+    console.log(res.data)
     if (res.success) {
-      this.user = res.data.user;
+      state.user = res.data.user;
     } else {
       router.push({name: 'adminLogin'})
     }

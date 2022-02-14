@@ -3,7 +3,9 @@
 </template>
 
 <script  setup>
-
+import {useRouter} from "vue-router";
+let router=useRouter()
+console.log(router.getRoutes())
 </script>
 
 <style>

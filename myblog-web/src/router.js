@@ -4,7 +4,7 @@ import {
     createWebHistory,
 } from "vue-router";
 import Home from "@/view/Home.vue";
-import HomeMain from "@/view/home/HomeMain.vue";
+const HomeMain= ()=>import("@/view/home/HomeMain.vue")
 import HomeLink from "@/view/home/HomeLink.vue";
 import AdminPage from "@/view/AdminPage.vue";
 import HomeTag from "@/view/home/HomeTag.vue";
@@ -15,7 +15,8 @@ import AdminWelcome from "@/view/admin/AdminWelcome.vue";
 import AdminMain from "@/view/admin/AdminMain.vue";
 import ArticleList from "@/view/admin/ArticleList.vue";
 import CommentList from "@/view/admin/CommentList.vue";
-import CategoryList from "@/view/admin/CategoryList.vue";
+
+const CategoryList = ()=>import(`./view/admin/CategoryList.vue`);
 import TagList from "@/view/admin/TagList.vue";
 import LinkList from "@/view/admin/LinkList.vue";
 import SystemInfo from "@/view/admin/SystemInfo.vue";
