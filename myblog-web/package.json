@@ -10,12 +10,12 @@
     "@element-plus/icons-vue": "^0.2.7",
     "md-editor-v3": "^1.10.1",
     "@vitejs/plugin-vue": "^2.2.0",
-    "@vueuse/core": "^7.6.1",
-    "axios": "^0.25.0",
+    "@vueuse/core": "^7.6.2",
+    "axios": "^0.26.0",
     "dayjs": "^1.10.7",
     "unplugin-auto-import": "^0.5.11",
     "unplugin-vue-components": "^0.17.18",
-    "element-plus": "2.0.1",
+    "element-plus": "2.0.2",
     "less": "^4.1.2",
     "prettier": "^2.5.1",
     "qs": "^6.10.3",
@@ -26,6 +26,6 @@
     "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "vite": "^2.8.1"
+    "vite": "^2.8.2"
   }
 }
