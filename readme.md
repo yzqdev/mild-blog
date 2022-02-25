@@ -8,15 +8,24 @@ myblog-layui
 
 拟采用nuxt重构首页
 
-
 注意vite引用的用法
 
-
 引用图片
+
 ```html
 <img src="@/assets/img/keqing.png" />
 ```
+
 引用css
+
 ```css
 import "element-plus/dist/index.css";
 ```
+
+## 演示图片
+
+![图片](./res/home.png)
+
+时间线
+
+![时间线](./res/timeline.png)
