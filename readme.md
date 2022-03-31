@@ -1,12 +1,12 @@
-myblog-layui
+# mild-blog
 
-> 个人博客
+> 一个简陋个人博客
 
-技术: 后端,springboot+jwt+mybatisplus  
+技术: 后端,springboot+mybatisplus  
 
 前端,vue3+vuerouter+vuex
 
-拟采用nuxt重构首页
+拟采用quasar重构首页
 
 注意vite引用的用法
 
@@ -14,12 +14,6 @@ myblog-layui
 
 ```html
 <img src="@/assets/img/keqing.png" />
-```
-
-引用css
-
-```css
-import "element-plus/dist/index.css";
 ```
 
 ## 演示图片
