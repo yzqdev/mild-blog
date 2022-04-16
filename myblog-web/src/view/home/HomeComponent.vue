@@ -121,7 +121,7 @@ watch(() => route , async (val, preVal) => {
 }, {immediate: true,deep:true})
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .home-component {
   height: 100%;
   margin: 20px;

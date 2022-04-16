@@ -185,7 +185,7 @@ watch(() => comment.value, (val, preVal) => {
 
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .home-blog {
   flex: 1;
 

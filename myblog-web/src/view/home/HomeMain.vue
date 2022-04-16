@@ -93,7 +93,7 @@ onBeforeMount(() => {
 });
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .link-title {
   cursor: pointer;
 }

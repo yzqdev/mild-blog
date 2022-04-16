@@ -66,7 +66,7 @@ onBeforeMount(async () => {
 })
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .blog-footer {
   padding: 2rem 0 2rem 0;
   margin-top: 5rem;

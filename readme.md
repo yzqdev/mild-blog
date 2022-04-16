@@ -18,6 +18,12 @@
 
 ## 演示图片
 
+管理员界面
+
+![admin](./res/admin.png)
+
+首页
+
 ![图片](./res/home.png)
 
 时间线

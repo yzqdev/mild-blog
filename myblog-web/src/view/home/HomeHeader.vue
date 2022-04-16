@@ -35,7 +35,7 @@ onBeforeMount(async () => {
 })
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .home-header {
   background-color: #f5f5f5;
   padding: 0 20px;

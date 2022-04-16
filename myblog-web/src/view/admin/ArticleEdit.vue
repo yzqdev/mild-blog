@@ -181,7 +181,7 @@ onBeforeMount(() => {
 
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .article-edit {
   :deep(.el-form-item) {
     margin: 10px;

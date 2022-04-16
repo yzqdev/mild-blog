@@ -48,7 +48,7 @@ function gotoBlog(item) {
 
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .passage-list {
   .article {
     padding: 20px;

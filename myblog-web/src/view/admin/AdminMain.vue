@@ -1,72 +1,7 @@
 <template>
   <div class="admin-main">
-    <aside class="sidebar">
-      <el-menu :default-active="actMenu" router class="el-menu-vertical-demo">
-        <el-menu-item index="/admin/home/welcome">
-          <template #title><i class="el-icon-menu"></i>系统信息</template>
-        </el-menu-item>
-        <el-sub-menu index="2">
-          <template #title><i class="el-icon-menu"></i>文章管理</template>
-          <el-menu-item index="/admin/home/article-edit">
-            文章编辑
-          </el-menu-item>
-          <el-menu-item index="/admin/home/article-list">
-            文章列表
-          </el-menu-item>
-          <el-menu-item index="/admin/home/comment-list">
-            评论列表
-          </el-menu-item>
-          <el-menu-item index="/admin/home/tag-list"> 标签列表</el-menu-item>
-          <el-menu-item index="/admin/home/category-list">
-            分类列表
-          </el-menu-item>
-          <el-menu-item index="/admin/home/img-list">
-            图片列表
-          </el-menu-item>
-        </el-sub-menu>
 
-        <el-sub-menu index="4">
-          <template #title><i class="el-icon-setting"></i>系统管理</template>
-          <el-menu-item index="/admin/home/system-info">
-            系统信息
-          </el-menu-item>
-          <el-menu-item index="/admin/home/users">
-            用户列表
-          </el-menu-item>
-          <el-menu-item index="/admin/home/link-list"> 链接列表</el-menu-item>
-        </el-sub-menu>
-      </el-menu>
-    </aside>
-    <div class="right-content">
-      <header class="admin-header">
-        <el-link href="/home/main">七月飞雪</el-link>
-        <article class="logout">
-          <el-dropdown>
-            <span class="dropdown-link">
-              <img :src="user.avatar" style="height: 30px"/>{{
-                user.loginUserName
-              }} <i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item @click="gotoUserInfo"
-                >账户信息
-                </el-dropdown-item
-                >
-                <el-dropdown-item>系统信息</el-dropdown-item>
-                <el-dropdown-item divided @click="logout"
-                >退出登录
-                </el-dropdown-item
-                >
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </article>
-      </header>
-      <div class="admin-content">
-        <router-view/>
-      </div>
-    </div>
+
   </div>
 </template>
 
@@ -84,37 +19,10 @@ let state = reactive({
 })
 let {user, actMenu} = toRefs(state)
 
-function getUser() {
-  getUserInfo().then((res) => {
-    console.log(`%c用户信息`,`color:red;font-size:16px;background:transparent`)
-    console.log(res.data)
-    if (res.success) {
-      state.user = res.data.user;
-    } else {
-      router.push({name: 'adminLogin'})
-    }
-  });
-}
 
-watch(() => router, (val, preVal) => {
-  state.actMenu = val.path
-})
-
-function gotoUserInfo() {
-  router.push({name: "userInfo"});
-}
-
-function logout() {
-  localStorage.clear();
-  router.push("/admin");
-}
-
-onBeforeMount(() => {
-  getUser()
-})
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .admin-main {
   height: 100vh;
   display: flex;

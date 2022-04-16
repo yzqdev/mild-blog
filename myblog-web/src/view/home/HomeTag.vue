@@ -26,7 +26,7 @@ onBeforeMount(async () => {
 
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .home-tag {
   flex: 1;
   padding: 20px 100px;
