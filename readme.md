@@ -2,9 +2,11 @@
 
 > 一个简陋个人博客
 
-技术: 后端,springboot+mybatisplus  
+## 技术
 
-前端,vue3+vuerouter+vuex
+- 后端,springboot+mybatisplus+jwt  
+
+- 前端,vue3+vue-router+vuex+axios
 
 拟采用quasar重构首页
 

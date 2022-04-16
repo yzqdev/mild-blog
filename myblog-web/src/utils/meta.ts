@@ -1,4 +1,4 @@
-export const setDocumentTitle = function (title) {
+export const setDocumentTitle = function (title:string) {
     document.title = title
     const ua = navigator.userAgent
     // eslint-disable-next-line

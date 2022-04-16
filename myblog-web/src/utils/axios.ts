@@ -1,6 +1,6 @@
 import store from "@/store";
 import qs from "qs";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 
  const instance=axios.create({
      baseURL: import.meta.env.VITE_APP_URL, //接口统一域名
@@ -9,7 +9,7 @@ import axios from "axios";
 
 instance.defaults.withCredentials = true;
 instance.interceptors.request.use(
-  (config) => {
+  (config:AxiosRequestConfig) => {
     console.log("requestUrl==", config.url);
 
     // if (process.client) {
@@ -41,7 +41,7 @@ instance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-instance.postForm = (url, data) => {
+instance.postForm = (url:string, data:any) => {
   return instance.post(url, qs.stringify(data), {
     headers: { "content-type": "application/x-www-form-urlencoded" },
   });
