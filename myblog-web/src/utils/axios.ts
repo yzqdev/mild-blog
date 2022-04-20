@@ -41,6 +41,7 @@ instance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+// @ts-ignore
 instance.postForm = (url:string, data:any) => {
   return instance.post(url, qs.stringify(data), {
     headers: { "content-type": "application/x-www-form-urlencoded" },
