@@ -13,7 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface AdminUserService extends IService<AdminUser> {
 
-    boolean validatePassword(Integer userId, String oldPwd);
+    boolean validatePassword(String userId, String oldPwd);
 
     boolean updateUserInfo(AdminUser adminUser);
 
@@ -24,5 +24,5 @@ public interface AdminUserService extends IService<AdminUser> {
      * @param id
      * @return
      */
-    AdminUser getAdminUserById(Integer id);
+    AdminUser getAdminUserById(String id);
 }

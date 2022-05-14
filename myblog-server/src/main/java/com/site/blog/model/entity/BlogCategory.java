@@ -22,16 +22,16 @@ public class BlogCategory  extends Model<BlogCategory> {
     /**
      * 关系id
      */
-    @TableId(type = IdType.AUTO)
-    private Integer relationId;
+    @TableId(type = IdType.ASSIGN_ID)
+    private String relationId;
     /**
      * 博客id
      */
-    private Long blogId;
+    private String blogId;
     /**
      * 类别id
      */
-    private Integer categoryId;
+    private String categoryId;
     /**
      * 创建时间
      */

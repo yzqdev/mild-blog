@@ -33,9 +33,9 @@ public class BlogServiceImpl extends ServiceImpl<BlogTagMapper, BlogTag> impleme
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void removeAndsaveBatch(List<String> blogTagIds, BlogInfo blogInfo) {
-        Long blogId = blogInfo.getBlogId();
+      String blogId = blogInfo.getBlogId();
         List<BlogTag> list = blogTagIds.stream().map(blogTagId -> new BlogTag()
-                .setTagId(Integer.valueOf(blogTagId))
+                .setTagId( blogTagId )
                 .setBlogId(blogId)).toList();
         blogTagMapper.delete(new QueryWrapper<BlogTag>()
                 .lambda()

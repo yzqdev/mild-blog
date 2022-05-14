@@ -38,8 +38,8 @@ public class Comment implements Serializable {
     /**
      * 主键id
      */
-    @TableId(value = "comment_id", type = IdType.AUTO)
-    private Long commentId;
+    @TableId(value = "comment_id", type = IdType.ASSIGN_ID)
+    private String commentId;
 
     /**
      * 关联的blog主键

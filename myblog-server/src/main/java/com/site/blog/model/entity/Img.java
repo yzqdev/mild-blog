@@ -23,8 +23,8 @@ import java.sql.Timestamp;
 public class Img extends Model<Img>  implements Serializable {
     @Serial
     private static final long serialVersionUID=1L;
-    @TableId(  type = IdType.AUTO)
-    private Integer id;
+    @TableId(  type = IdType.ASSIGN_ID)
+    private String id;
     private String imgName;
     /**
      * 图片系统路径

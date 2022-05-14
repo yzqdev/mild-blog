@@ -31,8 +31,8 @@ private static final long serialVersionUID=1L;
     /**
      * 友链表主键id
      */
-    @TableId(value = "link_id", type = IdType.AUTO)
-    private Integer linkId;
+    @TableId(value = "link_id", type = IdType.ASSIGN_ID)
+    private String linkId;
 
     /**
      * 友链类别 0-友链 1-推荐 2-个人网站

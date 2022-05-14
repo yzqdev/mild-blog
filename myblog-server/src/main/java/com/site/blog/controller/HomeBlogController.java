@@ -124,7 +124,7 @@ public class HomeBlogController {
             QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
             List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).collect(Collectors.toList());
             post.setBlogTags(tags);
-            Integer cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
+            String cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
             if (cateId != null) {
                 post.setBlogCategory(categoryService.getById(cateId));
             }
@@ -147,7 +147,7 @@ public class HomeBlogController {
                 QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
                 List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).collect(Collectors.toList());
                 post.setBlogTags(tags);
-                Integer cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
+               String cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
                 if (cateId != null) {
                     post.setBlogCategory(categoryService.getById(cateId));
                 }
@@ -334,7 +334,7 @@ public class HomeBlogController {
                 .setBlogViews(blogInfo.getBlogViews() + 1));
 
         // 获得关联的标签列表
-        List<Integer> tagIds;
+        List<String> tagIds;
         List<Tag> tagList = new ArrayList<>();
         if (!blogTags.isEmpty()) {
             tagIds = blogTags.stream()

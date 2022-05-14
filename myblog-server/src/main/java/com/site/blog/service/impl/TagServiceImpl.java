@@ -74,7 +74,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
                         if (blogTagService.list(new QueryWrapper<BlogTag>().eq("blog_id", blogTag.getBlogId())).stream().map(BlogTag::getTagId).collect(Collectors.toList()).contains(Integer.valueOf(SysConfigConstants.DEFAULT_TAG.getConfigField()))) {
                             blogTagService.removeById(blogTag);
                         } else {
-                            blogTagService.updateById(blogTag.setTagId(Integer.valueOf(SysConfigConstants.DEFAULT_TAG.getConfigField())));
+                            blogTagService.updateById(blogTag.setTagId( SysConfigConstants.DEFAULT_TAG.getConfigField() ));
                         }
                     })
                     .collect(Collectors.toList());

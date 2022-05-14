@@ -131,7 +131,7 @@ public class AdminController {
      */
     @GetMapping("/password")
     public Result<String> validatePassword(String oldPwd, HttpSession session) {
-        Integer userId = (Integer) session.getAttribute(SessionConstants.LOGIN_USER_ID);
+        String userId = (String) session.getAttribute(SessionConstants.LOGIN_USER_ID);
         boolean flag = adminUserService.validatePassword(userId, oldPwd);
         if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
@@ -141,7 +141,7 @@ public class AdminController {
 
     @PostMapping("/unlock/{id}")
     public Result unlock(@PathVariable("id") String id) {
-        AdminUser user = adminUserService.getAdminUserById(Integer.valueOf(id));
+        AdminUser user = adminUserService.getAdminUserById( id);
         AdminUser currentUser = RequestHelper.getSessionUser();
         if (user.getAdminUserId().equals(currentUser.getAdminUserId())) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "不能冻结自己");

@@ -37,7 +37,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
      * @date: 2019/8/26 13:27
      */
     @Override
-    public boolean validatePassword(Integer userId, String oldPwd) {
+    public boolean validatePassword(String userId, String oldPwd) {
         QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<>(
                 new AdminUser().setAdminUserId(userId)
                         .setLoginPassword(MD5Utils.MD5Encode(oldPwd, "UTF-8"))
@@ -61,7 +61,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     }
 
     @Override
-    public AdminUser getAdminUserById(Integer id) {
+    public AdminUser getAdminUserById(String id) {
 
         try {
             QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<>();

@@ -18,6 +18,7 @@ import com.site.blog.util.BeanMapUtil;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/v2/admin")
 @io.swagger.v3.oas.annotations.tags.Tag(name = "博客json")
 @RequiredArgsConstructor
+@Slf4j
 public class AdminBlogController {
 
      
@@ -70,7 +72,7 @@ public class AdminBlogController {
         blogDetailVO.setBlogPreface(blogInfo.getBlogPreface());
         blogDetailVO.setBlogCategoryId(blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", blogInfo.getBlogId())).getCategoryId());
         QueryWrapper<BlogTag> queryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", id);
-        List<Integer> ids = blogTagService.list(queryWrapper).stream().map(BlogTag::getTagId).collect(Collectors.toList());
+        List<String> ids = blogTagService.list(queryWrapper).stream().map(BlogTag::getTagId).collect(Collectors.toList());
         blogDetailVO.setBlogTagIds(ids);
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogDetailVO);
     }
@@ -116,7 +118,7 @@ public class AdminBlogController {
             //添加blog和分类映射关系
             if (blogInfoDo.getBlogCategoryId() == null) {
                 //blogCategoryService.save()
-                blogCategory.setCategoryId(1);
+                blogCategory.setCategoryId("1");
 
             } else {
                 blogCategoryService.remove(new QueryWrapper<BlogCategory>().eq("blog_id", blogInfo.getBlogId()));
@@ -127,7 +129,7 @@ public class AdminBlogController {
 
             //添加blog和标签映射关系
             blogTagService.remove(new QueryWrapper<BlogTag>().eq("blog_id", blogInfo.getBlogId()));
-            for (Integer tagId : blogInfoDo.getBlogTagIds()) {
+            for (String tagId : blogInfoDo.getBlogTagIds()) {
                 BlogTag blogTag = BlogTag.builder().blogId(blogInfo.getBlogId()).tagId(tagId).createTime(DateUtils.getLocalCurrentDate()).build();
 
                 blogTagService.save(blogTag);
@@ -153,15 +155,16 @@ public class AdminBlogController {
             queryWrapper.lambda().orderByDesc(BlogInfo::getUpdateTime);
             Page<BlogInfo> page = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
             Page<BlogInfo> blogInfoPage = blogInfoService.page(page, queryWrapper);
-
+log.info("blogInfoPage:====>{}",blogInfoPage.getRecords());
             List<BlogDetailVO> blogDetailVOS = blogInfoPage.getRecords().stream().map(BeanMapUtil::copyBlog).collect(Collectors.toList());
-
+log.info("blogDetailVOS:{}",blogDetailVOS);
             blogDetailVOS.forEach(post -> {
 
                 QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
                 List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).collect(Collectors.toList());
                 post.setBlogTags(tags);
-                Integer cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
+                System.out.println(post);
+                String cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
                 if (cateId != null) {
                     post.setBlogCategory(categoryService.getById(cateId));
                 }
@@ -236,7 +239,7 @@ public class AdminBlogController {
      */
 
     @PostMapping("/blog/restore")
-    public Result<String> restoreBlog(@RequestParam Long blogId) {
+    public Result<String> restoreBlog(@RequestParam String blogId) {
         BlogInfo blogInfo = new BlogInfo()
                 .setBlogId(blogId)
                 .setIsDeleted(DeleteStatusEnum.NO_DELETED.getStatus())

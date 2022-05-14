@@ -36,7 +36,7 @@ public class BlogInfo implements Serializable {
      * 博客表主键id
      */
     @TableId(value = "blog_id", type = IdType.ASSIGN_ID)
-    private Long blogId;
+    private String blogId;
 
     /**
      * 博客标题
