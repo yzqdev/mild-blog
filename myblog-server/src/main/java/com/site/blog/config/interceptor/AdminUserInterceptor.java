@@ -46,7 +46,7 @@ public class AdminUserInterceptor implements HandlerInterceptor {
         String userId = JwtUtil.getUserId(token);
         if (flag) {
 
-            AdminUser user = UserUtil.getUserByUserCode(Integer.parseInt(userId));
+            AdminUser user = UserUtil.getUserByUserCode( userId );
             request.setAttribute(BaseConstants.USER_ATTR, user);
         }
         return true;

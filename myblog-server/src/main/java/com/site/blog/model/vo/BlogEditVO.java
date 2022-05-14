@@ -8,11 +8,11 @@ import java.util.List;
 
 @Data
 public class BlogEditVO {
-    private Long blogId;
+    private String blogId;
 
     private String blogTitle;
 
-    private Integer blogCategoryId;
+    private String blogCategoryId;
 
     private Long commentCount;
 
@@ -24,7 +24,7 @@ public class BlogEditVO {
 
     private Long blogViews;
 
-    private List<Integer> blogTagIds;
+    private List<String> blogTagIds;
 
     private String blogContent;
 

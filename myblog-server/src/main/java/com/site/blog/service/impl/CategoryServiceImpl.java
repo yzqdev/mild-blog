@@ -39,7 +39,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     public boolean clearCategory(Integer id) {
         Category category = categoryMapper.selectById(id);
         BlogCategory blogCategory = new BlogCategory();
-                blogCategory.setCategoryId(Integer.valueOf(SysConfigConstants.DEFAULT_CATEGORY.getConfigField()));
+                blogCategory.setCategoryId( SysConfigConstants.DEFAULT_CATEGORY.getConfigField() );
 
         LambdaUpdateWrapper<BlogCategory> updateWrapper = Wrappers.<BlogCategory>lambdaUpdate()
                 .eq(BlogCategory::getCategoryId, category.getCategoryId());

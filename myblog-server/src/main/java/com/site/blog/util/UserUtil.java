@@ -10,7 +10,7 @@ import com.site.blog.model.entity.AdminUser;
  * @modified By:
  */
 public class UserUtil {
-    public static AdminUser getUserByUserCode(int userCode) {
+    public static AdminUser getUserByUserCode(String userCode) {
 
         AdminUser u = new AdminUser();
         u.setAdminUserId(userCode);

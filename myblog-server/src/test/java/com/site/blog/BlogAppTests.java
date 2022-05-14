@@ -19,13 +19,13 @@ public class BlogAppTests {
 
     @Test
     public void contextLoads() {
-        AdminUser u = adminUserService.getAdminUserById(4);
+        AdminUser u = adminUserService.getAdminUserById("4");
         System.out.println(u);
     }
 
     @Test
     public String getUserById() {
-        AdminUser u = adminUserService.getAdminUserById(4);
+        AdminUser u = adminUserService.getAdminUserById("4");
         System.out.println(u);
         return "aaa";
     }

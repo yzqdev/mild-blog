@@ -33,8 +33,8 @@ public class AdminUser extends Model<AdminUser> implements Serializable {
     /**
      * 管理员id
      */
-    @TableId(value = "admin_user_id", type = IdType.AUTO)
-    private Integer adminUserId;
+    @TableId(value = "admin_user_id", type = IdType.ASSIGN_ID)
+    private String adminUserId;
 
     /**
      * 管理员登陆名称

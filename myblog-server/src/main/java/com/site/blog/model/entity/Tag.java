@@ -29,7 +29,7 @@ private static final long serialVersionUID=1L;
     /**
      * 标签表主键id
      */
-    @TableId(value = "tag_id", type = IdType.AUTO)
+    @TableId(value = "tag_id", type = IdType.ASSIGN_ID)
     private Integer tagId;
 
     /**

@@ -31,8 +31,8 @@ private static final long serialVersionUID=1L;
     /**
      * 分类表主键
      */
-    @TableId(value = "category_id", type = IdType.AUTO)
-    private Integer categoryId;
+    @TableId(value = "category_id", type = IdType.ASSIGN_ID)
+    private String categoryId;
 
     /**
      * 分类的名称
