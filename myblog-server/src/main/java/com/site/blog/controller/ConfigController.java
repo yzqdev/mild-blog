@@ -42,12 +42,12 @@ public class ConfigController {
     @GetMapping("/blogConfig/list")
     public AjaxResultPage<BlogConfig> getBlogConfig(){
         AjaxResultPage<BlogConfig> ajaxResultPage = new AjaxResultPage<>();
-        List<BlogConfig> list = blogConfigService.list();
+        List<BlogConfig> list = blogConfigService.lambdaQuery().orderByDesc(BlogConfig::getUpdateTime).list();
         if (CollectionUtils.isEmpty(list)){
             ajaxResultPage.setCode(500);
             return ajaxResultPage;
         }
-        ajaxResultPage.setData(blogConfigService.list());
+        ajaxResultPage.setData(list);
         return ajaxResultPage;
     }
 
@@ -80,9 +80,7 @@ public class ConfigController {
      */
     @PostMapping("/blogConfig/add")
     public Result  addBlogConfig(@RequestBody BlogConfig blogConfig){
-        System.out.println(blogConfig
-        );
-        System.out.println("到达这里blogadd");
+       log.info(String.valueOf(blogConfig));
         blogConfig.setCreateTime(DateUtils.getLocalCurrentDate());
         blogConfig.setUpdateTime(DateUtils.getLocalCurrentDate());
         boolean flag = blogConfigService.save(blogConfig);

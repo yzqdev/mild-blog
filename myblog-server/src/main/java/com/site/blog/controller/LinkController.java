@@ -83,7 +83,7 @@ public class LinkController {
     }
 
     @DeleteMapping("/link/clear/{id}")
-    public Result  clearLink(@PathVariable("id") Integer linkId) {
+    public Result  clearLink(@PathVariable("id") String linkId) {
         boolean flag = linkService.removeById(linkId);
         if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,linkId);

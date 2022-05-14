@@ -29,6 +29,6 @@ public interface TagService extends IService<Tag> {
      * @param tagId 标签id
      * @return boolean
      */
-    int clearTag(Integer tagId);
+    int clearTag(String tagId);
 
 }

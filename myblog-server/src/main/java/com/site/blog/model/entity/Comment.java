@@ -47,7 +47,7 @@ public class Comment implements Serializable {
     @TableField("blog_id")
     @NotNull(message = "非法请求")
     @Min(value = 0, message = "非法请求")
-    private Long blogId;
+    private String blogId;
 
     /**
      * 评论者名称
