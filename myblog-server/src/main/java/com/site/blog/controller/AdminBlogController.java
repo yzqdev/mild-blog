@@ -1,5 +1,6 @@
 package com.site.blog.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.site.blog.constants.DeleteStatusEnum;
@@ -22,7 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -33,10 +37,11 @@ import java.util.stream.Collectors;
  * @date: 2019/8/24 9:43
  */
 @RestController
+@Slf4j
 @RequestMapping("/v2/admin")
 @io.swagger.v3.oas.annotations.tags.Tag(name = "博客json")
 @RequiredArgsConstructor
-@Slf4j
+
 public class AdminBlogController {
 
      
@@ -65,11 +70,14 @@ public class AdminBlogController {
 
         BlogInfo blogInfo = blogInfoService.getById(id);
         BlogEditVO blogDetailVO = new BlogEditVO();
+        blogDetailVO.setBlogId(blogInfo.getBlogId());
         blogDetailVO.setBlogContent(blogInfo.getBlogContent());
         blogDetailVO.setBlogTitle(blogInfo.getBlogTitle());
         blogDetailVO.setBlogViews(blogInfo.getBlogViews());
         blogDetailVO.setBlogStatus(blogInfo.getBlogStatus());
         blogDetailVO.setBlogPreface(blogInfo.getBlogPreface());
+        blogDetailVO.setEnableComment(blogInfo.getEnableComment());
+        blogDetailVO.setCreateTime(blogInfo.getCreateTime().toLocalDateTime());
         blogDetailVO.setBlogCategoryId(blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", blogInfo.getBlogId())).getCategoryId());
         QueryWrapper<BlogTag> queryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", id);
         List<String> ids = blogTagService.list(queryWrapper).stream().map(BlogTag::getTagId).collect(Collectors.toList());
@@ -94,15 +102,15 @@ public class AdminBlogController {
         //    return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
         //}
         BlogInfo blogInfo = new BlogInfo();
-        if (null != blogInfoDo.getBlogId()) {
+
             blogInfo.setBlogId(blogInfoDo.getBlogId());
-        }
-        blogInfo.setBlogViews(blogInfoDo.getBlogViews());
+
+        blogInfo.setBlogViews(0L);
         blogInfo.setBlogTitle(blogInfoDo.getBlogTitle());
         blogInfo.setBlogSubUrl(blogInfoDo.getBlogSubUrl());
         blogInfo.setEnableComment(blogInfoDo.getEnableComment());
         blogInfo.setBlogStatus(blogInfoDo.getBlogStatus());
-        blogInfo.setCreateTime(DateUtils.getLocalCurrentDate());
+        blogInfo.setCreateTime(Optional.ofNullable(Timestamp.valueOf(blogInfoDo.getCreateTime())).orElse(new Timestamp(System.currentTimeMillis())));
         blogInfo.setUpdateTime(DateUtils.getLocalCurrentDate());
 
 
@@ -110,7 +118,8 @@ public class AdminBlogController {
         blogInfo.setBlogPreface(blogInfoDo.getBlogPreface());
         blogInfo.setIsDeleted(0);
         blogInfo.setBlogStatus(blogInfoDo.getBlogStatus());
-
+        log.info("这是bloginfo");
+log.info(blogInfo.toString());
         if (blogInfoService.saveOrUpdate(blogInfo)) {
             BlogCategory blogCategory = new BlogCategory();
             blogCategory.setBlogId(blogInfo.getBlogId());
@@ -121,8 +130,15 @@ public class AdminBlogController {
                 blogCategory.setCategoryId("1");
 
             } else {
-                blogCategoryService.remove(new QueryWrapper<BlogCategory>().eq("blog_id", blogInfo.getBlogId()));
-                blogCategory.setCategoryId(blogInfoDo.getBlogCategoryId());
+                LambdaQueryWrapper<BlogCategory> queryWrapper=new LambdaQueryWrapper<BlogCategory>().eq(BlogCategory::getBlogId, blogInfo.getBlogId());
+                if (blogCategoryService.getOne(queryWrapper)==null){
+                    blogCategory.setCategoryId("1");
+                }else{
+                    blogCategoryService.remove(queryWrapper);
+                    blogCategory.setCategoryId(blogInfoDo.getBlogCategoryId());
+                }
+
+                //blogCategory.setCategoryId(blogInfoDo.getBlogCategoryId());
             }
             blogCategory.setCreateTime(DateUtils.getLocalCurrentDate());
             blogCategoryService.save(blogCategory);

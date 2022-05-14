@@ -59,7 +59,8 @@ public class JwtUtil {
             System.out.println(jwt.getClaims());
             result = jwt.getClaims();
             System.out.println("userid=" + result.get("userId"));
-            return result.get("userId").toString();
+            //注意!!!这里用toString会多出来引号!!!只能用asString
+            return result.get("userId").asString();
         } catch (JWTDecodeException e) {
             return null;
         }

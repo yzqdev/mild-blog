@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 
 import java.io.Serial;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -53,7 +55,7 @@ private static final long serialVersionUID=1L;
      * 添加时间
      */
     @TableField("create_time")
-    private Date createTime;
+    private Timestamp createTime;
 
 
 }

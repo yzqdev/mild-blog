@@ -45,9 +45,16 @@ public class AdminUserInterceptor implements HandlerInterceptor {
         boolean flag = JwtUtil.verifyToken(token);
         String userId = JwtUtil.getUserId(token);
         if (flag) {
-
+log.info(userId);
+            System.out.println("myid");
+            System.out.println(userId);
             AdminUser user = UserUtil.getUserByUserCode( userId );
+            log.info("这里设置用户到session");
+            log.info("user={}","myid");
+            log.info("user=" + user);
             request.setAttribute(BaseConstants.USER_ATTR, user);
+        }else{
+            log.info("token验证失败");
         }
         return true;
     }

@@ -1,5 +1,6 @@
 package com.site.blog.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.site.blog.model.entity.AdminUser;
@@ -11,9 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
-
-import javax.annotation.Resource;
 
 /**
  * <p>
@@ -39,7 +37,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     @Override
     public boolean validatePassword(String userId, String oldPwd) {
         QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<>(
-                new AdminUser().setAdminUserId(userId)
+                new AdminUser().setId(userId)
                         .setLoginPassword(MD5Utils.MD5Encode(oldPwd, "UTF-8"))
         );
 
@@ -64,8 +62,8 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     public AdminUser getAdminUserById(String id) {
 
         try {
-            QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("admin_user_id", id);
+            LambdaQueryWrapper<AdminUser> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(AdminUser::getId, id);
             return adminUserMappe.selectOne(queryWrapper);
         } catch (Exception e) {
             e.printStackTrace();

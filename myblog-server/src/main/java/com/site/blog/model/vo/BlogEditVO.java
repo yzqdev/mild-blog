@@ -4,6 +4,7 @@ import com.site.blog.model.entity.Tag;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -30,6 +31,6 @@ public class BlogEditVO {
 
     private Integer enableComment;
 
-    private Timestamp createTime;
+    private LocalDateTime createTime;
 
 }

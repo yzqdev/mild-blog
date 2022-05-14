@@ -66,10 +66,10 @@ public class AdminController {
         AdminUser adminUser = adminUserService.getOne(queryWrapper);
         if (adminUser != null) {
             if (adminUser.getLocked() == 0) {
-                String token = JwtUtil.sign(adminUser.getLoginUserName(), adminUser.getAdminUserId());
+                String token = JwtUtil.sign(adminUser.getLoginUserName(), adminUser.getId());
 
                 session.setAttribute(SessionConstants.LOGIN_USER, adminUser.getNickName());
-                session.setAttribute(SessionConstants.LOGIN_USER_ID, adminUser.getAdminUserId());
+                session.setAttribute(SessionConstants.LOGIN_USER_ID, adminUser.getId());
                 session.setAttribute(SessionConstants.LOGIN_USER_NAME, adminUser.getLoginUserName());
                 session.setAttribute(SessionConstants.AUTHOR_IMG, blogConfigService.getById(
                         SysConfigConstants.SYS_AUTHOR_IMG.getConfigField()));
@@ -143,7 +143,7 @@ public class AdminController {
     public Result unlock(@PathVariable("id") String id) {
         AdminUser user = adminUserService.getAdminUserById( id);
         AdminUser currentUser = RequestHelper.getSessionUser();
-        if (user.getAdminUserId().equals(currentUser.getAdminUserId())) {
+        if (user.getId().equals(currentUser.getId())) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "不能冻结自己");
         }
         if (user.getLocked() == 0) {
@@ -160,13 +160,13 @@ public class AdminController {
         try {
             AdminUser user = (AdminUser) request.getAttribute(BaseConstants.USER_ATTR);
 
-            System.out.println("心如这里");
+
             HashMap<String, Object> res = new HashMap<>(1);
             if (user == null) {
                 return ResultGenerator.getResultByHttp(HttpStatusEnum.UNAUTHORIZED, false, "请重新登录");
             }
             res.put("user", user);
-            System.out.println("user=" + user);
+           log.info(user.toString());
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, res);
         } catch (Exception e) {
             e.printStackTrace();

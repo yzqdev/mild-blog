@@ -13,7 +13,7 @@ public class UserUtil {
     public static AdminUser getUserByUserCode(String userCode) {
 
         AdminUser u = new AdminUser();
-        u.setAdminUserId(userCode);
+        u.setId(userCode);
 
         return u.selectOne(new QueryWrapper<>(u));
 
