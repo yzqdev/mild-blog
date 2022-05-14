@@ -4,8 +4,8 @@
        <span class='el-dropdown-link '>
                 <el-avatar :size='30'
                            :src='user.avatar'/>
-                <el-button type="text" class='ml-2'>{{ user.loginUserName}}</el-button>
-                <el-icon> <arrow-down/></el-icon>
+                <el-button text class='ml-2'>{{ user.loginUserName}}<el-icon> <arrow-down/></el-icon></el-button>
+                
             </span>
 
 

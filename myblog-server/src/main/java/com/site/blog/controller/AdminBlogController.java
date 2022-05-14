@@ -18,6 +18,7 @@ import com.site.blog.util.BeanMapUtil;
 import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -84,6 +85,7 @@ public class AdminBlogController {
      */
 
     @PostMapping("/blog/edit")
+    @Transactional(rollbackFor = Exception.class)
     public Result saveBlog(@RequestBody BlogInfoDo blogInfoDo) {
 //todo 当然这里可以直接用sql语句,不过我为了学习方便用了DO
         //if (ObjectUtils.isEmpty(blogInfoDo.getBlogTags()) || ObjectUtils.isEmpty(blogInfoDo)) {
