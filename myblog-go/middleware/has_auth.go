@@ -5,9 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"github.com/gookit/color"
+	"myblog-go/controller"
+	"myblog-go/model"
 	"net/http"
-	"ginblog/controller"
-	"ginblog/model"
 )
 
 func JwtHandler() gin.HandlerFunc {

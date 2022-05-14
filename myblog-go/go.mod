@@ -1,4 +1,4 @@
-module ginblog
+module myblog-go
 
 go 1.17
 

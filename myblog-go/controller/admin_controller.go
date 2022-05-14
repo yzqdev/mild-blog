@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"ginblog/model"
-	"ginblog/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"github.com/gookit/color"
+	"myblog-go/model"
+	"myblog-go/utils"
 	"net/http"
 	"strconv"
 	"time"

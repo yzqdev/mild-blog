@@ -3,7 +3,7 @@ package model
 import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"ginblog/config"
+	"myblog-go/config"
 )
 
 type Database struct {

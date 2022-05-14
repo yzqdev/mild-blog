@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"ginblog/model"
-	"ginblog/utils"
 	"github.com/gin-gonic/gin"
+	"myblog-go/model"
+	"myblog-go/utils"
 )
 
 func GetArticleList(c *gin.Context) {
@@ -11,7 +11,6 @@ func GetArticleList(c *gin.Context) {
 	articles := model.QueryArticleList()
 	utils.JSON(c, 200, "chengg", articles)
 }
-
 
 func PartCount(c *gin.Context) {
 	count := model.GetAllPartCount()

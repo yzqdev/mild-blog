@@ -1,9 +1,9 @@
 package main
 
 import (
-	"ginblog/controller"
-	"ginblog/middleware"
 	"github.com/gin-gonic/gin"
+	"myblog-go/controller"
+	"myblog-go/middleware"
 )
 
 func InitRouter(e *gin.Engine) {
@@ -27,7 +27,7 @@ func InitRouter(e *gin.Engine) {
 	{
 		homeRouter.GET("/index")
 		homeRouter.GET("/getArticleList", controller.GetArticleList)
-		homeRouter.GET("/getArticleById/:id",controller.GetArticleById)
+		homeRouter.GET("/getArticleById/:id", controller.GetArticleById)
 
 	}
 
