@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,7 +101,7 @@ public class LinkController {
         link.setCreateTime(DateUtils.getLocalCurrentDate());
         boolean flag;
         if (link.getLinkId() != null) {
-            link.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+            link.setUpdateTime(Timestamp.valueOf(LocalDateTime.now()));
             flag = linkService.updateById(link);
         } else {
             flag = linkService.save(link);

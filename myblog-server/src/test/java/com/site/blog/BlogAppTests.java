@@ -2,6 +2,7 @@ package com.site.blog;
 
 import com.site.blog.model.entity.AdminUser;
 import com.site.blog.service.AdminUserService;
+import com.site.blog.util.UserUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +20,7 @@ public class BlogAppTests {
 
     @Test
     public void contextLoads() {
-        AdminUser u = adminUserService.getAdminUserById("4");
+        AdminUser u = adminUserService.getAdminUserById("myid");
         System.out.println(u);
     }
 
@@ -29,6 +30,10 @@ public class BlogAppTests {
         System.out.println(u);
         return "aaa";
     }
-
+@Test
+    void getUserb(){
+        AdminUser u= UserUtil.getUserByUserCode("myid");
+    System.out.println(u.toString());
+}
 
 }

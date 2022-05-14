@@ -30,11 +30,9 @@ public class AdminUser extends Model<AdminUser> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 管理员id
-     */
-    @TableId(value = "admin_user_id", type = IdType.ASSIGN_ID)
-    private String adminUserId;
+
+    @TableId(  type = IdType.ASSIGN_UUID)
+    private String id;
 
     /**
      * 管理员登陆名称

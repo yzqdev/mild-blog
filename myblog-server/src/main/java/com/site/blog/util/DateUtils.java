@@ -1,6 +1,7 @@
 package com.site.blog.util;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,6 +33,6 @@ public class DateUtils {
      * @date 2019/8/28 13:03
      */
     public static Timestamp getLocalCurrentDate() {
-        return new Timestamp(System.currentTimeMillis());
+        return new Timestamp(System.currentTimeMillis()) ;
     }
 }
