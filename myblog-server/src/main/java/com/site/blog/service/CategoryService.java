@@ -13,6 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface CategoryService extends IService<Category> {
 
-    public boolean clearCategory(Integer id);
+    public boolean clearCategory(String id);
 
 }

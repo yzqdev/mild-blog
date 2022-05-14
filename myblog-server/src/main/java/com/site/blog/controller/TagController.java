@@ -115,7 +115,7 @@ public class TagController {
      */
 
     @PostMapping("/tags/clear/{id}")
-    public Result<String> clearTag(@PathVariable("id") Integer tagId) throws RuntimeException {
+    public Result<String> clearTag(@PathVariable("id") String tagId) throws RuntimeException {
 
         String name = tagService.getById(tagId).getTagName();
         if (tagService.clearTag(tagId)==1) {

@@ -57,7 +57,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public int clearTag(Integer tagId) {
+    public int clearTag(String tagId) {
         LambdaQueryWrapper<BlogTag> queryWrapper = Wrappers.<BlogTag>lambdaQuery()
                 .eq(BlogTag::getTagId, tagId);
         List<BlogTag> blogTagList = blogTagService.list(queryWrapper);

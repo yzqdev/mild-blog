@@ -135,7 +135,7 @@ public class CategoryController {
      */
     @ResponseBody
     @PostMapping("/category/clear/{id}")
-    public Result  clearCategory(@PathVariable("id") Integer id) {
+    public Result  clearCategory(@PathVariable("id") String id) {
         if (categoryService.clearCategory(id)) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,id);
         }

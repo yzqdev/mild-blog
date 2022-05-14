@@ -323,7 +323,7 @@ public class HomeBlogController {
      * @date 2019/9/6 13:09
      */
     @GetMapping({"/blog/{blogId}", "/article/{blogId}"})
-    public Result<Object> detail(@PathVariable("blogId") Long blogId) {
+    public Result<Object> detail(@PathVariable("blogId") String blogId) {
         // 获得文章info
         BlogInfo blogInfo = blogInfoService.getById(blogId);
         List<BlogTag> blogTags = blogService.list(new QueryWrapper<BlogTag>()
@@ -368,7 +368,7 @@ public class HomeBlogController {
      */
     @GetMapping("/blog/listComment")
     @ResponseBody
-    public AjaxResultPage<Comment> listComment(AjaxPutPage<Comment> ajaxPutPage, Integer blogId) {
+    public AjaxResultPage<Comment> listComment(AjaxPutPage<Comment> ajaxPutPage, String blogId) {
         Page<Comment> page = ajaxPutPage.putPageToPage();
         commentService.page(page, new QueryWrapper<Comment>()
                 .lambda()

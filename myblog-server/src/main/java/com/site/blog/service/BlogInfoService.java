@@ -43,7 +43,7 @@ public interface BlogInfoService extends IService<BlogInfo> {
      * @return boolean
      * @date 2020/1/29 21:54
      */
-    boolean clearBlogInfo(Long blogId);
+    boolean clearBlogInfo(String blogId);
     List<BlogDetailVO> getBlogs(PageDto pageDto );
 
     List<BlogInfo> searchBlog(String keyword);

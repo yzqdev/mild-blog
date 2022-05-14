@@ -80,7 +80,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean clearBlogInfo(Long blogId) {
+    public boolean clearBlogInfo(String blogId) {
         if (SqlHelper.retBool(blogInfoMapper.deleteById(blogId))) {
             QueryWrapper<BlogTag> tagRelationWrapper = new QueryWrapper<>();
             tagRelationWrapper.lambda().eq(BlogTag::getBlogId, blogId);

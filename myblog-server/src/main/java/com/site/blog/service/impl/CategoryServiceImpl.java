@@ -36,7 +36,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     private  final BlogCategoryService blogCategoryService;
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean clearCategory(Integer id) {
+    public boolean clearCategory(String id) {
         Category category = categoryMapper.selectById(id);
         BlogCategory blogCategory = new BlogCategory();
                 blogCategory.setCategoryId( SysConfigConstants.DEFAULT_CATEGORY.getConfigField() );

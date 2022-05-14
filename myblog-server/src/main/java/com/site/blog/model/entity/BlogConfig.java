@@ -3,6 +3,8 @@ package com.site.blog.model.entity;
 import java.io.Serial;
 import java.sql.Timestamp;
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
@@ -28,11 +30,12 @@ public class BlogConfig implements Serializable {
 
 @Serial
 private static final long serialVersionUID=1L;
-
+@TableId(type = IdType.ASSIGN_ID)
+private String id;
     /**
      * 字段名
      */
-    @TableId("config_field")
+    @TableField("config_field")
     private String configField;
 
     /**

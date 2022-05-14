@@ -61,7 +61,7 @@ public class AdminBlogController {
 
 
     @GetMapping("/blog/get/{id}")
-    public Result getBlogById(@PathVariable("id") Integer id) {
+    public Result getBlogById(@PathVariable("id") String id) {
 
         BlogInfo blogInfo = blogInfoService.getById(id);
         BlogEditVO blogDetailVO = new BlogEditVO();
@@ -204,7 +204,7 @@ log.info("blogDetailVOS:{}",blogDetailVOS);
      */
 
     @PostMapping("/blog/delete/{id}")
-    public Result deleteBlog(@PathVariable("id") Long blogId) {
+    public Result deleteBlog(@PathVariable("id") String blogId) {
         BlogInfo blogInfo = blogInfoService.getOne(new QueryWrapper<BlogInfo>().eq("blog_id", blogId));
         blogInfo.setIsDeleted(DeleteStatusEnum.DELETED.getStatus()).setUpdateTime(DateUtils.getLocalCurrentDate());
         boolean flag = blogInfoService.updateById(blogInfo);
@@ -223,7 +223,7 @@ log.info("blogDetailVOS:{}",blogDetailVOS);
      */
 
     @PostMapping("/blog/clear/{id}")
-    public Result clearBlog(@PathVariable("id") Long blogId) {
+    public Result clearBlog(@PathVariable("id") String blogId) {
         if (blogInfoService.clearBlogInfo(blogId)) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogId);
         }
