@@ -37,7 +37,7 @@
     <select id="findBlogList" parameterType="Map" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from blog_info
+        from tb_blog_info
         where is_deleted = #{isDeleted}
         <if test="keyword!=null">
             AND (blog_title like CONCAT('%','${keyword}','%' ) or blog_category_name like CONCAT('%','${keyword}','%' ))
@@ -55,7 +55,7 @@
     </select>
 
     <select id="getTotalBlogs" parameterType="Map" resultType="int">
-        select count(*) from blog_info
+        select count(*) from tb_blog_info
         where is_deleted = #{isDeleted}
         <if test="keyword!=null">
             AND (blog_title like CONCAT('%','${keyword}','%' ) or blog_category_name like CONCAT('%','${keyword}','%' ))
@@ -70,7 +70,7 @@
     <select id="findBlogListByType" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from blog_info
+        from tb_blog_info
         where is_deleted=0 AND blog_status = 1<!-- 发布状态的文章 -->
         <if test="type!=null and type==0">
             order by blog_views desc
@@ -84,7 +84,7 @@
     <select id="getBlogsPageByTagId" parameterType="Map" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from blog_info
+        from tb_blog_info
         where blog_id IN (SELECT blog_id FROM blog_tag_relation WHERE tag_id = #{tagId})
         AND blog_status =1 AND is_deleted=0
         order by blog_id desc
@@ -95,7 +95,7 @@
 
     <select id="getTotalBlogsByTagId" parameterType="Map" resultType="int">
         select count(*)
-        from blog_info
+        from tb_blog_info
         where blog_id IN (SELECT blog_id FROM blog_tag_relation WHERE tag_id = #{tagId})
           AND blog_status = 1
           AND is_deleted = 0
@@ -111,20 +111,20 @@
     </select>
 
     <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        UPDATE blog_info
+        UPDATE tb_blog_info
         SET is_deleted = 1
         where blog_id = #{blogId,jdbcType=BIGINT}
           and is_deleted = 0
     </update>
     <update id="removeBatch">
-        update blog_info
+        update tb_blog_info
         set is_deleted=1 where blog_id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </update>
     <insert id="insert" parameterType="com.site.blog.model.entity.BlogInfo">
-        insert into blog_info (blog_id, blog_title, blog_sub_url,
+        insert into tb_blog_info (blog_id, blog_title, blog_sub_url,
                                blog_cover_image, blog_category_id, blog_category_name,
                                blog_tags, blog_status, blog_views,
                                enable_comment, is_deleted, create_time,
@@ -138,7 +138,7 @@
     </insert>
     <insert id="insertSelective" useGeneratedKeys="true" keyProperty="blogId"
             parameterType="com.site.blog.model.entity.BlogInfo">
-        insert into blog_info
+        insert into tb_blog_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="blogId != null">
                 blog_id,
@@ -229,7 +229,7 @@
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.site.blog.model.entity.BlogInfo">
-        update blog_info
+        update tb_blog_info
         <set>
             <if test="blogTitle != null">
                 blog_title = #{blogTitle,jdbcType=VARCHAR},
@@ -277,7 +277,7 @@
         where blog_id = #{blogId,jdbcType=BIGINT}
     </update>
     <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.site.blog.model.entity.BlogInfo">
-        update blog_info
+        update tb_blog_info
         set blog_title         = #{blogTitle,jdbcType=VARCHAR},
             blog_sub_url       = #{blogSubUrl,jdbcType=VARCHAR},
             blog_cover_image   = #{blogCoverImage,jdbcType=VARCHAR},
@@ -294,7 +294,7 @@
         where blog_id = #{blogId,jdbcType=BIGINT}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.site.blog.model.entity.BlogInfo">
-        update blog_info
+        update tb_blog_info
         set blog_title         = #{blogTitle,jdbcType=VARCHAR},
             blog_sub_url       = #{blogSubUrl,jdbcType=VARCHAR},
             blog_cover_image   = #{blogCoverImage,jdbcType=VARCHAR},
@@ -310,7 +310,7 @@
         where blog_id = #{blogId,jdbcType=BIGINT}
     </update>
     <update id="updateBlogCategorys">
-        update blog_info
+        update tb_blog_info
         set blog_category_id = #{categoryId,jdbcType=INTEGER},
         blog_category_name = #{categoryName,jdbcType=VARCHAR}
         where blog_category_id in

@@ -33,6 +33,7 @@ public class ResponseHelper {
             out.print(result);
             out.flush();
         } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             out.close();
         }

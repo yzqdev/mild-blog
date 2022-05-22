@@ -16,7 +16,7 @@
       >
     </div>
     <article class="blog-content">
-      <md-editor-v3 v-model="blog.blogContent" preview-only></md-editor-v3>
+      <md-editor-v3 v-model="blog.blogContent" code-theme="atomDark" :show-code-row-number="true"     preview-only></md-editor-v3>
     </article>
 
     <div class="blog-comment" v-if="blog.enableComment">

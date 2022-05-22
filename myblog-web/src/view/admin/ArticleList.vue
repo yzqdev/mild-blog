@@ -1,7 +1,11 @@
 <template>
   <el-table v-loading="loading" :data="data" fit>
     <el-table-column prop="blogId" label="博客id"></el-table-column>
-    <el-table-column prop="blogTitle" label="博客标题"></el-table-column>
+    <el-table-column prop="blogTitle" label="博客标题">
+      <template v-slot="{row}">
+        <el-link :href="`/home/blog/${row.blogId}`" target="_blank">{{row.blogTitle}}</el-link>
+      </template>
+    </el-table-column>
     <el-table-column prop="blogCategoryName" label="博客分类">
       <template v-slot="{ row }">
         {{ row.blogCategory.categoryName }}

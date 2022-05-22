@@ -82,7 +82,7 @@
         <md-editor-v3
             v-model="articleForm.blogContent"
             height="400px"
-
+            code-theme="atomDark" :show-code-row-number="true"
             @copy-code-success="handleCopyCodeSuccess"
             @on-upload-img="handleUploadImage"
         ></md-editor-v3>

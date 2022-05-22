@@ -54,13 +54,13 @@ public class ImgServiceImpl extends ServiceImpl<ImgMapper, Img> implements ImgSe
         //创建文件
         Path destFile = Paths.get(staticDir.toString(), newFileName);
         try {
-            if (!staticDir.toFile().exists()) {
-                if (!staticDir.toFile().mkdirs()) {
-                    throw new IOException("文件夹创建失败,路径为：" + staticDir);
-                }
+            if (!Files.exists(staticDir)) {
+                Files.createDirectory(staticDir);
+
             }
-            Files.createFile(destFile);
+                Files.createFile(destFile);
                 file.transferTo(destFile);
+
 
             Img img = new Img();
             img.setImgName(destFile.toFile().getName());
@@ -68,8 +68,8 @@ public class ImgServiceImpl extends ServiceImpl<ImgMapper, Img> implements ImgSe
             img.setImgPath(destFile.toString());
             img.setUploadTime(DateUtils.getLocalCurrentDate());
             img.setImgUrl(ip + picPrefix + newFileName);
-            img.setImgSize(destFile.toFile().length());
-            img.setImgType(destFile.toFile().getName().substring(destFile.toFile().getName().indexOf(".") + 1));
+            img.setImgSize(Files.size(destFile));
+            img.setImgType(getExtension(destFile));
             img.setMd5(DigestUtils.md5DigestAsHex(new FileInputStream(destFile.toFile())));
             imgMapper.insert(img);
             return img;
@@ -79,7 +79,10 @@ public class ImgServiceImpl extends ServiceImpl<ImgMapper, Img> implements ImgSe
         }
         return new Img();
     }
+private String getExtension(Path path){
 
+         return path.getFileName().toString().substring(path.getFileName().toString().indexOf(".")+1);
+}
     @Override
     public void deleteImage(String fileName) {
 

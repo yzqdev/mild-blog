@@ -2,10 +2,8 @@ package com.site.blog.util;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Random;
 
 /**
@@ -40,10 +38,10 @@ public class UploadFileUtils {
      * @since  2019/8/24 15:29
      */
     public static String getNewFileName(String suffixName){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+       DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
         int random = new Random().nextInt(100);
         StringBuilder tempName = new StringBuilder();
-        tempName.append(sdf.format(new Date())).append(random).append(suffixName);
+        tempName.append(dateTimeFormatter.format(LocalDateTime.now())).append(random).append(suffixName);
         return tempName.toString();
     }
 }

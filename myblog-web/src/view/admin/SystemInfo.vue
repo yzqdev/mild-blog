@@ -59,6 +59,9 @@
     </el-table-column>
     <el-table-column label="操作">
       <template v-slot="{ row }">
+        <el-button type="primary" @click="editSystem(row)">
+          编辑
+        </el-button>
         <el-popconfirm
           title="确定删除吗？"
           confirmButtonText="好的"
@@ -72,9 +75,7 @@
             <el-button type="danger">删除</el-button>
           </template>
         </el-popconfirm>
-        <el-button type="primary" @click="editSystem(row)">
-          编辑
-        </el-button>
+
       </template>
     </el-table-column>
   </el-table>
