@@ -15,6 +15,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 
 /**
  * @author yzqde
@@ -94,7 +95,7 @@ public class CommentController {
      */
     @PostMapping("/comment/edit")
     public Result<String> editComment(Comment comment){
-        comment.setReplyCreateTime(DateUtils.getLocalCurrentDate());
+        comment.setReplyCreateTime(LocalDateTime.now());
         comment.setCommentBody(StringEscapeUtils.escapeHtml4(comment.getCommentBody()));
         boolean flag = commentService.updateById(comment);
         if (flag){

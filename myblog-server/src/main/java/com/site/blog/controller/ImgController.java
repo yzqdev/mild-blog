@@ -59,25 +59,31 @@ public class ImgController {
     }
 
     @DeleteMapping("/del/{id}")
-    public Result delImg(@PathVariable String id) {
+    public Result delImg(@PathVariable String id) throws IOException { Img img = imgService.getById(id);
+        Path file = Paths.get(img.getImgPath());
+        Path thumbPath=Paths.get(img.getThumbnailPath());
         try {
-            Img img = imgService.getById(id);
-            Path file = Paths.get(img.getImgPath());
-            if (file.toFile().exists()) {
+
+            if (Files.exists(file)) {
                 Files.deleteIfExists(file);
                 log.info("删除文件：{}", file);
             }
-            boolean flag = imgService.removeById(id);
-            log.info(img.getImgPath());
-
-            log.info("是否删除");
-            if (flag) {
-                return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, img);
+            if (Files.exists(thumbPath)){
+                Files.deleteIfExists(thumbPath);
+                log.info("删除文件：{}", thumbPath);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
+        } catch (Exception e) {
+
+            throw new IOException(e.getMessage());
+        }
+        boolean flag = imgService.removeById(id);
+        log.info(img.getImgPath());
+
+        log.info("是否删除");
+        if (flag) {
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, img);
+        }
 
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, null);
     }

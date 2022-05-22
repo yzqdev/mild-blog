@@ -15,10 +15,7 @@ import org.springframework.stereotype.Component;
 public class UploadProperty {
     private String fileUrl;
     private String filePrefix;
-    /**
-     * ${user.home}/.myblog/pic/
-     */
-    private String picUrl;
-    private String picPrefix;
+
+
     private String avatar;
 }

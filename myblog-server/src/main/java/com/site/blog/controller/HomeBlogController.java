@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -428,6 +429,8 @@ public class HomeBlogController {
         comment.setCommentatorIp(RequestHelper.getRequestIp());
         comment.setUserAgent(RequestHelper.getUa().getBrowser()+RequestHelper.getUa().getVersion());
         comment.setOs(RequestHelper.getUa().getOs().toString());
+        comment.setCommentCreateTime(LocalDateTime.now());
+        comment.setIsDeleted(0);
         //if (!StringUtils.hasText(ref)) {
         //    return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "非法请求");
         //}
