@@ -22,7 +22,7 @@
     <sql id="Base_Column_List">
         blog_id, blog_title, blog_sub_url, blog_preface, blog_content, blog_category_id , blog_tags, blog_status, blog_views, enable_comment, is_deleted, create_time, update_time
     </sql>
-    <select id="searchBlog" resultType="com.site.blog.model.entity.BlogInfo"> select * from my_blog_db.tb_blog_info where blog_title like "%${keyword}%"</select>
+    <select id="searchBlog" resultType="com.site.blog.model.entity.BlogInfo"> select * from  tb_blog_info where blog_title like "%${keyword}%"</select>
 
 
 </mapper>
