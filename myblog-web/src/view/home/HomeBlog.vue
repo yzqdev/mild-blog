@@ -4,53 +4,62 @@
     <div class="home-blog-head">
       <span>发表于{{ formatTime(blog.createTime) }}</span
       ><span>共有{{ blog.commentCount }}条评论</span
-    ><span>{{ blog.blogViews }}浏览</span>
+      ><span>{{ blog.blogViews }}浏览</span>
     </div>
     <div class="blog-tags">
       <el-tag
-          style="margin-left: 10px; cursor: pointer"
-          v-for="item in tags"
-          @click="gotoTag(item)"
-      >{{ item.tagName }}
-      </el-tag
-      >
+        style="margin-left: 10px; cursor: pointer"
+        v-for="item in tags"
+        @click="gotoTag(item)"
+        >{{ item.tagName }}
+      </el-tag>
     </div>
     <article class="blog-content">
-      <md-editor-v3 v-model="blog.blogContent" code-theme="atomDark" :show-code-row-number="true"     preview-only></md-editor-v3>
+      <md-editor-v3
+        v-model="blog.blogContent"
+        code-theme="atomDark"
+        :show-code-row-number="true"
+        preview-only
+      ></md-editor-v3>
     </article>
 
     <div class="blog-comment" v-if="blog.enableComment">
       <article class="blog-title">添加评论</article>
-      <el-form ref="commentForm" :model="comment" label-position="top" :rules="commentRule">
+      <el-form
+        ref="commentForm"
+        :model="comment"
+        label-position="top"
+        :rules="commentRule"
+      >
         <el-form-item prop="commentator">
           <el-input :input-style="commentInput" v-model="comment.commentator">
             <template #prepend>昵称</template>
-          </el-input
-          >
+          </el-input>
         </el-form-item>
         <el-form-item prop="email">
           <el-input
-              :input-style="commentInput"
-              type="email"
-              v-model="comment.email"
+            :input-style="commentInput"
+            type="email"
+            v-model="comment.email"
           >
             <template #prepend>邮箱</template>
-          </el-input
-          >
+          </el-input>
         </el-form-item>
         <el-form-item prop="website">
           <el-input :input-style="commentInput" v-model="comment.website">
             <template #prepend>网站地址</template>
-          </el-input
-          >
+          </el-input>
         </el-form-item>
         <article class="blog-title">评论内容</article>
         <el-form-item prop="commentBody">
           <div :class="active ? `active` : ``" style="width: 100%">
-            <md-editor-v3   v-model=" comment.commentBody" @on-upload-img="handleUploadImage"></md-editor-v3>
+            <md-editor-v3
+              v-model="comment.commentBody"
+              @on-upload-img="handleUploadImage"
+            ></md-editor-v3>
           </div>
         </el-form-item>
-        <el-button type="primary" @click="commentYou ">提交</el-button>
+        <el-button type="primary" @click="commentYou">提交</el-button>
       </el-form>
       <article class="blog-title">全部留言</article>
       <article v-if="commentList && commentList.length > 0">
@@ -59,8 +68,8 @@
             <div style="display: flex">
               <span>{{ item.commentator }}</span>
               <span style="flex: 1; text-align: right">{{
-                  formatTime(item.commentCreateTime)
-                }}</span>
+                formatTime(item.commentCreateTime)
+              }}</span>
             </div>
           </template>
           <md-editor-v3 preview-only v-model="item.commentBody"></md-editor-v3>
@@ -76,91 +85,94 @@
 </template>
 
 <script setup>
-import {getBlogById, listComments, submitComment, uploadImg} from "@/utils/apiConfig";
+import {
+  getBlogById,
+  listComments,
+  submitComment,
+  uploadImg,
+} from "@/utils/apiConfig";
 import dayjs from "dayjs";
-import {onMounted, reactive, ref, toRefs, watch} from "vue";
-import {useRoute, useRouter} from "vue-router";
-import {ElMessage} from "element-plus";
+import { onMounted, reactive, ref, toRefs, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
 
-const router = useRouter()
-const route = useRoute()
+const router = useRouter();
+const route = useRoute();
 
 let state = reactive({
-
-  commentInput: {width: "50%"},
+  commentInput: { width: "50%" },
   blog: {},
   tags: {},
-  comment: {commentator: null, email: null, commentBody: ""},
+  comment: { commentator: null, email: null, commentBody: "" },
   commentList: [],
-
-})
+});
 let commentRule = reactive({
   commentator: [
-    {required: true, message: "请输入网名", trigger: "blur"},
-    {min: 1, max: 20, message: "长度在 3 到 5 个字符", trigger: "blur"},
+    { required: true, message: "请输入网名", trigger: "blur" },
+    { min: 1, max: 20, message: "长度在 3 到 5 个字符", trigger: "blur" },
   ],
   email: [
-    { pattern: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
+    {
+      pattern: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
       require: true,
-      message: '请输入邮箱',
-      trigger: 'blur',
-
+      message: "请输入邮箱",
+      trigger: "blur",
     },
-    {min: 1, max: 20, message: "长度在 3 到 5 个字符", trigger: "blur"},
+    { min: 1, max: 20, message: "长度在 3 到 5 个字符", trigger: "blur" },
   ],
-  commentBody: [{required: true, message: "请输入评论内容"}],
-})
-let active = ref(false)
-let loading = ref(true)
-let {blog, tags, comment, commentList, commentInput} = toRefs(state)
-let commentForm = ref(null)
+  commentBody: [{ required: true, message: "请输入评论内容" }],
+});
+let active = ref(false);
+let loading = ref(true);
+let { blog, tags, comment, commentList, commentInput } = toRefs(state);
+let commentForm = ref(null);
 onMounted(async () => {
   let id = route.params.id;
-  const {data} = await getBlogById(id);
+  const { data } = await getBlogById(id);
 
   blog.value = data.blogDetailVO;
   tags.value = data.tagList;
 
   getComments();
-})
+});
 
-function handleUploadImage( files,callback) {
+function handleUploadImage(files, callback) {
   console.log(files);
   let formData = new FormData();
-  formData.append('img', files[0])
+  formData.append("img", files[0]);
   uploadImg(formData).then((res) => {
-    console.log(res)
-    callback(  [res.url] );
-  })
-
+    console.log(res);
+    callback([res.url]);
+  });
 }
 
-function commentYou( ) {
+function commentYou() {
   if (!state.comment.commentBody) {
-
     ElMessage({
-      message: '请输入评论内容!',
+      message: "请输入评论内容!",
       grouping: true,
-      type: 'error',
-    })
+      type: "error",
+    });
 
     return;
   }
   state.comment.blogId = state.blog.blogId;
   commentForm.value.validate((valid) => {
-    console.log(state.comment)
-    console.log(`%c看看是大幅度蓝山咖啡`,`color:red;font-size:16px;background:transparent`)
+    console.log(state.comment);
+    console.log(
+      `%c看看是大幅度蓝山咖啡`,
+      `color:red;font-size:16px;background:transparent`
+    );
     if (valid) {
       submitComment(state.comment).then((data) => {
-        ElMessage({message: "成功", type: 'success'})
-        getComments()
+        ElMessage({ message: "成功", type: "success" });
+        getComments();
       });
     }
-  })
+  });
 }
 
 function formatTime(time) {
-
   return dayjs(new Date(time)).format("YYYY-MM-DD HH:mm:ss");
 }
 
@@ -169,20 +181,20 @@ function gotoTag(item) {
 }
 
 function getComments() {
-  listComments({page: 1, limit: 30, blogId: blog.value.blogId}).then(
-      (res) => {
-        loading.value = false;
-        commentList.value = res.data;
-      }
+  listComments({ page: 1, limit: 30, blogId: blog.value.blogId }).then(
+    (res) => {
+      loading.value = false;
+      commentList.value = res.data;
+    }
   );
 }
 
-
-watch(() => comment.value, (val, preVal) => {
-  active.value = !val.commentBody;
-})
-
-
+watch(
+  () => comment.value,
+  (val, preVal) => {
+    active.value = !val.commentBody;
+  }
+);
 </script>
 
 <style lang="scss" scoped>

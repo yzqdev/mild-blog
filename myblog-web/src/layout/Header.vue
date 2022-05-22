@@ -1,25 +1,24 @@
 <template>
-  <header class="header"><el-link href="/home" target="_blank" style="margin-left: 0.5rem;" v-html="notice"></el-link>
+  <header class="header">
+    <el-link
+      href="/home"
+      target="_blank"
+      style="margin-left: 0.5rem"
+      v-html="notice"
+    ></el-link>
     <el-dropdown class="el-dropdown-link">
-       <span class='el-dropdown-link '>
-                <el-avatar :size='30'
-                           :src='user.avatar'/>
-                <el-button text class='ml-2'>{{ user.loginUserName}}<el-icon> <arrow-down/></el-icon></el-button>
-                
-            </span>
-
+      <span class="el-dropdown-link">
+        <el-avatar :size="30" :src="user.avatar" />
+        <el-button text class="ml-2"
+          >{{ user.loginUserName }}<el-icon> <arrow-down /></el-icon
+        ></el-button>
+      </span>
 
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item @click="gotoUserInfo"
-          >账户信息
-          </el-dropdown-item
-          >
+          <el-dropdown-item @click="gotoUserInfo">账户信息 </el-dropdown-item>
           <el-dropdown-item>系统信息</el-dropdown-item>
-          <el-dropdown-item divided @click="logout"
-          >退出登录
-          </el-dropdown-item
-          >
+          <el-dropdown-item divided @click="logout">退出登录 </el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -39,7 +38,7 @@ let user = $ref({});
 
 function gotoRoute(name) {
   router.push({
-    name: name
+    name: name,
   });
 }
 
@@ -54,7 +53,10 @@ function logout() {
 
 function getUser() {
   getUserInfo().then((res) => {
-    console.log(`%c用户信息`, `color:red;font-size:16px;background:transparent`);
+    console.log(
+      `%c用户信息`,
+      `color:red;font-size:16px;background:transparent`
+    );
     console.log(res.data);
     if (res.success) {
       user = res.data.user;
@@ -63,7 +65,6 @@ function getUser() {
     }
   });
 }
-
 
 onBeforeMount(() => {
   getUser();

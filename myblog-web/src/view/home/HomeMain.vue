@@ -4,7 +4,9 @@
     <PassageList :list="passages" :loading="loading"></PassageList>
     <div class="sidebar">
       <el-card
-        ><template #header>搜索文章<strong>(根据标题和内容搜索)</strong></template>
+        ><template #header
+          >搜索文章<strong>(根据标题和内容搜索)</strong></template
+        >
         <el-input
           type="text"
           placeholder="搜索"
@@ -12,10 +14,7 @@
           @keyup.enter="search"
         >
           <template #append>
-            <el-button
-              :icon="Search"
-              @click="search"
-            ></el-button> </template
+            <el-button :icon="Search" @click="search"></el-button> </template
         ></el-input>
       </el-card>
       <el-card style="margin: 20px 0"
@@ -51,9 +50,9 @@ import {
   Message,
   Star,
   Delete,
-} from '@element-plus/icons-vue'
+} from "@element-plus/icons-vue";
 const msg = "aaaaaasdda";
-import {onBeforeMount, onMounted, reactive, ref} from "vue";
+import { onBeforeMount, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import PassageList from "@/components/PassageList.vue";
 let loading = ref(true);
@@ -61,7 +60,7 @@ const color = ref("red");
 let passages = ref([]);
 let newBlog = ref([]);
 let hotTag = ref([]);
-let state=reactive({name:''})
+let state = reactive({ name: "" });
 const router = useRouter();
 const route = useRoute();
 function gotoRoute(item) {

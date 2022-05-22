@@ -15,8 +15,8 @@
 
 <script setup>
 import { getConfigs } from "@/utils/apiConfig";
-import {onBeforeMount, reactive, toRefs} from "vue";
-let state=reactive({
+import { onBeforeMount, reactive, toRefs } from "vue";
+let state = reactive({
   navs: [
     { text: "主页", id: 1 },
     { text: "友情链接", id: 2 },
@@ -24,15 +24,15 @@ let state=reactive({
   ],
   activeRoute: 1,
   config: {},
-})
-let {navs,activeRoute,config}=toRefs(state)
-function  gotoRoute(item) {
+});
+let { navs, activeRoute, config } = toRefs(state);
+function gotoRoute(item) {
   state.activeRoute = item.id;
 }
 onBeforeMount(async () => {
   let { data } = await getConfigs();
   state.config = data;
-})
+});
 </script>
 
 <style lang="scss" scoped>

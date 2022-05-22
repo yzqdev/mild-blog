@@ -9,25 +9,25 @@
 </template>
 
 <script>
-import types from './type'
+import types from "./type";
 
 export default {
-  name: 'Exception',
+  name: "Exception",
   props: {
     type: {
       type: String,
-      default: '404'
-    }
+      default: "404",
+    },
   },
   data() {
     return {
-      config: types
-    }
+      config: types,
+    };
   },
   methods: {
     handleToHome() {
-      this.$router.push({ name: 'homeMain' })
-    }
-  }
-}
+      this.$router.push({ name: "homeMain" });
+    },
+  },
+};
 </script>

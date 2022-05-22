@@ -16,36 +16,28 @@
       :collapse-transition="false"
       @close="handleClose"
       ><el-menu-item index="/admin/welcome">
-      <template #title> <el-icon ><home-filled /></el-icon>首页</template>
-    </el-menu-item>
+        <template #title>
+          <el-icon><home-filled /></el-icon>首页</template
+        >
+      </el-menu-item>
       <el-sub-menu index="2">
-        <template #title> <el-icon><Menu/></el-icon> 文章管理</template>
-        <el-menu-item index="/admin/article-edit">
-          文章编辑
-        </el-menu-item>
-        <el-menu-item index="/admin/article-list">
-          文章列表
-        </el-menu-item>
-        <el-menu-item index="/admin/comment-list">
-          评论列表
-        </el-menu-item>
+        <template #title>
+          <el-icon><Menu /></el-icon> 文章管理</template
+        >
+        <el-menu-item index="/admin/article-edit"> 文章编辑 </el-menu-item>
+        <el-menu-item index="/admin/article-list"> 文章列表 </el-menu-item>
+        <el-menu-item index="/admin/comment-list"> 评论列表 </el-menu-item>
         <el-menu-item index="/admin/tag-list"> 标签列表</el-menu-item>
-        <el-menu-item index="/admin/category-list">
-          分类列表
-        </el-menu-item>
-        <el-menu-item index="/admin/img-list">
-          图片列表
-        </el-menu-item>
+        <el-menu-item index="/admin/category-list"> 分类列表 </el-menu-item>
+        <el-menu-item index="/admin/img-list"> 图片列表 </el-menu-item>
       </el-sub-menu>
 
       <el-sub-menu index="4">
-        <template #title> <el-icon><setting /></el-icon> 系统管理</template>
-        <el-menu-item index="/admin/system-info">
-          系统信息
-        </el-menu-item>
-        <el-menu-item index="/admin/users">
-          用户列表
-        </el-menu-item>
+        <template #title>
+          <el-icon><setting /></el-icon> 系统管理</template
+        >
+        <el-menu-item index="/admin/system-info"> 系统信息 </el-menu-item>
+        <el-menu-item index="/admin/users"> 用户列表 </el-menu-item>
         <el-menu-item index="/admin/link-list"> 链接列表</el-menu-item>
       </el-sub-menu>
     </el-menu>
@@ -58,7 +50,9 @@ import {
   Document,
   Menu as IconMenu,
   Location,
-  Setting, HomeFilled, Menu
+  Setting,
+  HomeFilled,
+  Menu,
 } from "@element-plus/icons-vue";
 
 import { useStore } from "vuex";
@@ -92,9 +86,9 @@ watch(
 
 <style lang="scss" scoped>
 .sidebar {
-   width: 15rem;
+  width: 15rem;
   background-color: #001529;
-  height:100%;
+  height: 100%;
   .logo {
     position: sticky;
     top: 0;
@@ -109,28 +103,24 @@ watch(
     line-height: 1;
     text-decoration: none;
     background: #001529;
-    color:white;
+    color: white;
     .logo-icon {
       width: 2rem;
       height: 2rem;
     }
   }
-  :deep(.el-menu){
-   .el-menu{
-       background-color: #000c17;
-   }
-    .el-menu-item.is-active{
+  :deep(.el-menu) {
+    .el-menu {
+      background-color: #000c17;
+    }
+    .el-menu-item.is-active {
       background: var(--el-color-primary);
-      color:white;
+      color: white;
     }
   }
 }
 
-
 .side-menu {
   height: 90vh;
 }
-
-
-
 </style>

@@ -2,18 +2,13 @@
   <el-button type="primary" @click="addDialogShow">{{ dialogTxt }}</el-button>
   <el-dialog width="30%" v-model="addDialogVisible" title="添加系统信息">
     <el-form :model="addForm">
-      <el-form-item prop="configField" label="字段名"
-      >
+      <el-form-item prop="configField" label="字段名">
         <el-input v-model="addForm.configField"></el-input>
-      </el-form-item
-      >
-      <el-form-item prop="configName" label="参数名"
-      >
+      </el-form-item>
+      <el-form-item prop="configName" label="参数名">
         <el-input v-model="addForm.configName"></el-input>
-      </el-form-item
-      >
-      <el-form-item prop="configValue" label="参数值"
-      >
+      </el-form-item>
+      <el-form-item prop="configValue" label="参数值">
         <el-input v-model="addForm.configValue"></el-input>
       </el-form-item>
     </el-form>
@@ -25,33 +20,22 @@
       </span>
     </template>
   </el-dialog>
-  <el-table
-    :data="tableData"
-    fit
-  >
+  <el-table :data="tableData" fit>
     <el-table-column prop="configField" label="字段名"></el-table-column>
     <el-table-column prop="configName" label="参数名">
       <template v-slot="scope"
-      ><span
-
-      >
-          {{scope.row.configName }}
-
+        ><span>
+          {{ scope.row.configName }}
         </span>
       </template>
     </el-table-column>
     <el-table-column prop="configValue" label="参数值">
       <template v-slot="scope"
-      ><span
-
-      >
-       {{ scope.row.configValue }}
-
-
+        ><span>
+          {{ scope.row.configValue }}
         </span>
       </template>
-    </el-table-column
-    >
+    </el-table-column>
     <el-table-column label="更新时间" prop="updateTime">
       <template v-slot="{ row }">
         {{ formatTime(row.updateTime) }}
@@ -59,9 +43,7 @@
     </el-table-column>
     <el-table-column label="操作">
       <template v-slot="{ row }">
-        <el-button type="primary" @click="editSystem(row)">
-          编辑
-        </el-button>
+        <el-button type="primary" @click="editSystem(row)"> 编辑 </el-button>
         <el-popconfirm
           title="确定删除吗？"
           confirmButtonText="好的"
@@ -75,7 +57,6 @@
             <el-button type="danger">删除</el-button>
           </template>
         </el-popconfirm>
-
       </template>
     </el-table-column>
   </el-table>
@@ -87,7 +68,7 @@ import {
   addSystemInfo,
   delSystemInfo,
   editSystemInfo,
-  getSystemInfo
+  getSystemInfo,
 } from "@/utils/apiConfig";
 import dayjs from "dayjs";
 import { ElMessage } from "element-plus";
@@ -96,27 +77,25 @@ let dialogTxt = $ref("添加系统信息");
 let tableData = $ref();
 let addDialogVisible = $ref(false);
 let addForm = $ref({
-  id:null,
+  id: null,
   configName: "name",
   configField: "field",
-  configValue: "value"
+  configValue: "value",
 });
 
 function getData() {
   getSystemInfo().then(({ data }) => {
     console.log(data);
-     tableData=data
+    tableData = data;
   });
 }
 
-
-function editSystem(row){
-  addForm=row
-addDialogVisible=true
+function editSystem(row) {
+  addForm = row;
+  addDialogVisible = true;
 }
-function changeConfigName(  row) {
-  editSystemInfo(row).then(({ data }) => {
-  });
+function changeConfigName(row) {
+  editSystemInfo(row).then(({ data }) => {});
 }
 
 function formatTime(time) {
@@ -129,7 +108,7 @@ function deleteRow(row) {
     getData();
     ElMessage({
       type: "success",
-      message: "成功"
+      message: "成功",
     });
   });
 }
@@ -140,24 +119,21 @@ function addDialogShow() {
 
 async function confirmAdd() {
   if (addForm.id) {
-   await changeConfigName(addForm)
-  }else {
-   await addSystemInfo(addForm);
+    await changeConfigName(addForm);
+  } else {
+    await addSystemInfo(addForm);
   }
   getData();
   ElMessage({
     type: "success",
-    message: "成功"
+    message: "成功",
   });
   addDialogVisible = false;
-
 }
 
 onMounted(() => {
   getData();
 });
-
-
 </script>
 
 <style scoped></style>

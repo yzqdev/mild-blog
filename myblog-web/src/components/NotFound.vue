@@ -3,7 +3,5 @@
 </template>
 
 <script setup>
-import ExceptionPage from './ExceptionPage.vue'
-
-
+import ExceptionPage from "./ExceptionPage.vue";
 </script>

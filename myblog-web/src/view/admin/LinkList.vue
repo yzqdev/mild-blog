@@ -118,10 +118,10 @@ export default defineComponent({
       };
       clearLink(row.linkId).then((res) => {
         if (res.success) {
-          this.getData()
+          this.getData();
           this.$message.success("成功");
-        }else {
-          this.$message.error(res.msg)
+        } else {
+          this.$message.error(res.msg);
         }
       });
     },
