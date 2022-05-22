@@ -12,60 +12,16 @@
  Target Server Version : 140002
  File Encoding         : 65001
 
- Date: 14/05/2022 20:47:30
+ Date: 23/05/2022 02:00:16
 */
 
-
--- ----------------------------
--- Sequence structure for blog_info_seq
--- ----------------------------
-DROP SEQUENCE IF EXISTS "public"."blog_info_seq";
-CREATE SEQUENCE "public"."blog_info_seq" 
-INCREMENT 1
-MINVALUE  1
-MAXVALUE 9223372036854775807
-START 60
-CACHE 1;
-
--- ----------------------------
--- Sequence structure for blog_tag
--- ----------------------------
-DROP SEQUENCE IF EXISTS "public"."blog_tag";
-CREATE SEQUENCE "public"."blog_tag" 
-INCREMENT 1
-MINVALUE  1
-MAXVALUE 9223372036854775807
-START 482
-CACHE 1;
-
--- ----------------------------
--- Sequence structure for sequence_name
--- ----------------------------
-DROP SEQUENCE IF EXISTS "public"."sequence_name";
-CREATE SEQUENCE "public"."sequence_name" 
-INCREMENT 1
-MINVALUE  1
-MAXVALUE 9223372036854775807
-START 48
-CACHE 1;
-
--- ----------------------------
--- Sequence structure for upms_log_id_seq
--- ----------------------------
-DROP SEQUENCE IF EXISTS "public"."upms_log_id_seq";
-CREATE SEQUENCE "public"."upms_log_id_seq" 
-INCREMENT 1
-MINVALUE  1
-MAXVALUE 9223372036854775807
-START 1
-CACHE 1;
 
 -- ----------------------------
 -- Table structure for tb_admin_user
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."tb_admin_user";
 CREATE TABLE "public"."tb_admin_user" (
-  "admin_user_id" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
+  "id" varchar(32) COLLATE "pg_catalog"."default" NOT NULL,
   "login_user_name" varchar(50) COLLATE "pg_catalog"."default" NOT NULL,
   "login_password" varchar(50) COLLATE "pg_catalog"."default" NOT NULL,
   "nick_name" varchar(50) COLLATE "pg_catalog"."default",
@@ -74,7 +30,7 @@ CREATE TABLE "public"."tb_admin_user" (
   "avatar" varchar(255) COLLATE "pg_catalog"."default"
 )
 ;
-COMMENT ON COLUMN "public"."tb_admin_user"."admin_user_id" IS '管理员id';
+COMMENT ON COLUMN "public"."tb_admin_user"."id" IS '管理员id';
 COMMENT ON COLUMN "public"."tb_admin_user"."login_user_name" IS '管理员登陆名称';
 COMMENT ON COLUMN "public"."tb_admin_user"."login_password" IS '管理员登陆密码';
 COMMENT ON COLUMN "public"."tb_admin_user"."nick_name" IS '管理员显示昵称';
@@ -82,11 +38,6 @@ COMMENT ON COLUMN "public"."tb_admin_user"."locked" IS '是否锁定 0未锁定 
 COMMENT ON COLUMN "public"."tb_admin_user"."role" IS '0普通用户,1管理员';
 COMMENT ON COLUMN "public"."tb_admin_user"."avatar" IS '用户头像';
 COMMENT ON TABLE "public"."tb_admin_user" IS '后台管理员信息表';
-
--- ----------------------------
--- Records of tb_admin_user
--- ----------------------------
-INSERT INTO "public"."tb_admin_user" VALUES ('4', 'admin', 'e10adc3949ba59abbe56e057f20f883e', 'admin', 0, 1, 'https://i0.hdslb.com/bfs/album/0a75a254e639e7ce606099e1d6c2b75582dc4e8a.jpg');
 
 -- ----------------------------
 -- Table structure for tb_blog_category
@@ -99,12 +50,6 @@ CREATE TABLE "public"."tb_blog_category" (
   "create_time" timestamp(6)
 )
 ;
-
--- ----------------------------
--- Records of tb_blog_category
--- ----------------------------
-INSERT INTO "public"."tb_blog_category" VALUES ('1525440349486014466', '1525440349288882178', '33', '2022-05-14 19:38:15.292');
-INSERT INTO "public"."tb_blog_category" VALUES ('1525445797459091457', '1525440349288882200', '33', '2022-05-14 19:59:54.187');
 
 -- ----------------------------
 -- Table structure for tb_blog_config
@@ -127,18 +72,6 @@ COMMENT ON COLUMN "public"."tb_blog_config"."update_time" IS '修改时间';
 COMMENT ON COLUMN "public"."tb_blog_config"."id" IS 'id';
 
 -- ----------------------------
--- Records of tb_blog_config
--- ----------------------------
-INSERT INTO "public"."tb_blog_config" VALUES ('sysAuthor', '开发者', '飞雪', '2019-08-24 20:33:17', '2019-08-30 03:27:35', '1');
-INSERT INTO "public"."tb_blog_config" VALUES ('sysAuthorImg', '开发者头像', 'http://localhost/authorImg/20190906_18162846.jpg', '2019-08-24 20:33:14', '2019-08-24 21:56:23', '2');
-INSERT INTO "public"."tb_blog_config" VALUES ('sysEmail', '开发者邮箱', '1320291471@qq.com', '2019-08-24 14:06:48', '2019-08-24 14:06:51', '4');
-INSERT INTO "public"."tb_blog_config" VALUES ('sysUrl', '服务器url', 'localhost:80', '2019-08-24 14:03:23', '2019-08-24 14:03:26', '6');
-INSERT INTO "public"."tb_blog_config" VALUES ('sysVersion', '当前版本号', '1.1.0', '2019-08-24 20:33:23', '2019-08-24 11:58:06', '7');
-INSERT INTO "public"."tb_blog_config" VALUES ('websiteName', '博客名', '七月飞雪', '2018-11-11 20:33:01', '2021-08-10 09:54:45', '8');
-INSERT INTO "public"."tb_blog_config" VALUES ('sysCopyRight', '版权所', 'yzqdev', '2019-08-24 20:33:31', '2022-05-14 20:42:11.383', '3');
-INSERT INTO "public"."tb_blog_config" VALUES ('sysUpdateTime', '最后修改时间', '2022-03-24 20:33:23', '2019-08-24 20:33:20', '2022-05-14 20:43:17.239', '5');
-
--- ----------------------------
 -- Table structure for tb_blog_info
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."tb_blog_info";
@@ -152,8 +85,8 @@ CREATE TABLE "public"."tb_blog_info" (
   "blog_views" int8,
   "enable_comment" int2 NOT NULL,
   "is_deleted" int2 NOT NULL,
-  "create_time" timestamp(6) NOT NULL,
-  "update_time" timestamp(6)
+  "create_time" timestamptz(6) NOT NULL,
+  "update_time" timestamptz(6)
 )
 ;
 COMMENT ON COLUMN "public"."tb_blog_info"."blog_id" IS '博客表主键id';
@@ -168,10 +101,6 @@ COMMENT ON COLUMN "public"."tb_blog_info"."is_deleted" IS '是否删除 0=否 1=
 COMMENT ON COLUMN "public"."tb_blog_info"."create_time" IS '添加时间';
 COMMENT ON COLUMN "public"."tb_blog_info"."update_time" IS '修改时间';
 COMMENT ON TABLE "public"."tb_blog_info" IS '博客信息表';
-
--- ----------------------------
--- Records of tb_blog_info
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for tb_blog_tag
@@ -189,10 +118,6 @@ COMMENT ON COLUMN "public"."tb_blog_tag"."blog_id" IS '博客id';
 COMMENT ON COLUMN "public"."tb_blog_tag"."tag_id" IS '标签id';
 COMMENT ON COLUMN "public"."tb_blog_tag"."create_time" IS '添加时间';
 COMMENT ON TABLE "public"."tb_blog_tag" IS '博客跟标签的关系表';
-
--- ----------------------------
--- Records of tb_blog_tag
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for tb_category
@@ -214,13 +139,6 @@ COMMENT ON COLUMN "public"."tb_category"."category_rank" IS '分类的排序值 
 COMMENT ON COLUMN "public"."tb_category"."is_deleted" IS '是否删除 0=否 1=是';
 COMMENT ON COLUMN "public"."tb_category"."create_time" IS '创建时间';
 COMMENT ON TABLE "public"."tb_category" IS '博客分类';
-
--- ----------------------------
--- Records of tb_category
--- ----------------------------
-INSERT INTO "public"."tb_category" VALUES ('1', '默认分类', '', 1, 0, '2019-08-30 15:07:02');
-INSERT INTO "public"."tb_category" VALUES ('22', 'Java进阶', '', 22, 0, '2018-11-12 10:42:25');
-INSERT INTO "public"."tb_category" VALUES ('33', '前端', NULL, 1, 0, '2021-08-26 13:23:23');
 
 -- ----------------------------
 -- Table structure for tb_comment
@@ -260,10 +178,6 @@ COMMENT ON COLUMN "public"."tb_comment"."os" IS '用户的系统';
 COMMENT ON TABLE "public"."tb_comment" IS '评论信息表';
 
 -- ----------------------------
--- Records of tb_comment
--- ----------------------------
-
--- ----------------------------
 -- Table structure for tb_img
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."tb_img";
@@ -274,14 +188,12 @@ CREATE TABLE "public"."tb_img" (
   "img_path" varchar(255) COLLATE "pg_catalog"."default",
   "img_url" varchar(255) COLLATE "pg_catalog"."default",
   "img_type" varchar(255) COLLATE "pg_catalog"."default",
-  "md5" varchar(255) COLLATE "pg_catalog"."default",
-  "upload_time" timestamp(6)
+  "media_type" varchar(255) COLLATE "pg_catalog"."default",
+  "upload_time" timestamp(6),
+  "thumbnail_path" varchar(255) COLLATE "pg_catalog"."default",
+  "md5" varchar(255) COLLATE "pg_catalog"."default"
 )
 ;
-
--- ----------------------------
--- Records of tb_img
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for tb_link
@@ -310,13 +222,6 @@ COMMENT ON COLUMN "public"."tb_link"."create_time" IS '添加时间';
 COMMENT ON TABLE "public"."tb_link" IS '友情链接表';
 
 -- ----------------------------
--- Records of tb_link
--- ----------------------------
-INSERT INTO "public"."tb_link" VALUES ('1', 0, '百度', 'https://www.baidu.com', '这是百度', 0, 1, '2021-08-25 20:17:06', '2021-08-25 20:17:06');
-INSERT INTO "public"."tb_link" VALUES ('2', 0, 'github', 'https://github.com', '这是github', 0, 1, '2019-09-02 21:24:44', NULL);
-INSERT INTO "public"."tb_link" VALUES ('4', 1, '饿了吗', 'https://element-plus.gitee.io/#/zh-CN/component/link#tu-biao', '222222', 123, 0, '2019-09-03 14:47:21', NULL);
-
--- ----------------------------
 -- Table structure for tb_tag
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."tb_tag";
@@ -334,36 +239,9 @@ COMMENT ON COLUMN "public"."tb_tag"."create_time" IS '创建时间';
 COMMENT ON TABLE "public"."tb_tag" IS '标签表';
 
 -- ----------------------------
--- Records of tb_tag
--- ----------------------------
-INSERT INTO "public"."tb_tag" VALUES ('1', '默认tag', 0, '2021-08-26 13:05:01');
-INSERT INTO "public"."tb_tag" VALUES ('152', '333', 0, '2021-10-30 09:05:04');
-INSERT INTO "public"."tb_tag" VALUES ('154', '444', 0, '2021-10-30 09:06:53');
-
--- ----------------------------
--- Alter sequences owned by
--- ----------------------------
-SELECT setval('"public"."blog_info_seq"', 60, true);
-
--- ----------------------------
--- Alter sequences owned by
--- ----------------------------
-SELECT setval('"public"."blog_tag"', 492, true);
-
--- ----------------------------
--- Alter sequences owned by
--- ----------------------------
-SELECT setval('"public"."sequence_name"', 49, true);
-
--- ----------------------------
--- Alter sequences owned by
--- ----------------------------
-SELECT setval('"public"."upms_log_id_seq"', 3, true);
-
--- ----------------------------
 -- Primary Key structure for table tb_admin_user
 -- ----------------------------
-ALTER TABLE "public"."tb_admin_user" ADD CONSTRAINT "tb_admin_user_pkey" PRIMARY KEY ("admin_user_id", "login_user_name");
+ALTER TABLE "public"."tb_admin_user" ADD CONSTRAINT "tb_admin_user_pkey" PRIMARY KEY ("id", "login_user_name");
 
 -- ----------------------------
 -- Primary Key structure for table tb_blog_category

@@ -1,12 +1,12 @@
 <template>
   <div>
-    <el-button type="primary" @click="showUploadDialog">上传</el-button>
-    <el-dialog v-model="uploadDialogVisible" @close="closeUpload">
+    <el-button type="primary" @click="showUploadDialog">上传<el-icon><upload /></el-icon></el-button>
+    <el-dialog title="上传文件" v-model="uploadDialogVisible" @close="closeUpload">
       <file-pond
         name="img"
         ref="pond"
         label-idle="点击选择文件或者拖动文件到这里"
-         :allow-multiple="true"
+        :allow-multiple="true"
         accepted-file-types="image/jpeg, image/png"
         :server="server"
         v-bind:files="myFiles"
@@ -21,17 +21,73 @@
         v-on:init="handleFilePondInit"
       />
     </el-dialog>
+    <el-dialog class="detail-dialog" title="图片详情" v-model="detailDialogVisible">
+
+      <el-row>
+        <el-col :span="9">
+          <el-image
+            preview-teleported
+
+            :src="getImgUrl(detailImg.imgUrl)"
+          />
+        </el-col>
+        <el-col :span="15">
+          <div class="detail-wrap">
+            <article class="detail-list">
+              <h4 class="detail-h4">文件名:</h4>
+              <div class="detail-content">{{ detailImg.imgName }}</div>
+
+            </article>
+            <article class="detail-list">
+              <h4 class="detail-h4">文件类型:</h4>
+              <div class="detail-content">{{ detailImg.mediaType }}</div>
+
+            </article>
+            <article class="detail-list">
+              <h4 class="detail-h4">文件大小:</h4>
+              <div class="detail-content">{{ convertSize(detailImg.imgSize) }}</div>
+
+            </article>
+            <article class="detail-list">
+              <h4 class="detail-h4">文件md5:</h4>
+              <div class="detail-content">{{ detailImg.md5}}</div>
+
+            </article>
+            <article class="detail-list">
+              <h4 class="detail-h4">文件上传时间:</h4>
+              <div class="detail-content">{{  formatTime(detailImg.uploadTime)}}</div>
+
+            </article>
+            <article class="detail-list">
+              <h4 class="detail-h4">文件路径:<el-icon :size="16" @click="copyImgUrl" color="cyan" style="cursor: pointer;margin-left: 1rem;"> <copy-document /></el-icon></h4>
+              <div class="detail-content">{{  getImgUrl(detailImg.imgUrl) }}</div>
+
+            </article>  <article class="detail-list">
+              <h4 class="detail-h4">markdown格式:<el-icon :size="16" @click="copyMarkdown" color="cyan" style="cursor: pointer;margin-left: 1rem;"> <copy-document /></el-icon></h4>
+              <div class="detail-content">{{  `![img](${getImgUrl(detailImg.imgUrl)})` }}</div>
+
+            </article>
+          </div>
+        </el-col>
+      </el-row>
+    </el-dialog>
     <el-table :data="Imgs" fit>
-      <el-table-column prop="imgName" label="图片名称"></el-table-column>
+      <el-table-column prop="imgName" label="图片名称">
+        <template v-slot="{row}">
+          <span @click="detailDialogShow(row)">{{ row.imgName }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="imgUrl" label="图片url"></el-table-column>
       <el-table-column prop="imgUrl" width="100" label="缩略图">
         <template v-slot="{ row }"
-          ><el-image
+        >
+          <el-image
             :preview-src-list="[getImgUrl(row.imgUrl)]"
             preview-teleported
             style="height: 30px"
             :src="getImgUrl(row.imgUrl)"
-        /></template>
+          />
+        </template>
       </el-table-column>
       <el-table-column prop="imgSize" width="100" label="图片大小">
         <template v-slot="{ row }">
@@ -42,8 +98,9 @@
 
       <el-table-column prop="uploadTime" label="上传时间">
         <template v-slot="{ row }">{{
-          $dayjs(row.uploadTime).format("YYYY-MM-DD HH:mm:ss")
-        }}</template>
+            $dayjs(row.uploadTime).format("YYYY-MM-DD HH:mm:ss")
+          }}
+        </template>
       </el-table-column>
 
       <el-table-column label="操作">
@@ -59,8 +116,10 @@
           >
             <template #reference>
               <el-button type="danger">删除</el-button>
+
             </template>
           </el-popconfirm>
+          <el-button type="primary" @click="detailDialogShow(row)">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -69,8 +128,9 @@
 
 <script setup>
 import { baseUrl, delImg, getImgs, uploadUrl } from "@/utils/apiConfig";
-import { convertSize } from "@/utils/utils";
-
+import { convertSize,formatTime } from "@/utils/utils";
+import { useClipboard, usePermission } from '@vueuse/core'
+const { text, isSupported,copied, copy } = useClipboard()
 import vueFilePond from "vue-filepond";
 
 // Import FilePond styles
@@ -85,42 +145,74 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css
 // Import image preview and file type validation plugins
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-
+import "element-plus/theme-chalk/el-message.css"
 // Create component
 const FilePond = vueFilePond(
   FilePondPluginFileValidateType,
   FilePondPluginImagePreview
 );
 import { computed, onBeforeMount, reactive, ref, toRefs } from "vue";
+import { CopyDocument, Upload } from "@element-plus/icons-vue";
+import { ElMessage } from "element-plus";
+
 let state = reactive({
-  Imgs: [],
+  Imgs: []
 });
-let pond =ref()
-let myFiles=$ref([])
-let server=$ref(uploadUrl)
-let uploadDialogVisible=$ref(false)
+let pond = ref();
+let myFiles = $ref([]);
+let detailImg = $ref();
+let server = $ref(uploadUrl);
+let uploadDialogVisible = $ref(false);
+let detailDialogVisible = $ref(false);
 let { Imgs } = toRefs(state);
 onBeforeMount(() => {
   getList();
 });
-function handleFilePondInit(){
+
+function handleFilePondInit() {
 
 }
-function getImgUrl(url){
-  return baseUrl+"/"+ url
+
+function detailDialogShow(row) {
+  detailImg = row;
+  detailDialogVisible = true;
 }
+function copyMarkdown() {
+
+  copy(`![img](${getImgUrl(detailImg.imgUrl)})`).then(() => {
+      ElMessage({
+        type:'success',
+        message:"复制markdown成功"
+      })
+  })
+
+}
+function copyImgUrl(){
+  copy(getImgUrl(detailImg.imgUrl))
+  ElMessage({
+    type:'success',
+    message:"复制路径成功"
+  })
+}
+function getImgUrl(url) {
+  return baseUrl + "/" + url;
+}
+
 function getList() {
   getImgs().then(({ data }) => {
     state.Imgs = data;
   });
 }
+
 function closeUpload() {
-  pond.value.removeFiles()
-  getList()
+  pond.value.removeFiles();
+  getList();
 }
-function showUploadDialog(){
-uploadDialogVisible=true
+
+function showUploadDialog() {
+  uploadDialogVisible = true;
 }
+
 function deleteRow(row) {
   delImg(row.id).then(({ data }) => {
     console.log(data);
@@ -129,4 +221,33 @@ function deleteRow(row) {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+:deep(.el-dialog) {
+  .detail-wrap {
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    .detail-list {
+      padding: 12px 0;
+      border-bottom: 1px solid #e8e8e8;
+
+      .detail-h4 {
+        margin: 4px auto;
+        color: rgba(0, 0, 0, .65);
+        font-size: 14px;
+        line-height: 22px;
+      }
+
+      .detail-content {
+        color: rgba(0, 0, 0, .45);
+        font-size: 14px;
+        line-height: 22px;
+      }
+    }
+  }
+}
+
+</style>

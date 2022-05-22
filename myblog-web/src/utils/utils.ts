@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export function convertSize(limit: number) {
   let size = "";
   if (limit < 0.1 * 1024) {
@@ -22,4 +24,7 @@ export function convertSize(limit: number) {
     return sizestr.substring(0, len) + sizestr.substr(len + 3, 2);
   }
   return sizestr;
+}
+export function formatTime(time:string){
+  return dayjs(time).format("YYYY-MM-DD HH:mm:ss")
 }
