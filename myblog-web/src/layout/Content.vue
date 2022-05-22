@@ -1,10 +1,8 @@
 <template>
   <el-main class="content">
-
     <div class="wrap">
-      <router-view/>
+      <router-view />
     </div>
-
   </el-main>
 </template>
 <style lang="scss" scoped>

@@ -55,7 +55,7 @@
 import { onMounted, reactive, ref } from "vue";
 import { addCateApi, clearCateApi, getCatePaging } from "@/utils/apiConfig";
 let cateData = ref([]);
-let addFormRef=ref(null)
+let addFormRef = ref(null);
 let addCateRules = ref({
   categoryName: [{ required: true, message: "请输入名称" }],
   categoryRank: [{ required: true, message: "请输入排序" }],
@@ -72,9 +72,9 @@ function addCate() {
   addDialogVisible.value = true;
 }
 function confirmAdd() {
-  console.log(addFormRef.value)
-  addFormRef.value.validate((valid ) => {
-    if (valid ) {
+  console.log(addFormRef.value);
+  addFormRef.value.validate((valid) => {
+    if (valid) {
       addCateApi(addForm).then((res) => {
         if (res.success) {
           getData();
@@ -82,7 +82,7 @@ function confirmAdd() {
         }
       });
     }
-  })
+  });
 }
 function deleteRow(row) {
   clearCateApi(row.categoryId).then(({ data }) => {

@@ -12,19 +12,20 @@
 </template>
 
 <script setup>
-import {getIndex, getLinks} from "@/utils/apiConfig";
-import {onBeforeMount, reactive, toRefs} from "vue";
+import { getIndex, getLinks } from "@/utils/apiConfig";
+import { onBeforeMount, reactive, toRefs } from "vue";
 
 let state = reactive({
   links: null,
-  favoriteLinks: [], recommendLinks: []
-})
-let {links, favoriteLinks,recommendLinks} = toRefs(state)
+  favoriteLinks: [],
+  recommendLinks: [],
+});
+let { links, favoriteLinks, recommendLinks } = toRefs(state);
 onBeforeMount(async () => {
-  let {data} = await getLinks();
+  let { data } = await getLinks();
   state.favoriteLinks = data.favoriteLinks;
-  state.recommendLinks = data.recommendLinks
-})
+  state.recommendLinks = data.recommendLinks;
+});
 </script>
 
 <style lang="scss" scoped>

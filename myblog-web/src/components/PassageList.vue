@@ -1,13 +1,16 @@
 <template>
   <div class="passage-list" v-loading="loading">
     <template v-for="(item, index) in list">
-      <article class="article" v-if="item.blogStatus&&item.blogStatus>0&&!item.isDeleted ">
+      <article
+        class="article"
+        v-if="item.blogStatus && item.blogStatus > 0 && !item.isDeleted"
+      >
         <div class="article-top">
-        <span class="category-link" @click="gotoCate(item)">{{
+          <span class="category-link" @click="gotoCate(item)">{{
             item.blogCategory.categoryName
           }}</span>
           <span class="category-link">
-          <el-tag   @click="gotoTagRoute(tag)" v-for="tag in item.blogTags">{{
+            <el-tag @click="gotoTagRoute(tag)" v-for="tag in item.blogTags">{{
               tag.tagName
             }}</el-tag> </span
           ><span class="right">{{
@@ -24,19 +27,18 @@
 </template>
 
 <script setup>
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 
-const router = useRouter()
+const router = useRouter();
 const props = defineProps({
   list: Array,
   loading: {
     type: Boolean,
-    default: true
-  }
-})
+    default: true,
+  },
+});
 
-function gotoCate(item) {
-}
+function gotoCate(item) {}
 
 function gotoTagRoute(item) {
   router.push("/home/tag/" + item.tagId);
@@ -45,7 +47,6 @@ function gotoTagRoute(item) {
 function gotoBlog(item) {
   router.push("/home/blog/" + item.blogId);
 }
-
 </script>
 
 <style lang="scss" scoped>

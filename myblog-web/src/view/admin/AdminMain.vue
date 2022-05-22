@@ -1,25 +1,20 @@
 <template>
-  <div class="admin-main">
-
-
-  </div>
+  <div class="admin-main"></div>
 </template>
 
 <script setup>
-import {defineComponent, onBeforeMount, reactive, toRefs, watch} from "vue";
-import {getUserInfo} from "@/utils/apiConfig";
+import { defineComponent, onBeforeMount, reactive, toRefs, watch } from "vue";
+import { getUserInfo } from "@/utils/apiConfig";
 
-const router = useRouter()
+const router = useRouter();
 import axios from "axios";
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 
 let state = reactive({
   user: {},
-  actMenu: []
-})
-let {user, actMenu} = toRefs(state)
-
-
+  actMenu: [],
+});
+let { user, actMenu } = toRefs(state);
 </script>
 
 <style lang="scss" scoped>

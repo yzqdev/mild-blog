@@ -1,27 +1,26 @@
 <template>
   <el-container class="home">
-
-    <sidebar/>
+    <sidebar />
 
     <el-container class="main-wrap">
-      <Header/>
-      <Content/>
-      <Footer/>
+      <Header />
+      <Content />
+      <Footer />
     </el-container>
   </el-container>
 </template>
 
 <script lang="ts" setup>
-import Sidebar from './Sidebar.vue'
-import Header from './Header.vue';
-import Content from './Content.vue'
-import Footer from './Footer.vue'
-import {useStore} from "vuex";
-import {onMounted} from "vue";
-import {useRouter} from "vue-router";
+import Sidebar from "./Sidebar.vue";
+import Header from "./Header.vue";
+import Content from "./Content.vue";
+import Footer from "./Footer.vue";
+import { useStore } from "vuex";
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
 
-const store=useStore()
-const router=useRouter()
+const store = useStore();
+const router = useRouter();
 onMounted(() => {
   let token = localStorage.getItem("token");
   if (token && token !== "undefined") {
@@ -29,7 +28,7 @@ onMounted(() => {
   } else {
     router.push("/admin");
   }
-})
+});
 </script>
 <style lang="scss" scoped>
 .home {
@@ -42,7 +41,6 @@ onMounted(() => {
     display: flex;
     flex: 1;
     flex-direction: column;
-
   }
 }
 </style>

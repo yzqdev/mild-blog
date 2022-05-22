@@ -1,18 +1,16 @@
 <template>
   <el-dialog v-model="editFormShow" width="30%">
     <el-form :model="editForm">
-      <el-form-item label="标签名"
-      >
+      <el-form-item label="标签名">
         <el-input v-model="editForm.tagName"></el-input>
       </el-form-item>
-      <el-form-item label="当前状态"
-      >
+      <el-form-item label="当前状态">
         <el-switch
-            v-model="editForm.isDeleted"
-            :active-value="1"
-            :inactive-value="0"
-            active-text="已删除"
-            inactive-text="未删除"
+          v-model="editForm.isDeleted"
+          :active-value="1"
+          :inactive-value="0"
+          active-text="已删除"
+          inactive-text="未删除"
         ></el-switch>
       </el-form-item>
     </el-form>
@@ -25,8 +23,7 @@
     <el-table-column prop="tagId" label="标签id"></el-table-column>
     <el-table-column prop="tagName" label="标签名"></el-table-column>
     <el-table-column prop="isDeleted" label="当前状态">
-      <template v-slot="{ row }"
-      >
+      <template v-slot="{ row }">
         {{ row.isDeleted == 1 ? `已删除` : `未删除` }}
       </template>
     </el-table-column>
@@ -34,17 +31,16 @@
     <el-table-column label="操作" width="250">
       <template v-slot="{ row }">
         <el-button type="primary" size="mini" @click="editRow(row)"
-        >编辑
-        </el-button
-        >
+          >编辑
+        </el-button>
         <el-popconfirm
-            title="确定删除吗？"
-            confirmButtonText="好的"
-            cancelButtonText="不用了"
-            icon="el-icon-info"
-            placement="right"
-            iconColor="red"
-            @confirm="deleteRow(row)"
+          title="确定删除吗？"
+          confirmButtonText="好的"
+          cancelButtonText="不用了"
+          icon="el-icon-info"
+          placement="right"
+          iconColor="red"
+          @confirm="deleteRow(row)"
         >
           <template #reference>
             <el-button type="danger" size="mini">删除</el-button>
@@ -56,44 +52,50 @@
 </template>
 
 <script setup>
-import {addTag, clearTagById, EditTagList, getCommentList, getTagList} from "@/utils/apiConfig";
-import {onBeforeMount, reactive, toRefs} from "vue";
-import {ElMessage} from "element-plus";
+import {
+  addTag,
+  clearTagById,
+  EditTagList,
+  getCommentList,
+  getTagList,
+} from "@/utils/apiConfig";
+import { onBeforeMount, reactive, toRefs } from "vue";
+import { ElMessage } from "element-plus";
 
 let state = reactive({
   isEdit: true,
   data: "",
-  editForm: {tagName: '', isDeleted: false},
+  editForm: { tagName: "", isDeleted: false },
   editFormShow: false,
-})
-let {isEdit, data, editForm, editFormShow} = toRefs(state)
+});
+let { isEdit, data, editForm, editFormShow } = toRefs(state);
 onBeforeMount(() => {
-  getData()
-})
+  getData();
+});
 
 function getData() {
-  getTagList().then(({data}) => {
+  getTagList().then(({ data }) => {
     console.log(data);
     state.data = data;
   });
 }
 
 function deleteRow(row) {
-  clearTagById(row.tagId).then(({data}) => {
+  clearTagById(row.tagId).then(({ data }) => {
     if (data) {
-      getData()
+      getData();
       ElMessage({
         message: "成功",
-        type: "success"
-      })
+        type: "success",
+      });
     }
-  })
+  });
 }
 
 function showAddForm() {
-  state.isEdit = false
-  state.editForm = {tagName: '', isDeleted: 0}
-  state.editFormShow = true
+  state.isEdit = false;
+  state.editForm = { tagName: "", isDeleted: 0 };
+  state.editFormShow = true;
 }
 
 function submitEdit() {
@@ -103,27 +105,25 @@ function submitEdit() {
       if (data) {
         ElMessage({
           message: "成功",
-          type: "success"
-        })
+          type: "success",
+        });
         getData();
         state.editFormShow = false;
       }
     });
   } else {
-    addTag(state.editForm).then(({data}) => {
+    addTag(state.editForm).then(({ data }) => {
       if (data) {
         ElMessage({
           message: "成功",
-          type: "success"
-        })
+          type: "success",
+        });
         state.isEdit = true;
-        getData()
+        getData();
         state.editFormShow = false;
       }
-    })
-
+    });
   }
-
 }
 
 function editRow(row) {
