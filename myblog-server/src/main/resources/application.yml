@@ -35,7 +35,6 @@ myblog:
     file-url: ${user.home}/.myblog/upload/
     file-prefix: upload/
 
-    pic-url: ${user.home}/.myblog/pic/
-    pic-prefix: pic/
+
     avatar: ${user.home}/.myblog/authorImg/
 

@@ -33,7 +33,9 @@ public class Img extends Model<Img>  implements Serializable {
     private String imgPath;
     private Long imgSize;
     private String imgUrl;
+    private String thumbnailPath;
     private String imgType;
+    private String mediaType;
     private String md5;
     private Timestamp uploadTime;
 }

@@ -18,8 +18,7 @@ import javax.annotation.Resource;
 public class WebConfig implements WebMvcConfigurer {
     @Resource
     CorsInterceptor corsInterceptor;
-    @Value("${myblog.upload.pic-url}")
-    private String picUrl;
+
     @Value("${myblog.upload.file-url}")
     private String fileUrl;
 
@@ -33,7 +32,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/pic/**").addResourceLocations("file:" + picUrl);
         registry.addResourceHandler("/upload/**").addResourceLocations("file:" +fileUrl);
     }
 }
