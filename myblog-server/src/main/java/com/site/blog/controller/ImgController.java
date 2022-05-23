@@ -38,16 +38,16 @@ public class ImgController {
 
 
     @PostMapping("/upload")
-    public Map<String, Object> uploadFileByEditor(@RequestParam(name = "img") MultipartFile file) {
+    public Result uploadFileByEditor(@RequestParam(name = "img") MultipartFile file) {
 
         Map<String, Object> result = new HashMap<>();
         Img img=imgService.uploadImage(file);
-        result.put("success", 1);
+
         result.put("message", "上传成功");
         result.put("url", img.getImgUrl());
         result.put("img", img);
 
-        return result;
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,result);
     }
 
     @GetMapping("/list")

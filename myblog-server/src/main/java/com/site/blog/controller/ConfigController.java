@@ -60,7 +60,6 @@ public class ConfigController {
     @PostMapping("/blogConfig/edit")
     public Result<String> updateBlogConfig(@RequestBody  BlogConfig blogConfig){
         blogConfig.setUpdateTime(DateUtils.getLocalCurrentDate());
-        System.out.println(DateUtils.getLocalCurrentDate());
         boolean flag = blogConfigService.updateById(blogConfig);
         if (flag){
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
