@@ -28,7 +28,7 @@ public class CommonController {
     private  String fileUrl;
 
     @PostMapping("/file")
-    public Result uploadPic(@RequestBody MultipartFile multipartFile) {
+    public Result uploadFile(@RequestBody MultipartFile multipartFile) {
         try {
             multipartFile.transferTo(new File(fileUrl + multipartFile.getOriginalFilename()));
             HashMap<String, Object> result = new HashMap<>();
