@@ -11,8 +11,8 @@ namespace Mildblog.Web.Core {
 
             services.AddCorsAccessor();
 
-            services.AddControllers()
-                    .AddInjectWithUnifyResult();
+            services.AddControllers().AddDynamicApiControllers()
+                    .AddInjectWithUnifyResult<RESTfulResultProvider>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
