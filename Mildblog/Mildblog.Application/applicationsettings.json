@@ -1,0 +1,26 @@
+﻿{
+  "SpecificationDocumentSettings": {
+    "DocumentTitle": "Furion | 规范化接口",
+    "GroupOpenApiInfos": [
+      {
+        "Group": "Default",
+        "Title": "规范化接口演示",
+        "Description": "让 .NET 开发更简单，更通用，更流行。",
+        "Version": "1.0.0",
+        "TermsOfService": "https://dotnetchina.gitee.io/furion/",
+        "Contact": {
+          "Name": "yzqdev",
+          "Url": "https://github.com/yzqdev/mild-blog.git",
+          "Email": "yzqdev@outlook.com"
+        },
+        "License": {
+          "Name": "Apache-2.0",
+          "Url": "https://github.com/yzqdev/mild-blog/blob/main/LICENSE"
+        }
+      }
+    ]
+  },
+  "ConnectionStrings": {
+    "PgConnectionString": "PORT=5432;DATABASE=my_blog_db;HOST=127.0.0.1;PASSWORD=123456;USER ID=postgres;"
+  }
+}
