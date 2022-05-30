@@ -11,26 +11,34 @@ using System.Threading.Tasks;
 
 namespace Mildblog.Core.Entities {
     [Table("tb_blog_info")]
-    public class BlogInfo : Entity  {
+    public class BlogInfo : IEntity  {
         [Key]
-       private int BlogId{ get; set; }
-        private string blogTitle { get; set; }
-        private String blogSubUrl { get; set; }
-        private String blogPreface { get; set; }
-        private String blogContent { get; set; }
-        private int blogStatus { get; set; }
-        private long blogViews { get; set; }
+        [Column("blog_id")]
+       public string BlogId{ get; set; }
+        [Column("blog_title")]
+        public string blogTitle { get; set; }
+        [Column("blog_sub_url")]
+        public String blogSubUrl { get; set; }
+        [Column("blog_preface")]
+        public String blogPreface { get; set; }
+        [Column("blog_content")]
+        public String blogContent { get; set; }
+        [Column("blog_status")]
+        public int blogStatus { get; set; }
+        [Column("blog_views")]
+        public long blogViews { get; set; }
+        [Column("enable_comment")]
 
-        private int enableComment { get; set; } 
-
+        public int enableComment { get; set; }
+        [Column("is_deleted")]
    
-    private  int isDeleted { get; set; } 
+    public  int isDeleted { get; set; }
 
-        
-    private DateTime createTime { get; set; }
-
+        [Column("create_time")]
+    public DateTime createTime { get; set; }
+        [Column("update_time")]
        
-    private DateTime updateTime { get; set; }
+    public DateTime updateTime { get; set; }
 
     }
 }
