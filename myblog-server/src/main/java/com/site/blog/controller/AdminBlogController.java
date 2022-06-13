@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -77,7 +78,7 @@ public class AdminBlogController {
         blogDetailVO.setBlogStatus(blogInfo.getBlogStatus());
         blogDetailVO.setBlogPreface(blogInfo.getBlogPreface());
         blogDetailVO.setEnableComment(blogInfo.getEnableComment());
-        blogDetailVO.setCreateTime(blogInfo.getCreateTime().toLocalDateTime());
+        blogDetailVO.setCreateTime(blogInfo.getCreateTime() );
         blogDetailVO.setBlogCategoryId(blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", blogInfo.getBlogId())).getCategoryId());
         QueryWrapper<BlogTag> queryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", id);
         List<String> ids = blogTagService.list(queryWrapper).stream().map(BlogTag::getTagId).collect(Collectors.toList());
@@ -110,8 +111,8 @@ public class AdminBlogController {
         blogInfo.setBlogSubUrl(blogInfoDo.getBlogSubUrl());
         blogInfo.setEnableComment(blogInfoDo.getEnableComment());
         blogInfo.setBlogStatus(blogInfoDo.getBlogStatus());
-        blogInfo.setCreateTime(Optional.ofNullable(Timestamp.valueOf(blogInfoDo.getCreateTime())).orElse(new Timestamp(System.currentTimeMillis())));
-        blogInfo.setUpdateTime(DateUtils.getLocalCurrentDate());
+        blogInfo.setCreateTime(LocalDateTime.now());
+        blogInfo.setUpdateTime(LocalDateTime.now());
 
 
         blogInfo.setBlogContent(blogInfoDo.getBlogContent());
@@ -203,7 +204,7 @@ log.info("blogDetailVOS:{}",blogDetailVOS);
 
     @PostMapping("/blog/blogStatus")
     public Result<String> updateBlogStatus(BlogInfo blogInfo) {
-        blogInfo.setUpdateTime(DateUtils.getLocalCurrentDate());
+        blogInfo.setUpdateTime(LocalDateTime.now());
         boolean flag = blogInfoService.updateById(blogInfo);
         if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
@@ -222,7 +223,7 @@ log.info("blogDetailVOS:{}",blogDetailVOS);
     @PostMapping("/blog/delete/{id}")
     public Result deleteBlog(@PathVariable("id") String blogId) {
         BlogInfo blogInfo = blogInfoService.getOne(new QueryWrapper<BlogInfo>().eq("blog_id", blogId));
-        blogInfo.setIsDeleted(DeleteStatusEnum.DELETED.getStatus()).setUpdateTime(DateUtils.getLocalCurrentDate());
+        blogInfo.setIsDeleted(DeleteStatusEnum.DELETED.getStatus()).setUpdateTime(LocalDateTime.now());
         boolean flag = blogInfoService.updateById(blogInfo);
         if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogInfo);
@@ -259,7 +260,7 @@ log.info("blogDetailVOS:{}",blogDetailVOS);
         BlogInfo blogInfo = new BlogInfo()
                 .setBlogId(blogId)
                 .setIsDeleted(DeleteStatusEnum.NO_DELETED.getStatus())
-                .setUpdateTime(DateUtils.getLocalCurrentDate());
+                .setUpdateTime(LocalDateTime.now());
         boolean flag = blogInfoService.updateById(blogInfo);
         if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
