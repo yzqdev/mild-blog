@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -91,16 +92,16 @@ public class BlogInfo implements Serializable {
     /**
      * 添加时间,将Date转换成String,一般后台传值给前台时
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+
     @TableField("create_time")
-    private Timestamp createTime;
+    private LocalDateTime createTime;
 
     /**
      * 修改时间//将Date转换成String,一般后台传值给前台时
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+
     @TableField("update_time")
-    private Timestamp updateTime;
+    private LocalDateTime updateTime;
 
 
 }
