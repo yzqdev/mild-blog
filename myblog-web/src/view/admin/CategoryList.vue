@@ -28,7 +28,7 @@
       }}</template>
     </el-table-column>
 
-    <el-table-column prop="isDeleted" label="当前状态">
+    <el-table-column prop="show" label="当前状态">
       <template v-slot="{ row }"> </template>
     </el-table-column>
     <el-table-column label="操作">
@@ -65,7 +65,7 @@ let addForm = reactive({ categoryName: "", categoryRank: 1 });
 function getData() {
   getCatePaging({ page: 1, limit: 30 }).then(({ data }) => {
     console.log(data);
-    cateData.value = data;
+    cateData.value = data.list;
   });
 }
 function addCate() {

@@ -33,7 +33,7 @@
     <el-table-column prop="linkType" label="当前状态">
       <template v-slot="{ row }">
         <el-switch
-          v-model="row.isDeleted"
+          v-model="row.show"
           @change="changeLinkType($event, row)"
           active-text="已删除"
           inactive-text="未删除"
@@ -94,7 +94,7 @@ export default defineComponent({
   methods: {
     changeLinkType(e, row) {
       console.log(e);
-      delLink({ linkId: row.linkId, isDeleted: e }).then(({ data }) => {
+      delLink({ linkId: row.linkId, show: e }).then(({ data }) => {
         console.log(data);
         if (data) {
           this.$message.success("操作成功");
@@ -137,9 +137,9 @@ export default defineComponent({
       this.addDialogVisible = true;
     },
     getData() {
-      getLinkList({ page: 1, limit: 30 }).then(({ data }) => {
-        console.log(data);
-        this.linkData = data.data;
+      getLinkList({ page: 1, limit: 30 }).then((res) => {
+
+        this.linkData = res.data.list;
       });
     },
     confirmAdd() {

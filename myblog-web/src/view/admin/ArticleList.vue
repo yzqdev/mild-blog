@@ -38,9 +38,9 @@
         >{{ row.blogStatus == 1 ? `发布` : `草稿` }}
       </template>
     </el-table-column>
-    <el-table-column prop="isDeleted" label="隐藏状态">
+    <el-table-column prop="show" label="隐藏状态">
       <template v-slot="{ row }">
-        {{ row.isDeleted == 1 ? `隐藏` : `显示` }}
+        {{ row.show ?  `显示`:`隐藏`  }}
       </template>
     </el-table-column>
     <el-table-column prop="enableComment" label="评论">

@@ -84,9 +84,9 @@ let addForm = $ref({
 });
 
 function getData() {
-  getSystemInfo().then(({ data }) => {
-    console.log(data);
-    tableData = data;
+  getSystemInfo().then((res) => {
+
+    tableData = res.data.list;
   });
 }
 

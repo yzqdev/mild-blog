@@ -3,16 +3,16 @@
 
  Source Server         : localpg
  Source Server Type    : PostgreSQL
- Source Server Version : 140002
+ Source Server Version : 140003
  Source Host           : localhost:5432
  Source Catalog        : my_blog_db
  Source Schema         : public
 
  Target Server Type    : PostgreSQL
- Target Server Version : 140002
+ Target Server Version : 140003
  File Encoding         : 65001
 
- Date: 23/05/2022 02:00:16
+ Date: 15/06/2022 01:20:24
 */
 
 
@@ -45,8 +45,8 @@ COMMENT ON TABLE "public"."tb_admin_user" IS '后台管理员信息表';
 DROP TABLE IF EXISTS "public"."tb_blog_category";
 CREATE TABLE "public"."tb_blog_category" (
   "relation_id" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
-  "blog_id" varchar(64) COLLATE "pg_catalog"."default",
-  "category_id" varchar(64) COLLATE "pg_catalog"."default",
+  "blog_id" int8,
+  "category_id" int8,
   "create_time" timestamp(6)
 )
 ;
@@ -61,7 +61,7 @@ CREATE TABLE "public"."tb_blog_config" (
   "config_value" varchar(200) COLLATE "pg_catalog"."default" NOT NULL,
   "create_time" timestamp(6) NOT NULL,
   "update_time" timestamp(6) NOT NULL,
-  "id" varchar(32) COLLATE "pg_catalog"."default" NOT NULL
+  "id" int8 NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."tb_blog_config"."config_field" IS '字段名';
@@ -76,7 +76,7 @@ COMMENT ON COLUMN "public"."tb_blog_config"."id" IS 'id';
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."tb_blog_info";
 CREATE TABLE "public"."tb_blog_info" (
-  "blog_id" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
+  "blog_id" int8 NOT NULL,
   "blog_title" varchar(200) COLLATE "pg_catalog"."default" NOT NULL,
   "blog_sub_url" varchar(200) COLLATE "pg_catalog"."default",
   "blog_preface" varchar(255) COLLATE "pg_catalog"."default",
@@ -84,9 +84,9 @@ CREATE TABLE "public"."tb_blog_info" (
   "blog_status" int2 NOT NULL,
   "blog_views" int8,
   "enable_comment" int2 NOT NULL,
-  "is_deleted" int2 NOT NULL,
-  "create_time" timestamptz(6) NOT NULL,
-  "update_time" timestamptz(6)
+  "create_time" timestamp(6) NOT NULL,
+  "update_time" timestamp(6),
+  "show" bool NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."tb_blog_info"."blog_id" IS '博客表主键id';
@@ -97,9 +97,9 @@ COMMENT ON COLUMN "public"."tb_blog_info"."blog_content" IS '博客内容';
 COMMENT ON COLUMN "public"."tb_blog_info"."blog_status" IS '0-草稿 1-发布';
 COMMENT ON COLUMN "public"."tb_blog_info"."blog_views" IS '阅读量';
 COMMENT ON COLUMN "public"."tb_blog_info"."enable_comment" IS '0-允许评论 1-不允许评论';
-COMMENT ON COLUMN "public"."tb_blog_info"."is_deleted" IS '是否删除 0=否 1=是';
 COMMENT ON COLUMN "public"."tb_blog_info"."create_time" IS '添加时间';
 COMMENT ON COLUMN "public"."tb_blog_info"."update_time" IS '修改时间';
+COMMENT ON COLUMN "public"."tb_blog_info"."show" IS '是否删除 0=否 1=是';
 COMMENT ON TABLE "public"."tb_blog_info" IS '博客信息表';
 
 -- ----------------------------
@@ -107,9 +107,9 @@ COMMENT ON TABLE "public"."tb_blog_info" IS '博客信息表';
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."tb_blog_tag";
 CREATE TABLE "public"."tb_blog_tag" (
-  "relation_id" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
-  "blog_id" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
-  "tag_id" varchar(32) COLLATE "pg_catalog"."default" NOT NULL,
+  "relation_id" int8 NOT NULL,
+  "blog_id" int8 NOT NULL,
+  "tag_id" int8 NOT NULL,
   "create_time" timestamp(6)
 )
 ;
@@ -124,20 +124,20 @@ COMMENT ON TABLE "public"."tb_blog_tag" IS '博客跟标签的关系表';
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."tb_category";
 CREATE TABLE "public"."tb_category" (
-  "category_id" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
+  "category_id" int8 NOT NULL,
   "category_name" varchar(50) COLLATE "pg_catalog"."default" NOT NULL,
   "category_icon" varchar(50) COLLATE "pg_catalog"."default",
   "category_rank" int4 NOT NULL,
-  "is_deleted" int2 NOT NULL,
-  "create_time" timestamp(6) NOT NULL
+  "create_time" timestamp(6) NOT NULL,
+  "show" bool NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."tb_category"."category_id" IS '分类表主键';
 COMMENT ON COLUMN "public"."tb_category"."category_name" IS '分类的名称';
 COMMENT ON COLUMN "public"."tb_category"."category_icon" IS '分类的图标';
 COMMENT ON COLUMN "public"."tb_category"."category_rank" IS '分类的排序值 被使用的越多数值越大';
-COMMENT ON COLUMN "public"."tb_category"."is_deleted" IS '是否删除 0=否 1=是';
 COMMENT ON COLUMN "public"."tb_category"."create_time" IS '创建时间';
+COMMENT ON COLUMN "public"."tb_category"."show" IS '是否删除 0=否 1=是';
 COMMENT ON TABLE "public"."tb_category" IS '博客分类';
 
 -- ----------------------------
@@ -146,7 +146,7 @@ COMMENT ON TABLE "public"."tb_category" IS '博客分类';
 DROP TABLE IF EXISTS "public"."tb_comment";
 CREATE TABLE "public"."tb_comment" (
   "comment_id" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
-  "blog_id" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
+  "blog_id" int8 NOT NULL,
   "commentator" varchar(50) COLLATE "pg_catalog"."default" NOT NULL,
   "email" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "website_url" varchar(50) COLLATE "pg_catalog"."default",
@@ -156,9 +156,9 @@ CREATE TABLE "public"."tb_comment" (
   "reply_body" varchar(200) COLLATE "pg_catalog"."default",
   "reply_create_time" timestamp(6),
   "comment_status" int2 NOT NULL,
-  "is_deleted" int2 NOT NULL,
   "user_agent" varchar(255) COLLATE "pg_catalog"."default",
-  "os" varchar(255) COLLATE "pg_catalog"."default"
+  "os" varchar(255) COLLATE "pg_catalog"."default",
+  "show" bool NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."tb_comment"."comment_id" IS '主键id';
@@ -172,9 +172,9 @@ COMMENT ON COLUMN "public"."tb_comment"."commentator_ip" IS '评论时的ip地�
 COMMENT ON COLUMN "public"."tb_comment"."reply_body" IS '回复内容';
 COMMENT ON COLUMN "public"."tb_comment"."reply_create_time" IS '回复时间';
 COMMENT ON COLUMN "public"."tb_comment"."comment_status" IS '是否审核通过 0-未审核 1-审核通过';
-COMMENT ON COLUMN "public"."tb_comment"."is_deleted" IS '是否删除 0-未删除 1-已删除';
 COMMENT ON COLUMN "public"."tb_comment"."user_agent" IS '用户使用的浏览器';
 COMMENT ON COLUMN "public"."tb_comment"."os" IS '用户的系统';
+COMMENT ON COLUMN "public"."tb_comment"."show" IS '是否删除 0-未删除 1-已删除';
 COMMENT ON TABLE "public"."tb_comment" IS '评论信息表';
 
 -- ----------------------------
@@ -226,16 +226,16 @@ COMMENT ON TABLE "public"."tb_link" IS '友情链接表';
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."tb_tag";
 CREATE TABLE "public"."tb_tag" (
-  "tag_id" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
+  "tag_id" int8 NOT NULL,
   "tag_name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
-  "is_deleted" int2 NOT NULL,
-  "create_time" timestamp(6) NOT NULL
+  "create_time" timestamp(6) NOT NULL,
+  "show" bool NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."tb_tag"."tag_id" IS '标签表主键id';
 COMMENT ON COLUMN "public"."tb_tag"."tag_name" IS '标签名称';
-COMMENT ON COLUMN "public"."tb_tag"."is_deleted" IS '是否删除 0=否 1=是';
 COMMENT ON COLUMN "public"."tb_tag"."create_time" IS '创建时间';
+COMMENT ON COLUMN "public"."tb_tag"."show" IS '是否删除 0=否 1=是';
 COMMENT ON TABLE "public"."tb_tag" IS '标签表';
 
 -- ----------------------------

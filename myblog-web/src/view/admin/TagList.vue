@@ -6,7 +6,7 @@
       </el-form-item>
       <el-form-item label="当前状态">
         <el-switch
-          v-model="editForm.isDeleted"
+          v-model="editForm.show"
           :active-value="1"
           :inactive-value="0"
           active-text="已删除"
@@ -22,9 +22,9 @@
   <el-table :data="data">
     <el-table-column prop="tagId" label="标签id"></el-table-column>
     <el-table-column prop="tagName" label="标签名"></el-table-column>
-    <el-table-column prop="isDeleted" label="当前状态">
+    <el-table-column prop="show" label="当前状态">
       <template v-slot="{ row }">
-        {{ row.isDeleted == 1 ? `已删除` : `未删除` }}
+        {{ row.show ? `显示`:"不显示" }}
       </template>
     </el-table-column>
 
@@ -82,7 +82,7 @@ function sizeChange(size){
 let state = reactive({
   isEdit: true,
   data: [],
-  editForm: { tagName: "", isDeleted: false },
+  editForm: { tagName: "", show: false },
   editFormShow: false,
 });
 let { isEdit, data, editForm, editFormShow } = toRefs(state);
@@ -112,7 +112,7 @@ function deleteRow(row) {
 
 function showAddForm() {
   state.isEdit = false;
-  state.editForm = { tagName: "", isDeleted: 0 };
+  state.editForm = { tagName: "", show: 0 };
   state.editFormShow = true;
 }
 
