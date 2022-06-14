@@ -1,10 +1,12 @@
 package com.site.blog.model.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.site.blog.model.entity.Category;
 import com.site.blog.model.entity.Tag;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,6 +33,8 @@ public class BlogDetailVO {
 
     private Integer enableComment;
     private Integer isDeleted;
-    private LocalDateTime createTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private  LocalDateTime createTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 }

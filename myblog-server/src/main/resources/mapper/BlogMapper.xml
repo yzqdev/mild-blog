@@ -12,7 +12,7 @@
         <result column="blog_status" jdbcType="TINYINT" property="blogStatus"/>
         <result column="blog_views" jdbcType="BIGINT" property="blogViews"/>
         <result column="enable_comment" jdbcType="TINYINT" property="enableComment"/>
-        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="show"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>

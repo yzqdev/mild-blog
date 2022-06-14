@@ -32,7 +32,7 @@ public class AjaxResultPage<T> implements Serializable {
     /**
      * 表格数据
      */
-    private List<T> data;
+    private List<T> list;
 
 
 }

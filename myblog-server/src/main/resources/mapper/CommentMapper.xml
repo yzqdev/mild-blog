@@ -15,7 +15,7 @@
         <result column="reply_body" property="replyBody" />
         <result column="reply_create_time" property="replyCreateTime" />
         <result column="comment_status" property="commentStatus" />
-        <result column="is_deleted" property="isDeleted" />
+        <result column="is_deleted" property="show" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
