@@ -2,7 +2,7 @@ package com.site.blog.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.site.blog.constants.DeleteStatusEnum;
+import com.site.blog.constants.ShowEnum;
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.model.dto.AjaxPutPage;
 import com.site.blog.model.dto.AjaxResultPage;
@@ -51,7 +51,7 @@ public class CategoryController {
     @GetMapping("/category/list")
     public Result<List<Category>> categoryList() {
         QueryWrapper<Category> queryWrapper = new QueryWrapper<Category>();
-        queryWrapper.lambda().eq(Category::getIsDeleted, DeleteStatusEnum.SHOW.getStatus()).orderByDesc(Category::getCreateTime) ;
+        queryWrapper.lambda().eq(Category::getShow, ShowEnum.SHOW.getStatus()).orderByDesc(Category::getCreateTime) ;
         List<Category> list = categoryService.list(queryWrapper);
         if (CollectionUtils.isEmpty(list)) {
             ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
@@ -71,17 +71,17 @@ public class CategoryController {
      */
     @ResponseBody
     @GetMapping("/category/paging")
-    public AjaxResultPage<Category> getCategoryList(AjaxPutPage<Category> ajaxPutPage, Category condition) {
+    public Result<AjaxResultPage<Category>> getCategoryList(AjaxPutPage<Category> ajaxPutPage, Category condition) {
         QueryWrapper<Category> queryWrapper = new QueryWrapper<>(condition);
         queryWrapper.lambda()
-                .orderByAsc(Category::getCategoryRank)
-                .ne(Category::getCategoryId, 1);
+
+                .ne(Category::getCategoryId, 1L).orderByAsc(Category::getCategoryRank);
         Page<Category> page = ajaxPutPage.putPageToPage();
         categoryService.page(page, queryWrapper);
         AjaxResultPage<Category> result = new AjaxResultPage<>();
         result.setList(page.getRecords());
         result.setCount(page.getTotal());
-        return result;
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,result);
     }
 
     /**
@@ -149,6 +149,7 @@ public class CategoryController {
     @PostMapping("/category/add")
     public Result addCategory(Category category) {
         category.setCreateTime(DateUtils.getLocalCurrentDate());
+        category.setShow(ShowEnum.SHOW.getStatus());
         boolean flag = categoryService.save(category);
         if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, category);

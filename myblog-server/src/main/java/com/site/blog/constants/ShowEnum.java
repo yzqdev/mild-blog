@@ -7,7 +7,7 @@ package com.site.blog.constants;
  * @author: 南街
  * @create: 2019-08-15 09:11
  **/
-public enum DeleteStatusEnum {
+public enum ShowEnum {
 
     /**
      * 已删除
@@ -21,7 +21,7 @@ public enum DeleteStatusEnum {
     private final Boolean status;
     private final String note;
 
-    DeleteStatusEnum(Boolean status, String note) {
+    ShowEnum(Boolean status, String note) {
         this.status = status;
         this.note = note;
     }

@@ -2,7 +2,7 @@ package com.site.blog.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.site.blog.constants.DeleteStatusEnum;
+import com.site.blog.constants.ShowEnum;
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.model.dto.AjaxPutPage;
 import com.site.blog.model.dto.AjaxResultPage;
@@ -16,7 +16,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @qq交流群 796794009
@@ -38,14 +37,18 @@ public class TagController {
      * @return
      */
     @GetMapping("/tags/list")
-    public Result<List<Tag>> tagsList() {
+    public Result<AjaxResultPage<Tag>> tagsList(AjaxPutPage<Tag> ajaxPutPage) {
         QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(Tag::getIsDeleted, DeleteStatusEnum.SHOW.getStatus());
-        List<Tag> list = tagService.list();
-        if (CollectionUtils.isEmpty(list)) {
+        queryWrapper.lambda().eq(Tag::getShow, ShowEnum.SHOW.getStatus());
+        Page<Tag> page = ajaxPutPage.putPageToPage();
+        tagService.page(page,queryWrapper);
+        AjaxResultPage<Tag> result = new AjaxResultPage<>();
+        result.setList(page.getRecords());
+        result.setCount(page.getTotal());
+        if (CollectionUtils.isEmpty(page.getRecords())) {
             ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
         }
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, list);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true,result);
     }
 
     /**

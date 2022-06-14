@@ -91,9 +91,10 @@ onBeforeMount(() => {
 });
 
 function getData() {
-  getTagList().then(({ data }) => {
+  getTagList({page:1,limit:pageSize}).then(({ data }) => {
     console.log(data);
-    state.data = data;
+    state.data = data.list;
+    count=data.count
   });
 }
 

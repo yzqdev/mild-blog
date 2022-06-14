@@ -91,7 +91,7 @@ public class HomeBlogController {
 
 
                 .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
-                .eq(BlogInfo::getShow, DeleteStatusEnum.SHOW.getStatus());
+                .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus());
         //获取tag下的文章
         if (Objects.nonNull(tagId)) {
             List<BlogTag> list = blogService.list(new QueryWrapper<BlogTag>()
@@ -124,7 +124,7 @@ public class HomeBlogController {
             QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
             List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).collect(Collectors.toList());
             post.setBlogTags(tags);
-            String cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
+            Long cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
             if (cateId != null) {
                 post.setBlogCategory(categoryService.getById(cateId));
             }
@@ -147,7 +147,7 @@ public class HomeBlogController {
                 QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
                 List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).collect(Collectors.toList());
                 post.setBlogTags(tags);
-               String cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
+               Long cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
                 if (cateId != null) {
                     post.setBlogCategory(categoryService.getById(cateId));
                 }
@@ -175,7 +175,7 @@ public class HomeBlogController {
 
 
                 .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
-                .eq(BlogInfo::getShow, DeleteStatusEnum.SHOW.getStatus());
+                .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus());
         //获取tag下的文章
         if (Objects.nonNull(categoryId)) {
             List<BlogCategory> list = blogCategoryService.list(new QueryWrapper<BlogCategory>()
@@ -224,7 +224,7 @@ public class HomeBlogController {
     @GetMapping("/tags")
     public Result getTags() {
         QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(Tag::getIsDeleted, DeleteStatusEnum.SHOW.getStatus());
+        queryWrapper.lambda().eq(Tag::getShow, ShowEnum.SHOW.getStatus());
         List<Tag> list = tagService.list();
         if (CollectionUtils.isEmpty(list)) {
             ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
@@ -235,7 +235,7 @@ public class HomeBlogController {
     @GetMapping("/categories")
     public Result getCate() {
         QueryWrapper<Category> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(Category::getIsDeleted, DeleteStatusEnum.SHOW.getStatus()).orderByDesc(Category::getCreateTime);
+        queryWrapper.lambda().eq(Category::getShow, ShowEnum.SHOW.getStatus()).orderByDesc(Category::getCreateTime);
         List<Category> list = categoryService.list(queryWrapper);
         if (CollectionUtils.isEmpty(list)) {
             ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
@@ -280,7 +280,7 @@ public class HomeBlogController {
                 .like(Objects.nonNull(condition.getKeyword()), BlogInfo::getBlogTitle, condition.getKeyword())
 
                 .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
-                .eq(BlogInfo::getShow, DeleteStatusEnum.SHOW.getStatus());
+                .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus());
         //获取tag下的文章
         if (Objects.nonNull(condition.getTagId())) {
             List<BlogTag> list = blogService.list(new QueryWrapper<BlogTag>()
@@ -323,7 +323,7 @@ public class HomeBlogController {
      * @date 2019/9/6 13:09
      */
     @GetMapping({"/blog/{blogId}", "/article/{blogId}"})
-    public Result<Object> detail(@PathVariable("blogId") String blogId) {
+    public Result<Object> detail(@PathVariable("blogId") Long blogId) {
         // 获得文章info
         BlogInfo blogInfo = blogInfoService.getById(blogId);
         List<BlogTag> blogTags = blogService.list(new QueryWrapper<BlogTag>()
@@ -334,7 +334,7 @@ public class HomeBlogController {
                 .setBlogViews(blogInfo.getBlogViews() + 1));
 
         // 获得关联的标签列表
-        List<String> tagIds;
+        List<Long> tagIds;
         List<Tag> tagList = new ArrayList<>();
         if (!blogTags.isEmpty()) {
             tagIds = blogTags.stream()
@@ -346,7 +346,7 @@ public class HomeBlogController {
         long blogCommentCount = commentService.count(new QueryWrapper<Comment>()
                 .lambda()
                 .eq(Comment::getCommentStatus, CommentStatusEnum.ALLOW.getStatus())
-                .eq(Comment::getShow, DeleteStatusEnum.SHOW.getStatus())
+                .eq(Comment::getShow, ShowEnum.SHOW.getStatus())
                 .eq(Comment::getBlogId, blogId));
         HashMap<String, Object> result = new HashMap<>();
         BlogDetailVO blogDetailVO = new BlogDetailVO();
@@ -369,13 +369,13 @@ public class HomeBlogController {
      */
     @GetMapping("/blog/listComment")
     @ResponseBody
-    public AjaxResultPage<Comment> listComment(AjaxPutPage<Comment> ajaxPutPage, String blogId) {
+    public AjaxResultPage<Comment> listComment(AjaxPutPage<Comment> ajaxPutPage, Long blogId) {
         Page<Comment> page = ajaxPutPage.putPageToPage();
         commentService.page(page, new QueryWrapper<Comment>()
                 .lambda()
                 .eq(Comment::getBlogId, blogId)
                 .eq(Comment::getCommentStatus, CommentStatusEnum.ALLOW.getStatus())
-                .eq(Comment::getShow, DeleteStatusEnum.SHOW.getStatus())
+                .eq(Comment::getShow, ShowEnum.SHOW.getStatus())
                 .orderByDesc(Comment::getCommentCreateTime));
         AjaxResultPage<Comment> ajaxResultPage = new AjaxResultPage<>();
         ajaxResultPage.setCount(page.getTotal());

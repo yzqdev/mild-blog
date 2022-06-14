@@ -28,11 +28,11 @@ public class BlogCategory  extends Model<BlogCategory> {
     /**
      * 博客id
      */
-    private String blogId;
+    private Long blogId;
     /**
      * 类别id
      */
-    private String categoryId;
+    private Long categoryId;
     /**
      * 创建时间
      */

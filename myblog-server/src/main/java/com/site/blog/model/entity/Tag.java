@@ -3,8 +3,7 @@ package com.site.blog.model.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Date;
+
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
@@ -31,7 +30,7 @@ private static final long serialVersionUID=1L;
      * 标签表主键id
      */
     @TableId(value = "tag_id", type = IdType.ASSIGN_ID)
-    private String tagId;
+    private Long tagId;
 
     /**
      * 标签名称
@@ -42,8 +41,8 @@ private static final long serialVersionUID=1L;
     /**
      * 是否删除 0=否 1=是
      */
-    @TableField("is_deleted")
-    private Integer isDeleted;
+    @TableField("show")
+    private Boolean show;
 
     /**
      * 创建时间

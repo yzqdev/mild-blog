@@ -40,15 +40,15 @@ public class ConfigController {
      * @date 2019/8/29 19:30
      */
     @GetMapping("/blogConfig/list")
-    public AjaxResultPage<BlogConfig> getBlogConfig(){
+    public Result<AjaxResultPage<BlogConfig>> getBlogConfig(){
         AjaxResultPage<BlogConfig> ajaxResultPage = new AjaxResultPage<>();
         List<BlogConfig> list = blogConfigService.lambdaQuery().orderByDesc(BlogConfig::getUpdateTime).list();
         if (CollectionUtils.isEmpty(list)){
             ajaxResultPage.setCode(500);
-            return ajaxResultPage;
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR,false,ajaxResultPage);
         }
         ajaxResultPage.setList(list);
-        return ajaxResultPage;
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,ajaxResultPage);
     }
 
     /**

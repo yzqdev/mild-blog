@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.site.blog.constants.DeleteStatusEnum;
+import com.site.blog.constants.ShowEnum;
 import com.site.blog.constants.SysConfigConstants;
 import com.site.blog.mapper.TagMapper;
 import com.site.blog.model.entity.BlogTag;
@@ -41,7 +41,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     public List<BlogTagCount> getBlogTagCountForIndex() {
         QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda()
-                .eq(Tag::getIsDeleted, DeleteStatusEnum.SHOW.getStatus());
+                .eq(Tag::getShow, ShowEnum.SHOW.getStatus());
         List<Tag> list = baseMapper.selectList(queryWrapper);
         List<BlogTagCount> blogTagCounts = list.stream()
                 .map(blogTag -> new BlogTagCount()
@@ -50,7 +50,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
                         .setTagCount(
                                 blogTagService.count(new QueryWrapper<BlogTag>()
                                         .lambda().eq(BlogTag::getTagId, blogTag.getTagId()))
-                        )).collect(Collectors.toList());
+                        )).toList();
         return blogTagCounts;
     }
 
@@ -73,7 +73,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
                         if (blogTagService.list(new QueryWrapper<BlogTag>().eq("blog_id", blogTag.getBlogId())).stream().map(BlogTag::getTagId).collect(Collectors.toList()).contains(Integer.valueOf(SysConfigConstants.DEFAULT_TAG.getConfigField()))) {
                             blogTagService.removeById(blogTag);
                         } else {
-                            blogTagService.updateById(blogTag.setTagId( SysConfigConstants.DEFAULT_TAG.getConfigField() ));
+                            blogTagService.updateById(blogTag.setTagId( Long.parseLong(SysConfigConstants.DEFAULT_TAG.getConfigField()) ));
                         }
                     })
                     .collect(Collectors.toList());

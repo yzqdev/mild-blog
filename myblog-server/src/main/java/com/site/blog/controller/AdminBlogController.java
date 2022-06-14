@@ -3,7 +3,7 @@ package com.site.blog.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.site.blog.constants.DeleteStatusEnum;
+import com.site.blog.constants.ShowEnum;
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.model.dto.AjaxResultPage;
 import com.site.blog.model.dto.BlogInfoDo;
@@ -72,7 +72,7 @@ public class AdminBlogController {
         BeanUtils.copyProperties(blogInfo,blogDetailVO);
         blogDetailVO.setBlogCategoryId(blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", blogInfo.getBlogId())).getCategoryId());
         QueryWrapper<BlogTag> queryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", id);
-        List<String> ids = blogTagService.list(queryWrapper).stream().map(BlogTag::getTagId).toList();
+        List<Long> ids = blogTagService.list(queryWrapper).stream().map(BlogTag::getTagId).toList();
         blogDetailVO.setBlogTagIds(ids);
          log.info("home创建时间{}",blogDetailVO.getCreateTime().toString());
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogDetailVO);
@@ -120,12 +120,12 @@ public class AdminBlogController {
             //添加blog和分类映射关系
             if (blogInfoDo.getBlogCategoryId() == null) {
                 //blogCategoryService.save()
-                blogCategory.setCategoryId("1");
+                blogCategory.setCategoryId(1L);
 
             } else {
                 LambdaQueryWrapper<BlogCategory> queryWrapper = new LambdaQueryWrapper<BlogCategory>().eq(BlogCategory::getBlogId, blogInfo.getBlogId());
                 if (blogCategoryService.getOne(queryWrapper) == null) {
-                    blogCategory.setCategoryId("1");
+                    blogCategory.setCategoryId(1L);
                 } else {
                     blogCategoryService.remove(queryWrapper);
                     blogCategory.setCategoryId(blogInfoDo.getBlogCategoryId());
@@ -138,7 +138,7 @@ public class AdminBlogController {
 
             //添加blog和标签映射关系
             blogTagService.remove(new QueryWrapper<BlogTag>().eq("blog_id", blogInfo.getBlogId()));
-            for (String tagId : blogInfoDo.getBlogTagIds()) {
+            for (Long tagId : blogInfoDo.getBlogTagIds()) {
                 BlogTag blogTag = BlogTag.builder().blogId(blogInfo.getBlogId()).tagId(tagId).createTime(DateUtils.getLocalCurrentDate()).build();
 
                 blogTagService.save(blogTag);
@@ -173,7 +173,7 @@ public class AdminBlogController {
                 List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).toList();
                 post.setBlogTags(tags);
 
-                String cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
+                Long cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
                 if (cateId != null) {
                     post.setBlogCategory(categoryService.getById(cateId));
                 }
@@ -218,7 +218,7 @@ public class AdminBlogController {
     @PostMapping("/blog/delete/{id}")
     public Result deleteBlog(@PathVariable("id") String blogId) {
         BlogInfo blogInfo = blogInfoService.getOne(new QueryWrapper<BlogInfo>().eq("blog_id", blogId));
-        blogInfo.setShow(DeleteStatusEnum.NOT_SHOW.getStatus()).setUpdateTime(LocalDateTime.now());
+        blogInfo.setShow(ShowEnum.NOT_SHOW.getStatus()).setUpdateTime(LocalDateTime.now());
         boolean flag = blogInfoService.updateById(blogInfo);
         if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogInfo);
@@ -251,10 +251,10 @@ public class AdminBlogController {
      */
 
     @PostMapping("/blog/restore")
-    public Result<String> restoreBlog(@RequestParam String blogId) {
+    public Result<String> restoreBlog(@RequestParam Long blogId) {
         BlogInfo blogInfo = new BlogInfo()
                 .setBlogId(blogId)
-                .setShow(DeleteStatusEnum.SHOW.getStatus())
+                .setShow(ShowEnum.SHOW.getStatus())
                 .setUpdateTime(LocalDateTime.now());
         boolean flag = blogInfoService.updateById(blogInfo);
         if (flag) {

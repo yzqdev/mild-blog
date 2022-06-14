@@ -32,8 +32,8 @@ public class BlogServiceImpl extends ServiceImpl<BlogTagMapper, BlogTag> impleme
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void removeAndsaveBatch(List<String> blogTagIds, BlogInfo blogInfo) {
-      String blogId = blogInfo.getBlogId();
+    public void removeAndsaveBatch(List<Long> blogTagIds, BlogInfo blogInfo) {
+      Long blogId = blogInfo.getBlogId();
         List<BlogTag> list = blogTagIds.stream().map(blogTagId -> new BlogTag()
                 .setTagId( blogTagId )
                 .setBlogId(blogId)).toList();
