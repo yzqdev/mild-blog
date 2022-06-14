@@ -47,7 +47,7 @@ public class ConfigController {
             ajaxResultPage.setCode(500);
             return ajaxResultPage;
         }
-        ajaxResultPage.setData(list);
+        ajaxResultPage.setList(list);
         return ajaxResultPage;
     }
 

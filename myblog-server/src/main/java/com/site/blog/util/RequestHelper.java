@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -144,7 +144,7 @@ public class RequestHelper {
                 .append("\nSESSION_ID : ")
                 .append(request.getSession().getId())
                 .append("\n请求时间 : ")
-                .append(Instant.now());
+                .append(LocalDateTime.now());
         // 请求头
         final Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {

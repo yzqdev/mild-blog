@@ -1,6 +1,7 @@
 package com.site.blog.controller;
 
 
+import cn.hutool.core.lang.Console;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
@@ -17,10 +18,8 @@ import com.site.blog.util.ResultGenerator;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -92,7 +91,7 @@ public class HomeBlogController {
 
 
                 .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
-                .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
+                .eq(BlogInfo::getShow, DeleteStatusEnum.SHOW.getStatus());
         //获取tag下的文章
         if (Objects.nonNull(tagId)) {
             List<BlogTag> list = blogService.list(new QueryWrapper<BlogTag>()
@@ -176,7 +175,7 @@ public class HomeBlogController {
 
 
                 .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
-                .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
+                .eq(BlogInfo::getShow, DeleteStatusEnum.SHOW.getStatus());
         //获取tag下的文章
         if (Objects.nonNull(categoryId)) {
             List<BlogCategory> list = blogCategoryService.list(new QueryWrapper<BlogCategory>()
@@ -225,7 +224,7 @@ public class HomeBlogController {
     @GetMapping("/tags")
     public Result getTags() {
         QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(Tag::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
+        queryWrapper.lambda().eq(Tag::getIsDeleted, DeleteStatusEnum.SHOW.getStatus());
         List<Tag> list = tagService.list();
         if (CollectionUtils.isEmpty(list)) {
             ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
@@ -236,7 +235,7 @@ public class HomeBlogController {
     @GetMapping("/categories")
     public Result getCate() {
         QueryWrapper<Category> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(Category::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus()).orderByDesc(Category::getCreateTime);
+        queryWrapper.lambda().eq(Category::getIsDeleted, DeleteStatusEnum.SHOW.getStatus()).orderByDesc(Category::getCreateTime);
         List<Category> list = categoryService.list(queryWrapper);
         if (CollectionUtils.isEmpty(list)) {
             ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
@@ -281,7 +280,7 @@ public class HomeBlogController {
                 .like(Objects.nonNull(condition.getKeyword()), BlogInfo::getBlogTitle, condition.getKeyword())
 
                 .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
-                .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
+                .eq(BlogInfo::getShow, DeleteStatusEnum.SHOW.getStatus());
         //获取tag下的文章
         if (Objects.nonNull(condition.getTagId())) {
             List<BlogTag> list = blogService.list(new QueryWrapper<BlogTag>()
@@ -339,7 +338,7 @@ public class HomeBlogController {
         List<Tag> tagList = new ArrayList<>();
         if (!blogTags.isEmpty()) {
             tagIds = blogTags.stream()
-                    .map(BlogTag::getTagId).collect(Collectors.toList());
+                    .map(BlogTag::getTagId).toList();
             tagList = tagService.list(new QueryWrapper<Tag>().lambda().in(Tag::getTagId, tagIds));
         }
 
@@ -347,12 +346,13 @@ public class HomeBlogController {
         long blogCommentCount = commentService.count(new QueryWrapper<Comment>()
                 .lambda()
                 .eq(Comment::getCommentStatus, CommentStatusEnum.ALLOW.getStatus())
-                .eq(Comment::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus())
+                .eq(Comment::getShow, DeleteStatusEnum.SHOW.getStatus())
                 .eq(Comment::getBlogId, blogId));
         HashMap<String, Object> result = new HashMap<>();
         BlogDetailVO blogDetailVO = new BlogDetailVO();
         BeanUtils.copyProperties(blogInfo, blogDetailVO);
         blogDetailVO.setCommentCount(blogCommentCount);
+        Console.log("homeblog创建时间{}",blogDetailVO.getCreateTime().toString());
         result.put("blogDetailVO", blogDetailVO);
         result.put("tagList", tagList);
         result.put("pageName", "详情");
@@ -375,11 +375,11 @@ public class HomeBlogController {
                 .lambda()
                 .eq(Comment::getBlogId, blogId)
                 .eq(Comment::getCommentStatus, CommentStatusEnum.ALLOW.getStatus())
-                .eq(Comment::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus())
+                .eq(Comment::getShow, DeleteStatusEnum.SHOW.getStatus())
                 .orderByDesc(Comment::getCommentCreateTime));
         AjaxResultPage<Comment> ajaxResultPage = new AjaxResultPage<>();
         ajaxResultPage.setCount(page.getTotal());
-        ajaxResultPage.setData(page.getRecords());
+        ajaxResultPage.setList(page.getRecords());
         return ajaxResultPage;
     }
 
@@ -430,7 +430,7 @@ public class HomeBlogController {
         comment.setUserAgent(RequestHelper.getUa().getBrowser()+RequestHelper.getUa().getVersion());
         comment.setOs(RequestHelper.getUa().getOs().toString());
         comment.setCommentCreateTime(LocalDateTime.now());
-        comment.setIsDeleted(0);
+        comment.setShow(true);
         //if (!StringUtils.hasText(ref)) {
         //    return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "非法请求");
         //}

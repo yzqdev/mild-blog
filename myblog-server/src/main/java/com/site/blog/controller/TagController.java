@@ -39,8 +39,8 @@ public class TagController {
      */
     @GetMapping("/tags/list")
     public Result<List<Tag>> tagsList() {
-        QueryWrapper<Tag> queryWrapper = new QueryWrapper<Tag>();
-        queryWrapper.lambda().eq(Tag::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
+        QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(Tag::getIsDeleted, DeleteStatusEnum.SHOW.getStatus());
         List<Tag> list = tagService.list();
         if (CollectionUtils.isEmpty(list)) {
             ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
@@ -65,7 +65,7 @@ public class TagController {
         Page<Tag> page = ajaxPutPage.putPageToPage();
         tagService.page(page, queryWrapper);
         AjaxResultPage<Tag> result = new AjaxResultPage<>();
-        result.setData(page.getRecords());
+        result.setList(page.getRecords());
         result.setCount(page.getTotal());
         return result;
     }

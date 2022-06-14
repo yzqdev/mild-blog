@@ -17,7 +17,7 @@
       <template v-slot="{ row }">
         <el-tag
           style="margin: 0 5px"
-          type="primary"
+
           v-for="(item, index) in row.blogTags"
           >{{ item.tagName }}
         </el-tag>
@@ -50,7 +50,7 @@
     </el-table-column>
     <el-table-column label="操作" width="250">
       <template v-slot="{ row }">
-        <el-button type="primary" size="mini" @click="editArticle(row)"
+        <el-button type="primary" size="small" @click="editArticle(row)"
           >编辑
         </el-button>
         <el-popconfirm
@@ -63,7 +63,7 @@
           @confirm="deleteRow(row)"
         >
           <template #reference>
-            <el-button type="warning" size="mini">隐藏</el-button>
+            <el-button type="warning" size="small">隐藏</el-button>
           </template>
         </el-popconfirm>
         <el-popconfirm
@@ -76,12 +76,15 @@
           @confirm="clearRow(row)"
         >
           <template #reference>
-            <el-button type="danger" size="mini">删除</el-button>
+            <el-button type="danger" size="small">删除</el-button>
           </template>
         </el-popconfirm>
       </template>
     </el-table-column>
   </el-table>
+
+  <br/>
+  <el-pagination background layout="total,sizes,prev, pager, next " :total="count" :page-size="pageSize"  @current-change="getData" v-model:current-page="currentPage" :page-sizes="[10, 20, 30, 40, 50, 100]" @size-change="sizeChange"/>
 </template>
 
 <script setup>
@@ -97,11 +100,15 @@ import { useRoute, useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 
 let state = reactive({
-  data: "",
+  data: [],
   loading: true,
   cateList: [],
   tagList: [],
 });
+let count=$ref(0)
+let currentPage=$ref(1)
+
+let pageSize=$ref(10)
 const router = useRouter();
 const route = useRoute();
 let { data, loading, cateList, tagList } = toRefs(state);
@@ -116,7 +123,10 @@ function getCate() {
     state.cateList = data;
   });
 }
-
+function sizeChange(size) {
+  pageSize=size
+  getData()
+}
 function getTags() {
   getTagList().then(({ data }) => {
     state.tagList = data;
@@ -124,9 +134,11 @@ function getTags() {
 }
 
 function getData() {
-  getBlogList({ pageNum: 1, pageSize: 30 }).then(({ data }) => {
-    console.log(data);
-    state.data = data;
+  getBlogList({ pageNum: 1, pageSize: pageSize }).then((res) => {
+console.log(`%c获取`,`color:red;font-size:16px;background:transparent`)
+    console.log(res)
+    state.data = res.data.list;
+    count=res.data.count
     state.loading = false;
   });
 }

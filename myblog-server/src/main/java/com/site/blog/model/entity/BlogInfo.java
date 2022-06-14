@@ -2,17 +2,13 @@ package com.site.blog.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
 
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -86,8 +82,8 @@ public class BlogInfo implements Serializable {
     /**
      * 是否删除 0=否 1=是
      */
-    @TableField("is_deleted")
-    private Integer isDeleted;
+    @TableField("show")
+    private Boolean show;
 
     /**
      * 添加时间,将Date转换成String,一般后台传值给前台时

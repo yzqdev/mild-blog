@@ -2,7 +2,12 @@
   <el-table :data="data">
     <el-table-column prop="commentator" label="评论者名称"></el-table-column>
     <el-table-column prop="email" label="评论者邮箱"></el-table-column>
-    <el-table-column prop="commentBody" label="评论内容"></el-table-column>
+    <el-table-column
+      prop="commentBody"
+      label="评论内容"
+      width="300"
+      :show-overflow-tooltip="true"
+    ></el-table-column>
     <el-table-column prop="commentCreateTime" label="评论时间" width="180">
       <template v-slot="{ row }">
         {{ $dayjs(row.commentCreateTime).format("YYYY-MM-DD HH:mm:ss") }}
@@ -27,7 +32,7 @@
           @confirm="deleteRow(row)"
         >
           <template #reference>
-            <el-button type="danger" size="mini">删除</el-button>
+            <el-button type="danger" size="small">删除</el-button>
           </template>
         </el-popconfirm>
         <el-popconfirm
@@ -40,15 +45,26 @@
           @confirm="checkRow(row)"
         >
           <template #reference>
-            <el-button type="primary" size="mini">审核</el-button>
+            <el-button type="primary" size="small">审核</el-button>
           </template>
         </el-popconfirm>
       </template>
     </el-table-column>
   </el-table>
+  <br />
+  <el-pagination
+    background
+    layout="total,sizes,prev, pager, next "
+    :total="count"
+    :page-size="pageSize"
+    @current-change="getData"
+    v-model:current-page="currentPage"
+    :page-sizes="[10, 20, 30, 40, 50, 100]"
+    @size-change="sizeChange"
+  />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
   deleteCommentById,
   getBlogList,
@@ -60,15 +76,20 @@ import { onBeforeMount, ref } from "vue";
 onBeforeMount(() => {
   getData();
 });
-let data = ref([]);
-
+let data = $ref([]);
+let count = $ref(0);
+let currentPage = $ref(1);
+let pageSize = $ref(10);
 function getData() {
-  getCommentList({ page: 1, limit: 30 }).then(({ data }) => {
-    console.log(data);
-    data.value = data;
+  getCommentList({ page: currentPage, limit: pageSize }).then((res) => {
+    data = res.data.list;
+    count = res.data.count;
   });
 }
-
+function sizeChange(size: number) {
+  pageSize = size;
+  getData();
+}
 function deleteRow(row) {
   deleteCommentById(row.commentId).then(({ data }) => {
     getData();

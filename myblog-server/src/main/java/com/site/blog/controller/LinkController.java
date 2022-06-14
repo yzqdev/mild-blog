@@ -63,7 +63,7 @@ public class LinkController {
             Page<Link> page = ajaxPutPage.putPageToPage();
             linkService.page(page, queryWrapper);
             AjaxResultPage<Link> result = new AjaxResultPage<>();
-            result.setData(page.getRecords());
+            result.setList(page.getRecords());
             result.setCount(page.getTotal());
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, result);
         } else {

@@ -8,7 +8,6 @@ import com.site.blog.model.dto.AjaxResultPage;
 import com.site.blog.model.dto.Result;
 import com.site.blog.model.entity.Comment;
 import com.site.blog.service.CommentService;
-import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.text.StringEscapeUtils;
@@ -42,14 +41,14 @@ public class CommentController {
      * @date 2020/4/24 21:23
      */
     @GetMapping("/comment/paging")
-    public AjaxResultPage<Comment> getCommentList(AjaxPutPage<Comment> ajaxPutPage, Comment condition){
+    public Result<AjaxResultPage<Comment>> getCommentList(AjaxPutPage<Comment> ajaxPutPage, Comment condition){
         QueryWrapper<Comment> queryWrapper = new QueryWrapper<>(condition);
         Page<Comment> page = ajaxPutPage.putPageToPage();
         commentService.page(page,queryWrapper);
         AjaxResultPage<Comment> result = new AjaxResultPage<>();
-        result.setData(page.getRecords());
+        result.setList(page.getRecords());
         result.setCount(page.getTotal());
-        return result;
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,result);
     }
 
     /**

@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +41,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     public List<BlogTagCount> getBlogTagCountForIndex() {
         QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda()
-                .eq(Tag::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus());
+                .eq(Tag::getIsDeleted, DeleteStatusEnum.SHOW.getStatus());
         List<Tag> list = baseMapper.selectList(queryWrapper);
         List<BlogTagCount> blogTagCounts = list.stream()
                 .map(blogTag -> new BlogTagCount()

@@ -16,8 +16,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -81,10 +79,10 @@ public class Comment implements Serializable {
     private String commentBody;
 
     /**
-     * 评论提交时间
+     * 评论创建时间
      */
     @TableField("comment_create_time")
-    //@JsonFormat(pattern = "yyyy/MM/dd", timezone = "GMT+8")    //将Date转换成String,一般后台传值给前台时
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")    //将Date转换成String,一般后台传值给前台时
     private LocalDateTime commentCreateTime;
 
     /**
@@ -104,7 +102,7 @@ public class Comment implements Serializable {
      * 回复时间
      */
     @TableField("reply_create_time")
-    @JsonFormat(pattern = "yyyy/MM/dd", timezone = "GMT+8")
+
     private LocalDateTime replyCreateTime;
 
     /**
@@ -116,8 +114,8 @@ public class Comment implements Serializable {
     /**
      * 是否删除 0-未删除 1-已删除
      */
-    @TableField("is_deleted")
-    private Integer isDeleted;
+    @TableField("show")
+    private Boolean show;
     @TableField("os")
     private String os;
 

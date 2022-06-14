@@ -3,6 +3,7 @@ package com.site.blog.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -14,6 +15,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 
 public class Result<T> implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
     private Integer resultCode;
     private String message;
@@ -28,15 +30,6 @@ public class Result<T> implements Serializable {
         this.message = message;
     }
 
-    @Override
-    public String toString() {
-        return "Result{" +
-                "resultCode=" + resultCode +
-                ", message='" + message + '\'' +
-                ", data=" + data +
-                ", success=" + success +
-                '}';
-    }
 
 
 

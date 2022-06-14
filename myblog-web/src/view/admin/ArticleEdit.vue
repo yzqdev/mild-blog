@@ -97,6 +97,7 @@ import {
 } from "@/utils/apiConfig";
 import { onBeforeMount, reactive, toRefs } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
 
 let state = reactive({
   articleForm: {
@@ -161,7 +162,10 @@ function submit() {
       router.push({
         name: "articleList",
       });
-      this.$message.success("成功");
+      ElMessage({
+        type:'success',
+        message:'成功'
+      })
     }
   });
 }

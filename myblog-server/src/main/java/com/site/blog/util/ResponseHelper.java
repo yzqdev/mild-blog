@@ -26,16 +26,12 @@ public class ResponseHelper {
 
 
     public static void response(String result, HttpServletResponse response) {
-        PrintWriter out = null;
-        try {
-            out = response.getWriter();
+        try (PrintWriter out = response.getWriter()) {
             response.setCharacterEncoding("utf-8");
             out.print(result);
             out.flush();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            out.close();
         }
     }
 

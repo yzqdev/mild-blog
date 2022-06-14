@@ -12,16 +12,13 @@ import com.site.blog.model.entity.*;
 import com.site.blog.model.vo.BlogDetailVO;
 import com.site.blog.model.vo.SimpleBlogListVO;
 import com.site.blog.service.*;
-import com.site.blog.util.BeanMapUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -51,7 +48,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
         blogInfoMapper.selectPage(page, new QueryWrapper<BlogInfo>()
                 .lambda()
                 .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
-                .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus())
+                .eq(BlogInfo::getShow, DeleteStatusEnum.SHOW.getStatus())
                 .orderByDesc(BlogInfo::getCreateTime));
         for (BlogInfo blogInfo : page.getRecords()) {
             SimpleBlogListVO simpleBlogListVO = new SimpleBlogListVO();
@@ -68,7 +65,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
         blogInfoMapper.selectPage(page, new QueryWrapper<BlogInfo>()
                 .lambda()
                 .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
-                .eq(BlogInfo::getIsDeleted, DeleteStatusEnum.NO_DELETED.getStatus())
+                .eq(BlogInfo::getShow, DeleteStatusEnum.SHOW.getStatus())
                 .orderByDesc(BlogInfo::getBlogViews));
         for (BlogInfo blogInfo : page.getRecords()) {
             SimpleBlogListVO simpleBlogListVO = new SimpleBlogListVO();

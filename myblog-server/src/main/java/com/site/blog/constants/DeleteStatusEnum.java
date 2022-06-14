@@ -12,16 +12,16 @@ public enum DeleteStatusEnum {
     /**
      * 已删除
      */
-    DELETED(1, "已删除"),
+    NOT_SHOW(false, "不显示"),
     /**
      * 未删除
      */
-    NO_DELETED(0, "未删除");
+    SHOW(true, "显示");
 
-    private final int status;
+    private final Boolean status;
     private final String note;
 
-    DeleteStatusEnum(int status, String note) {
+    DeleteStatusEnum(Boolean status, String note) {
         this.status = status;
         this.note = note;
     }
@@ -30,7 +30,7 @@ public enum DeleteStatusEnum {
         return note;
     }
 
-    public int getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 }

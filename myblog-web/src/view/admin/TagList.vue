@@ -30,7 +30,7 @@
 
     <el-table-column label="操作" width="250">
       <template v-slot="{ row }">
-        <el-button type="primary" size="mini" @click="editRow(row)"
+        <el-button type="primary" size="small" @click="editRow(row)"
           >编辑
         </el-button>
         <el-popconfirm
@@ -43,12 +43,23 @@
           @confirm="deleteRow(row)"
         >
           <template #reference>
-            <el-button type="danger" size="mini">删除</el-button>
+            <el-button type="danger" size="small">删除</el-button>
           </template>
         </el-popconfirm>
       </template>
     </el-table-column>
   </el-table>
+  <br />
+  <el-pagination
+    background
+    layout="total,sizes,prev, pager, next "
+    :total="count"
+    :page-size="pageSize"
+    @current-change="getData"
+    v-model:current-page="currentPage"
+    :page-sizes="[10, 20, 30, 40, 50, 100]"
+    @size-change="sizeChange"
+  />
 </template>
 
 <script setup>
@@ -61,10 +72,16 @@ import {
 } from "@/utils/apiConfig";
 import { onBeforeMount, reactive, toRefs } from "vue";
 import { ElMessage } from "element-plus";
-
+let count=$ref(0)
+let pageSize=$ref(10)
+let currentPage=$ref(1)
+function sizeChange(size){
+  pageSize=size
+  getData()
+}
 let state = reactive({
   isEdit: true,
-  data: "",
+  data: [],
   editForm: { tagName: "", isDeleted: false },
   editFormShow: false,
 });

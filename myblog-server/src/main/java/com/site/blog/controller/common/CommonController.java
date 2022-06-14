@@ -21,7 +21,7 @@ import java.util.HashMap;
  * @modified By:
  */
 @RestController
-@RequestMapping("/common")
+@RequestMapping("/v2/common")
 @RequiredArgsConstructor
 public class CommonController {
     @Value("${myblog.upload.file-url}")
@@ -30,9 +30,10 @@ public class CommonController {
     @PostMapping("/file")
     public Result uploadFile(@RequestBody MultipartFile multipartFile) {
         try {
-            multipartFile.transferTo(new File(fileUrl + multipartFile.getOriginalFilename()));
+            File file=new File(fileUrl + multipartFile.getOriginalFilename());
+            multipartFile.transferTo(file);
             HashMap<String, Object> result = new HashMap<>();
-            result.put("hhh", "hhh");
+            result.put("file", file.getAbsolutePath());
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,result);
         }catch (IOException e){
             e.printStackTrace();
