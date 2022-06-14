@@ -216,7 +216,7 @@ public class AdminBlogController {
      */
 
     @PostMapping("/blog/delete/{id}")
-    public Result deleteBlog(@PathVariable("id") String blogId) {
+    public Result deleteBlog(@PathVariable("id") Long blogId) {
         BlogInfo blogInfo = blogInfoService.getOne(new QueryWrapper<BlogInfo>().eq("blog_id", blogId));
         blogInfo.setShow(ShowEnum.NOT_SHOW.getStatus()).setUpdateTime(LocalDateTime.now());
         boolean flag = blogInfoService.updateById(blogInfo);
