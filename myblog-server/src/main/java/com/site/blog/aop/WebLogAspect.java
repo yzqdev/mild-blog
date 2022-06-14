@@ -34,7 +34,11 @@ public class WebLogAspect {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
-    //使用@Before在切入点开始处切入内容
+    /**
+     * 使用@Before在切入点开始处切入内容
+     * @param joinPoint
+     * @throws Throwable
+     */
     @Before("webLog()")
     public void doBefore(JoinPoint joinPoint) throws Throwable {
         startTime.set(System.currentTimeMillis());
