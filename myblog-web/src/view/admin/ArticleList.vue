@@ -128,7 +128,7 @@ function sizeChange(size) {
   getData()
 }
 function getTags() {
-  getTagList().then(({ data }) => {
+  getTagList({page:1,limit:100}).then(({ data }) => {
     state.tagList = data;
   });
 }

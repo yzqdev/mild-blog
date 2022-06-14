@@ -140,8 +140,8 @@ function getData() {
 }
 
 function tagList() {
-  getTagList().then(({ data }) => {
-    state.tagOptions = data;
+  getTagList({page:1,limit:100}).then(({ data }) => {
+    state.tagOptions = data.list;
   });
 }
 

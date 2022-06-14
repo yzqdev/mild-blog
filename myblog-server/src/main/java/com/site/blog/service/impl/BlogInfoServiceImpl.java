@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.site.blog.constants.BlogStatusEnum;
-import com.site.blog.constants.DeleteStatusEnum;
+import com.site.blog.constants.ShowEnum;
 import com.site.blog.mapper.*;
 import com.site.blog.model.dto.PageDto;
 import com.site.blog.model.entity.*;
@@ -48,7 +48,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
         blogInfoMapper.selectPage(page, new QueryWrapper<BlogInfo>()
                 .lambda()
                 .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
-                .eq(BlogInfo::getShow, DeleteStatusEnum.SHOW.getStatus())
+                .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus())
                 .orderByDesc(BlogInfo::getCreateTime));
         for (BlogInfo blogInfo : page.getRecords()) {
             SimpleBlogListVO simpleBlogListVO = new SimpleBlogListVO();
@@ -65,7 +65,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
         blogInfoMapper.selectPage(page, new QueryWrapper<BlogInfo>()
                 .lambda()
                 .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
-                .eq(BlogInfo::getShow, DeleteStatusEnum.SHOW.getStatus())
+                .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus())
                 .orderByDesc(BlogInfo::getBlogViews));
         for (BlogInfo blogInfo : page.getRecords()) {
             SimpleBlogListVO simpleBlogListVO = new SimpleBlogListVO();

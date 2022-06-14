@@ -37,19 +37,19 @@ private static final long serialVersionUID=1L;
      * 关系表id
      */
     @TableId(value = "relation_id", type = IdType.ASSIGN_ID)
-    private String relationId;
+    private Long relationId;
 
     /**
      * 博客id
      */
     @TableField("blog_id")
-    private String blogId;
+    private Long blogId;
 
     /**
      * 标签id
      */
     @TableField(value = "tag_id" )
-    private String tagId;
+    private Long tagId;
 
     /**
      * 添加时间

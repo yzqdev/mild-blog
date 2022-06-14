@@ -103,8 +103,8 @@ export const checkCommentById = (id: string) => {
 export const hideCommentById = (id: string) => {
   return axios.post(`/admin/comment/isDel/${id}`);
 };
-export const getTagList = () => {
-  return axios.get(`/admin/tags/list`);
+export const getTagList = (data:{page:number,limit:number}) => {
+  return axios.get(`/admin/tags/list?page=${data.page}&limit=${data.limit}`);
 };
 export const addTag = (data: object) => {
   return axios.postForm(`/admin/tags/add`, data);

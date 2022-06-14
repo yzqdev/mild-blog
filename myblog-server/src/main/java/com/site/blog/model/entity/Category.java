@@ -7,7 +7,6 @@ import java.sql.Timestamp;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
@@ -33,7 +32,7 @@ private static final long serialVersionUID=1L;
      * 分类表主键
      */
     @TableId(value = "category_id", type = IdType.ASSIGN_ID)
-    private String categoryId;
+    private Long categoryId;
 
     /**
      * 分类的名称
@@ -56,8 +55,8 @@ private static final long serialVersionUID=1L;
     /**
      * 是否删除 0=否 1=是
      */
-    @TableField("is_deleted")
-    private Integer isDeleted;
+    @TableField("show")
+    private Boolean show;
 
     /**
      * 创建时间

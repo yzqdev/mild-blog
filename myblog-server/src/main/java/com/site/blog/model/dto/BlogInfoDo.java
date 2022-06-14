@@ -24,7 +24,7 @@ public class BlogInfoDo {
     /**
      * 博客表主键id
      */
-    private String blogId;
+    private Long blogId;
 
     /**
      * 博客标题
@@ -49,14 +49,14 @@ public class BlogInfoDo {
     /**
      * 博客分类id
      */
-    private String blogCategoryId;
+    private Long blogCategoryId;
 
 
     /**
      * 博客标签ids
      */
 
-    private List<String> blogTagIds;
+    private List<Long> blogTagIds;
     /**
      * 0-草稿 1-发布
      */

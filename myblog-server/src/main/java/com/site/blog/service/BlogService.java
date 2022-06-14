@@ -22,6 +22,6 @@ public interface BlogService extends IService<BlogTag> {
      * @return boolean
      * @date 2020/1/29 21:31
      */
-    void removeAndsaveBatch(List<String> blogTagIds, BlogInfo blogInfo);
+    void removeAndsaveBatch(List<Long> blogTagIds, BlogInfo blogInfo);
 
 }

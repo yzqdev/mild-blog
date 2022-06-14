@@ -12,7 +12,7 @@ import java.util.List;
 
 @Data
 public class BlogDetailVO {
-    private String blogId;
+    private Long blogId;
 
     private String blogTitle;
 
