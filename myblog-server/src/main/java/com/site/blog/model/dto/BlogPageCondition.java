@@ -20,8 +20,8 @@ public class BlogPageCondition {
 
     private String pageName;
 
-    private Long tagId;
+    private String tagId;
 
-    private Long categoryId;
+    private String categoryId;
 
 }

@@ -43,13 +43,13 @@ private static final long serialVersionUID=1L;
      * 博客id
      */
     @TableField("blog_id")
-    private Long blogId;
+    private String blogId;
 
     /**
      * 标签id
      */
     @TableField(value = "tag_id" )
-    private Long tagId;
+    private String tagId;
 
     /**
      * 添加时间

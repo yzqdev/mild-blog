@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -34,7 +35,7 @@ public class BlogInfo implements Serializable {
      * 博客表主键id
      */
     @TableId(value = "blog_id", type = IdType.ASSIGN_ID)
-    private Long blogId;
+    private String blogId;
 
     /**
      * 博客标题
@@ -61,11 +62,6 @@ public class BlogInfo implements Serializable {
     private String blogContent;
 
 
-    /**
-     * 0-草稿 1-发布
-     */
-    @TableField("blog_status")
-    private Integer blogStatus;
 
     /**
      * 阅读量
@@ -77,10 +73,10 @@ public class BlogInfo implements Serializable {
      * 0-允许评论 1-不允许评论
      */
     @TableField("enable_comment")
-    private Integer enableComment;
+    private Boolean enableComment;
 
     /**
-     * 是否删除 0=否 1=是
+     * 是否删除 0=草稿 1=发布
      */
     @TableField("show")
     private Boolean show;
@@ -88,16 +84,17 @@ public class BlogInfo implements Serializable {
     /**
      * 添加时间,将Date转换成String,一般后台传值给前台时
      */
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField("create_time")
     private LocalDateTime createTime;
 
     /**
      * 修改时间//将Date转换成String,一般后台传值给前台时
      */
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField("update_time")
     private LocalDateTime updateTime;
-
+@TableField("deleted")
+    private boolean deleted;
 
 }

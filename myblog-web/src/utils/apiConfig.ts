@@ -84,9 +84,9 @@ export const clearLink = (data: string) => {
 export const getUserInfo = () => {
   return axios.get("/admin/getUser");
 };
-export const getBlogList = (data: { pageNum: number; pageSize: number }) => {
+export const getBlogList = (data: { page: number; limit: number }) => {
   return axios.get(
-    `/admin/blog/list?pageNum=${data.pageNum}&pageSize=${data.pageSize}`
+    `/admin/blog/list?page=${data.page }&limit=${data.limit}`
   );
 };
 export const getCommentList = (data: { page: number; limit: number }) => {
@@ -100,8 +100,8 @@ export const deleteCommentById = (id: string) => {
 export const checkCommentById = (id: string) => {
   return axios.post(`/admin/comment/delete/${id}`);
 };
-export const hideCommentById = (id: string) => {
-  return axios.post(`/admin/comment/isDel/${id}`);
+export const hideCommentById = (id: string,show:boolean) => {
+  return axios.post(`/admin/comment/isDel/${id}?show=${show}`);
 };
 export const getTagList = (data:{page:number,limit:number}) => {
   return axios.get(`/admin/tags/list?page=${data.page}&limit=${data.limit}`);

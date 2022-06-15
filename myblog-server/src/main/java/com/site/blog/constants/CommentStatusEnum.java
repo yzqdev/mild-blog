@@ -12,16 +12,16 @@ public enum CommentStatusEnum {
     /**
      * 允许评论
      */
-    ALLOW(1,"允许评论"),
+    ALLOW(true,"允许评论"),
     /**
      * 不允许评论
      */
-    NO_ALLOW(0,"不允许评论");
+    NO_ALLOW(false,"不允许评论");
 
-    private final int status;
+    private final Boolean status;
     private final String note;
 
-    CommentStatusEnum(int status, String note) {
+    CommentStatusEnum(Boolean status, String note) {
         this.status = status;
         this.note = note;
     }
@@ -30,7 +30,7 @@ public enum CommentStatusEnum {
         return note;
     }
 
-    public int getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 }

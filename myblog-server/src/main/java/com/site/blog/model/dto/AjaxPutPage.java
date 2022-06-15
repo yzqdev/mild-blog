@@ -27,7 +27,10 @@ public class AjaxPutPage<T> {
      * 从多少开始
      */
     Integer start;
-
+    /**
+     * 删除
+     */
+    Boolean deleted;
     /**
      * 条件类
      */

@@ -54,7 +54,7 @@ public class HomeBlogController {
     private final BlogConfigService blogConfigService;
 
 
-    private final BlogService blogService;
+    private final BlogTagService blogService;
 
 
     private final CommentService commentService;
@@ -90,7 +90,6 @@ public class HomeBlogController {
         LambdaQueryWrapper<BlogInfo> sqlWrapper = Wrappers.<BlogInfo>lambdaQuery()
 
 
-                .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
                 .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus());
         //获取tag下的文章
         if (Objects.nonNull(tagId)) {
@@ -124,7 +123,7 @@ public class HomeBlogController {
             QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
             List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).collect(Collectors.toList());
             post.setBlogTags(tags);
-            Long cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
+            String cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
             if (cateId != null) {
                 post.setBlogCategory(categoryService.getById(cateId));
             }
@@ -147,7 +146,7 @@ public class HomeBlogController {
                 QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
                 List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).collect(Collectors.toList());
                 post.setBlogTags(tags);
-               Long cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
+               String cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
                 if (cateId != null) {
                     post.setBlogCategory(categoryService.getById(cateId));
                 }
@@ -174,7 +173,6 @@ public class HomeBlogController {
         LambdaQueryWrapper<BlogInfo> sqlWrapper = Wrappers.<BlogInfo>lambdaQuery()
 
 
-                .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
                 .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus());
         //获取tag下的文章
         if (Objects.nonNull(categoryId)) {
@@ -279,7 +277,6 @@ public class HomeBlogController {
         LambdaQueryWrapper<BlogInfo> sqlWrapper = Wrappers.<BlogInfo>lambdaQuery()
                 .like(Objects.nonNull(condition.getKeyword()), BlogInfo::getBlogTitle, condition.getKeyword())
 
-                .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
                 .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus());
         //获取tag下的文章
         if (Objects.nonNull(condition.getTagId())) {
@@ -323,7 +320,7 @@ public class HomeBlogController {
      * @date 2019/9/6 13:09
      */
     @GetMapping({"/blog/{blogId}", "/article/{blogId}"})
-    public Result<Object> detail(@PathVariable("blogId") Long blogId) {
+    public Result<Object> detail(@PathVariable("blogId") String blogId) {
         // 获得文章info
         BlogInfo blogInfo = blogInfoService.getById(blogId);
         List<BlogTag> blogTags = blogService.list(new QueryWrapper<BlogTag>()
@@ -334,7 +331,7 @@ public class HomeBlogController {
                 .setBlogViews(blogInfo.getBlogViews() + 1));
 
         // 获得关联的标签列表
-        List<Long> tagIds;
+        List<String> tagIds;
         List<Tag> tagList = new ArrayList<>();
         if (!blogTags.isEmpty()) {
             tagIds = blogTags.stream()
@@ -346,7 +343,7 @@ public class HomeBlogController {
         long blogCommentCount = commentService.count(new QueryWrapper<Comment>()
                 .lambda()
                 .eq(Comment::getCommentStatus, CommentStatusEnum.ALLOW.getStatus())
-                .eq(Comment::getShow, ShowEnum.SHOW.getStatus())
+                .eq(Comment::getDeleted, ShowEnum.SHOW.getStatus())
                 .eq(Comment::getBlogId, blogId));
         HashMap<String, Object> result = new HashMap<>();
         BlogDetailVO blogDetailVO = new BlogDetailVO();
@@ -369,18 +366,18 @@ public class HomeBlogController {
      */
     @GetMapping("/blog/listComment")
     @ResponseBody
-    public AjaxResultPage<Comment> listComment(AjaxPutPage<Comment> ajaxPutPage, Long blogId) {
+    public Result<AjaxResultPage<Comment>> listComment(AjaxPutPage<Comment> ajaxPutPage, String blogId) {
         Page<Comment> page = ajaxPutPage.putPageToPage();
         commentService.page(page, new QueryWrapper<Comment>()
                 .lambda()
                 .eq(Comment::getBlogId, blogId)
                 .eq(Comment::getCommentStatus, CommentStatusEnum.ALLOW.getStatus())
-                .eq(Comment::getShow, ShowEnum.SHOW.getStatus())
+                .eq(Comment::getDeleted, ShowEnum.SHOW.getStatus())
                 .orderByDesc(Comment::getCommentCreateTime));
         AjaxResultPage<Comment> ajaxResultPage = new AjaxResultPage<>();
         ajaxResultPage.setCount(page.getTotal());
         ajaxResultPage.setList(page.getRecords());
-        return ajaxResultPage;
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,ajaxResultPage);
     }
 
     /**
@@ -425,12 +422,12 @@ public class HomeBlogController {
 
         // 对非法字符进行转义，防止xss漏洞
         comment.setCommentBody(StringEscapeUtils.escapeHtml4(comment.getCommentBody()));
-        comment.setCommentStatus(1);
+        comment.setCommentStatus(true);
         comment.setCommentatorIp(RequestHelper.getRequestIp());
         comment.setUserAgent(RequestHelper.getUa().getBrowser()+RequestHelper.getUa().getVersion());
         comment.setOs(RequestHelper.getUa().getOs().toString());
         comment.setCommentCreateTime(LocalDateTime.now());
-        comment.setShow(true);
+        comment.setDeleted(true);
         //if (!StringUtils.hasText(ref)) {
         //    return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "非法请求");
         //}

@@ -1,15 +1,9 @@
 package com.site.blog.model.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,7 +18,7 @@ public class BlogInfoDo {
     /**
      * 博客表主键id
      */
-    private Long blogId;
+    private String blogId;
 
     /**
      * 博客标题
@@ -49,19 +43,18 @@ public class BlogInfoDo {
     /**
      * 博客分类id
      */
-    private Long blogCategoryId;
+    private String blogCategoryId;
 
 
     /**
      * 博客标签ids
      */
 
-    private List<Long> blogTagIds;
+    private List<String> blogTagIds;
     /**
      * 0-草稿 1-发布
      */
-    //@TableField("blog_status")
-    private Integer blogStatus;
+    private Boolean show;
 
     /**
      * 阅读量
@@ -72,7 +65,7 @@ public class BlogInfoDo {
      * 0-允许评论 1-不允许评论
      */
     //@TableField("enable_comment")
-    private Integer enableComment;
+    private Boolean enableComment;
 
     /**
      * 是否删除 0=否 1=是
@@ -83,6 +76,7 @@ public class BlogInfoDo {
     /**
      * 添加时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime createTime;
 
 

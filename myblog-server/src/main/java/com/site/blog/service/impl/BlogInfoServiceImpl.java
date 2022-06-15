@@ -47,7 +47,6 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
         Page<BlogInfo> page = new Page<>(1, 5);
         blogInfoMapper.selectPage(page, new QueryWrapper<BlogInfo>()
                 .lambda()
-                .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
                 .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus())
                 .orderByDesc(BlogInfo::getCreateTime));
         for (BlogInfo blogInfo : page.getRecords()) {
@@ -64,7 +63,6 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
         Page<BlogInfo> page = new Page<>(1, 5);
         blogInfoMapper.selectPage(page, new QueryWrapper<BlogInfo>()
                 .lambda()
-                .eq(BlogInfo::getBlogStatus, BlogStatusEnum.RELEASE.getStatus())
                 .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus())
                 .orderByDesc(BlogInfo::getBlogViews));
         for (BlogInfo blogInfo : page.getRecords()) {

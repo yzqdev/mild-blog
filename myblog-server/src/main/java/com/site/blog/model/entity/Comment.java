@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -38,8 +40,9 @@ public class Comment implements Serializable {
     /**
      * 主键id
      */
-    @TableId(value = "comment_id", type = IdType.ASSIGN_ID)
-    private String commentId;
+     
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    private String id;
 
     /**
      * 关联的blog主键
@@ -109,13 +112,13 @@ public class Comment implements Serializable {
      * 是否审核通过 0-未审核 1-审核通过
      */
     @TableField("comment_status")
-    private Integer commentStatus;
+    private Boolean commentStatus;
 
     /**
      * 是否删除 0-未删除 1-已删除
      */
-    @TableField("show")
-    private Boolean show;
+    @TableField("deleted")
+    private Boolean deleted;
     @TableField("os")
     private String os;
 
