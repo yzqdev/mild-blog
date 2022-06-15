@@ -32,7 +32,7 @@ private static final long serialVersionUID=1L;
      * 分类表主键
      */
     @TableId(value = "category_id", type = IdType.ASSIGN_ID)
-    private Long categoryId;
+    private String categoryId;
 
     /**
      * 分类的名称

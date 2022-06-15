@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class SimpleBlogListVO  {
 
-    private Long blogId;
+    private String blogId;
 
     private String blogTitle;
 

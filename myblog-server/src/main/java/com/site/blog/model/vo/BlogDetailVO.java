@@ -12,7 +12,7 @@ import java.util.List;
 
 @Data
 public class BlogDetailVO {
-    private Long blogId;
+    private String blogId;
 
     private String blogTitle;
 
@@ -31,10 +31,11 @@ public class BlogDetailVO {
     private Integer blogStatus;
     private String blogContent;
 
-    private Integer enableComment;
+    private Boolean enableComment;
     private Boolean show;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private  LocalDateTime createTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
+    private Boolean deleted;
 }

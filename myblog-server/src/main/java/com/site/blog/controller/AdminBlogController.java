@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.site.blog.constants.ShowEnum;
 import com.site.blog.constants.HttpStatusEnum;
-import com.site.blog.model.dto.AjaxResultPage;
-import com.site.blog.model.dto.BlogInfoDo;
-import com.site.blog.model.dto.PageDto;
-import com.site.blog.model.dto.Result;
+import com.site.blog.model.dto.*;
 import com.site.blog.model.entity.BlogCategory;
 import com.site.blog.model.entity.BlogInfo;
 import com.site.blog.model.entity.BlogTag;
@@ -54,7 +51,7 @@ public class AdminBlogController {
 
     private final TagService tagService;
 
-    private final BlogService blogService;
+    private final BlogTagService blogService;
 
     /**
      * 跳转博客编辑界面
@@ -72,7 +69,7 @@ public class AdminBlogController {
         BeanUtils.copyProperties(blogInfo,blogDetailVO);
         blogDetailVO.setBlogCategoryId(blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", blogInfo.getBlogId())).getCategoryId());
         QueryWrapper<BlogTag> queryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", id);
-        List<Long> ids = blogTagService.list(queryWrapper).stream().map(BlogTag::getTagId).toList();
+        List<String> ids = blogTagService.list(queryWrapper).stream().map(BlogTag::getTagId).toList();
         blogDetailVO.setBlogTagIds(ids);
          log.info("home创建时间{}",blogDetailVO.getCreateTime().toString());
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogDetailVO);
@@ -90,10 +87,7 @@ public class AdminBlogController {
     @PostMapping("/blog/edit")
     @Transactional(rollbackFor = Exception.class)
     public Result saveBlog(@RequestBody BlogInfoDo blogInfoDo) {
-//todo 当然这里可以直接用sql语句,不过我为了学习方便用了DO
-        //if (ObjectUtils.isEmpty(blogInfoDo.getBlogTags()) || ObjectUtils.isEmpty(blogInfoDo)) {
-        //    return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
-        //}
+
         BlogInfo blogInfo = new BlogInfo();
 
         blogInfo.setBlogId(blogInfoDo.getBlogId());
@@ -102,30 +96,28 @@ public class AdminBlogController {
         blogInfo.setBlogTitle(blogInfoDo.getBlogTitle());
         blogInfo.setBlogSubUrl(blogInfoDo.getBlogSubUrl());
         blogInfo.setEnableComment(blogInfoDo.getEnableComment());
-        blogInfo.setBlogStatus(blogInfoDo.getBlogStatus());
+        blogInfo.setShow(blogInfoDo.getShow());
         blogInfo.setCreateTime(LocalDateTime.now());
         blogInfo.setUpdateTime(LocalDateTime.now());
 
 
         blogInfo.setBlogContent(blogInfoDo.getBlogContent());
         blogInfo.setBlogPreface(blogInfoDo.getBlogPreface());
-        blogInfo.setShow(true);
-        blogInfo.setBlogStatus(blogInfoDo.getBlogStatus());
         log.info("这是bloginfo");
         log.info(blogInfo.toString());
         if (blogInfoService.saveOrUpdate(blogInfo)) {
             BlogCategory blogCategory = new BlogCategory();
             blogCategory.setBlogId(blogInfo.getBlogId());
-            System.out.println(blogInfo);
+
             //添加blog和分类映射关系
             if (blogInfoDo.getBlogCategoryId() == null) {
                 //blogCategoryService.save()
-                blogCategory.setCategoryId(1L);
+                blogCategory.setCategoryId("1");
 
             } else {
                 LambdaQueryWrapper<BlogCategory> queryWrapper = new LambdaQueryWrapper<BlogCategory>().eq(BlogCategory::getBlogId, blogInfo.getBlogId());
                 if (blogCategoryService.getOne(queryWrapper) == null) {
-                    blogCategory.setCategoryId(1L);
+                    blogCategory.setCategoryId("1");
                 } else {
                     blogCategoryService.remove(queryWrapper);
                     blogCategory.setCategoryId(blogInfoDo.getBlogCategoryId());
@@ -138,7 +130,7 @@ public class AdminBlogController {
 
             //添加blog和标签映射关系
             blogTagService.remove(new QueryWrapper<BlogTag>().eq("blog_id", blogInfo.getBlogId()));
-            for (Long tagId : blogInfoDo.getBlogTagIds()) {
+            for (String tagId : blogInfoDo.getBlogTagIds()) {
                 BlogTag blogTag = BlogTag.builder().blogId(blogInfo.getBlogId()).tagId(tagId).createTime(DateUtils.getLocalCurrentDate()).build();
 
                 blogTagService.save(blogTag);
@@ -150,33 +142,36 @@ public class AdminBlogController {
     }
 
     /**
+     *
      * 文章分页列表
      *
-     * @param pageDto 分页参数
+     * @param ajaxPutPage
      * @return com.site.blog.pojo.dto.AjaxResultPage<com.site.blog.entity.BlogInfo>
      * @date 2019/8/28 16:43
      */
 
     @GetMapping("/blog/list")
-    public Result getBlogList(PageDto pageDto) {
+    public Result  getBlogList(AjaxPutPage<BlogInfo> ajaxPutPage) {
         try {
             QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>();
             queryWrapper.lambda().orderByDesc(BlogInfo::getUpdateTime);
-            Page<BlogInfo> page = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
+            Page<BlogInfo> page =ajaxPutPage.putPageToPage();
             Page<BlogInfo> blogInfoPage = blogInfoService.page(page, queryWrapper);
             log.info("blogInfoPage:====>{}", blogInfoPage.getRecords());
             List<BlogDetailVO> blogDetailVOS = blogInfoPage.getRecords().stream().map(BeanMapUtil::copyBlog).toList();
             log.info("blogDetailVOS:{}", blogDetailVOS);
             blogDetailVOS.forEach(post -> {
 
-                QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
-                List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).toList();
-                post.setBlogTags(tags);
+             if (!post.getDeleted()){
+                 QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
+                 List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).toList();
+                 post.setBlogTags(tags);
 
-                Long cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
-                if (cateId != null) {
-                    post.setBlogCategory(categoryService.getById(cateId));
-                }
+                 String cateId = blogCategoryService.getOne(new LambdaQueryWrapper<BlogCategory>().eq(BlogCategory::getBlogId, post.getBlogId())).getCategoryId();
+                 if (cateId != null) {
+                     post.setBlogCategory(categoryService.getById(cateId));
+                 }
+             }
             });
             AjaxResultPage<BlogDetailVO> list=new AjaxResultPage<>();
             list.setCount(blogDetailVOS.size());
@@ -184,10 +179,11 @@ public class AdminBlogController {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, list);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, "error");
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false  );
         }
 
     }
+
 
     /**
      * 修改博客的部分状态相关信息
@@ -216,7 +212,7 @@ public class AdminBlogController {
      */
 
     @PostMapping("/blog/delete/{id}")
-    public Result deleteBlog(@PathVariable("id") Long blogId) {
+    public Result deleteBlog(@PathVariable("id") String blogId) {
         BlogInfo blogInfo = blogInfoService.getOne(new QueryWrapper<BlogInfo>().eq("blog_id", blogId));
         blogInfo.setShow(ShowEnum.NOT_SHOW.getStatus()).setUpdateTime(LocalDateTime.now());
         boolean flag = blogInfoService.updateById(blogInfo);
@@ -251,7 +247,7 @@ public class AdminBlogController {
      */
 
     @PostMapping("/blog/restore")
-    public Result<String> restoreBlog(@RequestParam Long blogId) {
+    public Result<String> restoreBlog(@RequestParam String blogId) {
         BlogInfo blogInfo = new BlogInfo()
                 .setBlogId(blogId)
                 .setShow(ShowEnum.SHOW.getStatus())

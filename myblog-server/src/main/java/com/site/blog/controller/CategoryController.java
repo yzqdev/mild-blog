@@ -75,7 +75,7 @@ public class CategoryController {
         QueryWrapper<Category> queryWrapper = new QueryWrapper<>(condition);
         queryWrapper.lambda()
 
-                .ne(Category::getCategoryId, 1L).orderByAsc(Category::getCategoryRank);
+                .ne(Category::getCategoryId, "1").orderByAsc(Category::getCategoryRank);
         Page<Category> page = ajaxPutPage.putPageToPage();
         categoryService.page(page, queryWrapper);
         AjaxResultPage<Category> result = new AjaxResultPage<>();

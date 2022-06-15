@@ -59,15 +59,15 @@
           <el-switch
             active-text="草稿"
             inactive-text="发布"
-            v-model="articleForm.blogStatus"
+            v-model="articleForm.show"
             :active-value="0"
             :inactive-value="1"
           ></el-switch>
           <el-switch
             active-text="开启评论"
             inactive-text="关闭评论"
-            :active-value="1"
-            :inactive-value="0"
+            :active-value="true"
+            :inactive-value="false"
             v-model="articleForm.enableComment"
           ></el-switch>
         </div>
@@ -108,8 +108,8 @@ let state = reactive({
     blogContent: "",
     blogPreface: "",
     blogSubUrl: "",
-    blogStatus: 0,
-    enableComment: 0,
+    show:false,
+    enableComment: false,
   },
   text: "",
   tagOptions: [],

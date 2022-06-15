@@ -184,7 +184,7 @@ function getComments() {
   listComments({ page: 1, limit: 30, blogId: blog.value.blogId }).then(
     (res) => {
       loading.value = false;
-      commentList.value = res.data;
+      commentList.value = res.data.list;
     }
   );
 }

@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 public class BlogTagCount {
-    private Long tagId;
+    private String tagId;
 
     private String tagName;
 

@@ -33,19 +33,15 @@
         {{ $dayjs(row.updateTime).format("YYYY-MM-DD HH:mm:ss") }}
       </template>
     </el-table-column>
-    <el-table-column prop="blogStatus" label="文章状态">
+    <el-table-column prop="show" label="文章状态">
       <template v-slot="{ row }"
-        >{{ row.blogStatus == 1 ? `发布` : `草稿` }}
+        >{{ row.show ? `发布` : `草稿` }}
       </template>
     </el-table-column>
-    <el-table-column prop="show" label="隐藏状态">
-      <template v-slot="{ row }">
-        {{ row.show ?  `显示`:`隐藏`  }}
-      </template>
-    </el-table-column>
+
     <el-table-column prop="enableComment" label="评论">
       <template v-slot="{ row }"
-        >{{ row.enableComment == 1 ? `允许` : `禁止` }}
+        >{{ row.enableComment  ? `允许` : `禁止` }}
       </template>
     </el-table-column>
     <el-table-column label="操作" width="250">
@@ -134,7 +130,7 @@ function getTags() {
 }
 
 function getData() {
-  getBlogList({ pageNum: 1, pageSize: pageSize }).then((res) => {
+  getBlogList({ page : 1, limit: pageSize }).then((res) => {
 console.log(`%c获取`,`color:red;font-size:16px;background:transparent`)
     console.log(res)
     state.data = res.data.list;

@@ -1,10 +1,7 @@
 package com.site.blog.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.site.blog.model.entity.BlogCategory;
-import com.site.blog.model.entity.BlogConfig;
-import com.site.blog.model.entity.BlogTag;
-import com.site.blog.model.entity.Tag;
+import com.site.blog.model.entity.*;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -17,5 +14,5 @@ import java.util.List;
  * @modified By:
  */
 public interface BlogTagService extends IService<BlogTag> {
-
+    public void removeAndsaveBatch(List<String> blogTagIds, BlogInfo blogInfo);
 }

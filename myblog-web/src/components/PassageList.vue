@@ -3,7 +3,7 @@
     <template v-for="(item, index) in list">
       <article
         class="article"
-        v-if="item.blogStatus && item.blogStatus > 0 && !item.isDeleted"
+        v-if="item.blogStatus && item.blogStatus > 0 && item.show"
       >
         <div class="article-top">
           <span class="category-link" @click="gotoCate(item)">{{

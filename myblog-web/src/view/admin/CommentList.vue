@@ -2,6 +2,11 @@
   <el-table :data="data">
     <el-table-column prop="commentator" label="评论者名称"></el-table-column>
     <el-table-column prop="email" label="评论者邮箱"></el-table-column>
+    <el-table-column prop="blogId" label="文章">
+      <template v-slot="{row}">
+        <el-link :href="`/home/blog/${row.blogId}`">{{ row.blogInfo.blogTitle }}</el-link>
+      </template>
+    </el-table-column>
     <el-table-column
       prop="commentBody"
       label="评论内容"
@@ -17,7 +22,7 @@
     <el-table-column prop="replyCreateTime" label="回复时间"></el-table-column>
     <el-table-column prop="commentStatus" label="当前状态">
       <template v-slot="{ row }"
-        >{{ row.commentStatus == 1 ? `审核通过` : `不通过` }}
+        >{{ row.commentStatus ? `审核通过` : `不通过` }}
       </template>
     </el-table-column>
     <el-table-column label="操作" width="250">
@@ -91,13 +96,14 @@ function sizeChange(size: number) {
   getData();
 }
 function deleteRow(row) {
-  deleteCommentById(row.commentId).then(({ data }) => {
+  deleteCommentById(row.id).then(({ data }) => {
     getData();
   });
 }
 
 function checkRow(row) {
-  hideCommentById(row.commentId).then(({ data }) => {
+  console.log("这是checkrow",row)
+  hideCommentById(row.id,!row.commentStatus).then(({ data }) => {
     getData();
   });
 }
