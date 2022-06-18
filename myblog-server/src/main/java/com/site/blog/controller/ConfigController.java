@@ -1,11 +1,12 @@
 package com.site.blog.controller;
 
+import com.site.blog.aop.LogOperationEnum;
+import com.site.blog.aop.SysLogAnnotation;
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.model.dto.AjaxResultPage;
 import com.site.blog.model.dto.Result;
 import com.site.blog.model.entity.BlogConfig;
 import com.site.blog.service.BlogConfigService;
-import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -13,15 +14,10 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * @author yzqde
- * @qq交流群 796794009
- * @qq 1320291471
- * @Description: blog配置controller
- * @create 2020/12/27
- */
+
 @RestController
 @RequestMapping("/v2/admin")
 @Tag(name = "配置信息")
@@ -40,6 +36,7 @@ public class ConfigController {
      * @date 2019/8/29 19:30
      */
     @GetMapping("/blogConfig/list")
+
     public Result<AjaxResultPage<BlogConfig>> getBlogConfig(){
         AjaxResultPage<BlogConfig> ajaxResultPage = new AjaxResultPage<>();
         List<BlogConfig> list = blogConfigService.lambdaQuery().orderByDesc(BlogConfig::getUpdateTime).list();
@@ -59,7 +56,7 @@ public class ConfigController {
      */
     @PostMapping("/blogConfig/edit")
     public Result<String> updateBlogConfig(@RequestBody  BlogConfig blogConfig){
-        blogConfig.setUpdateTime(DateUtils.getLocalCurrentDate());
+        blogConfig.setUpdateTime(LocalDateTime.now());
         boolean flag = blogConfigService.updateById(blogConfig);
         if (flag){
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
@@ -78,10 +75,11 @@ public class ConfigController {
      * @date 2019/8/30 10:57
      */
     @PostMapping("/blogConfig/add")
+    @SysLogAnnotation(title = "添加配置",opType = LogOperationEnum.ADD)
     public Result  addBlogConfig(@RequestBody BlogConfig blogConfig){
        log.info(String.valueOf(blogConfig));
-        blogConfig.setCreateTime(DateUtils.getLocalCurrentDate());
-        blogConfig.setUpdateTime(DateUtils.getLocalCurrentDate());
+        blogConfig.setCreateTime(LocalDateTime.now());
+        blogConfig.setUpdateTime(LocalDateTime.now());
         boolean flag = blogConfigService.save(blogConfig);
         if (flag){
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
@@ -97,6 +95,7 @@ public class ConfigController {
      * @date 2019/8/30 11:21
      */
     @DeleteMapping("/blogConfig/del/{id}")
+    @SysLogAnnotation(title = "删除配置",opType = LogOperationEnum.DELETE)
     public Result<String> delBlogConfig(@PathVariable("id") String configField){
         boolean flag = blogConfigService.removeById(configField);
         if (flag){

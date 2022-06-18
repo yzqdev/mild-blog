@@ -1,6 +1,7 @@
 package com.site.blog.model.vo;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -19,8 +20,9 @@ public class BlogEditVO {
 
     private String blogCategoryIcon;
 
-    private Integer blogStatus;
-    private String blogPreface;
+    private Boolean show;
+    private String subUrl;
+    private String preface;
     private String blogCoverImage;
 
     private Long blogViews;
@@ -29,8 +31,8 @@ public class BlogEditVO {
 
     private String blogContent;
 
-    private Integer enableComment;
-
+    private Boolean enableComment;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime createTime;
 
 }

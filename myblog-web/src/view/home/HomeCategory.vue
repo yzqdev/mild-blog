@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { getArticleByCate } from "@/utils/apiConfig";
+import { getArticleByCate } from "@/utils/homeApi";
 import PassageList from "@/components/PassageList.vue";
 import { onBeforeMount, reactive, toRefs } from "vue";
 import { useRoute } from "vue-router";

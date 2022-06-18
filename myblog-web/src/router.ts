@@ -7,27 +7,34 @@ import Home from "@/view/Home.vue";
 
 const HomeMain = () => import("@/view/home/HomeMain.vue");
 import HomeLink from "@/view/home/HomeLink.vue";
-import AdminPage from "@/view/AdminPage.vue";
 import HomeTag from "@/view/home/HomeTag.vue";
+import HomeCategory from "@/view/home/HomeCategory.vue";
 import HomeAbout from "@/view/home/HomeAbout.vue";
 import HomeBlog from "@/view/home/HomeBlog.vue";
+import HomeComponent from "@/view/home/HomeComponent.vue";
+//admin
 import AdminLogin from "@/view/admin/AdminLogin.vue";
 import AdminWelcome from "@/view/admin/AdminWelcome.vue";
-import AdminMain from "@/view/admin/AdminMain.vue";
+import AdminList from "@/view/admin/AdminList.vue";
+import ImgList from "@/view/admin/ImgList.vue";
 import ArticleList from "@/view/admin/ArticleList.vue";
+import ArticleRecycle from "@/view/admin/ArticleRecycle.vue";
 import CommentList from "@/view/admin/CommentList.vue";
 
 const CategoryList = () => import(`./view/admin/CategoryList.vue`);
 import TagList from "@/view/admin/TagList.vue";
 import LinkList from "@/view/admin/LinkList.vue";
-import SystemInfo from "@/view/admin/SystemInfo.vue";
+
 import ArticleEdit from "@/view/admin/ArticleEdit.vue";
 import UserInfo from "@/view/admin/UserInfo.vue";
-import AdminList from "@/view/admin/AdminList.vue";
-import HomeComponent from "@/view/home/HomeComponent.vue";
-import ImgList from "@/view/admin/ImgList.vue";
+//system
+import SystemDict from "@/view/system/SystemDict.vue";
+import SystemLog from "@/view/system/SystemLog.vue";
+import SystemInfo from "@/view/system/SystemInfo.vue";
+//layout
+
 import NotFound from "@/components/NotFound.vue";
-import HomeCategory from "@/view/home/HomeCategory.vue";
+
 import Layout from "./layout/Index.vue";
 import { setDocumentTitle, domTitle } from "@/utils/meta";
 
@@ -123,6 +130,11 @@ const routes = [
         component: ArticleList,
       },
       {
+        path: "article-recycle",
+        name: "articleRecycle",
+        component: ArticleRecycle,
+      },
+      {
         path: "article-edit",
         name: "articleEdit",
         component: ArticleEdit,
@@ -156,6 +168,15 @@ const routes = [
         path: "system-info",
         name: "systemInfo",
         component: SystemInfo,
+      },
+      {
+        path: "system-log",
+        name: "systemLog",
+        component: SystemLog,
+      },  {
+        path: "system-dict",
+        name: "systemDict",
+        component: SystemDict,
       },
       {
         path: "user-info",

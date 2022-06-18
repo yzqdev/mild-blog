@@ -1,12 +1,6 @@
 package com.site.blog.constants;
 
-/**
- * @program: my-blog
- * @classname: SysConfigContants
- * @description: blog配置项枚举
- * @author: 南街
- * @create: 2019-08-24 13:57
- **/
+
 public enum SysConfigConstants {
     SYS_VERSION("sysVersion","当前版本号"),
     SYS_URL("sysUrl","服务器url"),

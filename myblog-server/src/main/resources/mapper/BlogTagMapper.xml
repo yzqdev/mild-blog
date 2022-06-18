@@ -2,17 +2,5 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.site.blog.mapper.BlogTagMapper">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.site.blog.model.entity.BlogTag">
-        <id column="relation_id" property="relationId" />
-        <result column="blog_id" property="blogId" />
-        <result column="tag_id" property="tagId" />
-        <result column="create_time" property="createTime" />
-    </resultMap>
-
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        relation_id, blog_id, tag_id, create_time
-    </sql>
 
 </mapper>

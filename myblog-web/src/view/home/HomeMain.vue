@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { getIndex } from "@/utils/apiConfig";
+import { getIndex } from "@/utils/homeApi";
 let searchText = ref("");
 import {
   Search,

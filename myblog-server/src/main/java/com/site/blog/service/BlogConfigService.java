@@ -10,8 +10,6 @@ import java.util.Map;
  *  服务类
  * </p>
  *
- * @author: 南街
- * @since 2019-08-30
  */
 public interface BlogConfigService extends IService<BlogConfig> {
 

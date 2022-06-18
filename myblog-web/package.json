@@ -10,31 +10,36 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.4",
+    "@iconify/vue": "^3.2.1",
     "@types/lodash": "^4.14.182",
     "@vitejs/plugin-vue": "^2.3.3",
-    "@vueuse/core": "^8.6.0",
+    "@vueuse/core": "^8.7.3",
     "axios": "^0.27.2",
     "dayjs": "^1.11.3",
+    "echarts": "^5.3.3",
     "element-plus": "2.2.5",
     "filepond": "^4.30.4",
     "filepond-plugin-file-validate-type": "^1.2.8",
     "filepond-plugin-image-preview": "^4.6.11",
     "md-editor-v3": "^2.1.2",
-    "prettier": "^2.7.0",
+    "pinia": "^2.0.14",
+    "prettier": "^2.7.1",
     "qs": "^6.10.5",
     "sass": "latest",
     "typescript": "^4.7.3",
     "unplugin-auto-import": "^0.8.8",
+    "unplugin-icons": "^0.14.4",
     "unplugin-vue-components": "^0.19.6",
     "v-viewer": "^3.0.10",
     "vue": "^3.2.37",
     "vue-cropper": "^1.0.2",
     "vue-filepond": "^7.0.3",
-    "vue-router": "^4.0.16",
-    "vuex": "^4.0.2"
+    "vue-router": "^4.0.16"
   },
   "devDependencies": {
-    "@types/node": "^17.0.42",
+
+    "@types/node": "^18.0.0",
+    "@types/qs": "^6.9.7",
     "vite": "^2.9.12"
   }
 }

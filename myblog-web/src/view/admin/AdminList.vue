@@ -1,8 +1,8 @@
 <template>
   <el-table :data="tableData">
-    <el-table-column prop="loginUserName" label="用户名"></el-table-column>
+    <el-table-column prop="username" label="用户名"></el-table-column>
 
-    <el-table-column prop="nickName" label="昵称"></el-table-column>
+    <el-table-column prop="nickname" label="昵称"></el-table-column>
     <el-table-column prop="role" label="权限">
       <template v-slot="{ row }">
         {{ row.role == 0 ? `普通用户` : `管理员` }}
@@ -10,7 +10,7 @@
     </el-table-column>
     <el-table-column prop="locked" label="是否冻结">
       <template v-slot="{ row }">
-        {{ row.locked == 1 ? `已冻结` : `正常` }}
+        {{ row.locked ? `已冻结` : `正常` }}
       </template>
     </el-table-column>
 
@@ -18,13 +18,13 @@
       <template v-slot="{ row }">
         <el-button
           type="primary"
-          v-if="row.locked == 1"
+          v-if="row.locked  "
           @click="editUserClick(row)"
           >解冻</el-button
         >
         <el-button
           type="warning"
-          v-if="row.locked == 0"
+          v-if="!row.locked "
           @click="editUserClick(row)"
           >冻结</el-button
         >
@@ -57,7 +57,7 @@ onBeforeMount(() => {
 let tableData = ref([]);
 
 async function editUserClick(row) {
-  const { data } = await unlockUser(row.adminUserId);
+  const { data } = await unlockUser(row.id);
   if (data) {
     await getData();
     ElMessage({ message: "解冻成功", type: "success" });
@@ -72,7 +72,7 @@ async function getData() {
 }
 
 function deleteRow(row) {
-  delUsers(row.adminUserId).then(({ data }) => {
+  delUsers(row.id).then(({ data }) => {
     if (data) {
       getData();
       ElMessage({ message: "成功", type: "success" });

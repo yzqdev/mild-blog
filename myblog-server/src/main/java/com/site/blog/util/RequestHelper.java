@@ -5,6 +5,8 @@ import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.site.blog.constants.BaseConstants;
 import com.site.blog.model.entity.AdminUser;
+import com.site.blog.model.vo.UserVo;
+import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,13 +19,16 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 
+
 /**
- * @author: dobell
- * @link: http://www.dobell.me/
- * @description:
+ * 请求帮助
+ *
+ * @author yanni
+ * @date 2022/06/15
  */
 public class RequestHelper {
 
@@ -52,9 +57,9 @@ public class RequestHelper {
      *
      * @return
      */
-    public static AdminUser getSessionUser() {
+    public static UserVo getSessionUser() {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        AdminUser attribute = (AdminUser) requestAttributes.getAttribute(BaseConstants.USER_ATTR, RequestAttributes.SCOPE_REQUEST);
+        UserVo attribute = (UserVo) requestAttributes.getAttribute(BaseConstants.USER_ATTR, RequestAttributes.SCOPE_REQUEST);
         return attribute;
     }
 
@@ -102,7 +107,7 @@ public class RequestHelper {
 
     public static boolean isApplicationJsonHeader(HttpServletRequest request) {
         String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
-        return contentType != null && StringUtils.replaceAll(
+        return contentType != null && RegExUtils.replaceAll(
                 contentType.trim(),
                 StringUtils.SPACE,
                 StringUtils.EMPTY
@@ -119,11 +124,14 @@ public class RequestHelper {
         return getRequestHeader(REQUEST_HEADER_USER_AGENT);
     }
 
-    public static UserAgent getUa( ) {
-       return UserAgentUtil.parse(getUserAgentHeader());
+    public static String getBrowserFull() {
+        return  getUa().getBrowser() +  getUa().getVersion();
 
     }
+    public static UserAgent getUa() {
+        return UserAgentUtil.parse(getUserAgentHeader()) ;
 
+    }
     public static String getRequestMessage(HttpServletRequest request) throws IOException {
         StringBuilder parameters = new StringBuilder();
         return getRequestMessage(request, parameters);
@@ -175,10 +183,8 @@ public class RequestHelper {
      */
     public static String getBasePath() {
         HttpServletRequest request = getHttpServletRequest();
-        String path = getContextPath();
-        String basePath = request.getScheme() + "://" + request.getServerName()
-                + ":" + request.getServerPort() + path;
-        return basePath;
+        return request.getScheme() + "://" + request.getServerName() +
+                ":" + request.getServerPort() + getContextPath();
     }
 
     /**
@@ -195,7 +201,7 @@ public class RequestHelper {
 
     public static String getRequestBody(HttpServletRequest request) throws IOException {
         ServletInputStream inputStream = request.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         String s;
         StringBuilder sb = new StringBuilder();
         while ((s = reader.readLine()) != null) {
@@ -209,7 +215,7 @@ public class RequestHelper {
     public static String getRequestBody() throws IOException {
         HttpServletRequest request = getHttpServletRequest();
         ServletInputStream inputStream = request.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         String s;
         StringBuilder sb = new StringBuilder();
         while ((s = reader.readLine()) != null) {
@@ -220,12 +226,5 @@ public class RequestHelper {
         return str;
     }
 
-    public static Map getRequestHeaders(String type) {
-        Map heads = new HashMap();
-        List<String> list = new ArrayList<>();
-        list.add(type);
-        heads.put("type", list);
-        return heads;
-    }
 
 }

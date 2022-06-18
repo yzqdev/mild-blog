@@ -1,10 +1,7 @@
 <template>
   <div class="passage-list" v-loading="loading">
     <template v-for="(item, index) in list">
-      <article
-        class="article"
-        v-if="item.blogStatus && item.blogStatus > 0 && item.show"
-      >
+      <article class="article" v-if="!item.deleted && item.show">
         <div class="article-top">
           <span class="category-link" @click="gotoCate(item)">{{
             item.blogCategory.categoryName
@@ -20,7 +17,7 @@
         <h1 class="article-title" @click="gotoBlog(item)">
           {{ item.blogTitle }}
         </h1>
-        <div>{{ item.blogPreface }}</div>
+        <div>{{ item.preface }}</div>
       </article>
     </template>
   </div>

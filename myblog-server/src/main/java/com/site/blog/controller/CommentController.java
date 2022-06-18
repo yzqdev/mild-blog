@@ -3,6 +3,8 @@ package com.site.blog.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.site.blog.aop.LogOperationEnum;
+import com.site.blog.aop.SysLogAnnotation;
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.model.dto.AjaxPutPage;
 import com.site.blog.model.dto.AjaxResultPage;
@@ -16,20 +18,13 @@ import com.site.blog.util.BeanMapUtil;
 import com.site.blog.util.ResultGenerator;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.text.StringEscapeUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * @author yzqde
- * @qq交流群 796794009
- * @qq 1320291471
- * @Description: 评论标签
- * @date: 2019/8/6 17:24
- */
+
 @RestController
 @RequestMapping("/v2/admin")
 @Tag(name = "评论json")
@@ -75,6 +70,7 @@ private BlogInfoService blogService;
      * @date 2020/4/24 21:21
      */
     @PostMapping( "/comment/isDel/{id}" )
+    @SysLogAnnotation(title = "更新",opType = LogOperationEnum.CHANGE_STATUS)
     public Result   updateCommentStatus(@PathVariable("id") String id,@RequestParam("show")Boolean show){
         Comment comment= commentService.getById(id);
         comment.setCommentStatus(show);
@@ -92,6 +88,7 @@ private BlogInfoService blogService;
      * @date 2020/4/24 21:23
      */
     @DeleteMapping("/comment/delete/{id}")
+    @SysLogAnnotation(title = "删除评论",opType = LogOperationEnum.DELETE)
     public Result<String> deleteComment(@PathVariable("id") String id){
         boolean flag = commentService.removeById(id);
         if (flag){
@@ -108,6 +105,7 @@ private BlogInfoService blogService;
      * @date 2020/4/24 21:21
      */
     @PostMapping("/comment/edit")
+    @SysLogAnnotation(title = "编辑评论",opType = LogOperationEnum.EDIT)
     public Result<String> editComment(Comment comment){
         comment.setReplyCreateTime(LocalDateTime.now());
         comment.setCommentBody(StringEscapeUtils.escapeHtml4(comment.getCommentBody()));

@@ -17,17 +17,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-/**
- * @program: my-blog
- * @classname: UploadFileUtils
- * @description: 上传文件工具类
- * @author: 朱林
- * @create: 2019-08-24 15:24
- **/
+
 public class UploadFileUtils {
 
     /**
-     *
      * 获取图片后缀
      *
      * @param file 文件
@@ -72,20 +65,21 @@ public class UploadFileUtils {
      *
      * @param suffixName 后缀名
      * @return {@link String}
-     * @since  2019/8/24 15:29
+     * @since 2019/8/24 15:29
      */
-    public static String getNewFileName(String suffixName,Boolean thumbnail){
-       DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+    public static String getNewFileName(String suffixName, Boolean thumbnail) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
 
         StringBuilder tempName = new StringBuilder();
-        if(thumbnail){
+        if (Boolean.TRUE.equals(thumbnail)) {
             tempName.append(dateTimeFormatter.format(LocalDateTime.now())).append("-thumb.").append(suffixName);
-        }else{
+        } else {
             tempName.append(dateTimeFormatter.format(LocalDateTime.now())).append(".").append(suffixName);
         }
 
         return tempName.toString();
     }
+
     public static String getMD5(String path) {
         BigInteger bi = null;
         try {
@@ -100,9 +94,7 @@ public class UploadFileUtils {
             fis.close();
             byte[] b = md.digest();
             bi = new BigInteger(1, b);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (NoSuchAlgorithmException | IOException e) {
             e.printStackTrace();
         }
         return bi.toString(16);

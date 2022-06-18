@@ -1,157 +1,146 @@
-import axios from "@/utils/axios";
+import http from "@/utils/http";
 import qs from "qs";
-export const baseUrl=`http://localhost:2801`;
-export const getIndex = () => {
-  return axios.get("/home/index");
-};
+import axios from "axios";
 
-export const getConfigs = () => {
-  return axios.get("/home/configs");
-};
-export const getLinks = () => {
-  return axios.get("/home/link");
-};
-export const getHomeTags = () => {
-  return axios.get("/home/tags");
-};
-export const getHomeCates = () => {
-  return axios.get("/home/categories");
-};
-export const getTimeline = (x: { pageNum: number; pageSize: number }) => {
-  return axios.post("/home/timeline", {
-    pageNum: x.pageNum,
-    pageSize: x.pageSize,
-  });
-};
-export const getSearch = (keyword: string) => {
-  return axios.get("/home/search/" + keyword);
-};
-export const listComments = (data: object) => {
-  return axios.get("/home/blog/listComment?" + qs.stringify(data));
-};
-export const submitComment = (data: object) => {
-  return axios.postForm("/home/blog/comment", data);
-};
-export const getBlogById = (data: string) => {
-  return axios.get("/home/blog/" + data);
-};
-export const getArticleByTag = (id: string, data: object) => {
-  return axios.post("/home/tag/" + id, data);
-};
-export const getArticleByCate = (id: string, data: object) => {
-  return axios.post("/home/category/" + id, data);
+export const baseUrl = () => {
+  axios
+    .get("/config.json")
+    .then((res) => {
+      return res.data.url;
+    })
+    .catch((err) => {
+      return "http://localhost:2801";
+    });
+  return "http://localhost:2801";
 };
 export const loginApi = (username: string, password: string) => {
-  return axios.post(`/admin/login?username=${username}&password=${password}`);
+  return http.post(`/auth/login?username=${username}&password=${password}`);
 };
 export const getUsers = () => {
-  return axios.get(`/admin/users`);
+  return http.get(`/admin/users`);
+};
+export const editUser = (user: any) => {
+  return http.postForm(`/admin/userEdit`, user);
 };
 export const delUsers = (id: string) => {
-  return axios.post(`/admin/del/${id}`);
+  return http.post(`/admin/del/${id}`);
 };
 export const unlockUser = (id: string) => {
-  return axios.post(`/admin/unlock/${id}`);
+  return http.post(`/admin/unlock/${id}`);
 };
 export const regApi = (username: string, password: string) => {
-  return axios.post(`/admin/reg?username=${username}&password=${password}`);
+  return http.post(`/auth/reg?username=${username}&password=${password}`);
 };
 export const getSystemInfo = () => {
-  return axios.get("/admin/blogConfig/list");
+  return http.get("/admin/blogConfig/list");
 };
 export const addSystemInfo = (data: object) => {
-  return axios.post("/admin/blogConfig/add", data);
+  return http.post("/admin/blogConfig/add", data);
 };
 export const editSystemInfo = (data: object) => {
-  return axios.post("/admin/blogConfig/edit", data);
+  return http.post("/admin/blogConfig/edit", data);
 };
 export const delSystemInfo = (data: string) => {
-  return axios.delete("/admin/blogConfig/del/" + data);
+  return http.delete("/admin/blogConfig/del/" + data);
 };
 export const getLinkList = (data: { page: number; limit: number }) => {
-  return axios.get(`/admin/link/paging?page=${data.page}&limit=${data.limit}`);
+  return http.get(`/admin/link/paging?` + qs.stringify(data));
 };
 export const editLink = (data: object) => {
-  return axios.postForm("/admin/link/edit", data);
+  return http.postForm("/admin/link/edit", data);
 };
 export const delLink = (data: object) => {
-  return axios.postForm("/admin/link/isDel", data);
+  return http.postForm("/admin/link/hide", data);
 };
 export const clearLink = (data: string) => {
-  return axios.delete("/admin/link/clear/" + data);
+  return http.delete("/admin/link/clear/" + data);
 };
 
 export const getUserInfo = () => {
-  return axios.get("/admin/getUser");
+  return http.get("/admin/getUser");
 };
-export const getBlogList = (data: { page: number; limit: number }) => {
-  return axios.get(
-    `/admin/blog/list?page=${data.page }&limit=${data.limit}`
+export const getBlogList = (data: {
+  page: number;
+  limit: number;
+  deleted: boolean;
+}) => {
+  return http.get(
+    `/admin/blog/list?page=${data.page}&limit=${data.limit}&deleted=${data.deleted}`
   );
 };
 export const getCommentList = (data: { page: number; limit: number }) => {
-  return axios.get(
+  return http.get(
     `/admin/comment/paging?page=${data.page}&limit=${data.limit}`
   );
 };
 export const deleteCommentById = (id: string) => {
-  return axios.delete(`/admin/comment/delete/${id}`);
+  return http.delete(`/admin/comment/delete/${id}`);
 };
 export const checkCommentById = (id: string) => {
-  return axios.post(`/admin/comment/delete/${id}`);
+  return http.post(`/admin/comment/delete/${id}`);
 };
-export const hideCommentById = (id: string,show:boolean) => {
-  return axios.post(`/admin/comment/isDel/${id}?show=${show}`);
+export const hideCommentById = (id: string, show: boolean) => {
+  return http.post(`/admin/comment/isDel/${id}?show=${show}`);
 };
-export const getTagList = (data:{page:number,limit:number}) => {
-  return axios.get(`/admin/tags/list?page=${data.page}&limit=${data.limit}`);
+export const getTagList = (data: {
+  page: number;
+  limit: number;
+  show?: boolean;
+}) => {
+  return http.get(`/admin/tags/list?` + qs.stringify(data));
 };
 export const addTag = (data: object) => {
-  return axios.postForm(`/admin/tags/add`, data);
+  return http.postForm(`/admin/tags/add`, data);
 };
 export const EditTagList = (data: object) => {
-  return axios.post(`/admin/tags/update`, data);
+  return http.post(`/admin/tags/update`, data);
 };
 export const clearTagById = (data: object) => {
-  return axios.post(`/admin/tags/clear/${data}`);
+  return http.post(`/admin/tags/clear/${data}`);
 };
 export const getCateList = () => {
-  return axios.get(`/admin/category/list`);
+  return http.get(`/admin/category/list`);
 };
 export const addCateApi = (data: object) => {
-  return axios.postForm(`/admin/category/add`, data);
+  return http.postForm(`/admin/category/add`, data);
 };
 export const clearCateApi = (data: string) => {
-  return axios.post(`/admin/category/clear/${data}`);
+  return http.post(`/admin/category/clear/${data}`);
 };
 export const getCatePaging = (data: { page: number; limit: number }) => {
-  return axios.get(
+  return http.get(
     `/admin/category/paging?page=${data.page}&limit=${data.limit}`
   );
 };
 export const addBlog = (params: object) => {
-  return axios.post("/admin/blog/edit", params);
+  return http.post("/admin/blog/edit", params);
 };
 export const clearBlog = (params: string) => {
-  return axios.post("/admin/blog/clear/" + params);
+  return http.post("/admin/blog/clear/" + params);
 };
-export const deleteBlog = (params: string) => {
-  return axios.post("/admin/blog/delete/" + params);
+export const deleteBlog = (id: string, restore: boolean = false) => {
+  return http.post(`/admin/blog/delete/${id}?restore=${restore}`);
+};
+export const hideBlog = (id: string, show: boolean = false) => {
+  return http.post(`/admin/blog/show/${id}?show=${show}`);
 };
 export const getAdminBlogById = (params: string) => {
-  return axios.get("/admin/blog/get/" + params);
+  return http.get("/admin/blog/get/" + params);
 };
-export const uploadUrl=`${import.meta.env.VITE_APP_URL}/img/upload`
+export function getSysLogApi(data: { page: number; limit: number }) {
+  return http.get("/admin/log?" + qs.stringify(data));
+}
+export const uploadUrl = `${import.meta.env.VITE_APP_URL}/img/upload`;
 export const uploadImg = (params: object) => {
-  return axios.post("/img/upload", params, {
+  return http.post("/img/upload", params, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
 };
 export const getImgs = () => {
-  return axios.get("/img/list");
+  return http.get("/img/list");
 };
 export const delImg = (id: string) => {
-  return axios.delete("/img/del/" + id);
+  return http.delete("/img/del/" + id);
 };

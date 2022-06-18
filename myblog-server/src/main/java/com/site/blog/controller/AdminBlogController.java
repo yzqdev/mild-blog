@@ -3,6 +3,8 @@ package com.site.blog.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.site.blog.aop.LogOperationEnum;
+import com.site.blog.aop.SysLogAnnotation;
 import com.site.blog.constants.ShowEnum;
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.model.dto.*;
@@ -24,14 +26,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 
-/**
- * @qq交流群 796794009
- * @qq 1320291471
- * @Description: 管理员controller
- * @date: 2019/8/24 9:43
- */
+
 @RestController
 @Slf4j
 @RequestMapping("/v2/admin")
@@ -64,14 +62,14 @@ public class AdminBlogController {
     @GetMapping("/blog/get/{id}")
     public Result getBlogById(@PathVariable("id") String id) {
 
-        BlogInfo blogInfo = blogInfoService.getById(id);
+        BlogInfo blogInfo = blogInfoService.getOne(new LambdaQueryWrapper<BlogInfo>().eq(BlogInfo::getBlogId, id));
         BlogEditVO blogDetailVO = new BlogEditVO();
-        BeanUtils.copyProperties(blogInfo,blogDetailVO);
+        BeanUtils.copyProperties(blogInfo, blogDetailVO);
         blogDetailVO.setBlogCategoryId(blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", blogInfo.getBlogId())).getCategoryId());
         QueryWrapper<BlogTag> queryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", id);
         List<String> ids = blogTagService.list(queryWrapper).stream().map(BlogTag::getTagId).toList();
         blogDetailVO.setBlogTagIds(ids);
-         log.info("home创建时间{}",blogDetailVO.getCreateTime().toString());
+        log.info("home创建时间{}", blogDetailVO.getCreateTime().toString());
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogDetailVO);
     }
 
@@ -85,6 +83,7 @@ public class AdminBlogController {
      */
 
     @PostMapping("/blog/edit")
+    @SysLogAnnotation(title = "修改博客", opType = LogOperationEnum.EDIT)
     @Transactional(rollbackFor = Exception.class)
     public Result saveBlog(@RequestBody BlogInfoDo blogInfoDo) {
 
@@ -94,7 +93,7 @@ public class AdminBlogController {
 
         blogInfo.setBlogViews(0L);
         blogInfo.setBlogTitle(blogInfoDo.getBlogTitle());
-        blogInfo.setBlogSubUrl(blogInfoDo.getBlogSubUrl());
+        blogInfo.setSubUrl(blogInfoDo.getSubUrl());
         blogInfo.setEnableComment(blogInfoDo.getEnableComment());
         blogInfo.setShow(blogInfoDo.getShow());
         blogInfo.setCreateTime(LocalDateTime.now());
@@ -102,9 +101,10 @@ public class AdminBlogController {
 
 
         blogInfo.setBlogContent(blogInfoDo.getBlogContent());
-        blogInfo.setBlogPreface(blogInfoDo.getBlogPreface());
+        blogInfo.setPreface(blogInfoDo.getPreface());
         log.info("这是bloginfo");
         log.info(blogInfo.toString());
+        blogInfo.setDeleted(false);
         if (blogInfoService.saveOrUpdate(blogInfo)) {
             BlogCategory blogCategory = new BlogCategory();
             blogCategory.setBlogId(blogInfo.getBlogId());
@@ -142,7 +142,6 @@ public class AdminBlogController {
     }
 
     /**
-     *
      * 文章分页列表
      *
      * @param ajaxPutPage
@@ -151,52 +150,68 @@ public class AdminBlogController {
      */
 
     @GetMapping("/blog/list")
-    public Result  getBlogList(AjaxPutPage<BlogInfo> ajaxPutPage) {
+    public Result getBlogList(AjaxPutPage<BlogInfo> ajaxPutPage) {
         try {
             QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>();
             queryWrapper.lambda().orderByDesc(BlogInfo::getUpdateTime);
-            Page<BlogInfo> page =ajaxPutPage.putPageToPage();
+            if (Boolean.TRUE.equals(ajaxPutPage.getDeleted())) {
+                queryWrapper.lambda().eq(BlogInfo::getDeleted, true);
+            } else {
+                queryWrapper.lambda().eq(BlogInfo::getDeleted, false);
+            }
+            Page<BlogInfo> page = ajaxPutPage.putPageToPage();
             Page<BlogInfo> blogInfoPage = blogInfoService.page(page, queryWrapper);
             log.info("blogInfoPage:====>{}", blogInfoPage.getRecords());
             List<BlogDetailVO> blogDetailVOS = blogInfoPage.getRecords().stream().map(BeanMapUtil::copyBlog).toList();
             log.info("blogDetailVOS:{}", blogDetailVOS);
             blogDetailVOS.forEach(post -> {
 
-             if (!post.getDeleted()){
-                 QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
-                 List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).toList();
-                 post.setBlogTags(tags);
 
-                 String cateId = blogCategoryService.getOne(new LambdaQueryWrapper<BlogCategory>().eq(BlogCategory::getBlogId, post.getBlogId())).getCategoryId();
-                 if (cateId != null) {
-                     post.setBlogCategory(categoryService.getById(cateId));
-                 }
-             }
+                LambdaQueryWrapper<BlogTag> tagQueryWrapper = new LambdaQueryWrapper<BlogTag>().eq(BlogTag::getBlogId, post.getBlogId());
+
+
+                    var tags = blogTagService.list(tagQueryWrapper).stream().map(item ->
+                            tagService.getOne(new LambdaQueryWrapper<Tag>().eq(Tag::getTagId, item.getTagId()).eq(Tag::getShow, true))
+                    ).filter(Objects::nonNull).toList();
+                    post.setBlogTags(tags);
+
+
+
+                String cateId = blogCategoryService.getOne(new LambdaQueryWrapper<BlogCategory>().eq(BlogCategory::getBlogId, post.getBlogId())).getCategoryId();
+                if (cateId != null) {
+                    post.setBlogCategory(categoryService.getById(cateId));
+                }
+
             });
-            AjaxResultPage<BlogDetailVO> list=new AjaxResultPage<>();
-            list.setCount(blogDetailVOS.size());
+            AjaxResultPage<BlogDetailVO> list = new AjaxResultPage<>();
+            list.setCount(blogInfoPage.getTotal());
             list.setList(blogDetailVOS);
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, list);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false  );
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false);
         }
 
     }
 
 
     /**
-     * 修改博客的部分状态相关信息
+     * 更新博客状态
      *
-     * @param blogInfo
+     * @param id   id
+     * @param show 显示
      * @return com.site.blog.pojo.dto.Result
      * @date 2019/8/29 12:22
      */
 
-    @PostMapping("/blog/blogStatus")
-    public Result<String> updateBlogStatus(BlogInfo blogInfo) {
-        blogInfo.setUpdateTime(LocalDateTime.now());
-        boolean flag = blogInfoService.updateById(blogInfo);
+    @PostMapping("/blog/show/{id}")
+    @SysLogAnnotation(title = "更新博客状态", opType = LogOperationEnum.EDIT)
+    public Result<String> hideBlog(@PathVariable("id") String id, @RequestParam("show") Boolean show) {
+        BlogInfo sqlBlog = blogInfoService.getOne(new LambdaQueryWrapper<BlogInfo>().eq(BlogInfo::getBlogId, id));
+
+        sqlBlog.setShow(show);
+
+        boolean flag = blogInfoService.updateById(sqlBlog);
         if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
         }
@@ -212,9 +227,14 @@ public class AdminBlogController {
      */
 
     @PostMapping("/blog/delete/{id}")
-    public Result deleteBlog(@PathVariable("id") String blogId) {
+    public Result deleteBlog(@PathVariable("id") String blogId, @RequestParam("restore") Boolean restore) {
         BlogInfo blogInfo = blogInfoService.getOne(new QueryWrapper<BlogInfo>().eq("blog_id", blogId));
         blogInfo.setShow(ShowEnum.NOT_SHOW.getStatus()).setUpdateTime(LocalDateTime.now());
+        if (Boolean.TRUE.equals(restore)) {
+            blogInfo.setDeleted(false);
+        } else {
+            blogInfo.setDeleted(true);
+        }
         boolean flag = blogInfoService.updateById(blogInfo);
         if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogInfo);
@@ -247,6 +267,7 @@ public class AdminBlogController {
      */
 
     @PostMapping("/blog/restore")
+    @SysLogAnnotation(title = "恢复博客",opType = LogOperationEnum.CHANGE_STATUS)
     public Result<String> restoreBlog(@RequestParam String blogId) {
         BlogInfo blogInfo = new BlogInfo()
                 .setBlogId(blogId)

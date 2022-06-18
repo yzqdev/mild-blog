@@ -85,12 +85,8 @@
 </template>
 
 <script setup>
-import {
-  getBlogById,
-  listComments,
-  submitComment,
-  uploadImg,
-} from "@/utils/apiConfig";
+import { uploadImg } from "@/utils/apiConfig";
+import { getBlogById, listComments, submitComment } from "@/utils/homeApi";
 import dayjs from "dayjs";
 import { onMounted, reactive, ref, toRefs, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";

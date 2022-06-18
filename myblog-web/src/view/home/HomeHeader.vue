@@ -14,8 +14,11 @@
 </template>
 
 <script setup>
-import { getConfigs } from "@/utils/apiConfig";
+import { getConfigs } from "@/utils/homeApi";
 import { onBeforeMount, reactive, toRefs } from "vue";
+import  {useConfigStore} from "@/store/sysConfig";
+let configStore=useConfigStore()
+
 let state = reactive({
   navs: [
     { text: "主页", id: 1 },
@@ -31,6 +34,7 @@ function gotoRoute(item) {
 }
 onBeforeMount(async () => {
   let { data } = await getConfigs();
+  configStore.setSysConfig(data)
   state.config = data;
 });
 </script>

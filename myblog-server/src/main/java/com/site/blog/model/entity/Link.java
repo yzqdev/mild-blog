@@ -19,8 +19,6 @@ import lombok.experimental.Accessors;
  * 友情链接表
  * </p>
  *
- * @author: 南街
- * @since 2019-09-02
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -68,8 +66,8 @@ private static final long serialVersionUID=1L;
     /**
      * 是否删除 0-未删除 1-已删除
      */
-    @TableField("is_deleted")
-    private Integer isDeleted;
+    @TableField("show")
+    private Boolean show;
 
     /**
      * 添加时间

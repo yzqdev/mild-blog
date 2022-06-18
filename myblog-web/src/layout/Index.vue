@@ -15,16 +15,17 @@ import Sidebar from "./Sidebar.vue";
 import Header from "./Header.vue";
 import Content from "./Content.vue";
 import Footer from "./Footer.vue";
-import { useStore } from "vuex";
+
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
-const store = useStore();
+import { useUserStore } from "@/store/user";
+let store = useUserStore();
 const router = useRouter();
 onMounted(() => {
   let token = localStorage.getItem("token");
   if (token && token !== "undefined") {
-    store.commit("setUserToken", localStorage.getItem("token"));
+    store.setUserToken(token);
   } else {
     router.push("/admin");
   }

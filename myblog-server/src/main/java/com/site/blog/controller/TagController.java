@@ -1,28 +1,26 @@
 package com.site.blog.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.site.blog.constants.ShowEnum;
+import com.site.blog.aop.LogOperationEnum;
+import com.site.blog.aop.SysLogAnnotation;
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.model.dto.AjaxPutPage;
 import com.site.blog.model.dto.AjaxResultPage;
 import com.site.blog.model.dto.Result;
 import com.site.blog.model.entity.Tag;
 import com.site.blog.service.TagService;
-import com.site.blog.util.DateUtils;
 import com.site.blog.util.ResultGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
-/**
- * @qq交流群 796794009
- * @qq 1320291471
- * @Description: 标签Controller
- * @create 2020/12/27
- */
+
 @Slf4j
 @RestController
 @RequestMapping("/v2/admin")
@@ -38,8 +36,9 @@ public class TagController {
      */
     @GetMapping("/tags/list")
     public Result<AjaxResultPage<Tag>> tagsList(AjaxPutPage<Tag> ajaxPutPage) {
-        QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(Tag::getShow, ShowEnum.SHOW.getStatus());
+        LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<>();
+        Optional.ofNullable(ajaxPutPage.getShow()) .ifPresent(show-> queryWrapper.eq(Tag::getShow,ajaxPutPage.getShow()));
+
         Page<Tag> page = ajaxPutPage.putPageToPage();
         tagService.page(page,queryWrapper);
         AjaxResultPage<Tag> result = new AjaxResultPage<>();
@@ -83,6 +82,7 @@ public class TagController {
 
     @PostMapping("/tags/isDel")
     public Result<String> updateCategoryStatus(Tag tag) {
+        tag.setUpdateTime(LocalDateTime.now());
         boolean flag = tagService.updateById(tag);
         if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, tag.getTagName());
@@ -99,8 +99,10 @@ public class TagController {
      */
 
     @PostMapping("/tags/add")
-    public Result addTag(Tag tag) {
-        tag.setCreateTime(DateUtils.getLocalCurrentDate());
+    @SysLogAnnotation(title = "添加标签",opType = LogOperationEnum.ADD)
+    public Result<?> addTag(Tag tag) {
+        tag.setCreateTime(LocalDateTime.now());
+        tag.setUpdateTime(LocalDateTime.now());
         boolean flag = tagService.save(tag);
         if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, tag);
@@ -118,6 +120,7 @@ public class TagController {
      */
 
     @PostMapping("/tags/clear/{id}")
+    @SysLogAnnotation(title = "清除标签",opType = LogOperationEnum.CLEAN)
     public Result<String> clearTag(@PathVariable("id") String tagId) throws RuntimeException {
 
         String name = tagService.getById(tagId).getTagName();
@@ -137,14 +140,12 @@ public class TagController {
      */
 
     @PostMapping("/tags/update")
-    public Result<String> updateCategory(@RequestBody Tag tag) {
-        // TODO blogInfo的tags无实际意义，所以这里不再修改冗余的tags。
-        log.debug(String.valueOf(tag));
-        Tag sqlTag = tagService.getById(tag.getTagId());
-        boolean flag = sqlTag.getTagName().equals(tag.getTagName());
+    @SysLogAnnotation(title = "更新标签",opType = LogOperationEnum.UPDATE)
+    public Result<Tag> updateCategory(@RequestBody Tag tag) {
+         tag.setUpdateTime(LocalDateTime.now());
 
         tagService.updateById(tag);
 
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,tag);
     }
 }

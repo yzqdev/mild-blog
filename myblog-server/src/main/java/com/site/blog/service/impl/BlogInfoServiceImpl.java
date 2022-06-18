@@ -4,14 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
-import com.site.blog.constants.BlogStatusEnum;
 import com.site.blog.constants.ShowEnum;
+import com.site.blog.service.BlogInfoService;
 import com.site.blog.mapper.*;
-import com.site.blog.model.dto.PageDto;
 import com.site.blog.model.entity.*;
-import com.site.blog.model.vo.BlogDetailVO;
 import com.site.blog.model.vo.SimpleBlogListVO;
-import com.site.blog.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -25,8 +22,6 @@ import java.util.List;
  * 博客信息表 服务实现类
  * </p>
  *
- * @author: 南街
- * @since 2019-08-27
  */
 @Service
 @RequiredArgsConstructor
@@ -75,7 +70,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean clearBlogInfo(String blogId) {
+    public Boolean clearBlogInfo(String blogId) {
         if (SqlHelper.retBool(blogInfoMapper.deleteById(blogId))) {
             QueryWrapper<BlogTag> tagRelationWrapper = new QueryWrapper<>();
             tagRelationWrapper.lambda().eq(BlogTag::getBlogId, blogId);
@@ -89,13 +84,9 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
     }
 
     @Override
-    public List<BlogDetailVO> getBlogs(PageDto pageDto) {
-
-        return blogInfoMapper.getBlogDetail();
+    public Integer getViewsSum() {
+        return blogInfoMapper.getViews();
     }
 
-    @Override
-    public List<BlogInfo> searchBlog(String keyword) {
-        return blogInfoMapper.searchBlog(keyword);
-    }
+
 }

@@ -1,12 +1,6 @@
 package com.site.blog.constants;
 
-/**
- * @program: my-blog
- * @classname: SessionConstants
- * @description: session会话常量
- * @author: 南街
- * @create: 2019-08-25 09:16
- **/
+
 public class SessionConstants {
     // 用户id
     public static final String LOGIN_USER_ID = "loginUserId";

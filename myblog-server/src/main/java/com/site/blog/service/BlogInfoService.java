@@ -5,6 +5,7 @@ import com.site.blog.model.dto.PageDto;
 import com.site.blog.model.entity.BlogInfo;
 import com.site.blog.model.vo.BlogDetailVO;
 import com.site.blog.model.vo.SimpleBlogListVO;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -13,8 +14,6 @@ import java.util.List;
  * 博客信息表 服务类
  * </p>
  *
- * @author: 南街
- * @since 2019-08-27
  */
 public interface BlogInfoService extends IService<BlogInfo> {
 
@@ -43,8 +42,14 @@ public interface BlogInfoService extends IService<BlogInfo> {
      * @return boolean
      * @date 2020/1/29 21:54
      */
-    boolean clearBlogInfo(String blogId);
-    List<BlogDetailVO> getBlogs(PageDto pageDto );
+   Boolean clearBlogInfo(String blogId);
 
-    List<BlogInfo> searchBlog(String keyword);
+    /**
+     * 得到观点和
+     *
+     * @return {@link Integer}
+     */
+
+    Integer getViewsSum();
+
 }

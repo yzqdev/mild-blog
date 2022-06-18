@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { getArticleByTag } from "@/utils/apiConfig";
+import { getArticleByTag } from "@/utils/homeApi";
 import PassageList from "@/components/PassageList.vue";
 import { onBeforeMount, reactive, toRefs } from "vue";
 import { useRoute } from "vue-router";

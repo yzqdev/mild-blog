@@ -1,34 +1,27 @@
 package com.site.blog.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.site.blog.constants.property.UploadProperty;
 import com.site.blog.mapper.ImgMapper;
 import com.site.blog.model.entity.Img;
 import com.site.blog.service.ImgService;
-import com.site.blog.util.DateUtils;
 import com.site.blog.util.UploadFileUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -39,7 +32,7 @@ import java.util.Objects;
 @Service
 @Slf4j
 public class ImgServiceImpl extends ServiceImpl<ImgMapper, Img> implements ImgService {
-    UploadProperty uploadProperty;
+   private final UploadProperty uploadProperty;
     private final Path staticDir;
     /**
      * Thumbnail width.
@@ -80,7 +73,7 @@ String thumbnailPath=UploadFileUtils.getNewFileName(suffixName,true);
             img.setImgName(destFile.getFileName().toString());
 
             img.setImgPath(destFile.toString());
-            img.setUploadTime(DateUtils.getLocalCurrentDate());
+            img.setUploadTime(LocalDateTime.now());
             img.setImgUrl(uploadProperty.getFilePrefix()+ newFileName);
             try (InputStream is = file.getInputStream()) {
                 // Generate thumbnail

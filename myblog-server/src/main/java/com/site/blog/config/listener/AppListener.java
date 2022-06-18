@@ -16,6 +16,7 @@ import java.net.UnknownHostException;
 public class AppListener implements ApplicationListener<WebServerInitializedEvent> {
     @Override
     public void onApplicationEvent(WebServerInitializedEvent event) {
+
         int port = event.getApplicationContext().getWebServer().getPort();
         InetAddress address = null;
         try {

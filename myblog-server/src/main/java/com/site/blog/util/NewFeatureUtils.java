@@ -28,12 +28,7 @@ public class NewFeatureUtils {
 
     public static void main(String[] args) {
         List<String> fruit= Arrays.asList("香蕉","苹果","火龙果","落落莓","鸣草");
-        List<String > newFruit=filter(fruit, new Predicte<String>() {
-            @Override
-            public Boolean test(String s) {
-                return s.length()==2;
-            }
-        });
+        List<String > newFruit=filter(fruit, s -> s.length() == 2);
         //List<String> newFruit=filter(fruit,s->s.length()==2)
         System.out.println(newFruit);
     }

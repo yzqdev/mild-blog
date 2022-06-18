@@ -19,8 +19,6 @@ import lombok.experimental.Accessors;
  * 博客跟标签的关系表
  * </p>
  *
- * @author: 南街
- * @since 2019-08-28
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

@@ -4,6 +4,7 @@ import com.site.blog.model.dto.PageDto;
 import com.site.blog.model.entity.BlogInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.site.blog.model.vo.BlogDetailVO;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -17,7 +18,8 @@ import java.util.List;
  */
 public interface BlogInfoMapper extends BaseMapper<BlogInfo> {
 
-    List<BlogDetailVO> getBlogDetail( );
 
-    List<BlogInfo> searchBlog(String keyword);
+
+    @Select("select sum(blog_views) FROM  blog_info")
+    Integer getViews();
 }

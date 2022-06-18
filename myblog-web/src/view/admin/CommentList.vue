@@ -3,8 +3,10 @@
     <el-table-column prop="commentator" label="评论者名称"></el-table-column>
     <el-table-column prop="email" label="评论者邮箱"></el-table-column>
     <el-table-column prop="blogId" label="文章">
-      <template v-slot="{row}">
-        <el-link :href="`/home/blog/${row.blogId}`">{{ row.blogInfo.blogTitle }}</el-link>
+      <template v-slot="{ row }">
+        <el-link :href="`/home/blog/${row.blogId}`">{{
+          row.blogInfo.blogTitle
+        }}</el-link>
       </template>
     </el-table-column>
     <el-table-column
@@ -37,7 +39,7 @@
           @confirm="deleteRow(row)"
         >
           <template #reference>
-            <el-button type="danger" size="small">删除</el-button>
+            <el-button type="danger">删除</el-button>
           </template>
         </el-popconfirm>
         <el-popconfirm
@@ -50,7 +52,7 @@
           @confirm="checkRow(row)"
         >
           <template #reference>
-            <el-button type="primary" size="small">审核</el-button>
+            <el-button type="primary">审核</el-button>
           </template>
         </el-popconfirm>
       </template>
@@ -102,8 +104,8 @@ function deleteRow(row) {
 }
 
 function checkRow(row) {
-  console.log("这是checkrow",row)
-  hideCommentById(row.id,!row.commentStatus).then(({ data }) => {
+  console.log("这是checkrow", row);
+  hideCommentById(row.id, !row.commentStatus).then(({ data }) => {
     getData();
   });
 }

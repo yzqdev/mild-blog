@@ -2,6 +2,8 @@ package com.site.blog.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.site.blog.aop.LogOperationEnum;
+import com.site.blog.aop.SysLogAnnotation;
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.constants.LinkConstants;
 import com.site.blog.model.dto.AjaxPutPage;
@@ -55,8 +57,8 @@ public class LinkController {
      */
     @GetMapping("/link/paging")
     public Result getLinkList(AjaxPutPage<Link> ajaxPutPage) {
-        Link condition = new Link();
-        QueryWrapper<Link> queryWrapper = new QueryWrapper<>(condition);
+
+       var queryWrapper = new QueryWrapper<Link>( );
         queryWrapper.lambda()
                 .orderByAsc(Link::getLinkRank);
         if (ajaxPutPage != null) {
@@ -65,25 +67,27 @@ public class LinkController {
             AjaxResultPage<Link> result = new AjaxResultPage<>();
             result.setList(page.getRecords());
             result.setCount(page.getTotal());
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, result);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, result);
         } else {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST, "fail");
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST, false,"fail");
         }
     }
 
-    @PostMapping("/link/isDel")
+    @PostMapping("/link/hide")
+    @SysLogAnnotation(title = "删除链接",opType = LogOperationEnum.CHANGE_STATUS)
     public Result  updateLinkStatus(Link link) {
-        System.out.println(link);
+
         boolean flag = linkService.updateById(link);
 
-        List<Link> linkList = linkService.list();
+
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, linkList);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, link );
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
 
     @DeleteMapping("/link/clear/{id}")
+    @SysLogAnnotation(title = "清除链接",opType = LogOperationEnum.CLEAN)
     public Result  clearLink(@PathVariable("id") String linkId) {
         boolean flag = linkService.removeById(linkId);
         if (flag) {
@@ -97,6 +101,7 @@ public class LinkController {
 
 
     @PostMapping("/link/edit")
+    @SysLogAnnotation(title = "编辑链接",opType = LogOperationEnum.EDIT)
     public Result updateAndSaveLink(Link link) {
         link.setCreateTime(DateUtils.getLocalCurrentDate());
         boolean flag;

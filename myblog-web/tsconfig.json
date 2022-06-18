@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+
     "target": "esnext",
     "baseUrl": ".",
     "useDefineForClassFields": true,
@@ -11,6 +12,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
+    "types": [ "vite/client",
+      "element-plus/global",
+      "unplugin-icons/types/vue",
+      "vue/macros-global"],
     "paths": {
       "@/*": ["src/*"]
     },

@@ -6,12 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * @author yzq
- * @description
- * @date:Created time 2021/8/12 0:32
- * @modified By:
- */
+
 @Data
 public class BlogInfoDo {
 
@@ -29,11 +24,11 @@ public class BlogInfoDo {
      * 博客自定义路径url
      */
 
-    private String blogSubUrl;
+    private String subUrl;
     /**
      * 博客前言
      */
-    private String blogPreface;
+    private String preface;
 
     /**
      * 博客内容

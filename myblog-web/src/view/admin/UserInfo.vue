@@ -1,13 +1,13 @@
 <template>
   <el-form :model="user" label-width="100px">
-    <el-form-item label="锁定状态"
-      ><span>{{ getLockInfo(user.locked) }}</span></el-form-item
-    >
-    <el-form-item label="用户名">
-      <el-input v-model="user.loginUserName"></el-input>
+    <el-form-item label="锁定状态" prop="locked">
+      <label>{{ getLockInfo(user.locked) }}</label>
     </el-form-item>
-    <el-form-item label="昵称">
-      <el-input v-model="user.nickName" placeholder="请输入昵称"></el-input>
+    <el-form-item label="用户名" prop="username">
+      <el-input v-model="user.username"></el-input>
+    </el-form-item>
+    <el-form-item label="昵称" prop="nickName">
+      <el-input v-model="user.nickname" placeholder="请输入昵称"></el-input>
     </el-form-item>
     <el-form-item label="头像">
       <!--DOM模块-->
@@ -18,6 +18,7 @@
       -->
       <el-upload
         action=""
+        :show-file-list="false"
         class="avatar-uploader"
         :auto-upload="false"
         :on-change="getUploadFile"
@@ -60,12 +61,13 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from "vue";
+import { onBeforeMount, onMounted, reactive, ref } from "vue";
 import "vue-cropper/dist/index.css";
-import { getUserInfo, uploadImg } from "@/utils/apiConfig";
+import { baseUrl, editUser, getUserInfo, uploadImg } from "@/utils/apiConfig";
 import { VueCropper } from "vue-cropper";
+import { ElMessage } from "element-plus";
 let cropper = ref(null);
-let user = reactive({ user: "" });
+let user = $ref({});
 const option = reactive({
   img: "", // 裁剪图片的地址
   info: true, // 裁剪框的大小信息
@@ -82,7 +84,7 @@ const option = reactive({
   centerBox: false, // 截图框是否被限制在图片里面
   infoTrue: true, // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
 });
-let cropperVisible = ref(false);
+let cropperVisible = $ref(false);
 
 let fileinfo = reactive({ name: "", type: "" });
 function finish() {
@@ -101,10 +103,15 @@ function finish() {
     );
     // 调用接口上传
     uploadImg(formData).then((result) => {
+      console.log(
+        `%c上传完成`,
+        `color:red;font-size:16px;background:transparent`
+      );
       console.log(result);
-      user.user.img = result.img.imgUrl;
 
-      cropperVisible.value = false;
+      user.avatar = baseUrl() + "/" + result.data.img.imgUrl;
+
+      cropperVisible = false;
     });
   });
 }
@@ -127,7 +134,7 @@ function getUploadFile(file, fileList) {
       data = e.target.result;
     }
     option.img = data; // 设置option的初始image
-    cropperVisible.value = true;
+    cropperVisible = true;
   };
   reader.readAsArrayBuffer(files);
   option.fixedNumber = [1, 1]; // 图片的裁剪宽高比在这里也可以进行设置
@@ -135,25 +142,34 @@ function getUploadFile(file, fileList) {
 
 function getUserData() {
   getUserInfo().then(({ data }) => {
-    user.user = data.user;
+    user = data;
   });
 }
 
 function showCropper() {
-  cropperVisible.value = true;
+  cropperVisible = true;
 }
 
 function getLockInfo(item) {
-  if (item == 0) {
+  if (item) {
     return "已锁定";
   } else {
     return "未锁定";
   }
 }
 
-function submitUserinfo() {}
+function submitUserinfo() {
+  editUser(user).then((res) => {
+    if (res) {
+      ElMessage({
+        type: "success",
+        message: "修改成功!",
+      });
+    }
+  });
+}
 
-onMounted(() => {
+onBeforeMount(() => {
   getUserData();
 });
 </script>
