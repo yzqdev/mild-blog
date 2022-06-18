@@ -38,8 +38,8 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
 
     @Override
     public List<SimpleBlogListVO> getNewBlog() {
-        List<SimpleBlogListVO> simpleBlogListVOS = new ArrayList<>();
-        Page<BlogInfo> page = new Page<>(1, 5);
+       var simpleBlogListVOS = new ArrayList<SimpleBlogListVO>();
+        var page = new Page<BlogInfo>(1, 5);
         blogInfoMapper.selectPage(page, new QueryWrapper<BlogInfo>()
                 .lambda()
                 .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus())
@@ -54,8 +54,8 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo> i
 
     @Override
     public List<SimpleBlogListVO> getHotBlog() {
-        List<SimpleBlogListVO> simpleBlogListVOS = new ArrayList<>();
-        Page<BlogInfo> page = new Page<>(1, 5);
+        var simpleBlogListVOS = new ArrayList<SimpleBlogListVO>();
+       var page = new Page<BlogInfo>(1, 5);
         blogInfoMapper.selectPage(page, new QueryWrapper<BlogInfo>()
                 .lambda()
                 .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus())

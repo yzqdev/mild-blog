@@ -60,8 +60,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     @Override
     public int register(AdminUser admin) {
         admin.setPassword(MD5Utils.MD5Encode(admin.getPassword(), "UTF-8"));
-        int flag = adminUserMappe.insert(admin);
-        return flag;
+        return adminUserMappe.insert(admin);
     }
 
     @Override
