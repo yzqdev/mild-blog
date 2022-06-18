@@ -10,9 +10,9 @@ public class ColorUtil {
     public  static void colorLog(String content, int color, int type) {
         boolean hasType = type != 1 && type != 3 && type != 4;
         if (hasType) {
-            System.out.printf("\u001B[%dm%s\u001B[0m%n", color, content);;
+            System.out.printf("\u001B[%dm%s\u001B[0m%n", color, content);
         } else {
-            System.out.printf("\u001B[%d;%dm%s\u001B[0m%n", color, type, content);;
+            System.out.printf("\u001B[%d;%dm%s\u001B[0m%n", color, type, content);
         }
     }
 

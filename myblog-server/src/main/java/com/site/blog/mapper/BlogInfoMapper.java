@@ -19,7 +19,11 @@ import java.util.List;
 public interface BlogInfoMapper extends BaseMapper<BlogInfo> {
 
 
-
+    /**
+     * 获取
+     *
+     * @return {@link Integer}
+     */
     @Select("select sum(blog_views) FROM  blog_info")
     Integer getViews();
 }

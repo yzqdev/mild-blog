@@ -1,7 +1,8 @@
 package com.site.blog.util;
 
+import cn.hutool.core.lang.Console;
+
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class DateUtils {
                 .filter(s -> s.startsWith("c"))
                 .map(String::toUpperCase)
                 .sorted()
-                .forEach(System.out::println);
+                .forEach(Console::log);
     }
 
     /**
