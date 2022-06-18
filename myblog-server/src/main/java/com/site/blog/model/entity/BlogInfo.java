@@ -20,8 +20,6 @@ import lombok.experimental.Accessors;
  * 博客信息表
  * </p>
  *
- * @author: 南街
- * @since 2019-08-27
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -46,14 +44,14 @@ public class BlogInfo implements Serializable {
     /**
      * 博客自定义路径url
      */
-    @TableField("blog_sub_url")
-    private String blogSubUrl;
+@TableField("sub_url")
+    private String subUrl;
 
     /**
      * 博客前言
      */
-    @TableField("blog_preface")
-    private String blogPreface;
+   @TableField("preface")
+    private String preface;
 
     /**
      * 博客内容
@@ -95,6 +93,6 @@ public class BlogInfo implements Serializable {
     @TableField("update_time")
     private LocalDateTime updateTime;
 @TableField("deleted")
-    private boolean deleted;
+    private Boolean deleted;
 
 }

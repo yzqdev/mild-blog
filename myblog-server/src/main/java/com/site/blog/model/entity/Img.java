@@ -3,6 +3,7 @@ package com.site.blog.model.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.io.Serial;
@@ -37,5 +38,6 @@ public class Img extends Model<Img>  implements Serializable {
     private String imgType;
     private String mediaType;
     private String md5;
-    private Timestamp uploadTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private LocalDateTime uploadTime;
 }

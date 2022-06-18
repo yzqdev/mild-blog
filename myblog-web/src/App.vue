@@ -9,7 +9,6 @@ import { useRouter } from "vue-router";
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
 let router = useRouter();
 let locale = $ref(zhCn);
-console.log(router.getRoutes());
 </script>
 
 <style>

@@ -5,8 +5,6 @@ import com.site.blog.model.entity.Category;
 import com.site.blog.model.entity.Tag;
 import lombok.Data;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,14 +19,13 @@ public class BlogDetailVO {
     private Long commentCount;
 
     private String blogCategoryIcon;
-    private String blogPreface;
+    private String preface;
 
     private String blogCoverImage;
 
     private Long blogViews;
 
     private List<Tag> blogTags;
-    private Integer blogStatus;
     private String blogContent;
 
     private Boolean enableComment;

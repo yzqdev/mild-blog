@@ -26,6 +26,7 @@
         >
         <el-menu-item index="/admin/article-edit"> 文章编辑 </el-menu-item>
         <el-menu-item index="/admin/article-list"> 文章列表 </el-menu-item>
+        <el-menu-item index="/admin/article-recycle"> 回收站 </el-menu-item>
         <el-menu-item index="/admin/comment-list"> 评论列表 </el-menu-item>
         <el-menu-item index="/admin/tag-list"> 标签列表</el-menu-item>
         <el-menu-item index="/admin/category-list"> 分类列表 </el-menu-item>
@@ -37,6 +38,8 @@
           <el-icon><setting /></el-icon> 系统管理</template
         >
         <el-menu-item index="/admin/system-info"> 系统信息 </el-menu-item>
+        <el-menu-item index="/admin/system-dict"> 系统字典 </el-menu-item>
+        <el-menu-item index="/admin/system-log"> 系统日志</el-menu-item>
         <el-menu-item index="/admin/users"> 用户列表 </el-menu-item>
         <el-menu-item index="/admin/link-list"> 链接列表</el-menu-item>
       </el-sub-menu>
@@ -46,16 +49,8 @@
 
 <script lang="ts" setup>
 import { h, ref, computed, watchEffect, Component, watch } from "vue";
-import {
-  Document,
-  Menu as IconMenu,
-  Location,
-  Setting,
-  HomeFilled,
-  Menu,
-} from "@element-plus/icons-vue";
+import { Setting, HomeFilled, Menu } from "@element-plus/icons-vue";
 
-import { useStore } from "vuex";
 import { useRoute, RouterLink, useRouter } from "vue-router";
 
 let defaultActive = $ref("home");
@@ -77,8 +72,8 @@ const handleClose = (key: string, keyPath: string[]) => {
 watch(
   route,
   (val, oldVal) => {
-    defaultActive = val.name;
-    console.log("move to ", val.name);
+    defaultActive = val.path;
+    console.log("move to ", val.path);
   },
   { immediate: true }
 );

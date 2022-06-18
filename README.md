@@ -39,6 +39,8 @@ yarn dev
 
 管理员界面
 
+![首页](./res/admin-home.png)
+
 ![admin](./res/admin.png)
 
 首页

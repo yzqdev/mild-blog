@@ -1,6 +1,7 @@
 package com.site.blog.controller.common;
 
 import com.site.blog.constants.HttpStatusEnum;
+import com.site.blog.constants.property.UploadProperty;
 import com.site.blog.model.dto.Result;
 import com.site.blog.util.ResultGenerator;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +25,12 @@ import java.util.HashMap;
 @RequestMapping("/v2/common")
 @RequiredArgsConstructor
 public class CommonController {
-    @Value("${myblog.upload.file-url}")
-    private  String fileUrl;
+  private  final   UploadProperty uploadProperty;
 
     @PostMapping("/file")
     public Result uploadFile(@RequestBody MultipartFile multipartFile) {
         try {
-            File file=new File(fileUrl + multipartFile.getOriginalFilename());
+            File file=new File(uploadProperty.getFileUrl() + multipartFile.getOriginalFilename());
             multipartFile.transferTo(file);
             HashMap<String, Object> result = new HashMap<>();
             result.put("file", file.getAbsolutePath());

@@ -5,12 +5,7 @@ import lombok.Data;
 
 import java.util.List;
 
-/**
- * @Author: Yangzhengqian
- * @Description:
- * @Date:Created time 2020/11/9 下午1:33
- * @Modified By:
- */
+
 @Data
 public class LinkDto {
     List<Link> favoriteLinks;

@@ -7,7 +7,6 @@ import { defineComponent, onBeforeMount, reactive, toRefs, watch } from "vue";
 import { getUserInfo } from "@/utils/apiConfig";
 
 const router = useRouter();
-import axios from "axios";
 import { useRouter } from "vue-router";
 
 let state = reactive({

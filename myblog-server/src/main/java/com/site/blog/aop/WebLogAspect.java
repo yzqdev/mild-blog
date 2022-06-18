@@ -1,11 +1,8 @@
 package com.site.blog.aop;
 
-import lombok.extern.slf4j.Slf4j;
+import com.site.blog.service.BlogConfigService;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +10,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
@@ -26,7 +24,8 @@ import java.util.Arrays;
 public class WebLogAspect {
 
     private ThreadLocal<Long> startTime = new ThreadLocal<>();
-
+@Resource
+    BlogConfigService blogConfigService;
     //使用@Pointcut定义一个切入点，可以是一个规则表达式，比如下例中某个package下的所有函数，也可以是一个注解等。
     @Pointcut("execution(public * com.site.blog.controller.*.*(..))")
     public void webLog() {
@@ -57,12 +56,14 @@ public class WebLogAspect {
     }
 
 
+
     //使用@AfterReturning在切入点return内容之后切入内容（可以用来对处理返回值做一些加工处理）
     @AfterReturning(returning = "ret", pointcut = "webLog()")
     public void doAfterReturning(Object ret) throws Throwable {
         // 处理完请求，返回内容
         log.info("响应RESPONSE : " + ret);
-        log.info("响应时间SPEND TIME : " + (System.currentTimeMillis() - startTime.get()));
+        log.info("响应时间SPEND TIME : " + (System.currentTimeMillis() - startTime.get())+"ms");
+
     }
 
 }

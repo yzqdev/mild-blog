@@ -14,19 +14,19 @@
 </template>
 
 <script setup>
-import { getConfigs } from "@/utils/apiConfig";
+import { getConfigs } from "@/utils/homeApi";
 import { onBeforeMount, reactive, toRefs } from "vue";
 
 let state = reactive({
   configs: {
-    sysAuthor: "南街",
-    sysAuthorImg: "http://localhost/authorImg/20190906_18162846.jpg",
-    sysCopyRight: "xuebingsi(xuebingsi) 访问官网",
-    sysEmail: "1320291471@qq.com",
-    sysUpdateTime: "2019-08-24 20:33:23",
-    sysUrl: "localhost:80",
+    sysAuthor: "",
+    sysAuthorImg: "",
+    sysCopyRight: "",
+    sysEmail: "",
+    sysUpdateTime: "",
+    sysUrl: "",
     sysVersion: "1.1.0",
-    websiteName: "v1 blog",
+    websiteName: "",
   },
 });
 let { configs } = toRefs(state);

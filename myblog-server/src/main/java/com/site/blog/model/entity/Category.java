@@ -7,8 +7,12 @@ import java.sql.Timestamp;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -18,10 +22,9 @@ import lombok.experimental.Accessors;
  * 博客分类
  * </p>
  *
- * @author: 南街
- * @since 2019-08-30
  */
 @Data
+@Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 public class Category extends Model<Category> implements Serializable {
@@ -62,7 +65,9 @@ private static final long serialVersionUID=1L;
      * 创建时间
      */
     @TableField("create_time")
-    private Timestamp createTime;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private LocalDateTime createTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+private LocalDateTime updateTime;
 
 }

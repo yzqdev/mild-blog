@@ -4,14 +4,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
 import lombok.ToString;
 
-/**
- * @program: FreeMarkeDemo
- * @description: 分页查询[带条件]输入映射
- * @author: 南街
- * @create: 2019-01-03 11:40
- **/
+
 @Data
-@ToString
+
 public class AjaxPutPage<T> {
     /**
      * 当前页码
@@ -27,6 +22,7 @@ public class AjaxPutPage<T> {
      * 从多少开始
      */
     Integer start;
+    Boolean show;
     /**
      * 删除
      */

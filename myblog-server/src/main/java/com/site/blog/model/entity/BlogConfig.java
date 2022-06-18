@@ -2,15 +2,14 @@ package com.site.blog.model.entity;
 
 import java.io.Serial;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -19,8 +18,6 @@ import lombok.experimental.Accessors;
  * 
  * </p>
  *
- * @author: 南街
- * @since 2019-08-30
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -37,32 +34,34 @@ private String id;
     /**
      * 字段名
      */
-    @TableField("config_field")
-    private String configField;
+
+    private String code;
 
     /**
      * 配置名
      */
-    @TableField("config_name")
-    private String configName;
+
+    private String name;
 
     /**
      * 配置项的值
      */
-    @TableField("config_value")
-    private String configValue;
+
+    private String value;
 
     /**
      * 创建时间
      */
     @TableField("create_time")
-    private Timestamp createTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createTime;
 
     /**
      * 修改时间
      */
     @TableField("update_time")
-    private Timestamp updateTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updateTime;
 
 
 }

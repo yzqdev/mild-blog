@@ -18,7 +18,7 @@
     <div class="blog-text-center">
       <article>&copy;{{ configs.sysAuthor }}个人博客.</article>
       <span class="ft-warn">&heartsuit;</span>&nbsp;{{ configs.sysCopyRight }}
-      <a>浙ICP备 xxxxxx-x号</a><br />
+      <a>{{configs.filing}}</a><br />
       version: {{ configs.sysVersion }} Powered by
       <a href="#" target="_blank">2050 genshin</a
       ><span style="margin-left: 20px"
@@ -29,35 +29,37 @@
 </template>
 
 <script setup>
-import { getConfigs } from "@/utils/apiConfig";
+import { getConfigs } from "@/utils/homeApi";
 import { onBeforeMount, reactive, toRefs } from "vue";
 
-let state = reactive({
-  navs: [
-    { text: "主页", id: 1, link: "/home/main" },
-    { text: "标签", id: 2, link: "/home/tags" },
-    { text: "分类", id: 3, link: "/home/categories" },
-    { text: "时间线", id: 6, link: "/home/timeline" },
-    { text: "友情链接", id: 4, link: "/home/link" },
-    { text: "关于", id: 5, link: "/home/about" },
-  ],
-  activeRoute: "",
-  configs: {
-    sysAuthor: "南街",
-    sysAuthorImg: "http://localhost/authorImg/20190906_18162846.jpg",
-    sysCopyRight: "xuebingsi(xuebingsi) 访问官网",
-    sysEmail: "1320291471@qq.com",
-    sysUpdateTime: "2019-08-24 20:33:23",
-    sysUrl: "localhost:80",
-    sysVersion: "1.1.0",
-    websiteName: "",
-  },
-});
-let { configs, activeRoute, navs } = toRefs(state);
 
+import  {useConfigStore} from "@/store/sysConfig";
+let configStore=useConfigStore()
+let activeRoute=$ref('')
+let navs=$ref([
+  { text: "主页", id: 1, link: "/home/main" },
+  { text: "标签", id: 2, link: "/home/tags" },
+  { text: "分类", id: 3, link: "/home/categories" },
+  { text: "时间线", id: 6, link: "/home/timeline" },
+  { text: "友情链接", id: 4, link: "/home/link" },
+  { text: "关于", id: 5, link: "/home/about" },
+])
+let configs=$ref({
+  sysAuthor: "",
+  sysAuthorImg: "",
+  sysCopyRight: "",
+  sysEmail: "",
+  sysUpdateTime: "",
+  sysUrl: "",
+  sysVersion: "",
+  websiteName: "",
+  filing:''
+})
 async function getData() {
   let { data } = await getConfigs();
-  state.configs = data;
+configStore.setSysConfig(data)
+   configs = data;
+
 }
 
 onBeforeMount(async () => {

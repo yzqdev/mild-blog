@@ -7,10 +7,10 @@
       <el-form-item label="当前状态">
         <el-switch
           v-model="editForm.show"
-          :active-value="1"
-          :inactive-value="0"
-          active-text="已删除"
-          inactive-text="未删除"
+          :active-value="true"
+          :inactive-value="false"
+          active-text="显示"
+          inactive-text="隐藏"
         ></el-switch>
       </el-form-item>
     </el-form>
@@ -24,15 +24,13 @@
     <el-table-column prop="tagName" label="标签名"></el-table-column>
     <el-table-column prop="show" label="当前状态">
       <template v-slot="{ row }">
-        {{ row.show ? `显示`:"不显示" }}
+        {{ row.show ? `显示` : "不显示" }}
       </template>
     </el-table-column>
 
     <el-table-column label="操作" width="250">
       <template v-slot="{ row }">
-        <el-button type="primary" size="small" @click="editRow(row)"
-          >编辑
-        </el-button>
+        <el-button type="primary" @click="editRow(row)">编辑 </el-button>
         <el-popconfirm
           title="确定删除吗？"
           confirmButtonText="好的"
@@ -43,7 +41,7 @@
           @confirm="deleteRow(row)"
         >
           <template #reference>
-            <el-button type="danger" size="small">删除</el-button>
+            <el-button type="danger">删除</el-button>
           </template>
         </el-popconfirm>
       </template>
@@ -72,12 +70,12 @@ import {
 } from "@/utils/apiConfig";
 import { onBeforeMount, reactive, toRefs } from "vue";
 import { ElMessage } from "element-plus";
-let count=$ref(0)
-let pageSize=$ref(10)
-let currentPage=$ref(1)
-function sizeChange(size){
-  pageSize=size
-  getData()
+let count = $ref(0);
+let pageSize = $ref(10);
+let currentPage = $ref(1);
+function sizeChange(size) {
+  pageSize = size;
+  getData();
 }
 let state = reactive({
   isEdit: true,
@@ -91,10 +89,10 @@ onBeforeMount(() => {
 });
 
 function getData() {
-  getTagList({page:1,limit:pageSize}).then(({ data }) => {
+  getTagList({ page: currentPage, limit: pageSize }).then(({ data }) => {
     console.log(data);
     state.data = data.list;
-    count=data.count
+    count = data.count;
   });
 }
 
@@ -112,7 +110,7 @@ function deleteRow(row) {
 
 function showAddForm() {
   state.isEdit = false;
-  state.editForm = { tagName: "", show: 0 };
+  state.editForm = { tagName: "", show: true };
   state.editFormShow = true;
 }
 

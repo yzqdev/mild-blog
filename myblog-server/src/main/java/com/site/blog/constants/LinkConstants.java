@@ -1,16 +1,22 @@
 package com.site.blog.constants;
 
-/**
- * @program: my-blog
- * @classname: LinkConstants
- * @description:
- * @author: 南街
- * @create: 2019-09-02 21:18
- **/
+
+import lombok.Getter;
+
+@Getter
 public enum LinkConstants {
-    LINK_TYPE_FRIENDSHIP(0,"友链"),
-    LINK_TYPE_RECOMMEND(1,"推荐"),
-    LINK_TYPE_PRIVATE(2,"个人网站");
+    /**
+     * 链接类型友谊
+     */
+    LINK_TYPE_FRIENDSHIP(0,"friend"),
+    /**
+     * 链接类型推荐
+     */
+    LINK_TYPE_RECOMMEND(1,"recommend"),
+    /**
+     * 链接类型私人
+     */
+    LINK_TYPE_PRIVATE(2,"private");
 
 
     private final Integer linkTypeId;
@@ -21,11 +27,5 @@ public enum LinkConstants {
         this.linkTypeName = linkTypeName;
     }
 
-    public Integer getLinkTypeId() {
-        return linkTypeId;
-    }
 
-    public String getLinkTypeName() {
-        return linkTypeName;
-    }
 }

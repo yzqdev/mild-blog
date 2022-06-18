@@ -2,15 +2,15 @@ package com.site.blog.config.interceptor;
 
 import com.site.blog.constants.BaseConstants;
 import com.site.blog.model.entity.AdminUser;
-import com.site.blog.service.AdminUserService;
+import com.site.blog.model.vo.UserVo;
 import com.site.blog.util.JwtUtil;
 import com.site.blog.util.UserUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
@@ -45,14 +45,14 @@ public class AdminUserInterceptor implements HandlerInterceptor {
         boolean flag = JwtUtil.verifyToken(token);
         String userId = JwtUtil.getUserId(token);
         if (flag) {
-log.info(userId);
-            System.out.println("myid");
-            System.out.println(userId);
+
             AdminUser user = UserUtil.getUserByUserCode( userId );
+            UserVo userVo = new UserVo();
+            BeanUtils.copyProperties(user,userVo);
             log.info("这里设置用户到session");
             log.info("user={}","myid");
             log.info("user=" + user);
-            request.setAttribute(BaseConstants.USER_ATTR, user);
+            request.setAttribute(BaseConstants.USER_ATTR, userVo);
         }else{
             log.info("token验证失败");
         }

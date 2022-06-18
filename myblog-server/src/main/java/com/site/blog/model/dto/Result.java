@@ -6,11 +6,7 @@ import lombok.Data;
 import java.io.Serial;
 import java.io.Serializable;
 
-/**
- * 返回结果集
- * @author Linn-cn
- * @date 2020/12/7
- */
+
 @Data
 @AllArgsConstructor
 
@@ -21,7 +17,7 @@ public class Result<T> implements Serializable {
     private String message;
     private T data;
     private Boolean success;
-
+private long timestamp;
     public Result() {
     }
 

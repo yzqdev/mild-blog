@@ -5,12 +5,7 @@ import lombok.Data;
 
 import java.util.List;
 
-/**
- * @Author: Yangzhengqian
- * @Description:
- * @Date:Created time 2020/11/10 下午1:54
- * @Modified By:
- */
+
 @Data
 public class IndexDto {
     private int categoryCount;

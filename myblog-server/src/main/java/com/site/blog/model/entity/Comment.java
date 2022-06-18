@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,8 +23,6 @@ import java.time.LocalDateTime;
  * 评论信息表
  * </p>
  *
- * @author: 南街
- * @since 2019-09-04
  */
 @Data
 @Builder
@@ -105,7 +101,7 @@ public class Comment implements Serializable {
      * 回复时间
      */
     @TableField("reply_create_time")
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime replyCreateTime;
 
     /**

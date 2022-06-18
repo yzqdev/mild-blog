@@ -25,6 +25,6 @@ export function convertSize(limit: number) {
   }
   return sizestr;
 }
-export function formatTime(time:string){
-  return dayjs(time).format("YYYY-MM-DD HH:mm:ss")
+export function formatTime(time: string) {
+  return dayjs(time).format("YYYY-MM-DD HH:mm:ss");
 }

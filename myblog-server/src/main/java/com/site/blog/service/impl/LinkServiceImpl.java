@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
  * 友情链接表 服务实现类
  * </p>
  *
- * @author: 南街
- * @since 2019-09-02
  */
 @Service
 public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements LinkService {

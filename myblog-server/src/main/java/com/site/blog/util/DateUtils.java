@@ -5,13 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @program: my-blog
- * @classname: DateUtils
- * @description:
- * @author: 朱林
- * @create: 2019-08-28 13:02
- **/
+
 public class DateUtils {
     public static void getDate() {
         List<String> myList =

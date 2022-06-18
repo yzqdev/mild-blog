@@ -1,6 +1,6 @@
 <template>
   <div class="article-edit">
-    <el-form ref="form" :model="articleForm" label-width="100px">
+    <el-form ref="form" :model="articleForm" label-width="6rem">
       <div class="d-flex">
         <el-form-item label="标题">
           <el-input
@@ -10,7 +10,7 @@
         </el-form-item>
         <el-form-item label="自定义路径">
           <el-input
-            v-model="articleForm.blogSubUrl"
+            v-model="articleForm.subUrl"
             placeholder="输入文章标题"
           ></el-input>
         </el-form-item>
@@ -51,7 +51,7 @@
       <div class="d-grid3">
         <el-form-item label="前言">
           <el-input
-            v-model="articleForm.blogPreface"
+            v-model="articleForm.preface"
             placeholder="输入文章前言"
           ></el-input>
         </el-form-item>
@@ -60,8 +60,8 @@
             active-text="草稿"
             inactive-text="发布"
             v-model="articleForm.show"
-            :active-value="0"
-            :inactive-value="1"
+            :active-value="false"
+            :inactive-value="true"
           ></el-switch>
           <el-switch
             active-text="开启评论"
@@ -106,9 +106,9 @@ let state = reactive({
     blogTagIds: [],
     blogCategoryId: undefined,
     blogContent: "",
-    blogPreface: "",
-    blogSubUrl: "",
-    show:false,
+   preface: "",
+    subUrl: "",
+    show: false,
     enableComment: false,
   },
   text: "",
@@ -140,7 +140,7 @@ function getData() {
 }
 
 function tagList() {
-  getTagList({page:1,limit:100}).then(({ data }) => {
+  getTagList({ page: 1, limit: 100, show: true }).then(({ data }) => {
     state.tagOptions = data.list;
   });
 }
@@ -153,7 +153,7 @@ function cateList() {
 
 function submit() {
   if (route.query.id) {
-    state.articleForm.blogId = +route.query.id;
+    state.articleForm.blogId = route.query.id;
   }
 
   addBlog(state.articleForm).then((data) => {
@@ -163,9 +163,9 @@ function submit() {
         name: "articleList",
       });
       ElMessage({
-        type:'success',
-        message:'成功'
-      })
+        type: "success",
+        message: "成功",
+      });
     }
   });
 }

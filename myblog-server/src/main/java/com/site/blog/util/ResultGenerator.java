@@ -3,11 +3,7 @@ package com.site.blog.util;
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.model.dto.Result;
 
-/**
- * 响应结果生成工具
- *
- * @author nanjie
- */
+
 public class ResultGenerator {
 
     private ResultGenerator() {
@@ -18,6 +14,7 @@ public class ResultGenerator {
         result.setResultCode(constants.getStatus());
         result.setMessage(msg);
         result.setData(data);
+        result.setTimestamp(System.currentTimeMillis());
         return result;
     }
 
@@ -26,6 +23,7 @@ public class ResultGenerator {
         result.setResultCode(constants.getStatus());
         result.setMessage(constants.getContent());
         result.setData(data);
+        result.setTimestamp(System.currentTimeMillis());
         return result;
     }
 
@@ -35,6 +33,7 @@ public class ResultGenerator {
         result.setMessage(constants.getContent());
         result.setData(data);
         result.setSuccess(success);
+        result.setTimestamp(System.currentTimeMillis());
         return result;
     }
 
@@ -48,19 +47,16 @@ public class ResultGenerator {
         Result<String> result = new Result<>();
         result.setResultCode(constants.getStatus());
         result.setMessage(msg);
+        result.setTimestamp(System.currentTimeMillis());
         return result;
     }
 
-    /**
-     * @Description: 根据传入的常量返回对应result
-     * @Param: [constants] http状态
-     * @return: com.南街.blog.dto.Result
-     * @date: 2019/8/24 16:25
-     */
+
     public static Result<String> getResultByHttp(HttpStatusEnum constants) {
         Result<String> result = new Result<>();
         result.setResultCode(constants.getStatus());
         result.setMessage(constants.getContent());
+        result.setTimestamp(System.currentTimeMillis());
         return result;
     }
 }

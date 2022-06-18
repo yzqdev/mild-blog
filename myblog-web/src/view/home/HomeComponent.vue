@@ -47,7 +47,7 @@ import {
   getHomeTags,
   getSearch,
   getTimeline,
-} from "@/utils/apiConfig";
+} from "@/utils/homeApi";
 import PassageList from "@/components/PassageList.vue";
 import { useRoute, useRouter } from "vue-router";
 import dayjs from "dayjs";
@@ -128,7 +128,7 @@ watch(
 
 <style lang="scss" scoped>
 .home-component {
-  height: 100%;
+  flex: 1;
   margin: 20px;
   padding: 20px;
   border: 1px solid #f5f5f5;

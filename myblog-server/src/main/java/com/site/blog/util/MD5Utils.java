@@ -7,10 +7,10 @@ import java.security.MessageDigest;
  */
 public class MD5Utils {
 
-    private static String byteArrayToHexString(byte b[]) {
+    private static String byteArrayToHexString(byte[] b) {
         StringBuilder resultSb = new StringBuilder();
-        for (int i = 0; i < b.length; i++) {
-            resultSb.append(byteToHexString(b[i]));
+        for (byte value : b) {
+            resultSb.append(byteToHexString(value));
         }
 
         return resultSb.toString();
@@ -28,15 +28,17 @@ public class MD5Utils {
     public static String MD5Encode(String origin, String charsetname) {
         String resultString = null;
         try {
-            resultString = new String(origin);
+            resultString = origin;
             MessageDigest md = MessageDigest.getInstance("MD5");
-            if (charsetname == null || "".equals(charsetname))
+            if (charsetname == null || "".equals(charsetname)) {
                 resultString = byteArrayToHexString(md.digest(resultString
                         .getBytes()));
-            else
+            } else {
                 resultString = byteArrayToHexString(md.digest(resultString
                         .getBytes(charsetname)));
+            }
         } catch (Exception exception) {
+            exception.printStackTrace();
         }
         return resultString;
     }

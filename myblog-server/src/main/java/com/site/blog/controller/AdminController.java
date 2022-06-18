@@ -1,27 +1,26 @@
 package com.site.blog.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.site.blog.constants.BaseConstants;
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.constants.SessionConstants;
-import com.site.blog.constants.SysConfigConstants;
 import com.site.blog.model.dto.Result;
 import com.site.blog.model.entity.AdminUser;
+import com.site.blog.model.entity.BlogConfig;
+import com.site.blog.model.vo.UserVo;
 import com.site.blog.service.*;
-import com.site.blog.util.JwtUtil;
-import com.site.blog.util.MD5Utils;
 import com.site.blog.util.RequestHelper;
 import com.site.blog.util.ResultGenerator;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author Yangzhengqian
@@ -32,8 +31,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/v2/admin")
 @Tag(name = "后台json", description = "后台json")
-
-
 @Slf4j
 @RequiredArgsConstructor
 public class AdminController {
@@ -52,36 +49,6 @@ public class AdminController {
      
     private final LinkService linkService;
 
-    @PostMapping(value = "/login")
-    public Result login(String username, String password,
-                        HttpSession session) {
-        if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
-        }
-        QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<>(
-                new AdminUser().setLoginUserName(username)
-                        .setLoginPassword(MD5Utils.MD5Encode(password, "UTF-8"))
-        );
-        System.out.println(MD5Utils.MD5Encode(password, "UTF-8"));
-        AdminUser adminUser = adminUserService.getOne(queryWrapper);
-        if (adminUser != null) {
-            if (adminUser.getLocked() == 0) {
-                String token = JwtUtil.sign(adminUser.getLoginUserName(), adminUser.getId());
-
-                session.setAttribute(SessionConstants.LOGIN_USER, adminUser.getNickName());
-                session.setAttribute(SessionConstants.LOGIN_USER_ID, adminUser.getId());
-                session.setAttribute(SessionConstants.LOGIN_USER_NAME, adminUser.getLoginUserName());
-                session.setAttribute(SessionConstants.AUTHOR_IMG, blogConfigService.getById(
-                        SysConfigConstants.SYS_AUTHOR_IMG.getConfigField()));
-
-                return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, token);
-            } else {
-                return ResultGenerator.getResultByHttp(HttpStatusEnum.UNAUTHORIZED, false, "账户已被冻结");
-            }
-        } else {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.UNAUTHORIZED);
-        }
-    }
 
     @PostMapping("/del/{id}")
     public Result removeUser(@PathVariable("id") Integer id) {
@@ -93,34 +60,42 @@ public class AdminController {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, flag);
         }
     }
-
-    @PostMapping(value = "/reg")
-    public Result<String> register(String username, String password) {
-        if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
-        }
-        QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<AdminUser>(
-                new AdminUser().setLoginUserName(username)
-                        .setLoginPassword(MD5Utils.MD5Encode(password, "UTF-8"))
-        );
-        AdminUser adminUser = adminUserService.getOne(queryWrapper);
-        if (adminUser != null) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST, "用户名已存在");
-        } else {
-            AdminUser regUser = AdminUser.builder().loginUserName(username).loginPassword(password).locked(1).role(0).build();
-
-            adminUserService.register(regUser);
-
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, "/admin/v1/index");
-
-        }
+    @GetMapping("/dashboard")
+    public  Result dashboard(){
+      var res=new HashMap<String,Object>();
+        var articleCount=blogInfoService.count();
+        var commentCount=commentService.count();
+        var views=blogInfoService.getViewsSum();
+        res.put("articleCount",articleCount);
+        res.put("commentCount",commentCount);
+        res.put("viewsCount",views);
+        return  ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,res);
     }
+    @PostMapping("/userEdit")
+    public  Result editUser(UserVo userVo){
+        AdminUser sqlUser=adminUserService.getAdminUserById(userVo.getId());
+        BeanUtils.copyProperties(userVo,sqlUser);
+        var conf=blogConfigService.getOne(new LambdaQueryWrapper<BlogConfig>().eq(BlogConfig::getCode,"sysAuthorImg"));
+        conf.setValue(userVo.getAvatar());
+        blogConfigService.updateById(conf);
+        adminUserService.updateUserInfo(sqlUser);
+
+
+        return  ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,sqlUser);
+    }
+
 
     @GetMapping("/users")
     public Result getUsers() {
 
-        List<AdminUser> users = adminUserService.list();
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, users);
+       var users = adminUserService.list();
+       var userVos=new ArrayList<UserVo>();
+       users.forEach(item->{
+           var userVoItem=new UserVo();
+           BeanUtils.copyProperties(item,userVoItem);
+           userVos.add(userVoItem);
+       });
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, userVos);
     }
 
     /**
@@ -142,14 +117,14 @@ public class AdminController {
     @PostMapping("/unlock/{id}")
     public Result unlock(@PathVariable("id") String id) {
         AdminUser user = adminUserService.getAdminUserById( id);
-        AdminUser currentUser = RequestHelper.getSessionUser();
+        UserVo currentUser = RequestHelper.getSessionUser();
         if (user.getId().equals(currentUser.getId())) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "不能冻结自己");
         }
-        if (user.getLocked() == 0) {
-            user.setLocked(1);
+        if (Boolean.TRUE.equals(user.getLocked()) ) {
+            user.setLocked(true);
         } else {
-            user.setLocked(0);
+            user.setLocked(false);
         }
         adminUserService.updateById(user);
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, user.getLocked());
@@ -158,20 +133,20 @@ public class AdminController {
     @GetMapping("/getUser")
     public Result getUserInfo(HttpServletRequest request) {
         try {
-            AdminUser user = (AdminUser) request.getAttribute(BaseConstants.USER_ATTR);
+           UserVo user = (UserVo) request.getAttribute(BaseConstants.USER_ATTR);
 
 
-            HashMap<String, Object> res = new HashMap<>(1);
+
             if (user == null) {
                 return ResultGenerator.getResultByHttp(HttpStatusEnum.UNAUTHORIZED, false, "请重新登录");
             }
-            res.put("user", user);
+
            log.info(user.toString());
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, res);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, user);
         } catch (Exception e) {
             e.printStackTrace();
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, e.getMessage());
         }
 
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "fail");
     }
 }

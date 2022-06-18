@@ -11,11 +11,6 @@ import java.io.PrintWriter;
 import java.util.Objects;
 
 
-/**
- * @author: dobell
- * @link: http://www.dobell.me/
- * @description:
- */
 @Slf4j
 public class ResponseHelper {
 

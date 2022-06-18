@@ -18,12 +18,11 @@ import com.site.blog.util.ResultGenerator;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 博客前台
@@ -36,8 +35,6 @@ import java.util.stream.Collectors;
 @io.swagger.v3.oas.annotations.tags.Tag(name = "首页数据", description = "首页")
 @RequiredArgsConstructor
 public class HomeBlogController {
-
-    public static String theme = "amaze";
 
 
     private final BlogInfoService blogInfoService;
@@ -90,7 +87,7 @@ public class HomeBlogController {
         LambdaQueryWrapper<BlogInfo> sqlWrapper = Wrappers.<BlogInfo>lambdaQuery()
 
 
-                .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus());
+                .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus()).eq(BlogInfo::getDeleted, false);
         //获取tag下的文章
         if (Objects.nonNull(tagId)) {
             List<BlogTag> list = blogService.list(new QueryWrapper<BlogTag>()
@@ -116,14 +113,15 @@ public class HomeBlogController {
      */
     public List<BlogDetailVO> toBlogVo(Page<BlogInfo> blogInfoPage) {
 
-        List<BlogDetailVO> blogDetailVOS = blogInfoPage.getRecords().stream().map(BeanMapUtil::copyBlog).collect(Collectors.toList());
+        Console.log("toBlog",blogInfoPage.getRecords());
+        List<BlogDetailVO> blogDetailVOS = blogInfoPage.getRecords().stream().map(BeanMapUtil::copyBlog).toList();
 
         blogDetailVOS.forEach(post -> {
 
-            QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
-            List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).collect(Collectors.toList());
+            var tagQueryWrapper = new QueryWrapper<BlogTag>().lambda().eq(BlogTag::getBlogId, post.getBlogId());
+            List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).toList();
             post.setBlogTags(tags);
-            String cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
+            String cateId = blogCategoryService.getOne(new LambdaQueryWrapper<BlogCategory>().eq(BlogCategory::getBlogId, post.getBlogId())).getCategoryId();
             if (cateId != null) {
                 post.setBlogCategory(categoryService.getById(cateId));
             }
@@ -134,19 +132,19 @@ public class HomeBlogController {
     @PostMapping("/timeline")
     public Result timeline(@RequestBody PageDto pageDto) {
         try {
-            QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>();
-            queryWrapper.lambda().orderByDesc(BlogInfo::getUpdateTime);
+            var queryWrapper = new LambdaQueryWrapper<BlogInfo>();
+            queryWrapper.orderByDesc(BlogInfo::getUpdateTime).eq(BlogInfo::getDeleted, false).eq(BlogInfo::getShow, true);
             Page<BlogInfo> ipage = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
             Page<BlogInfo> blogInfoPage = blogInfoService.page(ipage, queryWrapper);
 
-            List<BlogDetailVO> blogDetailVOS = blogInfoPage.getRecords().stream().map(BeanMapUtil::copyBlog).collect(Collectors.toList());
+            var blogDetailVOS = blogInfoPage.getRecords().stream().map(BeanMapUtil::copyBlog).toList();
 
             blogDetailVOS.forEach(post -> {
 
-                QueryWrapper<BlogTag> tagQueryWrapper = new QueryWrapper<BlogTag>().eq("blog_id", post.getBlogId());
-                List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).collect(Collectors.toList());
+                var tagQueryWrapper = new QueryWrapper<BlogTag>().lambda().eq(BlogTag::getBlogId, post.getBlogId());
+                List<Tag> tags = blogTagService.list(tagQueryWrapper).stream().map(item -> tagService.getById(item.getTagId())).toList();
                 post.setBlogTags(tags);
-               String cateId = blogCategoryService.getOne(new QueryWrapper<BlogCategory>().eq("blog_id", post.getBlogId())).getCategoryId();
+                String cateId = blogCategoryService.getOne(new LambdaQueryWrapper<BlogCategory>().eq(BlogCategory::getBlogId, post.getBlogId())).getCategoryId();
                 if (cateId != null) {
                     post.setBlogCategory(categoryService.getById(cateId));
                 }
@@ -173,13 +171,12 @@ public class HomeBlogController {
         LambdaQueryWrapper<BlogInfo> sqlWrapper = Wrappers.<BlogInfo>lambdaQuery()
 
 
-                .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus());
+                .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus()).eq(BlogInfo::getDeleted, false);
         //获取tag下的文章
         if (Objects.nonNull(categoryId)) {
             List<BlogCategory> list = blogCategoryService.list(new QueryWrapper<BlogCategory>()
                     .lambda().eq(BlogCategory::getCategoryId, categoryId));
-            System.out.println(list);
-            System.out.println("这是list");
+
             if (!CollectionUtils.isEmpty(list)) {
                 sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogCategory::getBlogId).toArray());
             } else {
@@ -225,7 +222,7 @@ public class HomeBlogController {
         queryWrapper.lambda().eq(Tag::getShow, ShowEnum.SHOW.getStatus());
         List<Tag> list = tagService.list();
         if (CollectionUtils.isEmpty(list)) {
-            ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
+            ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR,false,"失败了");
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, list);
     }
@@ -261,51 +258,26 @@ public class HomeBlogController {
      * @author Linn-cn
      * @date 2020/12/7
      */
-    @GetMapping({"/page"})
-    public Result page(BlogPageCondition condition) {
+
+    private Result page(BlogPageCondition condition) {
         if (Objects.isNull(condition.getPageNum())) {
             condition.setPageNum(1);
         }
         if (Objects.isNull(condition.getPageSize())) {
             condition.setPageSize(5);
         }
-        HashMap<String, Object> result = new HashMap<>();
-        Page<BlogInfo> page = new Page<>(condition.getPageNum(), condition.getPageSize());
-        PageDto pageDto = new PageDto();
-        pageDto.setPageNum(condition.getPageNum());
-        pageDto.setPageSize(condition.getPageSize());
-        LambdaQueryWrapper<BlogInfo> sqlWrapper = Wrappers.<BlogInfo>lambdaQuery()
-                .like(Objects.nonNull(condition.getKeyword()), BlogInfo::getBlogTitle, condition.getKeyword())
-
-                .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus());
-        //获取tag下的文章
-        if (Objects.nonNull(condition.getTagId())) {
-            List<BlogTag> list = blogService.list(new QueryWrapper<BlogTag>()
-                    .lambda().eq(BlogTag::getTagId, condition.getTagId()));
-            if (!CollectionUtils.isEmpty(list)) {
-                sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogTag::getBlogId).toArray());
-            }
-        }
-        sqlWrapper.orderByDesc(BlogInfo::getCreateTime);
-        blogInfoService.page(page, sqlWrapper);
+        HashMap<String, Object> result = new HashMap<>(16);
 
 
-        if (Objects.nonNull(condition.getTagId())) {
-            result.put("tagId", condition.getTagId());
-        }
-        if (Objects.nonNull(condition.getCategoryId())) {
-            result.put("categoryName", condition.getCategoryId());
-        }
         //start
         QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().orderByDesc(BlogInfo::getUpdateTime);
-        Page<BlogInfo> ipage = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
+        queryWrapper.lambda().orderByDesc(BlogInfo::getUpdateTime).eq(BlogInfo::getDeleted, false).eq(BlogInfo::getShow, true);
+        Page<BlogInfo> ipage = new Page<>(condition.getPageNum(), condition.getPageSize());
         Page<BlogInfo> blogInfoPage = blogInfoService.page(ipage, queryWrapper);
 
-        List<BlogDetailVO> blogDetailVOS = toBlogVo(blogInfoPage);
+        var blogDetailVOS = toBlogVo(blogInfoPage);
 
         result.put("blogPageResult", blogDetailVOS);
-        result.put("pageName", condition.getPageName());
         result.put("newBlogs", blogInfoService.getNewBlog());
         result.put("hotBlogs", blogInfoService.getHotBlog());
         result.put("hotTags", tagService.getBlogTagCountForIndex());
@@ -340,8 +312,8 @@ public class HomeBlogController {
         }
 
         // 关联评论的Count
-        long blogCommentCount = commentService.count(new QueryWrapper<Comment>()
-                .lambda()
+        long blogCommentCount = commentService.count(new LambdaQueryWrapper<Comment>()
+
                 .eq(Comment::getCommentStatus, CommentStatusEnum.ALLOW.getStatus())
                 .eq(Comment::getDeleted, ShowEnum.SHOW.getStatus())
                 .eq(Comment::getBlogId, blogId));
@@ -349,11 +321,9 @@ public class HomeBlogController {
         BlogDetailVO blogDetailVO = new BlogDetailVO();
         BeanUtils.copyProperties(blogInfo, blogDetailVO);
         blogDetailVO.setCommentCount(blogCommentCount);
-        Console.log("homeblog创建时间{}",blogDetailVO.getCreateTime().toString());
         result.put("blogDetailVO", blogDetailVO);
         result.put("tagList", tagList);
-        result.put("pageName", "详情");
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, result);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, result);
     }
 
     /**
@@ -377,7 +347,7 @@ public class HomeBlogController {
         AjaxResultPage<Comment> ajaxResultPage = new AjaxResultPage<>();
         ajaxResultPage.setCount(page.getTotal());
         ajaxResultPage.setList(page.getRecords());
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,ajaxResultPage);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, ajaxResultPage);
     }
 
     /**
@@ -389,13 +359,13 @@ public class HomeBlogController {
     @GetMapping({"/link"})
     public Result link() {
         List<Link> favoriteLinks = linkService.list(new QueryWrapper<Link>()
-                .lambda().eq(Link::getLinkType, LinkConstants.LINK_TYPE_FRIENDSHIP.getLinkTypeId())
+                .lambda().eq(Link::getLinkType, LinkConstants.LINK_TYPE_FRIENDSHIP.getLinkTypeId()).eq(Link::getShow, true)
         );
         List<Link> recommendLinks = linkService.list(new QueryWrapper<Link>()
-                .lambda().eq(Link::getLinkType, LinkConstants.LINK_TYPE_RECOMMEND.getLinkTypeId())
+                .lambda().eq(Link::getLinkType, LinkConstants.LINK_TYPE_RECOMMEND.getLinkTypeId()).eq(Link::getShow, true)
         );
         List<Link> personalLinks = linkService.list(new QueryWrapper<Link>()
-                .lambda().eq(Link::getLinkType, LinkConstants.LINK_TYPE_PRIVATE.getLinkTypeId())
+                .lambda().eq(Link::getLinkType, LinkConstants.LINK_TYPE_PRIVATE.getLinkTypeId()).eq(Link::getShow, true)
         );
         //判断友链类别并封装数据 0-友链 1-推荐 2-个人网站
         HashMap<String, Object> result = new HashMap<>();
@@ -403,7 +373,7 @@ public class HomeBlogController {
         result.put("favoriteLinks", favoriteLinks);
         result.put("recommendLinks", recommendLinks);
         result.put("personalLinks", personalLinks);
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, result);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, result);
     }
 
     /**
@@ -414,28 +384,27 @@ public class HomeBlogController {
      */
     @PostMapping(value = "/blog/comment")
     @ResponseBody
-    public Result<String> comment(Comment comment) {
-        HttpServletRequest request = RequestHelper.getHttpServletRequest();
+    public Result<? super String>  comment(Comment comment) {
+        var request = RequestHelper.getHttpServletRequest();
         String ref = request.getHeader("Referer");
-        System.out.println(ref);
-        System.out.println("这是ref");
+
 
         // 对非法字符进行转义，防止xss漏洞
         comment.setCommentBody(StringEscapeUtils.escapeHtml4(comment.getCommentBody()));
         comment.setCommentStatus(true);
         comment.setCommentatorIp(RequestHelper.getRequestIp());
-        comment.setUserAgent(RequestHelper.getUa().getBrowser()+RequestHelper.getUa().getVersion());
+        comment.setUserAgent(RequestHelper.getUa().getBrowser() + RequestHelper.getUa().getVersion());
         comment.setOs(RequestHelper.getUa().getOs().toString());
         comment.setCommentCreateTime(LocalDateTime.now());
         comment.setDeleted(true);
-        //if (!StringUtils.hasText(ref)) {
-        //    return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "非法请求");
-        //}
+        if (!StringUtils.hasText(ref)) {
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR,false, "非法请求");
+        }
         boolean flag = commentService.save(comment);
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, comment);
         }
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, null);
     }
 
 }

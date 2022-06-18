@@ -1,0 +1,2 @@
+org.springframework.context.ApplicationListener=\
+com.site.blog.config.listener.ConstantsInitListener

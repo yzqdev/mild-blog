@@ -1,20 +1,17 @@
 package com.site.blog.controller;
 
+import com.site.blog.aop.LogOperationEnum;
+import com.site.blog.aop.SysLogAnnotation;
 import com.site.blog.constants.HttpStatusEnum;
-import com.site.blog.constants.property.UploadProperty;
 import com.site.blog.model.dto.Result;
 import com.site.blog.model.entity.Img;
 import com.site.blog.service.ImgService;
 import com.site.blog.util.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,6 +35,7 @@ public class ImgController {
 
 
     @PostMapping("/upload")
+    @SysLogAnnotation(title = "上传图片",opType = LogOperationEnum.ADD)
     public Result uploadFileByEditor(@RequestParam(name = "img") MultipartFile file) {
 
         Map<String, Object> result = new HashMap<>();
@@ -59,6 +57,7 @@ public class ImgController {
     }
 
     @DeleteMapping("/del/{id}")
+    @SysLogAnnotation(title = "删除图片",opType = LogOperationEnum.DELETE)
     public Result delImg(@PathVariable String id) throws IOException { Img img = imgService.getById(id);
         Path file = Paths.get(img.getImgPath());
         Path thumbPath=Paths.get(img.getThumbnailPath());

@@ -12,11 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author: Milogenius
- * @create: 2019-07-08 10:24
- * @description:
- **/
+
 public class JwtUtil {
 
 
@@ -29,7 +25,7 @@ public class JwtUtil {
     /**
      * token私钥
      */
-    private static final String TOKEN_SECRET = "joijsdfjlsjfljfljl5135313135";
+    private static final String TOKEN_SECRET = "thisistokensecret2022";
 
     /**
      * 生成签名,15分钟后过期
@@ -56,9 +52,7 @@ public class JwtUtil {
         try {
             DecodedJWT jwt = JWT.decode(token);
             Map<String, Claim> result;
-            System.out.println(jwt.getClaims());
             result = jwt.getClaims();
-            System.out.println("userid=" + result.get("userId"));
             //注意!!!这里用toString会多出来引号!!!只能用asString
             return result.get("userId").asString();
         } catch (JWTDecodeException e) {

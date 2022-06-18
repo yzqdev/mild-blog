@@ -89,11 +89,11 @@ import {
 } from "vue";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
-import { useStore } from "vuex";
 
 const router = useRouter();
-let store = useStore();
 
+import { useUserStore } from "@/store/user";
+let store = useUserStore();
 let activeName = $ref("first");
 let title = $ref("用户登录");
 let regForm = $ref({ username: "", password: "", password2: "" });
@@ -120,7 +120,7 @@ function login() {
           `color:red;font-size:16px;background:transparent`
         );
         if (res.success) {
-          store.commit("setUserToken", res.data);
+          store.setUserToken(res.data);
           localStorage.token = res.data;
           ElMessage({ message: "success", type: "success" });
           router.push({ name: "adminWelcome" });

@@ -1,24 +1,25 @@
 <template>
   <el-table v-loading="loading" :data="data" fit>
-    <el-table-column prop="blogId" label="博客id"></el-table-column>
-    <el-table-column prop="blogTitle" label="博客标题">
+    <el-table-column prop="blogId" label="博客id" width="90"
+      ><template v-slot="{ row }">
+        <el-button @click="copyBlogId(row)">复制</el-button>
+      </template></el-table-column
+    >
+    <el-table-column prop="blogTitle" label="博客标题" width="250">
       <template v-slot="{ row }">
         <el-link :href="`/home/blog/${row.blogId}`" target="_blank">{{
           row.blogTitle
         }}</el-link>
       </template>
     </el-table-column>
-    <el-table-column prop="blogCategoryName" label="博客分类">
+    <el-table-column prop="blogCategoryName" label="博客分类" width="200">
       <template v-slot="{ row }">
         {{ row.blogCategory.categoryName }}
       </template>
     </el-table-column>
-    <el-table-column prop="blogTags" width="100" label="博客标签">
+    <el-table-column prop="blogTags" width="200" label="博客标签">
       <template v-slot="{ row }">
-        <el-tag
-          style="margin: 0 5px"
-
-          v-for="(item, index) in row.blogTags"
+        <el-tag style="margin: 0 5px" v-for="(item, index) in row.blogTags"
           >{{ item.tagName }}
         </el-tag>
       </template>
@@ -34,21 +35,22 @@
       </template>
     </el-table-column>
     <el-table-column prop="show" label="文章状态">
-      <template v-slot="{ row }"
-        >{{ row.show ? `发布` : `草稿` }}
-      </template>
+      <template v-slot="{ row }">{{ row.show ? `发布` : `草稿` }} </template>
     </el-table-column>
 
     <el-table-column prop="enableComment" label="评论">
       <template v-slot="{ row }"
-        >{{ row.enableComment  ? `允许` : `禁止` }}
+        >{{ row.enableComment ? `允许` : `禁止` }}
       </template>
     </el-table-column>
     <el-table-column label="操作" width="250">
       <template v-slot="{ row }">
-        <el-button type="primary" size="small" @click="editArticle(row)"
-          >编辑
-        </el-button>
+        <el-button type="primary" @click="editArticle(row)">编辑 </el-button>
+
+        <el-button type="warning" @click="hide(row)">{{
+          row.show ? `草稿` : `发布`
+        }}</el-button>
+
         <el-popconfirm
           title="确定删除吗？"
           confirmButtonText="好的"
@@ -59,28 +61,24 @@
           @confirm="deleteRow(row)"
         >
           <template #reference>
-            <el-button type="warning" size="small">隐藏</el-button>
-          </template>
-        </el-popconfirm>
-        <el-popconfirm
-          title="确定删除吗？"
-          confirmButtonText="好的"
-          cancelButtonText="不用了"
-          icon="el-icon-info"
-          placement="right"
-          iconColor="red"
-          @confirm="clearRow(row)"
-        >
-          <template #reference>
-            <el-button type="danger" size="small">删除</el-button>
+            <el-button type="danger">删除</el-button>
           </template>
         </el-popconfirm>
       </template>
     </el-table-column>
   </el-table>
 
-  <br/>
-  <el-pagination background layout="total,sizes,prev, pager, next " :total="count" :page-size="pageSize"  @current-change="getData" v-model:current-page="currentPage" :page-sizes="[10, 20, 30, 40, 50, 100]" @size-change="sizeChange"/>
+  <br />
+  <el-pagination
+    background
+    layout="total,sizes,prev, pager, next "
+    :total="count"
+    :page-size="pageSize"
+    @current-change="getData"
+    v-model:current-page="currentPage"
+    :page-sizes="[10, 20, 30, 40, 50, 100]"
+    @size-change="sizeChange"
+  />
 </template>
 
 <script setup>
@@ -91,6 +89,7 @@ import {
   getBlogList,
   getCateList,
   getTagList,
+  hideBlog,
 } from "@/utils/apiConfig";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
@@ -101,10 +100,10 @@ let state = reactive({
   cateList: [],
   tagList: [],
 });
-let count=$ref(0)
-let currentPage=$ref(1)
+let count = $ref(0);
+let currentPage = $ref(1);
 
-let pageSize=$ref(10)
+let pageSize = $ref(10);
 const router = useRouter();
 const route = useRoute();
 let { data, loading, cateList, tagList } = toRefs(state);
@@ -120,25 +119,33 @@ function getCate() {
   });
 }
 function sizeChange(size) {
-  pageSize=size
-  getData()
+  pageSize = size;
+
+  getData();
 }
 function getTags() {
-  getTagList({page:1,limit:100}).then(({ data }) => {
+  getTagList({ page: 1, limit: 100 }).then(({ data }) => {
     state.tagList = data;
   });
 }
 
 function getData() {
-  getBlogList({ page : 1, limit: pageSize }).then((res) => {
-console.log(`%c获取`,`color:red;font-size:16px;background:transparent`)
-    console.log(res)
-    state.data = res.data.list;
-    count=res.data.count
-    state.loading = false;
+  state.loading = true;
+  getBlogList({ page: currentPage, limit: pageSize, deleted: false }).then(
+    (res) => {
+      console.log(`%c获取`, `color:red;font-size:16px;background:transparent`);
+
+      state.data = res.data.list;
+      count = res.data.count;
+      state.loading = false;
+    }
+  );
+}
+function copyBlogId(row) {
+  navigator.clipboard.writeText(row.blogId).then(() => {
+    ElMessage({ type: "success", message: "成功" });
   });
 }
-
 function editArticle(row) {
   router.push({
     name: "articleEdit",
@@ -160,9 +167,9 @@ function deleteRow(row) {
   });
 }
 
-function clearRow(row) {
-  clearBlog(row.blogId).then(({ data }) => {
-    if (data) {
+function hide(row) {
+  hideBlog(row.blogId, !row.show).then((res) => {
+    if (res) {
       getData();
       ElMessage({
         message: "成功",

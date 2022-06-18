@@ -1,3 +1,4 @@
+
 logging:
   level:
     com:
@@ -6,14 +7,13 @@ logging:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  global-config:
-    db-config:
-      table-prefix: tb_
+
   mapper-locations: classpath*:mapper/*.xml
   type-aliases-package: com.site.blog.entity
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+
+    driver-class-name:  org.postgresql.Driver
     druid:
       filter:
         slf4j:
@@ -53,9 +53,10 @@ spring:
         exclusions: /druid/*,*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico
         url-pattern: /*
     name: myBlog
-    password: 123456
+    password: dCycy5h9[Gm/dsC.aVHm
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://49.234.131.170:3306/my_blog_db?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false
-    username: root
-  thymeleaf:
-    prefix: classpath:/static
+    url: jdbc:postgresql://localhost:5432/my_blog_db?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false
+    username: postgres
+
+
+

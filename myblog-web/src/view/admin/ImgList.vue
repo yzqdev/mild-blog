@@ -1,7 +1,13 @@
 <template>
   <div>
-    <el-button type="primary" @click="showUploadDialog">上传<el-icon><upload /></el-icon></el-button>
-    <el-dialog title="上传文件" v-model="uploadDialogVisible" @close="closeUpload">
+    <el-button type="primary" @click="showUploadDialog"
+      >上传<el-icon><upload /></el-icon
+    ></el-button>
+    <el-dialog
+      title="上传文件"
+      v-model="uploadDialogVisible"
+      @close="closeUpload"
+    >
       <file-pond
         name="img"
         ref="pond"
@@ -21,51 +27,70 @@
         v-on:init="handleFilePondInit"
       />
     </el-dialog>
-    <el-dialog class="detail-dialog" title="图片详情" v-model="detailDialogVisible">
-
+    <el-dialog
+      class="detail-dialog"
+      title="图片详情"
+      v-model="detailDialogVisible"
+    >
       <el-row>
         <el-col :span="9">
-          <el-image
-            preview-teleported
-
-            :src="getImgUrl(detailImg.imgUrl)"
-          />
+          <el-image preview-teleported :src="getImgUrl(detailImg.imgUrl)" />
         </el-col>
         <el-col :span="15">
           <div class="detail-wrap">
             <article class="detail-list">
               <h4 class="detail-h4">文件名:</h4>
               <div class="detail-content">{{ detailImg.imgName }}</div>
-
             </article>
             <article class="detail-list">
               <h4 class="detail-h4">文件类型:</h4>
               <div class="detail-content">{{ detailImg.mediaType }}</div>
-
             </article>
             <article class="detail-list">
               <h4 class="detail-h4">文件大小:</h4>
-              <div class="detail-content">{{ convertSize(detailImg.imgSize) }}</div>
-
+              <div class="detail-content">
+                {{ convertSize(detailImg.imgSize) }}
+              </div>
             </article>
             <article class="detail-list">
               <h4 class="detail-h4">文件md5:</h4>
-              <div class="detail-content">{{ detailImg.md5}}</div>
-
+              <div class="detail-content">{{ detailImg.md5 }}</div>
             </article>
             <article class="detail-list">
               <h4 class="detail-h4">文件上传时间:</h4>
-              <div class="detail-content">{{  formatTime(detailImg.uploadTime)}}</div>
-
+              <div class="detail-content">
+                {{ formatTime(detailImg.uploadTime) }}
+              </div>
             </article>
             <article class="detail-list">
-              <h4 class="detail-h4">文件路径:<el-icon :size="16" @click="copyImgUrl" color="cyan" style="cursor: pointer;margin-left: 1rem;"> <copy-document /></el-icon></h4>
-              <div class="detail-content">{{  getImgUrl(detailImg.imgUrl) }}</div>
-
-            </article>  <article class="detail-list">
-              <h4 class="detail-h4">markdown格式:<el-icon :size="16" @click="copyMarkdown" color="cyan" style="cursor: pointer;margin-left: 1rem;"> <copy-document /></el-icon></h4>
-              <div class="detail-content">{{  `![img](${getImgUrl(detailImg.imgUrl)})` }}</div>
-
+              <h4 class="detail-h4">
+                文件路径:<el-icon
+                  :size="16"
+                  @click="copyImgUrl"
+                  color="cyan"
+                  style="cursor: pointer; margin-left: 1rem"
+                >
+                  <copy-document
+                /></el-icon>
+              </h4>
+              <div class="detail-content">
+                {{ getImgUrl(detailImg.imgUrl) }}
+              </div>
+            </article>
+            <article class="detail-list">
+              <h4 class="detail-h4">
+                markdown格式:<el-icon
+                  :size="16"
+                  @click="copyMarkdown"
+                  color="cyan"
+                  style="cursor: pointer; margin-left: 1rem"
+                >
+                  <copy-document
+                /></el-icon>
+              </h4>
+              <div class="detail-content">
+                {{ `![img](${getImgUrl(detailImg.imgUrl)})` }}
+              </div>
             </article>
           </div>
         </el-col>
@@ -73,14 +98,13 @@
     </el-dialog>
     <el-table :data="Imgs" fit>
       <el-table-column prop="imgName" label="图片名称">
-        <template v-slot="{row}">
+        <template v-slot="{ row }">
           <span @click="detailDialogShow(row)">{{ row.imgName }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="imgUrl" label="图片url"></el-table-column>
       <el-table-column prop="imgUrl" width="100" label="缩略图">
-        <template v-slot="{ row }"
-        >
+        <template v-slot="{ row }">
           <el-image
             :preview-src-list="[getImgUrl(row.imgUrl)]"
             preview-teleported
@@ -97,9 +121,8 @@
       <el-table-column prop="imgPath" label="图片目录"></el-table-column>
 
       <el-table-column prop="uploadTime" label="上传时间">
-        <template v-slot="{ row }">{{
-            $dayjs(row.uploadTime).format("YYYY-MM-DD HH:mm:ss")
-          }}
+        <template v-slot="{ row }"
+          >{{ $dayjs(row.uploadTime).format("YYYY-MM-DD HH:mm:ss") }}
         </template>
       </el-table-column>
 
@@ -116,22 +139,41 @@
           >
             <template #reference>
               <el-button type="danger">删除</el-button>
-
             </template>
           </el-popconfirm>
-          <el-button type="primary" @click="detailDialogShow(row)">详情</el-button>
+          <el-button type="primary" @click="detailDialogShow(row)"
+            >详情</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
+    <br />
+    <el-pagination
+      background
+      layout="total,sizes,prev, pager, next "
+      :total="count"
+      :page-size="pageSize"
+      @current-change="getList"
+      v-model:current-page="currentPage"
+      :page-sizes="[10, 20, 30, 40, 50, 100]"
+      @size-change="sizeChange"
+    />
   </div>
 </template>
 
 <script setup>
 import { baseUrl, delImg, getImgs, uploadUrl } from "@/utils/apiConfig";
-import { convertSize,formatTime } from "@/utils/utils";
-import { useClipboard, usePermission } from '@vueuse/core'
-const { text, isSupported,copied, copy } = useClipboard()
+import { convertSize, formatTime } from "@/utils/utils";
+import { useClipboard, usePermission } from "@vueuse/core";
+const { text, isSupported, copied, copy } = useClipboard();
 import vueFilePond from "vue-filepond";
+let count = $ref(0);
+let pageSize = $ref(10);
+let currentPage = $ref(1);
+function sizeChange(size) {
+  pageSize = size;
+  getList();
+}
 
 // Import FilePond styles
 import "filepond/dist/filepond.min.css";
@@ -145,7 +187,7 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css
 // Import image preview and file type validation plugins
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import "element-plus/theme-chalk/el-message.css"
+import "element-plus/theme-chalk/el-message.css";
 // Create component
 const FilePond = vueFilePond(
   FilePondPluginFileValidateType,
@@ -156,7 +198,7 @@ import { CopyDocument, Upload } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 
 let state = reactive({
-  Imgs: []
+  Imgs: [],
 });
 let pond = ref();
 let myFiles = $ref([]);
@@ -169,33 +211,30 @@ onBeforeMount(() => {
   getList();
 });
 
-function handleFilePondInit() {
-
-}
+function handleFilePondInit() {}
 
 function detailDialogShow(row) {
   detailImg = row;
   detailDialogVisible = true;
 }
 function copyMarkdown() {
-
   copy(`![img](${getImgUrl(detailImg.imgUrl)})`).then(() => {
-      ElMessage({
-        type:'success',
-        message:"复制markdown成功"
-      })
-  })
-
+    ElMessage({
+      type: "success",
+      message: "复制markdown成功",
+    });
+  });
 }
-function copyImgUrl(){
-  copy(getImgUrl(detailImg.imgUrl))
+function copyImgUrl() {
+  copy(getImgUrl(detailImg.imgUrl));
   ElMessage({
-    type:'success',
-    message:"复制路径成功"
-  })
+    type: "success",
+    message: "复制路径成功",
+  });
 }
 function getImgUrl(url) {
-  return baseUrl + "/" + url;
+  console.log(baseUrl());
+  return baseUrl() + "/" + url;
 }
 
 function getList() {
@@ -217,6 +256,10 @@ function deleteRow(row) {
   delImg(row.id).then(({ data }) => {
     console.log(data);
     getList();
+    ElMessage({
+      type: "success",
+      message: "删除成功",
+    });
   });
 }
 </script>
@@ -236,18 +279,17 @@ function deleteRow(row) {
 
       .detail-h4 {
         margin: 4px auto;
-        color: rgba(0, 0, 0, .65);
+        color: rgba(0, 0, 0, 0.65);
         font-size: 14px;
         line-height: 22px;
       }
 
       .detail-content {
-        color: rgba(0, 0, 0, .45);
+        color: rgba(0, 0, 0, 0.45);
         font-size: 14px;
         line-height: 22px;
       }
     }
   }
 }
-
 </style>
