@@ -63,9 +63,10 @@
 <script setup>
 import { onBeforeMount, onMounted, reactive, ref } from "vue";
 import "vue-cropper/dist/index.css";
-import { baseUrl, editUser, getUserInfo, uploadImg } from "@/utils/apiConfig";
+import {  editUser, getUserInfo, uploadImg } from "@/utils/apiConfig";
 import { VueCropper } from "vue-cropper";
 import { ElMessage } from "element-plus";
+import { baseConfig } from "@/utils/http";
 let cropper = ref(null);
 let user = $ref({});
 const option = reactive({
@@ -109,7 +110,7 @@ function finish() {
       );
       console.log(result);
 
-      user.avatar = baseUrl() + "/" + result.data.img.imgUrl;
+      user.avatar = baseConfig.url + "/" + result.data.img.imgUrl;
 
       cropperVisible = false;
     });

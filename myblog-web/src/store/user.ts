@@ -1,5 +1,6 @@
-import { UserState } from "@/type/storeTypes";
+
 import { defineStore } from "pinia";
+import { UserState } from "@/interface/storeTypes";
 
 export const useUserStore = defineStore({
   id: "user",

@@ -1,5 +1,5 @@
-import { SysConfig} from "@/type/storeTypes";
 import { defineStore } from "pinia";
+import { SysConfig } from "@/interface/storeTypes";
 
 export const useConfigStore = defineStore({
   id: "config",

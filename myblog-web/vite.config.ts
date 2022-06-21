@@ -15,24 +15,19 @@ export default defineConfig({
       autoInstall: true,
     }),
     AutoImport({
-      imports: ['vue'],
-      resolvers: [
-        ElementPlusResolver(), // 自动导入图标组件
-        IconsResolver({
-          prefix: "Icon",
-        }),
-      ],
-      // dts: path.resolve(pathSrc, 'typings', 'auto-imports.d.ts'),
+      imports: ['vue', 'vue-router', 'vue/macros', 'pinia', '@vueuse/core'],
+      resolvers: [ElementPlusResolver(),IconsResolver({
+        prefix: "Icon",
+      }),],
+      dts: path.resolve(pathSrc, 'types', 'auto-imports.d.ts'),
     }),
     Components({
-      resolvers: [
-        ElementPlusResolver(), // 自动注册图标组件
-        IconsResolver({
-          enabledCollections: ["ep"],
-        }),
-      ],
-      // dts: path.resolve(pathSrc, 'typings', 'components.d.ts'),
+      resolvers: [ElementPlusResolver(), IconsResolver({
+        enabledCollections: ["ep"],
+      }),],
+      dts: path.resolve(pathSrc, 'types', 'components.d.ts'),
     }),
+
   ],
   // publicDir:'/myblog',
   // base:'/myblog/',

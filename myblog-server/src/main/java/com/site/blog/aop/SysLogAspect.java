@@ -27,10 +27,11 @@ import java.time.format.DateTimeFormatter;
 @Aspect
 @Configuration
 public class SysLogAspect {
-@Resource
+    @Resource
     BlogConfigService blogConfigService;
-@Resource
+    @Resource
     SysOpLogService sysOpLogService;
+
     /**
      * 日志切入点
      *
@@ -44,14 +45,13 @@ public class SysLogAspect {
 
     /**
      * 操作成功返回结果记录日志
-     *
      */
     @AfterReturning(pointcut = "getLogPointCut()", returning = "result")
     public void doAfterReturning(JoinPoint joinPoint, Object result) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
         var businessLog = method.getAnnotation(SysLogAnnotation.class);
-        SysOpLog sysOpLog=genBaseSysOpLog();
+        SysOpLog sysOpLog = genBaseSysOpLog();
         String className = joinPoint.getTarget().getClass().getName();
 
         String methodName = joinPoint.getSignature().getName();
@@ -68,7 +68,7 @@ public class SysLogAspect {
         sysOpLog.setOpTime(LocalDateTime.now());
         sysOpLog.setAccount(UserContextHolder.me().getUser().getUuid());
 
-        BlogConfig sqlBlogConfig=blogConfigService.getOne(new LambdaQueryWrapper<BlogConfig>().eq(BlogConfig::getCode,"sysUpdateTime"));
+        BlogConfig sqlBlogConfig = blogConfigService.getOne(new LambdaQueryWrapper<BlogConfig>().eq(BlogConfig::getCode, "sysUpdateTime"));
 
         sqlBlogConfig.setValue(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         sysOpLogService.save(sysOpLog);
@@ -80,7 +80,6 @@ public class SysLogAspect {
 
     /**
      * 操作发生异常记录日志
-     *
      */
     @AfterThrowing(pointcut = "getLogPointCut()", throwing = "exception")
     public void doAfterThrowing(JoinPoint joinPoint, Exception exception) {
@@ -90,19 +89,20 @@ public class SysLogAspect {
 
     }
 
-    private SysOpLog genBaseSysOpLog()  {
+    private SysOpLog genBaseSysOpLog() {
         HttpServletRequest request = RequestHelper.getRequest();
         if (ObjectUtil.isNotNull(request)) {
             String ip = RequestHelper.getRequestIp();
-            String address ="aa"; //IpAddressUtil.getAddress(request);
-            String browser =RequestHelper.getBrowserFull();
+            String address = "aa"; //IpAddressUtil.getAddress(request);
+            String browser = RequestHelper.getBrowserFull();
             String os = RequestHelper.getUa().getOs().getName();
             String url = request.getRequestURI();
             String method = request.getMethod();
             return genBaseLog(ip, address, browser, os, url, method);
         }
-        return  null;
+        return null;
     }
+
     SysOpLog genBaseLog(String ip, String location, String browser, String os, String url, String method) {
         SysOpLog sysOpLog = new SysOpLog();
         sysOpLog.setIp(ip);

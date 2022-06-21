@@ -162,18 +162,11 @@
 </template>
 
 <script setup>
-import { baseUrl, delImg, getImgs, uploadUrl } from "@/utils/apiConfig";
+import {   delImg, getImgs, uploadUrl } from "@/utils/apiConfig";
 import { convertSize, formatTime } from "@/utils/utils";
 import { useClipboard, usePermission } from "@vueuse/core";
 const { text, isSupported, copied, copy } = useClipboard();
 import vueFilePond from "vue-filepond";
-let count = $ref(0);
-let pageSize = $ref(10);
-let currentPage = $ref(1);
-function sizeChange(size) {
-  pageSize = size;
-  getList();
-}
 
 // Import FilePond styles
 import "filepond/dist/filepond.min.css";
@@ -189,17 +182,26 @@ import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "element-plus/theme-chalk/el-message.css";
 // Create component
+
+import { computed, onBeforeMount, reactive, ref, toRefs } from "vue";
+import { CopyDocument, Upload } from "@element-plus/icons-vue";
+import { ElMessage } from "element-plus";
+import { baseConfig } from "@/utils/http";
 const FilePond = vueFilePond(
   FilePondPluginFileValidateType,
   FilePondPluginImagePreview
 );
-import { computed, onBeforeMount, reactive, ref, toRefs } from "vue";
-import { CopyDocument, Upload } from "@element-plus/icons-vue";
-import { ElMessage } from "element-plus";
-
 let state = reactive({
   Imgs: [],
 });
+let count = $ref(0);
+let pageSize = $ref(10);
+let currentPage = $ref(1);
+function sizeChange(size) {
+  pageSize = size;
+  getList();
+}
+
 let pond = ref();
 let myFiles = $ref([]);
 let detailImg = $ref();
@@ -233,8 +235,8 @@ function copyImgUrl() {
   });
 }
 function getImgUrl(url) {
-  console.log(baseUrl());
-  return baseUrl() + "/" + url;
+
+  return baseConfig.url + "/" + url;
 }
 
 function getList() {

@@ -30,7 +30,9 @@ public interface SqlConstant {
             INSERT INTO "public"."link" ("link_id", "link_type", "link_name", "link_url", "link_description", "link_rank", "is_deleted", "create_time", "update_time") VALUES ('2', 0, 'github', 'https://github.com', '这是github', 0, 1, '2019-09-02 21:24:44', NULL);
             INSERT INTO "public"."link" ("link_id", "link_type", "link_name", "link_url", "link_description", "link_rank", "is_deleted", "create_time", "update_time") VALUES ('4', 1, '饿了吗', 'https://element-plus.gitee.io/#/zh-CN/component/link#tu-biao', '222222', 123, 0, '2019-09-03 14:47:21', NULL);
             """;
-
+String oldSqlString="""
+		oldstring
+		""";
 
     String initSysDictTypeSql= """
             INSERT INTO "public"."sys_dict_type" ("id", "name", "code", "sort", "remark", "status", "create_time", "update_time") VALUES ('1537673136371220481', '邮件类型', 'email_type', 0, '啊啊', 't', NULL, NULL);

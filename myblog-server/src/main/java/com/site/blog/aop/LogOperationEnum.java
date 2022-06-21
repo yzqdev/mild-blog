@@ -1,6 +1,5 @@
 package com.site.blog.aop;
 
-import lombok.Data;
 import lombok.Getter;
 
 /**

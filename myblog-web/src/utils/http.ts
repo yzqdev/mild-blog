@@ -3,9 +3,10 @@ import qs from "qs";
 import axios, { AxiosRequestConfig } from "axios";
 import { Result } from "@/interface/result";
 
+export const baseConfig = (await axios.get("/config.json")).data;
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_APP_URL, //接口统一域名
-  timeout: 6000, //设置超时
+  baseURL: baseConfig.url + "/v2",
+  timeout: 6000
 });
 
 instance.defaults.withCredentials = true;
@@ -32,13 +33,13 @@ instance.interceptors.request.use(
 // 添加响应拦截器
 
 instance.interceptors.response.use(
-  function (response) {
+  function(response) {
     // 对响应数据做点什么
     console.log("进入response");
-    let data:Result = response.data;
+    let data: Result = response.data;
     return data;
   },
-  function (error) {
+  function(error) {
     // 对响应错误做点什么
     return Promise.reject(error);
   }
@@ -46,7 +47,7 @@ instance.interceptors.response.use(
 // @ts-ignore
 instance.postForm = (url: string, data: any) => {
   return instance.post(url, qs.stringify(data), {
-    headers: { "content-type": "application/x-www-form-urlencoded" },
+    headers: { "content-type": "application/x-www-form-urlencoded" }
   });
 };
 export default instance;

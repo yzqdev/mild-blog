@@ -1,6 +1,6 @@
 import { defaultTheme } from "@/constants/defaultTheme";
-import { ThemeState } from "@/type/storeTypes";
 import { defineStore } from "pinia";
+import { ThemeState } from "@/interface/storeTypes";
 
 export const useThemeStore = defineStore({
   id: "themeConfig",
