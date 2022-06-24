@@ -1,18 +1,5 @@
 import http from "@/utils/http";
 import qs from "qs";
-import axios from "axios";
-
-export const baseUrl = () => {
-  axios
-    .get("/config.json")
-    .then((res) => {
-      return res.data.url;
-    })
-    .catch((err) => {
-      return "http://localhost:2801";
-    });
-  return "http://localhost:2801";
-};
 export const loginApi = (username: string, password: string) => {
   return http.post(`/auth/login?username=${username}&password=${password}`);
 };

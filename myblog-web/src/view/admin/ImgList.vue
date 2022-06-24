@@ -162,7 +162,7 @@
 </template>
 
 <script setup>
-import { baseUrl, delImg, getImgs, uploadUrl } from "@/utils/apiConfig";
+import {   delImg, getImgs, uploadUrl } from "@/utils/apiConfig";
 import { convertSize, formatTime } from "@/utils/utils";
 import { useClipboard, usePermission } from "@vueuse/core";
 const { text, isSupported, copied, copy } = useClipboard();
@@ -196,6 +196,7 @@ const FilePond = vueFilePond(
 import { computed, onBeforeMount, reactive, ref, toRefs } from "vue";
 import { CopyDocument, Upload } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
+import { baseConfig } from "@/utils/http";
 
 let state = reactive({
   Imgs: [],
@@ -233,8 +234,8 @@ function copyImgUrl() {
   });
 }
 function getImgUrl(url) {
-  console.log(baseUrl());
-  return baseUrl() + "/" + url;
+
+  return baseConfig.url + "/" + url;
 }
 
 function getList() {
