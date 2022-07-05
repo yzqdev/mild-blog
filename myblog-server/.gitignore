@@ -9,6 +9,8 @@
 .settings
 .springBeans
 .sts4-cache
+bin/
+logs/
 
 ### IntelliJ IDEA ###
 .idea

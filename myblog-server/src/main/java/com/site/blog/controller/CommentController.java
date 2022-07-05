@@ -32,25 +32,26 @@ public class CommentController {
 
     @Resource
     private CommentService commentService;
-@Resource
-private BlogInfoService blogService;
+    @Resource
+    private BlogInfoService blogService;
 
 
     /**
      * 返回评论列表
+     *
      * @param ajaxPutPage
      * @param condition
      * @return com.site.blog.pojo.dto.AjaxResultPage<com.site.blog.entity.BlogComment>
      * @date 2020/4/24 21:23
      */
     @GetMapping("/comment/paging")
-    public Result<AjaxResultPage<CommentVo>> getCommentList(AjaxPutPage<Comment> ajaxPutPage, Comment condition){
+    public Result<AjaxResultPage<CommentVo>> getCommentList(AjaxPutPage<Comment> ajaxPutPage, Comment condition) {
         QueryWrapper<Comment> queryWrapper = new QueryWrapper<>(condition);
         Page<Comment> page = ajaxPutPage.putPageToPage();
-        commentService.page(page,queryWrapper);
-        List<CommentVo> commentVoPage=page.getRecords().stream().map(BeanMapUtil::copyComment).toList();
-        commentVoPage.forEach(item->{
-            BlogInfo blogInfo=blogService.getOne(new LambdaQueryWrapper<BlogInfo>().eq(BlogInfo::getBlogId,item.getBlogId()));
+        commentService.page(page, queryWrapper);
+        List<CommentVo> commentVoPage = page.getRecords().stream().map(BeanMapUtil::copyComment).toList();
+        commentVoPage.forEach(item -> {
+            BlogInfo blogInfo = blogService.getOne(new LambdaQueryWrapper<BlogInfo>().eq(BlogInfo::getBlogId, item.getBlogId()));
             item.setBlogInfo(blogInfo);
         });
 
@@ -58,7 +59,7 @@ private BlogInfoService blogService;
         AjaxResultPage<CommentVo> result = new AjaxResultPage<>();
         result.setList(commentVoPage);
         result.setCount(commentVoPage.size());
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,result);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, result);
     }
 
     /**
@@ -69,29 +70,30 @@ private BlogInfoService blogService;
      * @return com.site.blog.pojo.dto.Result<java.lang.String>
      * @date 2020/4/24 21:21
      */
-    @PostMapping( "/comment/isDel/{id}" )
-    @SysLogAnnotation(title = "更新",opType = LogOperationEnum.CHANGE_STATUS)
-    public Result   updateCommentStatus(@PathVariable("id") String id,@RequestParam("show")Boolean show){
-        Comment comment= commentService.getById(id);
+    @PostMapping("/comment/isDel/{id}")
+    @SysLogAnnotation(title = "更新", opType = LogOperationEnum.CHANGE_STATUS)
+    public Result updateCommentStatus(@PathVariable("id") String id, @RequestParam("show") Boolean show) {
+        Comment comment = commentService.getById(id);
         comment.setCommentStatus(show);
         boolean flag = commentService.updateById(comment);
-        if (flag){
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,comment);
+        if (flag) {
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, comment);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
 
     /**
      * 删除评论
+     *
      * @param id
      * @return com.site.blog.pojo.dto.Result<java.lang.String>
      * @date 2020/4/24 21:23
      */
     @DeleteMapping("/comment/delete/{id}")
-    @SysLogAnnotation(title = "删除评论",opType = LogOperationEnum.DELETE)
-    public Result<String> deleteComment(@PathVariable("id") String id){
+    @SysLogAnnotation(title = "删除评论", opType = LogOperationEnum.DELETE)
+    public Result<String> deleteComment(@PathVariable("id") String id) {
         boolean flag = commentService.removeById(id);
-        if (flag){
+        if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
@@ -100,19 +102,20 @@ private BlogInfoService blogService;
 
     /**
      * 编辑评论
+     *
      * @param comment
      * @return com.site.blog.pojo.dto.Result<java.lang.String>
      * @date 2020/4/24 21:21
      */
     @PostMapping("/comment/edit")
-    @SysLogAnnotation(title = "编辑评论",opType = LogOperationEnum.EDIT)
-    public Result<String> editComment(Comment comment){
+    @SysLogAnnotation(title = "编辑评论", opType = LogOperationEnum.EDIT)
+    public Result<String> editComment(Comment comment) {
         comment.setReplyCreateTime(LocalDateTime.now());
         comment.setCommentBody(StringEscapeUtils.escapeHtml4(comment.getCommentBody()));
         boolean flag = commentService.updateById(comment);
-        if (flag){
+        if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
-        }else{
+        } else {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
         }
     }
