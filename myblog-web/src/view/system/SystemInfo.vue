@@ -2,14 +2,14 @@
   <el-button type="primary" @click="addDialogShow">{{ dialogTxt }}</el-button>
   <el-dialog width="30%" v-model="addDialogVisible" title="添加系统信息">
     <el-form :model="addForm">
-      <el-form-item prop="configField" label="字段名">
-        <el-input v-model="addForm.configField"></el-input>
+      <el-form-item prop="code" label="字段名">
+        <el-input v-model="addForm.code"></el-input>
       </el-form-item>
-      <el-form-item prop="configName" label="参数名">
-        <el-input v-model="addForm.configName"></el-input>
+      <el-form-item prop="name" label="参数名">
+        <el-input v-model="addForm.name"></el-input>
       </el-form-item>
-      <el-form-item prop="configValue" label="参数值">
-        <el-input v-model="addForm.configValue"></el-input>
+      <el-form-item prop="value" label="参数值">
+        <el-input v-model="addForm.value"></el-input>
       </el-form-item>
     </el-form>
 
@@ -22,18 +22,18 @@
   </el-dialog>
 
   <el-table :data="tableData" fit>
-    <el-table-column prop="configField" label="字段名"></el-table-column>
-    <el-table-column prop="configName" label="参数名">
+    <el-table-column prop="code" label="字段名"></el-table-column>
+    <el-table-column prop="name" label="参数名">
       <template v-slot="scope"
         ><span>
-          {{ scope.row.configName }}
+          {{ scope.row.name }}
         </span>
       </template>
     </el-table-column>
-    <el-table-column prop="configValue" label="参数值">
+    <el-table-column prop="value" label="参数值">
       <template v-slot="scope"
         ><span>
-          {{ scope.row.configValue }}
+          {{ scope.row.value }}
         </span>
       </template>
     </el-table-column>
@@ -80,9 +80,9 @@ let addDialogVisible = $ref(false);
 
 let addForm = $ref({
   id: null,
-  configName: "name",
-  configField: "field",
-  configValue: "value",
+  name: "name",
+  code: "field",
+  value: "value",
 });
 
 function getData() {
@@ -95,7 +95,7 @@ function editSystem(row) {
   addForm = row;
   addDialogVisible = true;
 }
-function changeConfigName(row) {
+function changename(row) {
   editSystemInfo(row).then(({ data }) => {});
 }
 
@@ -105,7 +105,7 @@ function formatTime(time) {
 }
 
 function deleteRow(row) {
-  delSystemInfo(row.configField).then(({ data }) => {
+  delSystemInfo(row.code).then(({ data }) => {
     getData();
     ElMessage({
       type: "success",
@@ -120,7 +120,7 @@ function addDialogShow() {
 
 async function confirmAdd() {
   if (addForm.id) {
-    await changeConfigName(addForm);
+    await changename(addForm);
   } else {
     await addSystemInfo(addForm);
   }
