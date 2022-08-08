@@ -1,7 +1,7 @@
-package utils
+package util
 
 import (
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v4"
 	"time"
 )
 
@@ -10,7 +10,7 @@ var jwtSecret = []byte("EhBu9G3bGTUssukg")
 type Claims struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
-	jwt.StandardClaims
+	jwt.RegisteredClaims
 }
 
 // GenerateToken 生成token
@@ -21,8 +21,8 @@ func GenerateToken(username, password string) (string, error) {
 	claims := Claims{
 		username,
 		password,
-		jwt.StandardClaims{
-			ExpiresAt: expireTime.Unix(),
+		jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(expireTime),
 
 			Issuer: "react_blog",
 		},

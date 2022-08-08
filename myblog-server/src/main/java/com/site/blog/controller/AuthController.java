@@ -10,6 +10,7 @@ import com.site.blog.constants.SysConfigConstants;
 import com.site.blog.context.ConfigContextHolder;
 import com.site.blog.model.dto.Result;
 import com.site.blog.model.entity.AdminUser;
+import com.site.blog.model.vo.UserVo;
 import com.site.blog.service.AdminUserService;
 import com.site.blog.service.BlogConfigService;
 import com.site.blog.service.MailService;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
-
 
 /**
  * @author yanni
@@ -44,14 +44,13 @@ public class AuthController {
     @PostMapping(value = "/login")
     @ResponseBody
     public Result login(String username, String password,
-                        HttpSession session) {
+            HttpSession session) {
         if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
         }
         QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<>(
                 new AdminUser().setUsername(username)
-                        .setPassword(MD5Utils.MD5Encode(password, "UTF-8"))
-        );
+                        .setPassword(MD5Utils.MD5Encode(password, "UTF-8")));
         AdminUser adminUser = adminUserService.getOne(queryWrapper);
         if (adminUser != null) {
             if (!adminUser.getLocked()) {
@@ -87,7 +86,8 @@ public class AuthController {
         if (adminUser != null) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST, false, "用户名已存在");
         } else {
-            AdminUser regUser = AdminUser.builder().username(username).password(password).uuid(UUID.fastUUID().toString()).locked(true).role(0).build();
+            AdminUser regUser = AdminUser.builder().username(username).password(password)
+                    .uuid(UUID.fastUUID().toString()).locked(true).role(0).build();
 
             adminUserService.register(regUser);
 
@@ -98,14 +98,14 @@ public class AuthController {
 
     @PostMapping("/findPassByMail/{email}")
     @ResponseBody
-    public Result findPassEmail(@PathVariable("email") String email) {
+    public Result<String> findPassEmail(@PathVariable("email") String email) {
         mailService.sendFindPassEmail(email, mailService.getDefaultMail());
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, "已发送邮件");
     }
 
     @PostMapping("/findPass")
     @ResponseBody
-    public Result sengFindPassEmail() {
+    public Result<UserVo> sengFindPassEmail() {
         var user = RequestHelper.getSessionUser();
         mailService.sendFindPassEmail(user.getEmail(), mailService.getDefaultMail());
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, user);
@@ -121,8 +121,7 @@ public class AuthController {
                 String newPass = HexUtil.decodeHexStr(cip);
                 sysUser.setPassword(newPass);
 
-
-                Boolean r = adminUserService.updateUserInfo(sysUser);
+                Boolean result = adminUserService.updateUserInfo(sysUser);
                 model.addAttribute("title", "成功");
                 model.addAttribute("name", "新密码:" + newPass);//
                 model.addAttribute("note", "密码已被系统重置，请登录修改你的新密码");
@@ -131,9 +130,7 @@ public class AuthController {
                 model.addAttribute("name", "为获取到用户信息");
                 model.addAttribute("note", "操作失败");
 
-
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();

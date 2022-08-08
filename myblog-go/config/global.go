@@ -11,12 +11,22 @@ import (
 )
 
 type Global struct {
+	Server struct {
+		Port string `mapstructure:"port"`
+	}
 	Mysql struct {
-		Host string `json:"host"`
-		Port string `json:"port"`
-		User string `json:"user"`
-		Pass string `json:"pass"`
-		Name string `json:"name"`
+		Host string `mapstructure:"host"`
+		Port string `mapstructure:"port"`
+		User string `mapstructure:"user"`
+		Pass string `mapstructure:"pass"`
+		Name string `mapstructure:"name"`
+	}
+	Pg struct {
+		Host string `mapstructure:"host"`
+		Port string `mapstructure:"port"`
+		User string `mapstructure:"user"`
+		Pass string `mapstructure:"pass"`
+		Name string `mapstructure:"name"`
 	}
 }
 
@@ -24,7 +34,7 @@ var g *Global
 
 func GetGlobal() *Global {
 
-	conf := "./config/config.yml"
+	conf := "./config.yml"
 	viper.SetConfigFile(conf)
 	content, err := ioutil.ReadFile(conf)
 	if err != nil {

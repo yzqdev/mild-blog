@@ -1,5 +1,7 @@
-### Example user template template
-### Example user template
+*.exe
+
+
+
 
 # IntelliJ project files
 .idea
@@ -7,6 +9,4 @@
 out
 gen
 go.sum
-tmp/
-*.exe
-myblog-go
+tmp

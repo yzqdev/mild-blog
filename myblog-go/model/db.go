@@ -1,8 +1,10 @@
 package model
 
 import (
-	"gorm.io/driver/mysql"
+	"github.com/gookit/color"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"myblog-go/config"
 )
 
@@ -12,12 +14,14 @@ type Database struct {
 
 var DB *gorm.DB
 
-// Init Open mysql 连接
+// Init Open pgsql连接
 func init() {
 	g := config.GetGlobal()
 
-	dsn := g.Mysql.User + ":" + g.Mysql.Pass + "@tcp(127.0.0.1:3306)/" + g.Mysql.Name + "?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	dsn := "host=" + g.Pg.Host + " user=" + g.Pg.User + " password=" + g.Pg.Pass + " dbname=" + g.Pg.Name + " port=" + g.Pg.Port
+	color.Redln(dsn)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
+	db.AutoMigrate(AdminUser{}, Article{})
 	if err != nil {
 		return
 	}

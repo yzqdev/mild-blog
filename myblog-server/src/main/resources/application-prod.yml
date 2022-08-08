@@ -12,7 +12,7 @@ mybatis-plus:
   type-aliases-package: com.site.blog.entity
 spring:
   datasource:
-
+    
     driver-class-name:  org.postgresql.Driver
     druid:
       filter:

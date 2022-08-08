@@ -2,9 +2,11 @@
 server:
   compression:
     enabled: false
+    
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
+    
     druid:
       filter:
         slf4j:
@@ -17,6 +19,7 @@ spring:
           enabled: true
           log-slow-sql: true
           slow-sql-millis: 1000
+          
         wall:
           config:
             delete-where-none-check: true

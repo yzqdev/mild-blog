@@ -2,10 +2,11 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/gookit/color"
+	"github.com/rs/xid"
 	"myblog-go/model"
-	"myblog-go/utils"
+	"myblog-go/util"
 	"net/http"
 	"strconv"
 	"time"
@@ -22,8 +23,8 @@ type ReqReg struct {
 	Password string `json:"password"`
 }
 type NewJwtClaims struct {
-	*model.AdminUser
-	jwt.StandardClaims
+	Uid string
+	jwt.RegisteredClaims
 }
 
 func Login(c *gin.Context) {
@@ -38,7 +39,7 @@ func Login(c *gin.Context) {
 
 		result.Message = "数据绑定失败"
 		result.Code = http.StatusUnauthorized
-		c.JSON(http.StatusUnauthorized, gin.H{
+		util.JSON(c, http.StatusUnauthorized, "数据绑定失败", gin.H{
 			"result": result,
 		})
 	}
@@ -48,8 +49,8 @@ func Login(c *gin.Context) {
 	color.Red.Println(user.Password)
 	color.Red.Println("登陆接口进入")
 	color.Cyan.Println(sqlU.Password)
-	if sqlU.Password == utils.MD5(user.Password+salt) {
-		expiresTime := time.Now().Unix() + int64(60*60*24)
+	if sqlU.Password == util.MD5(user.Password+salt) {
+		expiresTime := jwt.NewNumericDate(time.Now().Add(48 * time.Hour * time.Duration(1))) //48小时
 		//claims := jwt.StandardClaims{
 		//	Audience:  user.Username,          // 受众
 		//	ExpiresAt: expiresTime,            // 失效时间
@@ -59,37 +60,38 @@ func Login(c *gin.Context) {
 		//	NotBefore: time.Now().Unix(),      // 生效时间
 		//	Subject:   "login",                // 主题
 		//}
-		stdClaims := jwt.StandardClaims{
+		stdClaims := jwt.RegisteredClaims{
 
-			Audience:  "啊啊啊",             // 受众
-			ExpiresAt: expiresTime,       // 失效时间
-			Id:        "id",              // 编号
-			IssuedAt:  time.Now().Unix(), // 签发时间
-			Issuer:    "sqlU.Username",   // 签发人
-			NotBefore: time.Now().Unix(), // 生效时间
-			Subject:   "login",           // 主题
+			Audience:  []string{"啊啊啊"},                // 受众
+			ExpiresAt: expiresTime,                    // 失效时间
+			ID:        "id",                           // 编号
+			IssuedAt:  jwt.NewNumericDate(time.Now()), // 签发时间
+			Issuer:    "sqlU.Username",                // 签发人
+			NotBefore: jwt.NewNumericDate(time.Now()), // 生效时间
+			Subject:   "login",                        // 主题
 		}
 		newClaims := NewJwtClaims{
-			AdminUser:      &sqlU,
-			StandardClaims: stdClaims,
+			Uid:              sqlU.Uid,
+			RegisteredClaims: stdClaims,
 		}
 		tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, newClaims)
 		if token, err := tokenClaims.SignedString(SecretKey); err == nil {
 			result.Message = "登录成功"
 			result.Data = token
 			result.Code = http.StatusOK
-			c.JSON(result.Code, result)
+			util.JSON(c, result.Code, "成功", result)
 		} else {
 			result.Message = "登录失败，请重新登陆"
 			result.Code = http.StatusOK
-			c.JSON(result.Code, gin.H{
+			util.JSON(c, result.Code, "success", gin.H{
 				"result": result,
 			})
+
 		}
 	} else {
 		result.Message = "密码不一样"
-		result.Code = http.StatusOK
-		c.JSON(result.Code, gin.H{
+		result.Code = http.StatusUnauthorized
+		util.JSON(c, result.Code, "success", gin.H{
 			"result": result,
 		})
 	}
@@ -112,42 +114,42 @@ func Register(c *gin.Context) {
 
 	have := model.GetUserCheck(username)
 	if !have {
-		salt := utils.GetRandomString(4)
-		data := map[string]interface{}{
-			"username": username,
-			"password": utils.MD5(password + salt),
-
-			"salt": salt,
+		salt := util.GetRandomString(4)
+		data := model.AdminUser{
+			Username: username,
+			Password: util.MD5(password + salt),
+			Uid:      xid.New().String(),
+			Salt:     salt,
 		}
-		model.SaveUser(data)
+		model.SaveUser(&data)
 
-		c.JSON(http.StatusOK, gin.H{
+		util.JSON(c, http.StatusOK, "注册成功", gin.H{
 			"status":  200,
 			"message": "注册成功",
 		})
 
 	} else {
-		c.JSON(http.StatusOK, gin.H{
+		util.JSON(c, http.StatusBadGateway, "用户已经存在", gin.H{
 			"status":  2010,
 			"message": "用户信息已存在，请确认后输入！",
 		})
 	}
 }
 
-// Index 通过token获取user信息
-func Index(c *gin.Context) {
+// GetUser 通过token获取user信息
+func GetUser(c *gin.Context) {
 	userContext, exist := c.Get("user")
 	if !exist {
 		color.Danger.Println("失败了")
 	}
 	//查询用户组及该组的功能权限
-	user, ok := userContext.(model.AdminUser) //这个是类型推断,判断接口是什么类型
+	userId, ok := userContext.(string) //这个是类型推断,判断接口是什么类型
 	if !ok {
 
 		color.Danger.Println("断言失败")
 	}
 	color.Red.Println(c.Request.Host)
-	utils.JSON(c, 200, "获取成功", user)
+	util.JSON(c, 200, "获取成功", userId)
 }
 func CheckToken(c *gin.Context) {
 	userContext, exist := c.Get("user")
@@ -155,44 +157,44 @@ func CheckToken(c *gin.Context) {
 		color.Danger.Println("失败了")
 	}
 	//查询用户组及该组的功能权限
-	user, ok := userContext.(model.AdminUser) //这个是类型推断,判断接口是什么类型
+	userId, ok := userContext.(string) //这个是类型推断,判断接口是什么类型
 	if !ok {
 
 		color.Danger.Println("断言失败")
 	}
 	color.Red.Println(c.Request.Host)
-	utils.JSON(c, 200, "获取成功", user)
+	util.JSON(c, 200, "获取成功", userId)
 }
 
 func AddArticle(c *gin.Context) {
 	article := &model.Article{}
 	if err := c.ShouldBindJSON(article); err != nil {
 		color.Cyan.Println(err)
-		utils.JSON(c, 500, "success", "失败了")
+		util.JSON(c, 500, "success", "失败了")
 	} else {
 		flag := model.QueryAddArticle(*article)
-		utils.JSON(c, 200, "success", flag)
+		util.JSON(c, 200, "success", flag)
 	}
 }
 func UpdateArticle(c *gin.Context) {
 	article := &model.Article{}
 	if err := c.ShouldBindJSON(article); err != nil {
 		color.Cyan.Println(err)
-		utils.JSON(c, 500, "success", "失败了")
+		util.JSON(c, 500, "success", "失败了")
 	} else {
 		flag := model.QueryUpdateArticle(*article)
-		utils.JSON(c, 200, "success", flag)
+		util.JSON(c, 200, "success", flag)
 	}
 }
 func DelArticle(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	model.DeleteArticle(id)
-	utils.JSON(c, 200, "success", true)
+	util.JSON(c, 200, "success", true)
 }
 func GetArticleById(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	var article model.Article
 	article = model.QueryGetArticleById(id)
 	color.Yellowln(article)
-	utils.JSON(c, 200, "success", article)
+	util.JSON(c, 200, "success", article)
 }

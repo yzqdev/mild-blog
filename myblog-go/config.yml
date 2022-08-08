@@ -1,0 +1,14 @@
+server:
+  port: :9010
+mysql:
+  host: localhost
+  name: myblog-go
+  user: root
+  pass: 123456
+  port: 3306
+pg:
+  port: 5432
+  host: localhost
+  name: myblog-go
+  user: postgres
+  pass: 123456

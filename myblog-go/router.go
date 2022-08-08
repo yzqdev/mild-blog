@@ -7,7 +7,7 @@ import (
 )
 
 func InitRouter(e *gin.Engine) {
-	baseRouter := e.Group("/base")
+	baseRouter := e.Group("/auth")
 	{
 		baseRouter.POST("/login", controller.Login)
 		baseRouter.POST("/reg", controller.Register)
@@ -15,7 +15,7 @@ func InitRouter(e *gin.Engine) {
 	adminRouter := e.Group("/admin", middleware.JwtHandler())
 	{
 
-		adminRouter.GET("/index", controller.Index)
+		adminRouter.GET("/index", controller.GetUser)
 		adminRouter.POST("/addArticle", controller.AddArticle)
 		adminRouter.PUT("/updateArticle", controller.UpdateArticle)
 		adminRouter.DELETE("/delArticle/:id", controller.DelArticle)
@@ -23,7 +23,7 @@ func InitRouter(e *gin.Engine) {
 		adminRouter.GET("/checkToken", controller.CheckToken)
 
 	}
-	homeRouter := e.Group("/default")
+	homeRouter := e.Group("/home")
 	{
 		homeRouter.GET("/index")
 		homeRouter.GET("/getArticleList", controller.GetArticleList)
@@ -31,4 +31,7 @@ func InitRouter(e *gin.Engine) {
 
 	}
 
+}
+func StaticRoute(e *gin.Engine) {
+	e.Static("./public", "views")
 }

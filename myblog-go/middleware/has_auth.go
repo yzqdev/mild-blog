@@ -3,7 +3,7 @@ package middleware
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/gookit/color"
 	"myblog-go/controller"
 	"myblog-go/model"
@@ -42,9 +42,9 @@ func JwtHandler() gin.HandlerFunc {
 		context.Next()
 	}
 }
-func parseToken(yourToken string) (model.AdminUser, error) {
+func parseToken(yourToken string) (uid string, err error) {
 	claims := controller.NewJwtClaims{}
-	_, err := jwt.ParseWithClaims(yourToken, &claims, func(token *jwt.Token) (interface{}, error) {
+	_, err = jwt.ParseWithClaims(yourToken, &claims, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
@@ -56,7 +56,7 @@ func parseToken(yourToken string) (model.AdminUser, error) {
 		color.Danger.Println("token值为空")
 
 	}
-	color.Danger.Println(claims.AdminUser, "编译token")
-	return *claims.AdminUser, err
+
+	return claims.Uid, err
 
 }

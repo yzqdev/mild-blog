@@ -19,6 +19,10 @@ import javax.annotation.Resource;
 public class UserContextService implements  UserContext{
     @Resource
     private AdminUserMapper adminUserMapper;
+    /* (non-Javadoc)
+     * @see com.site.blog.context.UserContext#getUser()
+     */
+    @Override
     public UserVo getUser(){
         var token= RequestHelper.getRequestHeader(BaseConstants.TOKEN);
         var user=adminUserMapper.selectById(JwtUtil.getUserId(token));
