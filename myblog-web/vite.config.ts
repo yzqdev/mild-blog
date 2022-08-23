@@ -7,7 +7,7 @@ import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import Icons from "unplugin-icons/vite";
 import IconsResolver from "unplugin-icons/resolver";
-const pathSrc = path.resolve(__dirname, 'src')
+const pathSrc = path.resolve(__dirname, "src");
 export default defineConfig({
   plugins: [
     vue({ reactivityTransform: true }),
@@ -15,19 +15,24 @@ export default defineConfig({
       autoInstall: true,
     }),
     AutoImport({
-      imports: ['vue', 'vue-router', 'vue/macros', 'pinia', '@vueuse/core'],
-      resolvers: [ElementPlusResolver(),IconsResolver({
-        prefix: "Icon",
-      }),],
-      dts: path.resolve(pathSrc, 'types', 'auto-imports.d.ts'),
+      imports: ["vue", "vue-router", "vue/macros", "pinia", "@vueuse/core"],
+      resolvers: [
+        ElementPlusResolver(),
+        IconsResolver({
+          prefix: "Icon",
+        }),
+      ],
+      dts: path.resolve(pathSrc, "types", "auto-imports.d.ts"),
     }),
     Components({
-      resolvers: [ElementPlusResolver(), IconsResolver({
-        enabledCollections: ["ep"],
-      }),],
-      dts: path.resolve(pathSrc, 'types', 'components.d.ts'),
+      resolvers: [
+        ElementPlusResolver(),
+        IconsResolver({
+          enabledCollections: ["ep"],
+        }),
+      ],
+      dts: path.resolve(pathSrc, "types", "components.d.ts"),
     }),
-
   ],
   // publicDir:'/myblog',
   // base:'/myblog/',
@@ -37,7 +42,7 @@ export default defineConfig({
   },
   build: {
     outDir: "myblog",
-
+    target: "es2022",
     // sourcemap: true,
     // minify: false,
   },

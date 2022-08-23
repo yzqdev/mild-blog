@@ -32,7 +32,7 @@ import java.util.Objects;
 @Service
 @Slf4j
 public class ImgServiceImpl extends ServiceImpl<ImgMapper, Img> implements ImgService {
-   private final UploadProperty uploadProperty;
+    private final UploadProperty uploadProperty;
     private final Path staticDir;
     /**
      * Thumbnail width.
@@ -59,29 +59,29 @@ public class ImgServiceImpl extends ServiceImpl<ImgMapper, Img> implements ImgSe
         String suffixName = UploadFileUtils.getExtension(file.getOriginalFilename());
         //生成文件名称通用方法
         log.info(suffixName);
-        String newFileName = UploadFileUtils.getNewFileName(suffixName,false);
-String thumbnailPath=UploadFileUtils.getNewFileName(suffixName,true);
+        String newFileName = UploadFileUtils.getNewFileName(suffixName, false);
+        String thumbnailPath = UploadFileUtils.getNewFileName(suffixName, true);
         //创建文件
         Path destFile = Paths.get(staticDir.toString(), newFileName);
         Path thumbPath = Path.of(staticDir.toString(), thumbnailPath);
         try {
             Files.createDirectories(staticDir);
-                Files.createFile(destFile);
-                file.transferTo(destFile);
+            Files.createFile(destFile);
+            file.transferTo(destFile);
 
             Img img = new Img();
             img.setImgName(destFile.getFileName().toString());
 
             img.setImgPath(destFile.toString());
             img.setUploadTime(LocalDateTime.now());
-            img.setImgUrl(uploadProperty.getFilePrefix()+ newFileName);
+            img.setImgUrl(uploadProperty.getFilePrefix() + newFileName);
             try (InputStream is = file.getInputStream()) {
                 // Generate thumbnail
                 BufferedImage originalImage =
                         ImageIO.read(is);
 
                 boolean result = generateThumbnail(originalImage, thumbPath
-                       );
+                );
                 if (result) {
                     // Set thumb path
                     img.setThumbnailPath(thumbPath.toString());
@@ -103,7 +103,8 @@ String thumbnailPath=UploadFileUtils.getNewFileName(suffixName,true);
         }
         return new Img();
     }
-    private boolean generateThumbnail(BufferedImage originalImage, Path thumbPath ) {
+
+    private boolean generateThumbnail(BufferedImage originalImage, Path thumbPath) {
 
         boolean result = false;
         // Create the thumbnail
@@ -124,10 +125,12 @@ String thumbnailPath=UploadFileUtils.getNewFileName(suffixName,true);
         }
         return result;
     }
-private String getExtension(Path path){
 
-         return path.getFileName().toString().substring(path.getFileName().toString().indexOf(".")+1);
-}
+    private String getExtension(Path path) {
+
+        return path.getFileName().toString().substring(path.getFileName().toString().indexOf(".") + 1);
+    }
+
     @Override
     public void deleteImage(String fileName) {
 
