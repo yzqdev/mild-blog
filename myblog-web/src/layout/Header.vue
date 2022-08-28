@@ -109,7 +109,7 @@ import { computed, onBeforeMount, watch } from "vue";
 import { useThemeStore } from "@/store/themeConfig";
 import { defaultTheme } from "@/constants/defaultTheme";
 import { useUserStore } from "@/store/user";
-import { UserState } from "@/type/storeTypes";
+import { UserState } from "@/interface/storeTypes";
 import { useFullscreen, useStorage } from "@vueuse/core";
 import { getUserInfo, getUsers } from "@/utils/apiConfig";
 import {formatTime} from "@/utils/utils";

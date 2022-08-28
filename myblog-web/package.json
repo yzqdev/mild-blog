@@ -26,7 +26,7 @@
     "prettier": "^2.7.1",
     "qs": "^6.11.0",
     "sass": "latest",
-    "typescript": "^4.7.4",
+    "typescript": "^4.8.2",
     "unplugin-auto-import": "^0.11.2",
     "unplugin-icons": "^0.14.8",
     "unplugin-vue-components": "^0.22.4",
@@ -38,7 +38,7 @@
     "vue-router": "^4.1.4"
   },
   "devDependencies": {
-    "@types/node": "^18.7.11",
+    "@types/node": "^18.7.13",
     "@types/qs": "^6.9.7",
     "vite": "^3.0.9",
     "vue-tsc": "^0.40.1"
