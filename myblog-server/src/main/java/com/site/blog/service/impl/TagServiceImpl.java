@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
  * <p>
  * 标签表 服务实现类
  * </p>
- *
  */
 @Service
 @RequiredArgsConstructor
@@ -64,18 +63,18 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
 
         } else {
-            blogTagList = blogTagList.stream()
+            blogTagList.stream()
                     .peek(blogTag -> {
 
                         //如果blogtag包含默认标签,就不重置为默认标签,直接删除关系
-                        if (blogTagService.list(new QueryWrapper<BlogTag>().eq("blog_id", blogTag.getBlogId())).stream().map(BlogTag::getTagId).collect(Collectors.toList()).contains(Integer.valueOf(SysConfigConstants.DEFAULT_TAG.getConfigField()))) {
+                        var tagList = blogTagService.list(new QueryWrapper<BlogTag>().eq("blog_id", blogTag.getBlogId())).stream().map(BlogTag::getTagId).toList();
+                        if (tagList.contains(SysConfigConstants.DEFAULT_TAG.getConfigField())) {
                             blogTagService.removeById(blogTag);
                         } else {
-                            blogTagService.updateById(blogTag.setTagId(  SysConfigConstants.DEFAULT_TAG.getConfigField()  ));
+                            blogTagService.updateById(blogTag.setTagId(SysConfigConstants.DEFAULT_TAG.getConfigField()));
                         }
-                    })
-                    .collect(Collectors.toList());
-            //blogTagService.updateBatchById(blogTagList);
+                    });
+
 
             return tagMapper.deleteById(tagId);
         }

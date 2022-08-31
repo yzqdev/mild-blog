@@ -9,10 +9,7 @@ import com.site.blog.model.entity.SysOpLog;
 import com.site.blog.service.SysOpLogService;
 import com.site.blog.util.ResultGenerator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author yanni
@@ -25,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SysLogController {
     private final SysOpLogService sysOpLogService;
 
-    @GetMapping("/log")
+    @PostMapping("/log")
     public Result<AjaxResultPage<SysOpLog>> getSyslogs(AjaxPutPage<SysOpLog> ajaxPutPage) {
         var page = ajaxPutPage.putPageToPage();
         sysOpLogService.page(page);
