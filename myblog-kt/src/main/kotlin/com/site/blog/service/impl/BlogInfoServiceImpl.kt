@@ -69,11 +69,11 @@ class BlogInfoServiceImpl(
     @Transactional(rollbackFor = [Exception::class])
     override fun clearBlogInfo(blogId: String): Boolean {
         if (SqlHelper.retBool(blogInfoMapper.deleteById(blogId))) {
-            val tagRelationWrapper = QueryWrapper<BlogTag>()
-            tagRelationWrapper.lambda().eq(BlogTag::blogId, blogId)
+            val tagRelationWrapper = KtQueryWrapper (BlogTag())
+            tagRelationWrapper.eq(BlogTag::blogId, blogId)
             blogTagMapper.delete(tagRelationWrapper)
-            val commentWrapper = QueryWrapper<Comment>()
-            commentWrapper.lambda().eq(Comment::blogId, blogId)
+            val commentWrapper = KtQueryWrapper (Comment())
+            commentWrapper.eq(Comment::blogId, blogId)
             commentMapper.delete(commentWrapper)
             return true
         }

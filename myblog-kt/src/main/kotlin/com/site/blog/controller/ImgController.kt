@@ -24,15 +24,14 @@ import javax.annotation.Resource
 @RestController
 @RequestMapping("/v2/img")
 @Slf4j
-class ImgController {
+class ImgController(private val imgService: ImgService) {
     val log =LoggerFactory.getLogger(this.javaClass)
-    @Resource
-    private val imgService: ImgService? = null
+
     @PostMapping("/upload")
     @SysLogAnnotation(title = "上传图片", opType = LogOperationEnum.ADD)
     fun uploadFileByEditor(@RequestParam(name = "img") file: MultipartFile?): Result<*> {
         val result: MutableMap<String, Any?> = HashMap()
-        val img = imgService!!.uploadImage(file)
+        val img = imgService.uploadImage(file)
         result["message"] = "上传成功"
         result["url"] = img!!.imgUrl
         result["img"] = img
@@ -41,7 +40,7 @@ class ImgController {
 
     @GetMapping("/list")
     fun listFiles(): Result<Any> {
-        val imgs = imgService!!.list()
+        val imgs = imgService.list()
         return getResultByHttp(HttpStatusEnum.OK, imgs)
     }
 
@@ -51,9 +50,9 @@ class ImgController {
         IOException::class
     )
     fun delImg(@PathVariable id: String?): Result<*> {
-        val img = imgService!!.getById(id)
-        val file = Paths.get(img!!.imgPath)
-        val thumbPath = Paths.get(img.thumbnailPath)
+        val img = imgService.getById(id)
+        val file = Paths.get(img?.imgPath )
+        val thumbPath = Paths.get(img?.thumbnailPath )
         try {
             if (Files.exists(file)) {
                 Files.deleteIfExists(file)
@@ -67,8 +66,7 @@ class ImgController {
             throw IOException(e.message)
         }
         val flag = imgService.removeById(id)
-      log.info(img.imgPath)
-         log.info("是否删除")
+
         return if (flag) {
             getResultByHttp<Img?>(HttpStatusEnum.OK, img)
         } else getResultByHttp<Any?>(HttpStatusEnum.OK, null)

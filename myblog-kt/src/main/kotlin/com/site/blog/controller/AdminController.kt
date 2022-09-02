@@ -44,7 +44,7 @@ class AdminController(
     private val linkService: LinkService
 ) {
     @PostMapping("/del/{id}")
-    fun removeUser(@PathVariable("id") id: Int?): Result<*> {
+    fun removeUser(@PathVariable("id") id: String?): Result<*> {
         return if (id == null) {
             getResultByHttp(HttpStatusEnum.BAD_REQUEST, "请输入id")
         } else {

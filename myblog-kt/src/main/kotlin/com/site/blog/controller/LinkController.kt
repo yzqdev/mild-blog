@@ -91,16 +91,25 @@ class LinkController(private val linkService: LinkService) {
     @PostMapping("/link/edit")
     @SysLogAnnotation(title = "编辑链接", opType = LogOperationEnum.EDIT)
     fun updateAndSaveLink(link: Link): Result<*> {
-        link.createTime = localCurrentDate
-        val flag: Boolean
-        if (link.linkId != null) {
-            link.updateTime = Timestamp.valueOf(LocalDateTime.now())
-            flag = linkService.updateById(link)
-        } else {
-            flag = linkService.save(link)
+        try {
+            link.createTime = localCurrentDate
+            val flag: Boolean
+            if (link.linkId?.isNotEmpty() == true) {
+                println(link.linkId)
+                println("编辑链接->更改")
+                link.updateTime = Timestamp.valueOf(LocalDateTime.now())
+                flag = linkService.updateById(link)
+            } else {
+                link.linkRank=1
+                flag = linkService.save(link)
+            }
+            if (flag) {
+              return  getResultByHttp(HttpStatusEnum.OK, link.linkId)
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+            return  getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR,e.message)
         }
-        return if (flag) {
-            getResultByHttp(HttpStatusEnum.OK, link.linkId)
-        } else getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR)
+        return    getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR)
     }
 }

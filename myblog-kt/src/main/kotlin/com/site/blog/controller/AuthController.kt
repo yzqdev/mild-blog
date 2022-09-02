@@ -4,6 +4,7 @@ import cn.hutool.core.lang.UUID
 import cn.hutool.core.util.HexUtil
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
+import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.site.blog.constants.HttpStatusEnum
 import com.site.blog.constants.SessionConstants
 import com.site.blog.constants.SysConfigConstants
@@ -82,7 +83,7 @@ class AuthController(
         if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
             return getResultByHttp(HttpStatusEnum.BAD_REQUEST)
         }
-        val queryWrapper = LambdaQueryWrapper<AdminUser>().eq(AdminUser::username, username)
+        val queryWrapper = KtQueryWrapper (AdminUser()).eq(AdminUser::username, username)
         val adminUser = adminUserService.getOne(queryWrapper)
         return if (adminUser != null) {
             getResultByHttp(HttpStatusEnum.BAD_REQUEST, false, "用户名已存在")
@@ -112,7 +113,7 @@ class AuthController(
     @GetMapping("/findPass")
     fun findPass(model: Model, @RequestParam("email") email: String?, @RequestParam("cip") cip: String?): String {
         try {
-            val sysUser = adminUserService.getOne(LambdaQueryWrapper<AdminUser>().eq(AdminUser::email, email))
+            val sysUser = adminUserService.getOne(KtQueryWrapper(AdminUser()).eq(AdminUser::email, email))
             val userFlag = Optional.ofNullable(sysUser)
             if (userFlag.isPresent) {
                 val newPass = HexUtil.decodeHexStr(cip)
