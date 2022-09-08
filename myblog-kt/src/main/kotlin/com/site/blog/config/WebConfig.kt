@@ -23,7 +23,8 @@ class WebConfig : WebMvcConfigurer {
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
-        print("thisis $fileUrl ===>")
+
         registry.addResourceHandler("/upload/**").addResourceLocations("file:$fileUrl")
+        registry.addResourceHandler("/**").addResourceLocations("classpath:dist")
     }
 }

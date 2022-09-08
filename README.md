@@ -16,6 +16,8 @@
 
 ```shell
 ./gradlew bootRun
+#打包跳过测试
+./gradlew build -x test
 ```
 
 ### 运行前端代码
@@ -25,6 +27,15 @@
 
 ```shell
 yarn dev
+```
+
+## 打包
+
+```shell
+yarn build
+
+# 然后把dist文件夹放入`resources`文件夹,执行
+./gradlew build -x test
 ```
 
 注意vite引用的用法
