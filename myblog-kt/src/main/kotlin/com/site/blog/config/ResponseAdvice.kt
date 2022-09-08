@@ -4,7 +4,6 @@ import com.site.blog.constants.HttpStatusEnum
 import com.site.blog.exception.ResultException
 import com.site.blog.model.dto.Result
 import com.site.blog.util.ResultGenerator
-import lombok.extern.slf4j.Slf4j
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -22,6 +21,7 @@ import javax.servlet.http.HttpServletRequest
 @RestControllerAdvice
 class ResponseAdvice {
     val log: Logger = LoggerFactory.getLogger(this.javaClass)
+
     @ExceptionHandler(ResultException::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
@@ -36,12 +36,14 @@ class ResponseAdvice {
      * @param e
      * @return
      */
-    @ExceptionHandler(value = [NullPointerException::class])
-    @ResponseBody
-    fun exceptionHandler(req: HttpServletRequest?, e: NullPointerException?): Result<*> {
-        log.error("发生空指针异常！原因是:", e)
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, "空指针异常")
-    }
+//    @ExceptionHandler(value = [NullPointerException::class])
+//    @ResponseBody
+//    fun exceptionHandler(req: HttpServletRequest?, e: NullPointerException?): Result<String?> {
+//        log.error("发生空指针异常！原因是:", e)
+//
+//        return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, "空指针异常")
+//
+//    }
 
     /**
      * 处理其他异常
@@ -53,7 +55,7 @@ class ResponseAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     fun unknownExceptionHandler(req: HttpServletRequest?, e: Exception): Result<*> {
-      log.error("未知异常！原因是:", e)
+        log.error("未知异常！原因是:", e)
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, e.message)
     }
 }

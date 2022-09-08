@@ -48,10 +48,10 @@ dependencies {
 
 
     implementation("com.auth0:java-jwt:4.0.0")
-    compileOnly("org.projectlombok:lombok")
+
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    annotationProcessor("org.projectlombok:lombok")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

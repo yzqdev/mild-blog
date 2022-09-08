@@ -1,6 +1,6 @@
 package com.site.blog.controller
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
+import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.site.blog.constants.BaseConstants
 import com.site.blog.constants.HttpStatusEnum
 import com.site.blog.constants.SessionConstants
@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpSession
 import kotlin.Any
 import kotlin.Exception
-import kotlin.Int
 import kotlin.String
 
 /**
@@ -69,8 +68,8 @@ class AdminController(
     fun editUser(userVo: UserVo): Result<*> {
         val sqlUser = adminUserService.getAdminUserById(userVo.id)
         BeanUtils.copyProperties(userVo, sqlUser!!)
-        val conf = blogConfigService.getOne(LambdaQueryWrapper<BlogConfig>().eq(BlogConfig::code, "sysAuthorImg"))
-        conf!!.value = userVo.avatar
+        val conf = blogConfigService.getOne(KtQueryWrapper(BlogConfig()).eq(BlogConfig::configCode, "sysAuthorImg"))
+        conf!!.configValue = userVo.avatar
         blogConfigService.updateById(conf)
         adminUserService.updateUserInfo(sqlUser)
         return getResultByHttp<AdminUser?>(HttpStatusEnum.OK, true, sqlUser)

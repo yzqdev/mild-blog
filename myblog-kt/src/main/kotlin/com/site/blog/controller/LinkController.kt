@@ -101,6 +101,7 @@ class LinkController(private val linkService: LinkService) {
                 flag = linkService.updateById(link)
             } else {
                 link.linkRank=1
+                link.show=true
                 flag = linkService.save(link)
             }
             if (flag) {

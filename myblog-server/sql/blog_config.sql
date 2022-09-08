@@ -1,0 +1,10 @@
+INSERT INTO "blog_config" ("id","config_code", "config_name", "config_value", "create_time", "update_time") VALUES ( '1','sysAuthor', '开发者', '飞雪', '2019-08-24 20:33:17', '2019-08-30 03:27:35');
+INSERT INTO "blog_config" ("id","config_code", "config_name", "config_value", "create_time", "update_time") VALUES ('2','sysUrl', '服务器url', 'localhost:80', '2019-08-24 14:03:23', '2019-08-24 14:03:26');
+INSERT INTO "blog_config" ("id","config_code", "config_name", "config_value", "create_time", "update_time") VALUES ('3','sysVersion', '当前版本号', '1.1.0', '2019-08-24 20:33:23', '2019-08-24 11:58:06' );
+INSERT INTO "blog_config" ("id","config_code", "config_name", "config_value", "create_time", "update_time") VALUES ('4','websiteName', '博客名', '七月飞雪', '2018-11-11 20:33:01', '2021-08-10 09:54:45' );
+INSERT INTO "blog_config" ("id","config_code", "config_name", "config_value", "create_time", "update_time") VALUES ('5','sysCopyRight', '版权所', 'yzqdev', '2019-08-24 20:33:31', '2022-05-14 20:42:11.383' );
+INSERT INTO "blog_config" ("id","config_code", "config_name", "config_value", "create_time", "update_time") VALUES ('6','sysAuthorImg', '开发者头像', 'http://localhost:2801/upload/20220908_233437.png', '2019-08-24 20:33:14', '2019-08-24 21:56:23' );
+INSERT INTO "blog_config" ("id","config_code", "config_name", "config_value", "create_time", "update_time") VALUES ('7','sysUpdateTime', '最后修改时间', '2022-09-08 23:37:23', '2019-08-24 20:33:20', '2022-05-14 20:43:17.239' );
+INSERT INTO "blog_config" ("id","config_code", "config_name", "config_value", "create_time", "update_time") VALUES ('init','init', '初始化', 'init', '2019-08-24 20:33:17', '2019-08-30 03:27:35' );
+INSERT INTO "blog_config" ("id","config_code", "config_name", "config_value", "create_time", "update_time") VALUES ('8','filing', '备案', '豫ICP备2022004109号', '2022-06-18 13:11:12', '2022-06-18 13:11:15' );
+INSERT INTO "blog_config" ('id',,"config_code", "config_name", "config_value", "create_time", "update_time") VALUES ('9','sysEmail', '开发者邮箱', 'xxxxx@qq.com', '2019-08-24 14:06:48', '2022-06-16 12:47:37.1');

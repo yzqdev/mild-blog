@@ -2,10 +2,7 @@ package com.site.blog.aop
 
 import cn.hutool.core.lang.Console
 import cn.hutool.core.util.ObjectUtil
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
-import com.baomidou.mybatisplus.core.toolkit.support.SFunction
-import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.site.blog.context.UserContextHolder
 import com.site.blog.model.entity.BlogConfig
 import com.site.blog.model.entity.SysOpLog
@@ -23,7 +20,6 @@ import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.context.annotation.Configuration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import javax.annotation.Resource
 
 @Aspect
 @Configuration
@@ -71,7 +67,7 @@ class SysLogAspect(var sysOpLogService: SysOpLogService,val blogConfigService: B
             )
         )
         println("获取sqlblogconfig ,${sqlBlogConfig.toString()}")
-        sqlBlogConfig?.value = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+        sqlBlogConfig?.configValue = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
         sysOpLogService.save(sysOpLog)
         blogConfigService.updateById(sqlBlogConfig)
         Console.log("更新系统修改日期")

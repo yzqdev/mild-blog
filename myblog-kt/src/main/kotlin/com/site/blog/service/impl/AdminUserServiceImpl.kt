@@ -2,6 +2,7 @@ package com.site.blog.service.impl
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
+import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper
 import com.site.blog.mapper.AdminUserMapper
@@ -57,7 +58,7 @@ class AdminUserServiceImpl(private val adminUserMapper: AdminUserMapper) : Servi
 
     override fun getAdminUserById(id: String?): AdminUser? {
         return try {
-            val queryWrapper = LambdaQueryWrapper<AdminUser>()
+            val queryWrapper = KtQueryWrapper (AdminUser())
             queryWrapper.eq(AdminUser::id, id)
             adminUserMapper.selectOne(queryWrapper)
         } catch (e: Exception) {

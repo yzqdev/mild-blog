@@ -1,7 +1,6 @@
 package com.site.blog.service.impl
 
 import cn.hutool.log.StaticLog
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.site.blog.config.listener.SqlConstant
@@ -36,7 +35,7 @@ class InitServiceImpl(
 
 
     override fun initDatabase() {
-        val flag: Boolean = blogConfigMapper.exists(KtQueryWrapper (BlogConfig()).eq(BlogConfig::code, "init"))
+        val flag: Boolean = blogConfigMapper.exists(KtQueryWrapper (BlogConfig()).eq(BlogConfig::configCode, "init"))
         if (!flag) {
             jdbcTemplate.execute(SqlConstant.initAdminSql)
             jdbcTemplate.execute(SqlConstant.initTagSql)
@@ -50,11 +49,12 @@ class InitServiceImpl(
     }
 
     override fun initUseEntity() {
-        val flag = blogConfigMapper.exists(QueryWrapper<BlogConfig>().eq("code","init"))
-        val userLambda=blogConfigMapper.exists(KtQueryWrapper(BlogConfig()).eq(BlogConfig::code,"init"))
+        val flag = blogConfigMapper.exists(QueryWrapper<BlogConfig>().eq("config_code","init"))
+        val userLambda=blogConfigMapper.exists(KtQueryWrapper(BlogConfig()).eq(BlogConfig::configCode,"init"))
+        //使用lambda结果错误
         println("使用lambda ,$userLambda")
 //        val flag = blogConfigMapper.exists(KtQueryWrapper (BlogConfig()).eq(BlogConfig::code, "init"))
-        println("是否是第一次? $flag")
+        println("是否初始化过? $flag")
         if (!flag ) {
             //123456
             adminUserMapper.insert(

@@ -12,7 +12,7 @@
  Target Server Version : 140003
  File Encoding         : 65001
 
- Date: 18/06/2022 02:32:41
+ Date: 08/09/2022 23:56:44
 */
 
 
@@ -60,20 +60,14 @@ CREATE TABLE "public"."blog_category" (
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."blog_config";
 CREATE TABLE "public"."blog_config" (
-  "code" varchar(20) COLLATE "pg_catalog"."default" NOT NULL,
-  "name" varchar(50) COLLATE "pg_catalog"."default" NOT NULL,
-  "value" varchar(200) COLLATE "pg_catalog"."default" NOT NULL,
-  "create_time" timestamp(6) NOT NULL,
-  "update_time" timestamp(6) NOT NULL,
-  "id" varchar(64) COLLATE "pg_catalog"."default" NOT NULL
+  "id" varchar(255) COLLATE "pg_catalog"."default",
+  "config_code" varchar(255) COLLATE "pg_catalog"."default",
+  "config_name" varchar(255) COLLATE "pg_catalog"."default",
+  "config_value" varchar(255) COLLATE "pg_catalog"."default",
+  "create_time" timestamp(6),
+  "update_time" timestamp(6)
 )
 ;
-COMMENT ON COLUMN "public"."blog_config"."code" IS '字段名';
-COMMENT ON COLUMN "public"."blog_config"."name" IS '配置名';
-COMMENT ON COLUMN "public"."blog_config"."value" IS '配置项的值';
-COMMENT ON COLUMN "public"."blog_config"."create_time" IS '创建时间';
-COMMENT ON COLUMN "public"."blog_config"."update_time" IS '修改时间';
-COMMENT ON COLUMN "public"."blog_config"."id" IS 'id';
 
 -- ----------------------------
 -- Table structure for blog_info
@@ -82,8 +76,8 @@ DROP TABLE IF EXISTS "public"."blog_info";
 CREATE TABLE "public"."blog_info" (
   "blog_id" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
   "blog_title" varchar(200) COLLATE "pg_catalog"."default" NOT NULL,
-  "blog_sub_url" varchar(200) COLLATE "pg_catalog"."default",
-  "blog_preface" varchar(255) COLLATE "pg_catalog"."default",
+  "sub_url" varchar(200) COLLATE "pg_catalog"."default",
+  "preface" varchar(255) COLLATE "pg_catalog"."default",
   "blog_content" text COLLATE "pg_catalog"."default" NOT NULL,
   "blog_views" int8,
   "enable_comment" bool,
@@ -95,8 +89,8 @@ CREATE TABLE "public"."blog_info" (
 ;
 COMMENT ON COLUMN "public"."blog_info"."blog_id" IS '博客表主键id';
 COMMENT ON COLUMN "public"."blog_info"."blog_title" IS '博客标题';
-COMMENT ON COLUMN "public"."blog_info"."blog_sub_url" IS '博客自定义路径url';
-COMMENT ON COLUMN "public"."blog_info"."blog_preface" IS '博客前言';
+COMMENT ON COLUMN "public"."blog_info"."sub_url" IS '博客自定义路径url';
+COMMENT ON COLUMN "public"."blog_info"."preface" IS '博客前言';
 COMMENT ON COLUMN "public"."blog_info"."blog_content" IS '博客内容';
 COMMENT ON COLUMN "public"."blog_info"."blog_views" IS '阅读量';
 COMMENT ON COLUMN "public"."blog_info"."enable_comment" IS '0-允许评论 1-不允许评论';
@@ -377,11 +371,6 @@ ALTER TABLE "public"."admin_user" ADD CONSTRAINT "tb_admin_user_pkey" PRIMARY KE
 -- Primary Key structure for table blog_category
 -- ----------------------------
 ALTER TABLE "public"."blog_category" ADD CONSTRAINT "tb_blog_category_pkey" PRIMARY KEY ("relation_id");
-
--- ----------------------------
--- Primary Key structure for table blog_config
--- ----------------------------
-ALTER TABLE "public"."blog_config" ADD CONSTRAINT "tb_blog_config_pkey" PRIMARY KEY ("id");
 
 -- ----------------------------
 -- Primary Key structure for table blog_info

@@ -9,25 +9,27 @@ object ResultGenerator {
         val result = Result<T>()
         result.resultCode = constants.status
         result.message = msg
-        result.data=data
+        result.data = data
         result.timestamp = System.currentTimeMillis()
         return result
     }
+
     @JvmStatic
     fun <T> getResultByHttp(constants: HttpStatusEnum, data: T): Result<T> {
         val result = Result<T>()
         result.resultCode = constants.status
         result.message = constants.content
-        result.data=data
+        result.data = data
         result.timestamp = System.currentTimeMillis()
         return result
     }
-@JvmStatic
+
+    @JvmStatic
     fun <T> getResultByHttp(constants: HttpStatusEnum, success: Boolean, data: T): Result<T> {
         val result = Result<T>()
         result.resultCode = constants.status
         result.message = constants.content
-        result.data=data
+        result.data = data
         result.success = success
         result.timestamp = System.currentTimeMillis()
         return result

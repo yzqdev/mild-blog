@@ -65,6 +65,7 @@ class SysDictController(
         dictData.status = true
         dictData.createTime = LocalDateTime.now()
         dictData.updateTime = LocalDateTime.now()
+        dictData.sort=dictDataDto.sort
         sysDictDataService.save(dictData)
         return getResultByHttp(HttpStatusEnum.OK, true, dictData)
     }

@@ -79,6 +79,6 @@ class ConstantsInitListener : ApplicationListener<ApplicationContextInitializedE
 
     companion object {
         private val log = Log.get()
-        private const val initSql = "select code,value from  blog_config  "
+        private const val initSql = "select config_code,config_value from  blog_config  "
     }
 }

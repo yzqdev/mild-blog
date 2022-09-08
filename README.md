@@ -15,7 +15,7 @@
 进去myblog-server
 
 ```shell
-mvn spring-boot:run
+./gradlew bootRun
 ```
 
 ### 运行前端代码

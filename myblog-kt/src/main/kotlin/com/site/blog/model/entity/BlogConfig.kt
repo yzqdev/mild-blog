@@ -4,28 +4,26 @@ import com.baomidou.mybatisplus.annotation.IdType
 import com.baomidou.mybatisplus.annotation.TableField
 import com.baomidou.mybatisplus.annotation.TableId
 import com.fasterxml.jackson.annotation.JsonFormat
-import java.io.Serial
-import java.io.Serializable
 import java.time.LocalDateTime
  
-data class BlogConfig  (  
+data class BlogConfig  (
     @TableId(type = IdType.ASSIGN_ID)
     var  id: String? = null,
 
     /**
      * 字段名
      */
-    var  code: String = "",
+    var  configCode: String  = "",
 
     /**
      * 配置名
      */
-    var  name: String = "",
+    var  configName: String  = "",
 
     /**
      * 配置项的值
      */
-    var  value: String? = null,
+    var  configValue: String? = null,
 
     /**
      * 创建时间

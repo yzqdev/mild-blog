@@ -1,4 +1,3 @@
-
 pebble:
   suffix: .html
 logging:
@@ -34,7 +33,7 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
   profiles:
-    active: @activatedProperties@
+    active: dev
   servlet:
     multipart:
       max-file-size: 10MB
@@ -47,7 +46,7 @@ spring:
 
 myblog:
   name: 我的博客
-  version: @project.version@
+  version: 1.0.1
   site:
     ip: http://localhost:2801/
 

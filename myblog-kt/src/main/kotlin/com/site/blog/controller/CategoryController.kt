@@ -58,7 +58,7 @@ class CategoryController(private val categoryService: CategoryService) {
     @ResponseBody
     @GetMapping("/category/paging")
     fun getCategoryList(ajaxPutPage: AjaxPutPage<Category?>, condition: Category): Result<AjaxResultPage<Category?>> {
-        val queryWrapper = LambdaQueryWrapper(condition)
+        val queryWrapper =KtQueryWrapper(condition)
         queryWrapper.ne(Category::categoryId, "1").orderByAsc(Category::categoryRank)
         val page = ajaxPutPage.putPageToPage()
         categoryService.page (page, queryWrapper)

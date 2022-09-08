@@ -6,5 +6,5 @@
 启动:
 
 ```shell
-mvn  spring-boot:run
+./gradlew bootRun
 ```

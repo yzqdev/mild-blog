@@ -16,11 +16,10 @@ import com.site.blog.model.entity.*
 import com.site.blog.model.vo.BlogDetailVO
 import com.site.blog.service.*
 import com.site.blog.util.BeanMapUtil
-import com.site.blog.util.RequestHelper.httpServletRequest
-import com.site.blog.util.RequestHelper.requestIp
-import com.site.blog.util.RequestHelper.ua
+import com.site.blog.util.RequestHelper
 import com.site.blog.util.ResultGenerator.getResultByHttp
 import org.apache.commons.text.StringEscapeUtils
+import org.aspectj.apache.bcel.generic.RET
 import org.slf4j.LoggerFactory
 import org.springframework.beans.BeanUtils
 import org.springframework.util.StringUtils
@@ -337,7 +336,7 @@ class HomeBlogController(
     fun listComment(ajaxPutPage: AjaxPutPage<Comment?>, blogId: String?): Result<AjaxResultPage<Comment?>> {
         val page = ajaxPutPage.putPageToPage()
         commentService.page(
-            page, KtQueryWrapper (Comment())
+            page, KtQueryWrapper(Comment())
 
                 .eq(Comment::blogId, blogId)
                 .eq(Comment::commentStatus, CommentStatusEnum.ALLOW.status)
@@ -388,24 +387,27 @@ class HomeBlogController(
     @PostMapping(value = ["/blog/comment"])
     @ResponseBody
     fun comment(comment: Comment): Result<in String?> {
-        val request = httpServletRequest
-        val ref = request.getHeader("Referer")
+        try {
+            val request = RequestHelper.getHttpServletRequest()
+            val ref = request.getHeader("Referer")
 
 
-        // 对非法字符进行转义，防止xss漏洞
-        comment.commentBody = StringEscapeUtils.escapeHtml4(comment.commentBody)
-        comment.commentStatus = true
-        comment.commentatorIp = requestIp
-        comment.userAgent = ua.browser.toString() + ua.version
-        comment.os = ua.os.toString()
-        comment.commentCreateTime = LocalDateTime.now()
-        comment.deleted = true
-        if (!StringUtils.hasText(ref)) {
-            return getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, "非法请求")
+            // 对非法字符进行转义，防止xss漏洞
+            comment.commentBody = StringEscapeUtils.escapeHtml4(comment.commentBody)
+            comment.commentStatus = true
+            comment.commentatorIp =RequestHelper.getRequestIp()
+            comment.userAgent =RequestHelper.getUa().browser.toString() + RequestHelper.getUa().version
+            comment.os =  RequestHelper.getUa().os.toString()
+            comment.commentCreateTime = LocalDateTime.now()
+            comment.deleted = true
+
+            val flag = commentService.save(comment)
+
+             return   getResultByHttp(HttpStatusEnum.OK, true, comment)
+
+        }catch (e:Exception){
+            e.printStackTrace()
+          return getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, e.toString())
         }
-        val flag = commentService.save(comment)
-        return if (flag) {
-            getResultByHttp(HttpStatusEnum.OK, true, comment)
-        } else getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, null)
     }
 }
