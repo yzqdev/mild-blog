@@ -22,5 +22,5 @@ interface BlogInfoMapper : BaseMapper<BlogInfo?> {
      * @return [Integer]
      */
     @Select("select sum(blog_views) FROM  blog_info")
-    fun getViews(): Int
+    fun getViews(): Int?
 }

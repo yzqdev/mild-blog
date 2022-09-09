@@ -81,6 +81,8 @@ class BlogInfoServiceImpl(
     }
 
     override fun getViewsSum(): Int {
-        return blogInfoMapper.getViews()
+         val res=  blogInfoMapper.getViews()
+        return res ?: 0
+
     }
 }

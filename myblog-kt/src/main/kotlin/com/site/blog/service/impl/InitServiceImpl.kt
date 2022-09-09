@@ -40,7 +40,7 @@ class InitServiceImpl(
             jdbcTemplate.execute(SqlConstant.initAdminSql)
             jdbcTemplate.execute(SqlConstant.initTagSql)
             jdbcTemplate.execute(SqlConstant.initCateSql)
-            jdbcTemplate.execute(SqlConstant.initLinkSql)
+//            jdbcTemplate.execute(SqlConstant.initLinkSql)
             jdbcTemplate.execute(SqlConstant.insertConfigDataSql)
             jdbcTemplate.execute(SqlConstant.initSysDictTypeSql)
             jdbcTemplate.execute(SqlConstant.initSysDictDataSql)
@@ -64,11 +64,11 @@ class InitServiceImpl(
             val tag: Tag = Tag ("1","默认tag",true,LocalDateTime.now(),
                 LocalDateTime.now()
              )
-            val category=Category(categoryId = "1",categoryName = "默认分类", createTime = LocalDateTime.now(), updateTime = LocalDateTime.now(), categoryRank = 1)
+            val category=Category(categoryId = "1",categoryName = "默认分类", createTime = LocalDateTime.now(), updateTime = LocalDateTime.now(), categoryRank = 1,show=true)
 
             tagMapper.insert(tag)
             categoryMapper.insert(category)
-            jdbcTemplate.execute(SqlConstant.initLinkSql)
+//            jdbcTemplate.execute(SqlConstant.initLinkSql)
             jdbcTemplate.execute(SqlConstant.insertConfigDataSql)
             jdbcTemplate.execute(SqlConstant.initSysDictTypeSql)
             jdbcTemplate.execute(SqlConstant.initSysDictDataSql)

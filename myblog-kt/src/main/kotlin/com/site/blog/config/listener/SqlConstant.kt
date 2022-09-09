@@ -27,9 +27,9 @@ INSERT INTO "public"."blog_config" VALUES ('8', 'filing', '备案', '豫ICP备20
             INSERT INTO "public"."category" ("category_id", "category_name", "category_icon", "category_rank", "create_time", "show") VALUES ('1', '默认分类', '', 1, '2019-08-30 15:07:02', 't');
             """
     const val initLinkSql: String = """
-            INSERT INTO "public"."link" ("link_id", "link_type", "link_name", "link_url", "link_description", "link_rank", "is_deleted", "create_time", "update_time") VALUES ('1', 0, '百度', 'https://www.baidu.com', '这是百度', 0, 1, '2021-08-25 20:17:06', '2021-08-25 20:17:06');
-            INSERT INTO "public"."link" ("link_id", "link_type", "link_name", "link_url", "link_description", "link_rank", "is_deleted", "create_time", "update_time") VALUES ('2', 0, 'github', 'https://github.com', '这是github', 0, 1, '2019-09-02 21:24:44', NULL);
-            INSERT INTO "public"."link" ("link_id", "link_type", "link_name", "link_url", "link_description", "link_rank", "is_deleted", "create_time", "update_time") VALUES ('4', 1, '饿了吗', 'https://element-plus.gitee.io/#/zh-CN/component/link#tu-biao', '222222', 123, 0, '2019-09-03 14:47:21', NULL);
+            INSERT INTO "public"."link" ("link_id", "link_type", "link_name", "link_url", "link_description", "link_rank", "show", "create_time", "update_time") VALUES ('1', 0, '百度', 'https://www.baidu.com', '这是百度', 0, 1, '2021-08-25 20:17:06', '2021-08-25 20:17:06');
+            INSERT INTO "public"."link" ("link_id", "link_type", "link_name", "link_url", "link_description", "link_rank", "show", "create_time", "update_time") VALUES ('2', 0, 'github', 'https://github.com', '这是github', 0, 1, '2019-09-02 21:24:44', NULL);
+            INSERT INTO "public"."link" ("link_id", "link_type", "link_name", "link_url", "link_description", "link_rank", "show", "create_time", "update_time") VALUES ('4', 1, '饿了吗', 'https://element-plus.gitee.io/#/zh-CN/component/link#tu-biao', '222222', 123, 0, '2019-09-03 14:47:21', NULL);
             """
     const val oldSqlString: String = """oldstring"""
     const val initSysDictTypeSql: String = """
