@@ -2,6 +2,7 @@ package com.site.blog.controller
 
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ResponseBody
 
 /**
  * @author Yangzhengqian
@@ -13,6 +14,11 @@ import org.springframework.web.bind.annotation.GetMapping
 class PageController {
     @GetMapping("/index")
     fun index(): String {
+        return "index"
+    }
+    @GetMapping("")
+
+    fun home() :String{
         return "index"
     }
 }
