@@ -113,7 +113,7 @@ let regFormRef = ref(null);
 function login() {
   loginFormRef.value.validate((valid) => {
     if (valid) {
-      loginApi(loginForm.username, loginForm.password).then((res) => {
+      loginApi(loginForm).then((res) => {
         console.log(res);
         console.log(
           `%c看到雷锋`,

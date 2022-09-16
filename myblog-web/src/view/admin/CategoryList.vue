@@ -24,7 +24,7 @@
     <el-table-column prop="categoryRank" label="排序值"></el-table-column>
     <el-table-column width="180" prop="createTime" label="创建时间">
       <template v-slot="{ row }">{{
-        $dayjs(row.createTime).format("YYYY-MM-DD HH:mm:ss")
+      formatTime(row.createTime)
       }}</template>
     </el-table-column>
 
@@ -53,6 +53,7 @@
 
 <script setup>
 import { onMounted, reactive, ref } from "vue";
+import {formatTime} from "@/utils/utils";
 import { addCateApi, clearCateApi, getCatePaging } from "@/utils/apiConfig";
 let cateData = ref([]);
 let addFormRef = ref(null);

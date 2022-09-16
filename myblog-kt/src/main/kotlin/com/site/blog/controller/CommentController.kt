@@ -24,7 +24,7 @@ import java.util.function.Consumer
 @RestController
 @RequestMapping("/v2/admin")
 @Tag(name = "评论json")
-class CommentController( private val commentService: CommentService, private val blogService: BlogInfoService) {
+class CommentController(private val commentService: CommentService, private val blogService: BlogInfoService) {
 
 
     /**
@@ -40,9 +40,9 @@ class CommentController( private val commentService: CommentService, private val
         val queryWrapper = QueryWrapper(condition)
         val page = ajaxPutPage.putPageToPage()
         commentService.page(page, queryWrapper)
-        val commentVoPage =  page.records.map { (BeanMapUtil::copyComment)(it) }
+        val commentVoPage = page.records.map { (BeanMapUtil::copyComment)(it) }
         commentVoPage.forEach(Consumer { item: CommentVo ->
-            val blogInfo = blogService.getOne(KtQueryWrapper (BlogInfo()).eq(BlogInfo::blogId, item.blogId))
+            val blogInfo = blogService.getOne(KtQueryWrapper(BlogInfo()).eq(BlogInfo::blogId, item.blogId))
             item.blogInfo = blogInfo
         })
 

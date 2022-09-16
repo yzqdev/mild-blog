@@ -97,10 +97,15 @@ function sizeChange(size: number) {
   pageSize = size;
   getData();
 }
-function deleteRow(row) {
-  deleteCommentById(row.id).then(({ data }) => {
-    getData();
-  });
+async function deleteRow(row) {
+  try {
+   let res=await deleteCommentById(row.id)
+    if (res.success) {
+      getData();
+    }
+  }catch (e) {
+
+  }
 }
 
 function checkRow(row) {

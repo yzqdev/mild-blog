@@ -110,11 +110,7 @@ class AdminController(
         if (user!!.id == currentUser!!.id) {
             return getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "不能冻结自己")
         }
-        if (Boolean.TRUE == user.locked) {
-            user.locked = true
-        } else {
-            user.locked = false
-        }
+        user.locked = Boolean.TRUE == user.locked
         adminUserService.updateById(user)
         return getResultByHttp(HttpStatusEnum.OK, user.locked)
     }

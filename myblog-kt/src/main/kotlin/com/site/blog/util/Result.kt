@@ -91,10 +91,10 @@ object Result {
         return resultDto
     }
     @JvmStatic
-    fun <T> err(code:HttpStatusEnum,msg:String):ResultDto<T>{
-        val result=ResultDto<T>().apply {
+    fun   err(code:HttpStatusEnum,msg:String):ResultDto<String>{
+        val result=ResultDto<String>().apply {
             resultCode=code.status
-            data=msg as T
+            data=msg
             message=msg
             success=false
             timestamp=System.currentTimeMillis()

@@ -31,9 +31,24 @@ class LinkController(private val linkService: LinkService) {
     @GetMapping("/linkType/list")
     fun linkTypeList(): ResultDto<List<Link>> {
         val links: MutableList<Link> = ArrayList()
-        links.add( Link(linkType = LinkConstants.LINK_TYPE_FRIENDSHIP.linkTypeId, linkName = LinkConstants.LINK_TYPE_FRIENDSHIP.linkTypeName ))
-        links.add( Link(linkType = LinkConstants.LINK_TYPE_RECOMMEND.linkTypeId, linkName = LinkConstants.LINK_TYPE_RECOMMEND.linkTypeName ))
-        links.add( Link(linkType = LinkConstants.LINK_TYPE_PRIVATE.linkTypeId, linkName = LinkConstants.LINK_TYPE_PRIVATE.linkTypeName ))
+        links.add(
+            Link(
+                linkType = LinkConstants.LINK_TYPE_FRIENDSHIP.linkTypeId,
+                linkName = LinkConstants.LINK_TYPE_FRIENDSHIP.linkTypeName
+            )
+        )
+        links.add(
+            Link(
+                linkType = LinkConstants.LINK_TYPE_RECOMMEND.linkTypeId,
+                linkName = LinkConstants.LINK_TYPE_RECOMMEND.linkTypeName
+            )
+        )
+        links.add(
+            Link(
+                linkType = LinkConstants.LINK_TYPE_PRIVATE.linkTypeId,
+                linkName = LinkConstants.LINK_TYPE_PRIVATE.linkTypeName
+            )
+        )
 
 
         return getResultByHttp(HttpStatusEnum.OK, links)
@@ -47,12 +62,12 @@ class LinkController(private val linkService: LinkService) {
      */
     @GetMapping("/link/paging")
     fun getLinkList(ajaxPutPage: AjaxPutPage<Link?>?): ResultDto<*> {
-        val queryWrapper = KtQueryWrapper (Link())
+        val queryWrapper = KtQueryWrapper(Link())
         queryWrapper
             .orderByAsc(Link::linkRank)
         return if (ajaxPutPage != null) {
             val page = ajaxPutPage.putPageToPage()
-            linkService.page (
+            linkService.page(
                 page,
                 queryWrapper
             )
@@ -99,17 +114,17 @@ class LinkController(private val linkService: LinkService) {
                 link.updateTime = Timestamp.valueOf(LocalDateTime.now())
                 flag = linkService.updateById(link)
             } else {
-                link.linkRank=1
-                link.show=true
+                link.linkRank = 1
+                link.show = true
                 flag = linkService.save(link)
             }
             if (flag) {
-              return  getResultByHttp(HttpStatusEnum.OK, link.linkId)
+                return getResultByHttp(HttpStatusEnum.OK, link.linkId)
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
-            return  getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR,e.message)
+            return getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, e.message)
         }
-        return    getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR)
+        return getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR)
     }
 }

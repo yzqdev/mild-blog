@@ -19,6 +19,7 @@ import com.site.blog.util.MD5Utils.MD5Encode
 import com.site.blog.util.RequestHelper
 
 import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.Result
 import com.site.blog.util.ResultDto
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -42,11 +43,11 @@ class AuthController(
     @PostMapping(value = ["/login"])
     @ResponseBody
     fun login(
-        username: String, password: String?,
+        username: String, password: String,
         session: HttpSession
     ): ResultDto<*> {
         if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
-            return getResultByHttp(HttpStatusEnum.BAD_REQUEST)
+            return Result.err(HttpStatusEnum.BAD_REQUEST,"请输入账号密码")
         }
         val queryWrapper: QueryWrapper<AdminUser > = QueryWrapper<AdminUser>(
            AdminUser(username=username, password = MD5Encode(password, "UTF-8"))
@@ -65,10 +66,11 @@ class AuthController(
                 )
                 getResultByHttp(HttpStatusEnum.OK, true, token)
             } else {
+
                 getResultByHttp(HttpStatusEnum.UNAUTHORIZED, false, "账户已被冻结")
             }
         } else {
-            getResultByHttp(HttpStatusEnum.UNAUTHORIZED)
+            getResultByHttp(HttpStatusEnum.UNAUTHORIZED,false,"用户不存在")
         }
     }
 

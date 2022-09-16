@@ -3,73 +3,35 @@
     <el-form ref="form" :model="articleForm" label-width="6rem">
       <div class="d-flex">
         <el-form-item label="标题">
-          <el-input
-            v-model="articleForm.blogTitle"
-            placeholder="输入文章标题"
-          ></el-input>
+          <el-input v-model="articleForm.blogTitle" placeholder="输入文章标题"></el-input>
         </el-form-item>
         <el-form-item label="自定义路径">
-          <el-input
-            v-model="articleForm.subUrl"
-            placeholder="输入文章标题"
-          ></el-input>
+          <el-input v-model="articleForm.subUrl" placeholder="输入文章标题"></el-input>
         </el-form-item>
       </div>
       <div class="d-flex">
         <el-form-item label="标签">
-          <el-select
-            style="width: 100%"
-            v-model="articleForm.blogTagIds"
-            multiple
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in tagOptions"
-              :key="+item.tagId"
-              :label="item.tagName"
-              :value="item.tagId"
-            >
-            </el-option>
+          <el-select style="width: 100%" v-model="articleForm.blogTagIds" multiple placeholder="请选择">
+            <el-option v-for="item in tagOptions" :key="+item.tagId" :label="item.tagName"
+                       :value="item.tagId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="分类">
-          <el-select
-            style="width: 100%"
-            v-model="articleForm.blogCategoryId"
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in cateOptions"
-              :key="item.categoryId"
-              :label="item.categoryName"
-              :value="item.categoryId"
-            >
-            </el-option>
+          <el-select style="width: 100%" v-model="articleForm.blogCategoryId" placeholder="请选择">
+            <el-option v-for="item in cateOptions" :key="item.categoryId" :label="item.categoryName"
+                       :value="item.categoryId"></el-option>
           </el-select>
         </el-form-item>
       </div>
       <div class="d-grid3">
         <el-form-item label="前言">
-          <el-input
-            v-model="articleForm.preface"
-            placeholder="输入文章前言"
-          ></el-input>
+          <el-input v-model="articleForm.preface" placeholder="输入文章前言"></el-input>
         </el-form-item>
         <div class="inner-flex">
-          <el-switch
-            active-text="草稿"
-            inactive-text="发布"
-            v-model="articleForm.show"
-            :active-value="false"
-            :inactive-value="true"
-          ></el-switch>
-          <el-switch
-            active-text="开启评论"
-            inactive-text="关闭评论"
-            :active-value="true"
-            :inactive-value="false"
-            v-model="articleForm.enableComment"
-          ></el-switch>
+          <el-switch active-text="草稿" inactive-text="发布" v-model="articleForm.show" :active-value="false"
+                     :inactive-value="true"></el-switch>
+          <el-switch active-text="开启评论" inactive-text="关闭评论" :active-value="true" :inactive-value="false"
+                     v-model="articleForm.enableComment"></el-switch>
         </div>
       </div>
       <el-form-item>
@@ -87,35 +49,29 @@
   </div>
 </template>
 
-<script setup>
-import {
-  addBlog,
-  getAdminBlogById,
-  getCateList,
-  getTagList,
-  uploadImg,
-} from "@/utils/apiConfig";
+<script setup lang="ts">
+import { addBlog, getAdminBlogById, getCateList, getTagList, uploadImg } from "@/utils/apiConfig";
 import { onBeforeMount, reactive, toRefs } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
+import { Article } from "@/interface/result";
 
-let state = reactive({
-  articleForm: {
-    blogId: "",
-    blogTitle: "",
-    blogTagIds: [],
-    blogCategoryId: undefined,
-    blogContent: "",
-   preface: "",
-    subUrl: "",
-    show: false,
-    enableComment: false,
-  },
-  text: "",
-  tagOptions: [],
-  cateOptions: [],
+
+let articleForm = $ref<Article>({
+  blogId: "",
+  blogTitle: "",
+  blogTagIds: [],
+  blogCategoryId: undefined,
+  blogContent: "",
+  preface: "",
+  subUrl: "",
+  show: false,
+  enableComment: false
 });
-let { articleForm, text, tagOptions, cateOptions } = toRefs(state);
+let text = $ref("");
+let tagOptions = $ref([]);
+let cateOptions = $ref([]);
+
 const route = useRoute();
 const router = useRouter();
 
@@ -133,41 +89,66 @@ function handleUploadImage(files, callback) {
   });
 }
 
-function getData() {
-  getAdminBlogById(route.query.id).then(({ data }) => {
-    state.articleForm = data;
-  });
+async function getData() {
+  try {
+    let res = await getAdminBlogById(route.query.id as string);
+    if (res.success) {
+      articleForm = res.data as unknown as Article;
+    } else {
+      ElMessage({
+        type: "error",
+        message: res.message
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
 }
 
 function tagList() {
   getTagList({ page: 1, limit: 100, show: true }).then(({ data }) => {
-    state.tagOptions = data.list;
+    tagOptions = data.list;
   });
 }
 
-function cateList() {
-  getCateList().then(({ data }) => {
-    state.cateOptions = data;
-  });
+async function cateList() {
+  try {
+    let res = await getCateList();
+    if (res.success) {
+      cateOptions = res.data;
+    } else {
+      ElMessage.error(res.message)
+    }
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-function submit() {
+async function submit() {
   if (route.query.id) {
-    state.articleForm.blogId = route.query.id;
+    articleForm.blogId = route.query.id;
   }
 
-  addBlog(state.articleForm).then((data) => {
-    console.log(data);
-    if (data) {
+  try {
+    let res = await addBlog(articleForm);
+    if (res.success) {
       router.push({
-        name: "articleList",
+        name: "articleList"
       });
       ElMessage({
         type: "success",
-        message: "成功",
+        message: "成功"
+      });
+    } else {
+      ElMessage({
+        type: "error",
+        message: res.message
       });
     }
-  });
+  } catch (e) {
+
+  }
 }
 
 onBeforeMount(() => {

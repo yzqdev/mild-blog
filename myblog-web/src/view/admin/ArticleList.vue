@@ -129,17 +129,20 @@ function getTags() {
   });
 }
 
-function getData() {
+async function getData() {
   state.loading = true;
-  getBlogList({ page: currentPage, limit: pageSize, deleted: false }).then(
-    (res) => {
-      console.log(`%c获取`, `color:red;font-size:16px;background:transparent`);
+try {
+  let res=await getBlogList({ page: currentPage, limit: pageSize, deleted: false })
+  if (res.success ) {
+    console.log(`%c获取`, `color:red;font-size:16px;background:transparent`);
 
-      state.data = res.data.list;
-      count = res.data.count;
-      state.loading = false;
-    }
-  );
+    state.data = res.data.list;
+    count = res.data.count;
+    state.loading = false;
+  }
+}catch (e){
+  console.log(e)
+}
 }
 function copyBlogId(row) {
   navigator.clipboard.writeText(row.blogId).then(() => {
@@ -155,28 +158,36 @@ function editArticle(row) {
   });
 }
 
-function deleteRow(row) {
-  deleteBlog(row.blogId).then(({ data }) => {
-    if (data) {
-      getData();
-      ElMessage({
-        message: "成功",
-        type: "success",
-      });
-    }
-  });
+async function deleteRow(row) {
+ try {
+   let res=await deleteBlog(row.blogId)
+   if (res.success) {
+     getData();
+     ElMessage({
+       message: "成功",
+       type: "success",
+     });
+   }
+ }catch (e){
+   console.log(e)
+ }
 }
 
-function hide(row) {
-  hideBlog(row.blogId, !row.show).then((res) => {
-    if (res) {
-      getData();
-      ElMessage({
-        message: "成功",
-        type: "success",
-      });
-    }
-  });
+async function hide(row) {
+try {
+  let res =await  hideBlog(row.blogId, !row.show)
+  if (res.success) {
+    getData();
+    ElMessage({
+      message: "成功",
+      type: "success",
+    });
+  }else{
+    ElMessage.error(res.message)
+  }
+}catch (e) {
+
+}
 }
 </script>
 

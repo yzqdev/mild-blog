@@ -40,7 +40,7 @@ class ImgController(private val imgService: ImgService) {
     @GetMapping("/list")
     fun listFiles(): ResultDto<Any> {
         val imgs = imgService.list()
-        return getResultByHttp(HttpStatusEnum.OK, imgs)
+        return getResultByHttp(HttpStatusEnum.OK,true, imgs)
     }
 
     @DeleteMapping("/del/{id}")
@@ -67,7 +67,7 @@ class ImgController(private val imgService: ImgService) {
         val flag = imgService.removeById(id)
 
         return if (flag) {
-            getResultByHttp<Img?>(HttpStatusEnum.OK, img)
+            getResultByHttp(HttpStatusEnum.OK, img)
         } else getResultByHttp<Any?>(HttpStatusEnum.OK, null)
     }
 }

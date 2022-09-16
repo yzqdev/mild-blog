@@ -33,7 +33,7 @@
             </article>
           </section>
           <section class="see-all-btn">
-            <el-button  style="width: 100%"  type="primary" text>查看所有</el-button>
+            <el-button style="width: 100%" type="primary" text>查看所有</el-button>
           </section>
         </template>
       </el-dropdown>
@@ -112,7 +112,7 @@ import { useUserStore } from "@/store/user";
 import { UserState } from "@/interface/storeTypes";
 import { useFullscreen, useStorage } from "@vueuse/core";
 import { getUserInfo, getUsers } from "@/utils/apiConfig";
-import {formatTime} from "@/utils/utils";
+import { formatTime } from "@/utils/utils";
 
 let router = useRouter();
 let { setThemeConfig } = useThemeStore();
@@ -121,7 +121,8 @@ let userInfo: UserState = computed(() => {
   return userStore.$state;
 });
 
-function readAll() {}
+function readAll() {
+}
 
 let notice = computed(() => {
   return `你好,${
@@ -132,7 +133,7 @@ let comments = $ref<any>([]);
 let settingDraw = $ref<boolean>(false);
 const theme = $(
   useStorage("themeConfig", {
-    ...defaultTheme,
+    ...defaultTheme
   })
 );
 let noticeTab = $ref("notice");
@@ -145,7 +146,7 @@ function showSettings() {
 
 function gotoRoute(name: string) {
   router.push({
-    name: name,
+    name: name
   });
 }
 
@@ -167,7 +168,7 @@ async function getUnread() {
       read_state: false,
       nickname: "niu",
       avatar_url: "",
-      github_url: "",
+      github_url: ""
     },
     {
       id: 4,
@@ -179,7 +180,7 @@ async function getUnread() {
       read_state: false,
       nickname: "woc",
       avatar_url: "",
-      github_url: "",
+      github_url: ""
     },
     {
       id: 3,
@@ -191,7 +192,7 @@ async function getUnread() {
       read_state: false,
       nickname: "fff",
       avatar_url: "",
-      github_url: "",
+      github_url: ""
     },
     {
       id: 2,
@@ -203,7 +204,7 @@ async function getUnread() {
       read_state: false,
       nickname: "aaa",
       avatar_url: "",
-      github_url: "",
+      github_url: ""
     },
     {
       id: 1,
@@ -215,20 +216,26 @@ async function getUnread() {
       read_state: false,
       nickname: "辅导费",
       avatar_url: "",
-      github_url: "",
-    },
+      github_url: ""
+    }
   ];
 }
 
 async function getUser() {
-   let res = await getUserInfo();
+  try {
+    let res = await getUserInfo();
 
-  userStore.setUser(res.data);
+    if (res.success) {
+      userStore.setUser(res.data);
+    }
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-onBeforeMount(async () => {
-  await getUser();
-  await getUnread();
+onBeforeMount(() => {
+  getUser();
+  getUnread();
 });
 watch(
   theme,
@@ -240,10 +247,11 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-.see-all-btn{
+.see-all-btn {
   //border-2 border-gray-100
-  border:solid 2px rgb(243, 244, 246 );
+  border: solid 2px rgb(243, 244, 246);
 }
+
 .notice-tab {
   padding: 1rem;
   display: flex;
@@ -251,14 +259,16 @@ watch(
 
   .notice-head {
     display: flex;
-    .notice-text{
+
+    .notice-text {
       font-size: 1rem;
     }
-    .all-read{
+
+    .all-read {
       font-size: 1rem;
       color: var(--el-color-primary);
       //text-base flex-1 cursor-pointer text-right text-primary
-      flex:1;
+      flex: 1;
       cursor: pointer;
       text-align: right;
 

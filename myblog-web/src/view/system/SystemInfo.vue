@@ -2,14 +2,14 @@
   <el-button type="primary" @click="addDialogShow">{{ dialogTxt }}</el-button>
   <el-dialog width="30%" v-model="addDialogVisible" title="添加系统信息">
     <el-form :model="addForm">
-      <el-form-item prop="code" label="字段名">
-        <el-input v-model="addForm.code"></el-input>
+      <el-form-item prop="configCode" label="字段id">
+        <el-input v-model="addForm.configCode"></el-input>
       </el-form-item>
-      <el-form-item prop="name" label="参数名">
-        <el-input v-model="addForm.name"></el-input>
+      <el-form-item prop="configName" label="字段名">
+        <el-input v-model="addForm.configName"></el-input>
       </el-form-item>
-      <el-form-item prop="value" label="参数值">
-        <el-input v-model="addForm.value"></el-input>
+      <el-form-item prop="configValue" label="字段值">
+        <el-input v-model="addForm.configValue"></el-input>
       </el-form-item>
     </el-form>
 
@@ -20,20 +20,19 @@
       </span>
     </template>
   </el-dialog>
-
   <el-table :data="tableData" fit>
-    <el-table-column prop="code" label="字段名"></el-table-column>
-    <el-table-column prop="name" label="参数名">
-      <template v-slot="scope"
-        ><span>
-          {{ scope.row.name }}
+    <el-table-column prop="configCode" label="字段id"></el-table-column>
+    <el-table-column prop="configName" label="字段名字">
+      <template v-slot="scope">
+        <span>
+          {{ scope.row.configName }}
         </span>
       </template>
     </el-table-column>
-    <el-table-column prop="value" label="参数值">
-      <template v-slot="scope"
-        ><span>
-          {{ scope.row.value }}
+    <el-table-column prop="configValue" label="字段值">
+      <template v-slot="{ row }">
+        <span>
+          {{ row.configValue }}
         </span>
       </template>
     </el-table-column>
@@ -44,16 +43,8 @@
     </el-table-column>
     <el-table-column label="操作">
       <template v-slot="{ row }">
-        <el-button type="primary" @click="editSystem(row)"> 编辑 </el-button>
-        <el-popconfirm
-          title="确定删除吗？"
-          confirmButtonText="好的"
-          cancelButtonText="不用了"
-          icon="el-icon-info"
-          placement="right"
-          iconColor="red"
-          @confirm="deleteRow(row)"
-        >
+        <el-button type="primary" @click="editSystem(row)">编辑</el-button>
+        <el-popconfirm title="确定删除吗？" confirmButtonText="好的" cancelButtonText="不用了" icon="el-icon-info" placement="right" iconColor="red" @confirm="deleteRow(row)">
           <template #reference>
             <el-button type="danger">删除</el-button>
           </template>
@@ -65,37 +56,44 @@
 
 <script setup lang="ts">
 import { defineComponent, onMounted } from "vue";
-import {
-  addSystemInfo,
-  delSystemInfo,
-  editSystemInfo,
-  getSystemInfo,
-} from "@/utils/apiConfig";
+import { addSystemInfo, delSystemInfo, editSystemInfo, getSystemInfo } from "@/utils/apiConfig";
 import dayjs from "dayjs";
 import { ElMessage } from "element-plus";
 
 let dialogTxt = $ref("添加系统信息");
 let tableData = $ref();
 let addDialogVisible = $ref(false);
-
 let addForm = $ref({
   id: null,
-  name: "name",
-  code: "field",
-  value: "value",
+  configCode: "",
+  configName: "",
+  configValue: "",
 });
 
-function getData() {
-  getSystemInfo().then((res) => {
-    tableData = res.data.list;
-  });
+async function getData() {
+  try {
+    let res = await getSystemInfo();
+    if (res.success) {
+      tableData = res.data.list;
+    }else{
+      ElMessage({
+        type:'error',
+        message:res.message
+      })
+    }
+  } catch (e) {
+    ElMessage({
+      message: (e as Error).message,
+      type: "error",
+    });
+  }
 }
 
 function editSystem(row) {
   addForm = row;
   addDialogVisible = true;
 }
-function changename(row) {
+function changeConfigName(row) {
   editSystemInfo(row).then(({ data }) => {});
 }
 
@@ -105,7 +103,7 @@ function formatTime(time) {
 }
 
 function deleteRow(row) {
-  delSystemInfo(row.code).then(({ data }) => {
+  delSystemInfo(row.configField).then(({ data }) => {
     getData();
     ElMessage({
       type: "success",
@@ -120,7 +118,7 @@ function addDialogShow() {
 
 async function confirmAdd() {
   if (addForm.id) {
-    await changename(addForm);
+    await changeConfigName(addForm);
   } else {
     await addSystemInfo(addForm);
   }

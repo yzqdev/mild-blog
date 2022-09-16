@@ -38,10 +38,10 @@ class ResponseAdvice {
      */
 //    @ExceptionHandler(value = [NullPointerException::class])
 //    @ResponseBody
-//    fun exceptionHandler(req: HttpServletRequest?, e: NullPointerException?): Result<String?> {
+//    fun exceptionHandler(req: HttpServletRequest?, e: NullPointerException?): ResultDto<String?> {
 //        log.error("发生空指针异常！原因是:", e)
 //
-//        return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, "空指针异常")
+//        return getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, "空指针异常")
 //
 //    }
 

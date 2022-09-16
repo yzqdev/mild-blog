@@ -129,15 +129,20 @@ function sizeChange(size: number) {
   pageSize = size;
   getData();
 }
-function hideLink(row: any) {
+async function hideLink(row: any) {
   row.show = !row.show;
-  delLink(row).then(({ data }) => {
+ try {
+  let res=await delLink(row)
+   if (res.success) {
+     ElMessage({ type: "success", message: "成功" });
+     getData();
+   }else {
+     ElMessage.error(res.message)
+   }
+ }catch (e) {
+   console.log(e)
 
-    if (data) {
-      ElMessage({ type: "success", message: "成功" });
-      getData();
-    }
-  });
+ }
 }
 
 function editLinkClick(row) {
