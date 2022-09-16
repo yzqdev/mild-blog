@@ -4,15 +4,14 @@ import com.site.blog.aop.LogOperationEnum
 import com.site.blog.aop.SysLogAnnotation
 import com.site.blog.constants.HttpStatusEnum
 import com.site.blog.model.dto.AjaxResultPage
-import com.site.blog.model.dto.Result
 import com.site.blog.model.entity.BlogConfig
 import com.site.blog.service.BlogConfigService
-import com.site.blog.util.ResultGenerator.getResultByHttp
+import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.ResultDto
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.util.CollectionUtils
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
-import javax.annotation.Resource
 
 @RestController
 @RequestMapping("/v2/admin")
@@ -27,7 +26,7 @@ class ConfigController(val blogConfigService: BlogConfigService) {
      * @date 2019/8/29 19:30
     </com.site.blog.entity.BlogConfig> */
     @GetMapping("/blogConfig/list")
-   fun blogConfig(): Result<AjaxResultPage<BlogConfig?>>
+   fun blogConfig(): ResultDto<AjaxResultPage<BlogConfig?>>
        {
             val ajaxResultPage = AjaxResultPage<BlogConfig?>()
             val list = blogConfigService.query().orderByDesc("update_time").list()
@@ -46,7 +45,7 @@ class ConfigController(val blogConfigService: BlogConfigService) {
      * @date 2019/8/29 19:45
      */
     @PostMapping("/blogConfig/edit")
-    fun updateBlogConfig(@RequestBody blogConfig: BlogConfig): Result<String> {
+    fun updateBlogConfig(@RequestBody blogConfig: BlogConfig): ResultDto<String> {
         blogConfig.updateTime = LocalDateTime.now()
         val flag = blogConfigService.updateById(blogConfig)
         return if (flag) {
@@ -64,7 +63,7 @@ class ConfigController(val blogConfigService: BlogConfigService) {
      */
     @PostMapping("/blogConfig/add")
     @SysLogAnnotation(title = "添加配置", opType = LogOperationEnum.ADD)
-    fun addBlogConfig(@RequestBody blogConfig: BlogConfig): Result<*> {
+    fun addBlogConfig(@RequestBody blogConfig: BlogConfig): ResultDto<*> {
         blogConfig.createTime = LocalDateTime.now()
         blogConfig.updateTime = LocalDateTime.now()
         val flag = blogConfigService.save(blogConfig)
@@ -83,7 +82,7 @@ class ConfigController(val blogConfigService: BlogConfigService) {
      */
     @DeleteMapping("/blogConfig/del/{id}")
     @SysLogAnnotation(title = "删除配置", opType = LogOperationEnum.DELETE)
-    fun delBlogConfig(@PathVariable("id") configField: String?): Result<String> {
+    fun delBlogConfig(@PathVariable("id") configField: String?): ResultDto<String> {
         val flag = blogConfigService.removeById(configField)
         return if (flag) {
             getResultByHttp(HttpStatusEnum.OK)

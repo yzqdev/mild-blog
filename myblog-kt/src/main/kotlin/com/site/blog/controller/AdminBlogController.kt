@@ -10,7 +10,6 @@ import com.site.blog.constants.ShowEnum
 import com.site.blog.model.dto.AjaxPutPage
 import com.site.blog.model.dto.AjaxResultPage
 import com.site.blog.model.dto.BlogInfoDo
-import com.site.blog.model.dto.Result
 import com.site.blog.model.entity.BlogCategory
 import com.site.blog.model.entity.BlogInfo
 import com.site.blog.model.entity.BlogTag
@@ -20,7 +19,8 @@ import com.site.blog.model.vo.BlogEditVO
 import com.site.blog.service.*
 import com.site.blog.util.BeanMapUtil
 import com.site.blog.util.DateUtils.localCurrentDate
-import com.site.blog.util.ResultGenerator.getResultByHttp
+import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.ResultDto
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.BeanUtils
@@ -46,7 +46,7 @@ class AdminBlogController(
      * @date 2019/8/28 15:03
      */
     @GetMapping("/blog/get/{id}")
-    fun getBlogById(@PathVariable("id") id: String?): Result<*> {
+    fun getBlogById(@PathVariable("id") id: String?): ResultDto<*> {
         val blogInfo = blogInfoService.getOne(KtQueryWrapper (BlogInfo()).eq(BlogInfo::blogId, id))
         val blogDetailVO = BlogEditVO()
         BeanUtils.copyProperties(blogInfo!!, blogDetailVO)
@@ -69,21 +69,21 @@ class AdminBlogController(
     @PostMapping("/blog/edit")
     @SysLogAnnotation(title = "修改博客", opType = LogOperationEnum.EDIT)
     @Transactional(rollbackFor = [Exception::class])
-    fun saveBlog(@RequestBody blogInfoDo: BlogInfoDo): Result<*> {
-        val blogInfo = BlogInfo()
-        blogInfo.blogId = blogInfoDo.blogId
-        blogInfo.blogViews = 0L
-        blogInfo.blogTitle = blogInfoDo.blogTitle
-        blogInfo.subUrl = blogInfoDo.subUrl
-        blogInfo.enableComment = blogInfoDo.enableComment
-        blogInfo.show = blogInfoDo.show
-        blogInfo.createTime = LocalDateTime.now()
-        blogInfo.updateTime = LocalDateTime.now()
-        blogInfo.blogContent = blogInfoDo.blogContent
-        blogInfo.preface = blogInfoDo.preface
-        log.info("这是bloginfo")
-        log.info(blogInfo.toString())
-        blogInfo.deleted = false
+    fun saveBlog(@RequestBody blogInfoDo: BlogInfoDo): ResultDto<*> {
+        val blogInfo = BlogInfo().apply {
+            blogId = blogInfoDo.blogId
+            blogViews = 0L
+            blogTitle = blogInfoDo.blogTitle
+            subUrl = blogInfoDo.subUrl
+            enableComment = blogInfoDo.enableComment
+            show = blogInfoDo.show
+            createTime = LocalDateTime.now()
+            updateTime = LocalDateTime.now()
+            blogContent = blogInfoDo.blogContent
+            preface = blogInfoDo.preface
+            deleted = false
+        }
+    
         if (blogInfoService.saveOrUpdate(blogInfo)) {
             val blogCategory = BlogCategory()
             blogCategory.blogId = blogInfo.blogId
@@ -93,7 +93,7 @@ class AdminBlogController(
                 //blogCategoryService.save()
                 blogCategory.categoryId = "1"
             } else {
-                val queryWrapper = LambdaQueryWrapper<BlogCategory>().eq(BlogCategory::blogId, blogInfo.blogId)
+                val queryWrapper =KtQueryWrapper(BlogCategory()).eq(BlogCategory::blogId, blogInfo.blogId)
                 if (blogCategoryService.getOne(queryWrapper) == null) {
                     blogCategory.categoryId = "1"
                 } else {
@@ -116,9 +116,9 @@ class AdminBlogController(
                 blogTagService.save(blogTag)
             }
             //blogService.removeAndsaveBatch(Arrays.asList(blogInfo.getBlogTags().split(",")), blogInfo);
-            return getResultByHttp(HttpStatusEnum.OK, blogInfo)
+            return getResultByHttp(HttpStatusEnum.OK,true, blogInfo)
         }
-        return getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR)
+        return getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR,false,)
     }
 
     /**
@@ -129,7 +129,7 @@ class AdminBlogController(
      * @date 2019/8/28 16:43
     </com.site.blog.entity.BlogInfo> */
     @GetMapping("/blog/list")
-    fun getBlogList(ajaxPutPage: AjaxPutPage<BlogInfo?>): Result<*> {
+    fun getBlogList(ajaxPutPage: AjaxPutPage<BlogInfo?>): ResultDto<*> {
         return try {
             val queryWrapper = KtQueryWrapper (BlogInfo())
             queryWrapper .orderByDesc(BlogInfo::updateTime)
@@ -174,12 +174,12 @@ class AdminBlogController(
      */
     @PostMapping("/blog/show/{id}")
     @SysLogAnnotation(title = "更新博客状态", opType = LogOperationEnum.EDIT)
-    fun hideBlog(@PathVariable("id") id: String?, @RequestParam("show") show: Boolean?): Result<String> {
+    fun hideBlog(@PathVariable("id") id: String?, @RequestParam("show") show: Boolean?): ResultDto<String> {
         val sqlBlog = blogInfoService.getOne(LambdaQueryWrapper<BlogInfo>().eq(BlogInfo::blogId, id))
         sqlBlog!!.show = show
         val flag = blogInfoService.updateById(sqlBlog)
         return if (flag) {
-            getResultByHttp(HttpStatusEnum.OK)
+            getResultByHttp(HttpStatusEnum.OK,true,"成功")
         } else getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR)
     }
 
@@ -191,7 +191,7 @@ class AdminBlogController(
      * @date 2019/8/29 14:02
      */
     @PostMapping("/blog/delete/{id}")
-    fun deleteBlog(@PathVariable("id") blogId: String?, @RequestParam("restore") restore: Boolean): Result<*> {
+    fun deleteBlog(@PathVariable("id") blogId: String?, @RequestParam("restore") restore: Boolean): ResultDto<*> {
         val blogInfo = blogInfoService.getOne(QueryWrapper<BlogInfo>().eq("blog_id", blogId))!!
         blogInfo.apply {
             show = ShowEnum.NOT_SHOW.status
@@ -200,7 +200,7 @@ class AdminBlogController(
         blogInfo.deleted = java.lang.Boolean.TRUE != restore
         val flag = blogInfoService.updateById(blogInfo)
         return if (flag) {
-            getResultByHttp<BlogInfo?>(HttpStatusEnum.OK, blogInfo)
+            getResultByHttp<BlogInfo?>(HttpStatusEnum.OK,true, blogInfo)
         } else getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR)
     }
 
@@ -212,10 +212,10 @@ class AdminBlogController(
      * @date 2019/8/29 14:02
      */
     @PostMapping("/blog/clear/{id}")
-    fun clearBlog(@PathVariable("id") blogId: String ): Result<*> {
+    fun clearBlog(@PathVariable("id") blogId: String ): ResultDto<*> {
         return if (blogInfoService.clearBlogInfo(blogId) ) {
-            getResultByHttp(HttpStatusEnum.OK, blogId)
-        } else getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR)
+            getResultByHttp(HttpStatusEnum.OK,true, blogId)
+        } else getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR,false)
     }
 
     /**
@@ -227,7 +227,7 @@ class AdminBlogController(
      */
     @PostMapping("/blog/restore")
     @SysLogAnnotation(title = "恢复博客", opType = LogOperationEnum.CHANGE_STATUS)
-    fun restoreBlog(@RequestParam blogId: String): Result<String> {
+    fun restoreBlog(@RequestParam blogId: String): ResultDto<String> {
         val blogInfo: BlogInfo =
             BlogInfo(blogId = blogId, show = ShowEnum.SHOW.status, updateTime = LocalDateTime.now())
 

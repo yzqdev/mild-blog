@@ -1,6 +1,5 @@
 package com.site.blog.controller
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.site.blog.aop.LogOperationEnum
@@ -8,14 +7,14 @@ import com.site.blog.aop.SysLogAnnotation
 import com.site.blog.constants.HttpStatusEnum
 import com.site.blog.model.dto.AjaxPutPage
 import com.site.blog.model.dto.AjaxResultPage
-import com.site.blog.model.dto.Result
 import com.site.blog.model.entity.BlogInfo
 import com.site.blog.model.entity.Comment
 import com.site.blog.model.vo.CommentVo
 import com.site.blog.service.BlogInfoService
 import com.site.blog.service.CommentService
 import com.site.blog.util.BeanMapUtil
-import com.site.blog.util.ResultGenerator.getResultByHttp
+import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.ResultDto
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.apache.commons.text.StringEscapeUtils
 import org.springframework.web.bind.annotation.*
@@ -37,7 +36,7 @@ class CommentController( private val commentService: CommentService, private val
      * @date 2020/4/24 21:23
     </com.site.blog.entity.BlogComment> */
     @GetMapping("/comment/paging")
-    fun getCommentList(ajaxPutPage: AjaxPutPage<Comment>, condition: Comment): Result<AjaxResultPage<CommentVo>> {
+    fun getCommentList(ajaxPutPage: AjaxPutPage<Comment>, condition: Comment): ResultDto<AjaxResultPage<CommentVo>> {
         val queryWrapper = QueryWrapper(condition)
         val page = ajaxPutPage.putPageToPage()
         commentService.page(page, queryWrapper)
@@ -58,12 +57,12 @@ class CommentController( private val commentService: CommentService, private val
      * 修改评论状态
      *
      * @param id id
-     * @return com.site.blog.pojo.dto.Result<java.lang.String>
+     * @return com.site.blog.pojo.dto.ResultDto<java.lang.String>
      * @date 2020/4/24 21:21
     </java.lang.String> */
     @PostMapping("/comment/isDel/{id}")
     @SysLogAnnotation(title = "更新", opType = LogOperationEnum.CHANGE_STATUS)
-    fun updateCommentStatus(@PathVariable("id") id: String?, @RequestParam("show") show: Boolean?): Result<*> {
+    fun updateCommentStatus(@PathVariable("id") id: String?, @RequestParam("show") show: Boolean?): ResultDto<*> {
         val comment = commentService.getById(id)
         comment!!.commentStatus = show
         val flag = commentService.updateById(comment)
@@ -76,12 +75,12 @@ class CommentController( private val commentService: CommentService, private val
      * 删除评论
      *
      * @param id
-     * @return com.site.blog.pojo.dto.Result<java.lang.String>
+     * @return com.site.blog.pojo.dto.ResultDto<java.lang.String>
      * @date 2020/4/24 21:23
     </java.lang.String> */
     @DeleteMapping("/comment/delete/{id}")
     @SysLogAnnotation(title = "删除评论", opType = LogOperationEnum.DELETE)
-    fun deleteComment(@PathVariable("id") id: String?): Result<String> {
+    fun deleteComment(@PathVariable("id") id: String?): ResultDto<String> {
         val flag = commentService.removeById(id)
         return if (flag) {
             getResultByHttp(HttpStatusEnum.OK)
@@ -92,12 +91,12 @@ class CommentController( private val commentService: CommentService, private val
      * 编辑评论
      *
      * @param comment
-     * @return com.site.blog.pojo.dto.Result<java.lang.String>
+     * @return com.site.blog.pojo.dto.ResultDto<java.lang.String>
      * @date 2020/4/24 21:21
     </java.lang.String> */
     @PostMapping("/comment/edit")
     @SysLogAnnotation(title = "编辑评论", opType = LogOperationEnum.EDIT)
-    fun editComment(comment: Comment): Result<String> {
+    fun editComment(comment: Comment): ResultDto<String> {
         comment.replyCreateTime = LocalDateTime.now()
         comment.commentBody = StringEscapeUtils.escapeHtml4(comment.commentBody)
         val flag = commentService.updateById(comment)

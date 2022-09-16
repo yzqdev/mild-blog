@@ -1,7 +1,6 @@
 package com.site.blog.controller
 
 import cn.hutool.core.lang.Console
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
@@ -17,12 +16,11 @@ import com.site.blog.model.vo.BlogDetailVO
 import com.site.blog.service.*
 import com.site.blog.util.BeanMapUtil
 import com.site.blog.util.RequestHelper
-import com.site.blog.util.ResultGenerator.getResultByHttp
+import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.ResultDto
 import org.apache.commons.text.StringEscapeUtils
-import org.aspectj.apache.bcel.generic.RET
 import org.slf4j.LoggerFactory
 import org.springframework.beans.BeanUtils
-import org.springframework.util.StringUtils
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
 import java.util.*
@@ -55,7 +53,7 @@ class HomeBlogController(
      * @date 2020/12/7
      */
     @GetMapping("/", "/index")
-    fun index(): Result<*> {
+    fun index(): ResultDto<*> {
         return page(
             BlogPageCondition(pageNum = 1, pageName = "首页")
 
@@ -70,7 +68,7 @@ class HomeBlogController(
      * @date 2019/9/6 7:04
      */
     @PostMapping(*["/tag/{tagId}"])
-    fun tag(@PathVariable("tagId") tagId: String?, @RequestBody pageDto: PageDto): Result<*> {
+    fun tag(@PathVariable("tagId") tagId: String?, @RequestBody pageDto: PageDto): ResultDto<*> {
         val page = Page<BlogInfo>(
             pageDto.pageNum!!.toLong(), pageDto.pageSize!!.toLong()
         )
@@ -120,7 +118,7 @@ class HomeBlogController(
     }
 
     @PostMapping("/timeline")
-    fun timeline(@RequestBody pageDto: PageDto): Result<*> {
+    fun timeline(@RequestBody pageDto: PageDto): ResultDto<*> {
         return try {
             val queryWrapper = KtQueryWrapper (BlogInfo())
             queryWrapper.orderByDesc(BlogInfo::updateTime).eq(BlogInfo::deleted, false).eq(BlogInfo::show, true)
@@ -156,7 +154,7 @@ class HomeBlogController(
      * @date 2020/12/7
      */
     @PostMapping(*["/category/{categoryId}"])
-    fun category(@PathVariable("categoryId") categoryId: String?, @RequestBody pageDto: PageDto): Result<*> {
+    fun category(@PathVariable("categoryId") categoryId: String?, @RequestBody pageDto: PageDto): ResultDto<*> {
         val page = Page<BlogInfo>(
             pageDto.pageNum!!.toLong(), pageDto.pageSize!!.toLong()
         )
@@ -188,7 +186,7 @@ class HomeBlogController(
      * @date 2019/9/6 7:03
      */
     @GetMapping("/search/{keyword}")
-    fun search(@PathVariable("keyword") keyword: String?): Result<*> {
+    fun search(@PathVariable("keyword") keyword: String?): ResultDto<*> {
         try {
             val (pageNum, pageSize) = PageDto(0, 10)
             val ipage = Page<BlogInfo>(
@@ -205,7 +203,7 @@ class HomeBlogController(
     }
 
     @get:GetMapping("/tags")
-    val tags: Result<*>
+    val tags: ResultDto<*>
         get() {
             val queryWrapper = QueryWrapper<Tag>()
             queryWrapper.lambda().eq(Tag::show, ShowEnum.SHOW.status)
@@ -217,7 +215,7 @@ class HomeBlogController(
         }
 
     @GetMapping("/categories")
-    fun cate(): Result<*>
+    fun cate(): ResultDto<*>
         {
             val queryWrapper = KtQueryWrapper (Category())
             queryWrapper. eq(Category::show, ShowEnum.SHOW.status).orderByDesc(Category::createTime)
@@ -229,7 +227,7 @@ class HomeBlogController(
         }
 
     @GetMapping("/configs")
-    fun configs(): Result<Any>
+    fun configs(): ResultDto<Any>
          {
             try {
                 return getResultByHttp(HttpStatusEnum.OK, blogConfigService.allConfigs())
@@ -247,7 +245,7 @@ class HomeBlogController(
      * @author Linn-cn
      * @date 2020/12/7
      */
-    private fun page(condition: BlogPageCondition): Result<*> {
+    private fun page(condition: BlogPageCondition): ResultDto<*> {
         if (Objects.isNull(condition.pageNum)) {
             condition.pageNum = 1
         }
@@ -282,7 +280,7 @@ class HomeBlogController(
      * @date 2019/9/6 13:09
      */
     @GetMapping("/blog/{blogId}", "/article/{blogId}")
-    fun detail(@PathVariable("blogId") blogId: String?): Result<Any> {
+    fun detail(@PathVariable("blogId") blogId: String?): ResultDto<Any> {
         // 获得文章info
         val blogInfo = blogInfoService.getById(blogId)
         val blogTags = blogService.list(
@@ -333,7 +331,7 @@ class HomeBlogController(
     </com.site.blog.entity.BlogComment> */
     @GetMapping("/blog/listComment")
     @ResponseBody
-    fun listComment(ajaxPutPage: AjaxPutPage<Comment?>, blogId: String?): Result<AjaxResultPage<Comment?>> {
+    fun listComment(ajaxPutPage: AjaxPutPage<Comment?>, blogId: String?): ResultDto<AjaxResultPage<Comment?>> {
         val page = ajaxPutPage.putPageToPage()
         commentService.page(
             page, KtQueryWrapper(Comment())
@@ -356,7 +354,7 @@ class HomeBlogController(
      * @date 2019/9/6 17:26
      */
     @GetMapping("/link")
-    fun link(): Result<*> {
+    fun link(): ResultDto<*> {
         val favoriteLinks = linkService.list(
             KtQueryWrapper (Link())
                 .eq(Link::linkType, LinkConstants.LINK_TYPE_FRIENDSHIP.linkTypeId).eq(Link::show, true)
@@ -386,7 +384,7 @@ class HomeBlogController(
      */
     @PostMapping(value = ["/blog/comment"])
     @ResponseBody
-    fun comment(comment: Comment): Result<in String?> {
+    fun comment(comment: Comment): ResultDto<in String?> {
         try {
             val request = RequestHelper.getHttpServletRequest()
             val ref = request.getHeader("Referer")

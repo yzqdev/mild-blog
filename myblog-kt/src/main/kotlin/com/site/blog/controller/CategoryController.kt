@@ -1,6 +1,5 @@
 package com.site.blog.controller
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
 import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.site.blog.aop.LogOperationEnum
 import com.site.blog.aop.SysLogAnnotation
@@ -8,10 +7,10 @@ import com.site.blog.constants.HttpStatusEnum
 import com.site.blog.constants.ShowEnum
 import com.site.blog.model.dto.AjaxPutPage
 import com.site.blog.model.dto.AjaxResultPage
-import com.site.blog.model.dto.Result
 import com.site.blog.model.entity.Category
 import com.site.blog.service.CategoryService
-import com.site.blog.util.ResultGenerator.getResultByHttp
+import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.ResultDto
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.stereotype.Controller
 import org.springframework.util.CollectionUtils
@@ -32,12 +31,12 @@ class CategoryController(private val categoryService: CategoryService) {
      * 分类的集合数据[用于下拉框]
      *
      * @param
-     * @return com.site.blog.pojo.dto.Result<com.site.blog.entity.BlogCategory>
+     * @return com.site.blog.pojo.dto.ResultDto<com.site.blog.entity.BlogCategory>
      * @date 2019/8/30 14:38
     </com.site.blog.entity.BlogCategory> */
     @ResponseBody
     @GetMapping("/category/list")
-    fun categoryList(): Result<List<Category?>> {
+    fun categoryList(): ResultDto<List<Category?>> {
         val queryWrapper = KtQueryWrapper (Category())
         queryWrapper.eq(Category::show, ShowEnum.SHOW.status).orderByDesc(Category::createTime)
         val list = categoryService.list(queryWrapper)
@@ -57,7 +56,7 @@ class CategoryController(private val categoryService: CategoryService) {
     </com.site.blog.entity.BlogCategory> */
     @ResponseBody
     @GetMapping("/category/paging")
-    fun getCategoryList(ajaxPutPage: AjaxPutPage<Category?>, condition: Category): Result<AjaxResultPage<Category?>> {
+    fun getCategoryList(ajaxPutPage: AjaxPutPage<Category?>, condition: Category): ResultDto<AjaxResultPage<Category?>> {
         val queryWrapper =KtQueryWrapper(condition)
         queryWrapper.ne(Category::categoryId, "1").orderByAsc(Category::categoryRank)
         val page = ajaxPutPage.putPageToPage()
@@ -71,14 +70,14 @@ class CategoryController(private val categoryService: CategoryService) {
     /**
      * 修改分类信息
      *
-     * @return com.site.blog.pojo.dto.Result<java.lang.String>
+     * @return com.site.blog.pojo.dto.ResultDto<java.lang.String>
      * @author Linn-cn
      * @date 2020/9/1
     </java.lang.String> */
     @ResponseBody
     @PostMapping("/category/update")
     @SysLogAnnotation(title = "更新分类", opType = LogOperationEnum.UPDATE)
-    fun updateCategory(category: Category): Result<String> {
+    fun updateCategory(category: Category): ResultDto<String> {
         val sqlCategory = categoryService.getById(category.categoryId)
         val flag = sqlCategory!!.categoryName == category.categoryName
         if (!flag) {
@@ -97,7 +96,7 @@ class CategoryController(private val categoryService: CategoryService) {
     @ResponseBody
     @PostMapping("/category/isDel")
     @SysLogAnnotation(title = "更新分类", opType = LogOperationEnum.CHANGE_STATUS)
-    fun updateCategoryStatus(category: Category): Result<String> {
+    fun updateCategoryStatus(category: Category): ResultDto<String> {
         val flag = categoryService.updateById(category)
         return if (flag) {
             getResultByHttp(HttpStatusEnum.OK)
@@ -114,7 +113,7 @@ class CategoryController(private val categoryService: CategoryService) {
     @ResponseBody
     @PostMapping("/category/clear/{id}")
     @SysLogAnnotation(title = "清除分类", opType = LogOperationEnum.CLEAN)
-    fun clearCategory(@PathVariable("id") id: String?): Result<*> {
+    fun clearCategory(@PathVariable("id") id: String?): ResultDto<*> {
         return if (categoryService.clearCategory(id)) {
             getResultByHttp(HttpStatusEnum.OK, true, id)
         } else getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR)
@@ -130,7 +129,7 @@ class CategoryController(private val categoryService: CategoryService) {
     @ResponseBody
     @PostMapping("/category/add")
     @SysLogAnnotation(title = "添加分类", opType = LogOperationEnum.ADD)
-    fun addCategory(category: Category): Result<*> {
+    fun addCategory(category: Category): ResultDto<*> {
         category.createTime = LocalDateTime.now()
         category.show = ShowEnum.SHOW.status
         val flag = categoryService.save(category)

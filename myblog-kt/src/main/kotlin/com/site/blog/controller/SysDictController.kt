@@ -2,7 +2,6 @@ package com.site.blog.controller
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
 import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.site.blog.aop.LogOperationEnum
 import com.site.blog.aop.SysLogAnnotation
 import com.site.blog.constants.HttpStatusEnum
@@ -11,7 +10,8 @@ import com.site.blog.model.entity.SysDictData
 import com.site.blog.model.entity.SysDictType
 import com.site.blog.service.SysDictDataService
 import com.site.blog.service.SysDictTypeService
-import com.site.blog.util.ResultGenerator.getResultByHttp
+import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.ResultDto
 import org.springframework.beans.BeanUtils
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
@@ -29,7 +29,7 @@ class SysDictController(
     private val sysDictTypeService: SysDictTypeService
 ) {
     @GetMapping("/dict/list")
-    fun dictList(ajaxPutPage: AjaxPutPage<SysDictType?>): Result<*> {
+    fun dictList(ajaxPutPage: AjaxPutPage<SysDictType?>): ResultDto<*> {
         val page = ajaxPutPage.putPageToPage()
         sysDictTypeService.page (page)
         val res = AjaxResultPage<SysDictType?>()
@@ -40,7 +40,7 @@ class SysDictController(
 
     @PostMapping("/dict/add")
     @SysLogAnnotation(title = "添加字典类型", opType = LogOperationEnum.ADD)
-    fun addDict(@RequestBody dictTypeDto: DictTypeDto?): Result<*> {
+    fun addDict(@RequestBody dictTypeDto: DictTypeDto?): ResultDto<*> {
         val dicType = SysDictType()
         BeanUtils.copyProperties(dictTypeDto!!, dicType)
         dicType.status = true
@@ -51,7 +51,7 @@ class SysDictController(
     @DeleteMapping("/dict/clear/{dictType}")
     @Transactional(rollbackFor = [Exception::class])
     @SysLogAnnotation(title = "清除字典类型", opType = LogOperationEnum.CLEAN)
-    fun clearDictType(@PathVariable("dictType") dictType: String?): Result<*> {
+    fun clearDictType(@PathVariable("dictType") dictType: String?): ResultDto<*> {
         sysDictDataService.remove(LambdaQueryWrapper<SysDictData>().eq(SysDictData::typeId, dictType))
         val res = sysDictTypeService.remove(LambdaQueryWrapper<SysDictType>().eq(SysDictType::id, dictType))
         return getResultByHttp(HttpStatusEnum.OK, true, res)
@@ -59,7 +59,7 @@ class SysDictController(
 
     @PostMapping("/dictData/add")
     @SysLogAnnotation(title = "添加字典数据", opType = LogOperationEnum.ADD)
-    fun addDict(@RequestBody dictDataDto: DictDataDto?): Result<*> {
+    fun addDict(@RequestBody dictDataDto: DictDataDto?): ResultDto<*> {
         val dictData = SysDictData()
         BeanUtils.copyProperties(dictDataDto!!, dictData)
         dictData.status = true
@@ -71,7 +71,7 @@ class SysDictController(
     }
 
     @GetMapping("/dictData/list/{dictType}")
-    fun dictDataList(ajaxPutPage: AjaxPutPage<SysDictData?>, @PathVariable("dictType") dicType: String?): Result<*> {
+    fun dictDataList(ajaxPutPage: AjaxPutPage<SysDictData?>, @PathVariable("dictType") dicType: String?): ResultDto<*> {
         val page = ajaxPutPage.putPageToPage()
         val queryWrapper = KtQueryWrapper (SysDictData()).eq(SysDictData::typeId, dicType)
         sysDictDataService.page (page, queryWrapper)

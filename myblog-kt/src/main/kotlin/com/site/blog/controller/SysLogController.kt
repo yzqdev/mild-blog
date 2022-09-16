@@ -1,14 +1,14 @@
 package com.site.blog.controller
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.site.blog.constants.HttpStatusEnum
 import com.site.blog.model.dto.AjaxPutPage
 import com.site.blog.model.dto.AjaxResultPage
-import com.site.blog.model.dto.Result
+
 import com.site.blog.model.entity.SysOpLog
 import com.site.blog.service.SysOpLogService
-import com.site.blog.util.ResultGenerator.getResultByHttp
+import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.ResultDto
 import org.springframework.web.bind.annotation.*
 
 /**
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/v2/admin")
 class SysLogController(private val sysOpLogService: SysOpLogService) {
     @GetMapping("/log")
-    fun getSyslogs(ajaxPutPage: AjaxPutPage<SysOpLog?>): Result<AjaxResultPage<SysOpLog?>> {
+    fun getSyslogs(ajaxPutPage: AjaxPutPage<SysOpLog?>): ResultDto<AjaxResultPage<SysOpLog?>> {
         val page = ajaxPutPage.putPageToPage()
         sysOpLogService.page(page)
         val res = AjaxResultPage<SysOpLog?>()
@@ -30,7 +30,7 @@ class SysLogController(private val sysOpLogService: SysOpLogService) {
     }
 
     @DeleteMapping("/log/clear")
-    fun clearAll(): Result<*> {
+    fun clearAll(): ResultDto<*> {
         sysOpLogService.remove(QueryWrapper())
         return getResultByHttp(HttpStatusEnum.OK, true, "")
     }

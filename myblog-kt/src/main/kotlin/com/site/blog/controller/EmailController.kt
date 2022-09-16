@@ -1,9 +1,9 @@
 package com.site.blog.controller
 
 import com.site.blog.constants.HttpStatusEnum
-import com.site.blog.model.dto.Result
 import com.site.blog.service.MailService
-import com.site.blog.util.ResultGenerator.getResultByHttp
+import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.ResultDto
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -20,7 +20,7 @@ class EmailController(private val mailService: MailService) {
     @Value("\${server.port}")
     private val port: String? = null
     @PostMapping("/sendTemplate")
-    fun sendTemplate(to: String?, subject: String?): Result<*> {
+    fun sendTemplate(to: String?, subject: String?): ResultDto<*> {
         val content = HashMap<String?, Any?>(16)
         val username = "yanni"
         val webname = "yzq"

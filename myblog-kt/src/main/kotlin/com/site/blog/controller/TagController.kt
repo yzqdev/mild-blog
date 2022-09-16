@@ -1,6 +1,5 @@
 package com.site.blog.controller
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.site.blog.aop.LogOperationEnum
@@ -8,10 +7,10 @@ import com.site.blog.aop.SysLogAnnotation
 import com.site.blog.constants.HttpStatusEnum
 import com.site.blog.model.dto.AjaxPutPage
 import com.site.blog.model.dto.AjaxResultPage
-import com.site.blog.model.dto.Result
 import com.site.blog.model.entity.Tag
 import com.site.blog.service.TagService
-import com.site.blog.util.ResultGenerator.getResultByHttp
+import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.ResultDto
 import lombok.extern.slf4j.Slf4j
 import org.springframework.util.CollectionUtils
 import org.springframework.web.bind.annotation.*
@@ -31,7 +30,7 @@ class TagController {
      * @return
      */
     @GetMapping("/tags/list")
-    fun tagsList(ajaxPutPage: AjaxPutPage<Tag?>): Result<AjaxResultPage<Tag?>> {
+    fun tagsList(ajaxPutPage: AjaxPutPage<Tag?>): ResultDto<AjaxResultPage<Tag?>> {
         val queryWrapper = KtQueryWrapper (Tag())
         Optional.ofNullable(ajaxPutPage.show)
             .ifPresent { show: Boolean? -> queryWrapper.eq(Tag::show, ajaxPutPage.show) }
@@ -75,7 +74,7 @@ class TagController {
      * @date 2019/8/30 14:55
      */
     @PostMapping("/tags/isDel")
-    fun updateCategoryStatus(tag: Tag): Result<out String?> {
+    fun updateCategoryStatus(tag: Tag): ResultDto<out String?> {
         tag.updateTime = LocalDateTime.now()
         val flag = tagService!!.updateById(tag)
         return if (flag) {
@@ -92,7 +91,7 @@ class TagController {
      */
     @PostMapping("/tags/add")
     @SysLogAnnotation(title = "添加标签", opType = LogOperationEnum.ADD)
-    fun addTag(tag: Tag): Result<*> {
+    fun addTag(tag: Tag): ResultDto<*> {
         tag.createTime = LocalDateTime.now()
         tag.updateTime = LocalDateTime.now()
         val flag = tagService!!.save(tag)
@@ -115,7 +114,7 @@ class TagController {
     @Throws(
         RuntimeException::class
     )
-    fun clearTag(@PathVariable("id") tagId: String?): Result<out String?> {
+    fun clearTag(@PathVariable("id") tagId: String?): ResultDto<out String?> {
         val name = tagService!!.getById(tagId)!!.tagName
         return if (tagService.clearTag(tagId) == 1) {
             getResultByHttp(HttpStatusEnum.OK, name)
@@ -125,13 +124,13 @@ class TagController {
     /**
      * 修改标题名字
      *
-     * @return com.site.blog.pojo.dto.Result<java.lang.String>
+     * @return com.site.blog.pojo.dto.ResultDto<java.lang.String>
      * @author Linn-cn
      * @date 2020/9/1
     </java.lang.String> */
     @PostMapping("/tags/update")
     @SysLogAnnotation(title = "更新标签", opType = LogOperationEnum.UPDATE)
-    fun updateCategory(@RequestBody tag: Tag): Result<Tag> {
+    fun updateCategory(@RequestBody tag: Tag): ResultDto<Tag> {
         tag.updateTime = LocalDateTime.now()
         tagService!!.updateById(tag)
         return getResultByHttp(HttpStatusEnum.OK, true, tag)

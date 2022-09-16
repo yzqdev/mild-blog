@@ -2,12 +2,11 @@ package com.site.blog.controller
 
 import com.site.blog.client.MyClient
 import com.site.blog.constants.HttpStatusEnum
-import com.site.blog.model.dto.Result
-import com.site.blog.util.ResultGenerator.getResultByHttp
+import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.ResultDto
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.annotation.Resource
 
 /**
  * @author yanni
@@ -20,7 +19,7 @@ class ClientController(var myClient: MyClient) {
 
 
     @get:GetMapping("/home")
-    val mihoyoHome: Result<*>
+    val mihoyoHome: ResultDto<*>
         get() {
             val result = myClient.helloForest()
             return getResultByHttp(HttpStatusEnum.OK, true, result)

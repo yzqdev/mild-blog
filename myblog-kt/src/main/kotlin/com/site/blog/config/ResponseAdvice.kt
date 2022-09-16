@@ -2,8 +2,8 @@ package com.site.blog.config
 
 import com.site.blog.constants.HttpStatusEnum
 import com.site.blog.exception.ResultException
-import com.site.blog.model.dto.Result
-import com.site.blog.util.ResultGenerator
+import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.ResultDto
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -25,9 +25,9 @@ class ResponseAdvice {
     @ExceptionHandler(ResultException::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    fun exceptionHandler(req: HttpServletRequest?, e: ResultException): Result<*> {
+    fun exceptionHandler(req: HttpServletRequest?, e: ResultException): ResultDto<*> {
         log.error("发生业务异常！原因是：{}", e.message)
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, e.message)
+        return  getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, e.message)
     }
 
     /**
@@ -54,8 +54,8 @@ class ResponseAdvice {
     @ExceptionHandler(Exception::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    fun unknownExceptionHandler(req: HttpServletRequest?, e: Exception): Result<*> {
+    fun unknownExceptionHandler(req: HttpServletRequest?, e: Exception): ResultDto<*> {
         log.error("未知异常！原因是:", e)
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, e.message)
+        return  getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, e.message)
     }
 }

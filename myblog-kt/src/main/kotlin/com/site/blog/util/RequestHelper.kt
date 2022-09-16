@@ -1,5 +1,6 @@
 package com.site.blog.util
 
+import cn.hutool.core.lang.Console
 import cn.hutool.http.useragent.UserAgent
 import cn.hutool.http.useragent.UserAgentUtil
 import com.site.blog.constants.BaseConstants
@@ -34,10 +35,9 @@ object RequestHelper {
     }
 
     @JvmStatic
-    fun getRequest(): HttpServletRequest
-    {
-       val req=     RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
-        return  req.request
+    fun getRequest(): HttpServletRequest {
+        val req = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
+        return req.request
     }
 
     /**
@@ -46,15 +46,14 @@ object RequestHelper {
      * @return
      */
     @JvmStatic
-   fun getSessionUser(): UserVo?
-       {
-            val requestAttributes =
-                RequestContextHolder.getRequestAttributes()
-            return requestAttributes!!.getAttribute(
-                BaseConstants.USER_ATTR,
-                RequestAttributes.SCOPE_REQUEST
-            ) as UserVo?
-        }
+    fun getSessionUser(): UserVo? {
+        val requestAttributes =
+            RequestContextHolder.getRequestAttributes()
+        return requestAttributes!!.getAttribute(
+            BaseConstants.USER_ATTR,
+            RequestAttributes.SCOPE_REQUEST
+        ) as UserVo?
+    }
 
     /**
      * 判断请求是否为Ajax请求.
@@ -68,35 +67,34 @@ object RequestHelper {
 
     // 多次反向代理后会有多个IP值，第一个为 真实 ip
     @JvmStatic
-    fun getRequestIp(): String
-       {
-            val request = getRequest()
-            var ip = request.getHeader("X-Real-IP")
-            if (StringUtils.isNotBlank(ip) && !"unknown".equals(ip, ignoreCase = true)) {
-                return ip.trim { it <= ' ' }
-            }
-            ip = request.getHeader("X-Forwarded-For")
-            if (StringUtils.isNotBlank(ip) && !"unknown".equals(ip, ignoreCase = true)) {
-                // 多次反向代理后会有多个IP值，第一个为 真实 ip
-                return StringUtils.split(ip, ",")[0].trim { it <= ' ' }
-            }
-            ip = request.getHeader("Proxy-Client-IP")
-            if (StringUtils.isNotBlank(ip) && !"unknown".equals(ip, ignoreCase = true)) {
-                return ip.trim { it <= ' ' }
-            }
-            ip = request.getHeader("WL-Proxy-Client-IP")
-            if (StringUtils.isNotBlank(ip) && !"unknown".equals(ip, ignoreCase = true)) {
-                return ip.trim { it <= ' ' }
-            }
-            ip = request.getHeader("HTTP_CLIENT_IP")
-            if (StringUtils.isNotBlank(ip) && !"unknown".equals(ip, ignoreCase = true)) {
-                return ip.trim { it <= ' ' }
-            }
-            ip = request.getHeader("X-Cluster-Client-IP")
-            return if (StringUtils.isNotBlank(ip) && !"unknown".equals(ip, ignoreCase = true)) {
-                ip.trim { it <= ' ' }
-            } else request.remoteAddr
+    fun getRequestIp(): String {
+        val request = getRequest()
+        var ip = request.getHeader("X-Real-IP")
+        if (StringUtils.isNotBlank(ip) && !"unknown".equals(ip, ignoreCase = true)) {
+            return ip.trim { it <= ' ' }
         }
+        ip = request.getHeader("X-Forwarded-For")
+        if (StringUtils.isNotBlank(ip) && !"unknown".equals(ip, ignoreCase = true)) {
+            // 多次反向代理后会有多个IP值，第一个为 真实 ip
+            return StringUtils.split(ip, ",")[0].trim { it <= ' ' }
+        }
+        ip = request.getHeader("Proxy-Client-IP")
+        if (StringUtils.isNotBlank(ip) && !"unknown".equals(ip, ignoreCase = true)) {
+            return ip.trim { it <= ' ' }
+        }
+        ip = request.getHeader("WL-Proxy-Client-IP")
+        if (StringUtils.isNotBlank(ip) && !"unknown".equals(ip, ignoreCase = true)) {
+            return ip.trim { it <= ' ' }
+        }
+        ip = request.getHeader("HTTP_CLIENT_IP")
+        if (StringUtils.isNotBlank(ip) && !"unknown".equals(ip, ignoreCase = true)) {
+            return ip.trim { it <= ' ' }
+        }
+        ip = request.getHeader("X-Cluster-Client-IP")
+        return if (StringUtils.isNotBlank(ip) && !"unknown".equals(ip, ignoreCase = true)) {
+            ip.trim { it <= ' ' }
+        } else request.remoteAddr
+    }
 
     fun isApplicationJsonHeader(request: HttpServletRequest): Boolean {
         val contentType = request.getHeader(HttpHeaders.CONTENT_TYPE)
@@ -108,20 +106,26 @@ object RequestHelper {
     }
 
     @JvmStatic
-    fun getRequestHeader(headerName: String?): String {
-        return getRequest().getHeader(headerName)
+    fun getRequestHeader(headerName: String): String {
+        Console.print(headerName)
+        val header = getRequest().getHeader(headerName)
+        return header ?: headerName
     }
 
-    fun getUserAgentHeader(): String
-    {return getRequestHeader(REQUEST_HEADER_USER_AGENT)}
     @JvmStatic
-    fun getBrowserFull(): String
-    {
+    fun getUserAgentHeader(): String {
+        return getRequestHeader(REQUEST_HEADER_USER_AGENT)
+    }
+
+    @JvmStatic
+    fun getBrowserFull(): String {
         return getUa().browser.toString() + getUa().version
     }
+
     @JvmStatic
-    fun getUa(): UserAgent
-    {return UserAgentUtil.parse(getUserAgentHeader())}
+    fun getUa(): UserAgent {
+        return UserAgentUtil.parse(getUserAgentHeader())
+    }
 
     @Throws(IOException::class)
     fun getRequestMessage(request: HttpServletRequest): String {
@@ -163,33 +167,30 @@ object RequestHelper {
     }
 
     @JvmStatic
-   fun getHttpServletRequest(): HttpServletRequest
-    {
-      return  (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes?)!!.request
-   }
+    fun getHttpServletRequest(): HttpServletRequest {
+        return (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes?)!!.request
+    }
 
     /**
      * 得到请求的根目录
      *
      * @return
      */
-    fun getBasePath(): String
-        {
-            val request = getHttpServletRequest()
-            return request.scheme + "://" + request.serverName +
-                    ":" + request.serverPort + getContextPath()
-        }
+    fun getBasePath(): String {
+        val request = getHttpServletRequest()
+        return request.scheme + "://" + request.serverName +
+                ":" + request.serverPort + getContextPath()
+    }
 
     /**
      * 得到结构目录
      *
      * @return
      */
-    fun getContextPath(): String
-       {
-            val request = getHttpServletRequest()
-            return request.contextPath
-        }
+    fun getContextPath(): String {
+        val request = getHttpServletRequest()
+        return request.contextPath
+    }
 
     @Throws(IOException::class)
     fun getRequestBody(request: HttpServletRequest): String {
@@ -206,18 +207,17 @@ object RequestHelper {
     }
 
 
-    fun getRequestBody(): String
-        {
-            val request = getHttpServletRequest()
-            val inputStream = request.inputStream
-            val reader =
-                BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8))
-            var s: String?
-            val sb = StringBuilder()
-            while (reader.readLine().also { s = it } != null) {
-                sb.append(s)
-            }
-            reader.close()
-            return sb.toString()
+    fun getRequestBody(): String {
+        val request = getHttpServletRequest()
+        val inputStream = request.inputStream
+        val reader =
+            BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8))
+        var s: String?
+        val sb = StringBuilder()
+        while (reader.readLine().also { s = it } != null) {
+            sb.append(s)
         }
+        reader.close()
+        return sb.toString()
+    }
 }

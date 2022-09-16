@@ -63,7 +63,7 @@ class SysLogAspect(var sysOpLogService: SysOpLogService,val blogConfigService: B
         val sqlBlogConfig = blogConfigService.getOne(
             QueryWrapper<BlogConfig> ().eq(
 
-               "code", "sysUpdateTime"
+               "config_code", "sysUpdateTime"
             )
         )
         println("获取sqlblogconfig ,${sqlBlogConfig.toString()}")

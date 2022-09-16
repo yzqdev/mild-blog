@@ -2,14 +2,12 @@ package com.site.blog.controller
 
 import cn.hutool.core.lang.UUID
 import cn.hutool.core.util.HexUtil
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.site.blog.constants.HttpStatusEnum
 import com.site.blog.constants.SessionConstants
 import com.site.blog.constants.SysConfigConstants
 import com.site.blog.context.ConfigContextHolder.domain
-import com.site.blog.model.dto.Result
 import com.site.blog.model.entity.AdminUser
 
 import com.site.blog.model.vo.UserVo
@@ -17,11 +15,11 @@ import com.site.blog.service.AdminUserService
 import com.site.blog.service.BlogConfigService
 import com.site.blog.service.MailService
 import com.site.blog.util.JwtUtil.sign
-import com.site.blog.util.MD5Utils
 import com.site.blog.util.MD5Utils.MD5Encode
 import com.site.blog.util.RequestHelper
 
-import com.site.blog.util.ResultGenerator.getResultByHttp
+import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.ResultDto
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.util.StringUtils
@@ -46,7 +44,7 @@ class AuthController(
     fun login(
         username: String, password: String?,
         session: HttpSession
-    ): Result<*> {
+    ): ResultDto<*> {
         if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
             return getResultByHttp(HttpStatusEnum.BAD_REQUEST)
         }
@@ -79,7 +77,7 @@ class AuthController(
      */
     @PostMapping(value = ["/reg"])
     @ResponseBody
-    fun register(username: String?, password: String?): Result<String> {
+    fun register(username: String?, password: String?): ResultDto<String> {
         if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
             return getResultByHttp(HttpStatusEnum.BAD_REQUEST)
         }
@@ -97,14 +95,14 @@ class AuthController(
 
     @PostMapping("/findPassByMail/{email}")
     @ResponseBody
-    fun findPassEmail(@PathVariable("email") email: String?): Result<String> {
+    fun findPassEmail(@PathVariable("email") email: String?): ResultDto<String> {
         mailService.sendFindPassEmail(email, mailService.defaultMail)
         return getResultByHttp(HttpStatusEnum.OK, true, "已发送邮件")
     }
 
     @PostMapping("/findPass")
     @ResponseBody
-    fun sengFindPassEmail(): Result<UserVo?> {
+    fun sengFindPassEmail(): ResultDto<UserVo?> {
         val user = RequestHelper.getSessionUser()
         mailService.sendFindPassEmail(user!!.email, mailService.defaultMail)
         return getResultByHttp(HttpStatusEnum.OK, true, user)

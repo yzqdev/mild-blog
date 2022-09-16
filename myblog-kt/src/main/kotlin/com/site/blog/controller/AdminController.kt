@@ -4,14 +4,14 @@ import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.site.blog.constants.BaseConstants
 import com.site.blog.constants.HttpStatusEnum
 import com.site.blog.constants.SessionConstants
-import com.site.blog.model.dto.Result
 import com.site.blog.model.entity.AdminUser
 import com.site.blog.model.entity.BlogConfig
 import com.site.blog.model.vo.UserVo
 import com.site.blog.service.*
 import com.site.blog.util.RequestHelper
 
-import com.site.blog.util.ResultGenerator.getResultByHttp
+import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.ResultDto
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.slf4j.LoggerFactory
 import org.springframework.beans.BeanUtils
@@ -43,17 +43,17 @@ class AdminController(
     private val linkService: LinkService
 ) {
     @PostMapping("/del/{id}")
-    fun removeUser(@PathVariable("id") id: String?): Result<*> {
+    fun removeUser(@PathVariable("id") id: String?): ResultDto<*> {
         return if (id == null) {
-            getResultByHttp(HttpStatusEnum.BAD_REQUEST, "请输入id")
+            getResultByHttp(HttpStatusEnum.BAD_REQUEST,false, "请输入id")
         } else {
             val flag = adminUserService.removeById(id)
-            getResultByHttp(HttpStatusEnum.OK, flag)
+            getResultByHttp(HttpStatusEnum.OK,true, flag)
         }
     }
 
     @GetMapping("/dashboard")
-    fun dashboard(): Result<*> {
+    fun dashboard(): ResultDto<*> {
         val res = HashMap<String, Any>()
         val articleCount = blogInfoService.count()
         val commentCount = commentService.count()
@@ -65,7 +65,7 @@ class AdminController(
     }
 
     @PostMapping("/userEdit")
-    fun editUser(userVo: UserVo): Result<*> {
+    fun editUser(userVo: UserVo): ResultDto<*> {
         val sqlUser = adminUserService.getAdminUserById(userVo.id)
         BeanUtils.copyProperties(userVo, sqlUser!!)
         val conf = blogConfigService.getOne(KtQueryWrapper(BlogConfig()).eq(BlogConfig::configCode, "sysAuthorImg"))
@@ -76,7 +76,7 @@ class AdminController(
     }
 
     @get:GetMapping("/users")
-    val users: Result<*>
+    val users: ResultDto<*>
         get() {
             val users = adminUserService.list()
             val userVos = ArrayList<UserVo>()
@@ -95,7 +95,7 @@ class AdminController(
      * @date: 2019/8/25 9:15
      */
     @GetMapping("/password")
-    fun validatePassword(oldPwd: String?, session: HttpSession): Result<String> {
+    fun validatePassword(oldPwd: String?, session: HttpSession): ResultDto<String> {
         val userId = session.getAttribute(SessionConstants.LOGIN_USER_ID) as String
         val flag = adminUserService.validatePassword(userId, oldPwd)
         return if (flag) {
@@ -104,7 +104,7 @@ class AdminController(
     }
 
     @PostMapping("/unlock/{id}")
-    fun unlock(@PathVariable("id") id: String?): Result<*> {
+    fun unlock(@PathVariable("id") id: String?): ResultDto<*> {
         val user = adminUserService.getAdminUserById(id)
         val currentUser = RequestHelper.getSessionUser()
         if (user!!.id == currentUser!!.id) {
@@ -120,7 +120,7 @@ class AdminController(
     }
 
     @GetMapping("/getUser")
-    fun getUserInfo(request: HttpServletRequest): Result<*> {
+    fun getUserInfo(request: HttpServletRequest): ResultDto<*> {
         return try {
             val user = request.getAttribute(BaseConstants.USER_ATTR) as UserVo
                 ?: return getResultByHttp(HttpStatusEnum.UNAUTHORIZED, false, "请重新登录")
