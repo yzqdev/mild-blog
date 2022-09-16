@@ -2,7 +2,7 @@ package com.site.blog.controller
 
 import com.site.blog.constants.HttpStatusEnum
 import com.site.blog.service.MailService
-import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.BaseResult.getResultByHttp
 import com.site.blog.util.ResultDto
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.PostMapping

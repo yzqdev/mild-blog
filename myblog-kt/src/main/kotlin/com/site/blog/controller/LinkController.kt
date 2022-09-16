@@ -10,7 +10,7 @@ import com.site.blog.model.dto.AjaxResultPage
 import com.site.blog.model.entity.Link
 import com.site.blog.service.LinkService
 import com.site.blog.util.DateUtils.localCurrentDate
-import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.BaseResult.getResultByHttp
 import com.site.blog.util.ResultDto
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*

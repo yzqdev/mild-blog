@@ -2,41 +2,35 @@
   <header class="home-header">
     <div>{{ config.websiteName }}</div>
     <div class="nav">
-      <span
-        class="nav-link"
-        :class="[activeRoute == item.id ? `nav-active` : ``]"
-        v-for="item in navs"
-        @click="gotoRoute(item)"
-        >{{ item.text }}</span
-      >
+      <span class="nav-link" :class="[activeRoute == item.id ? `nav-active` : ``]" v-for="item in navs" @click="gotoRoute(item)">{{ item.text }}</span>
     </div>
   </header>
 </template>
 
 <script setup>
-import { getConfigs } from "@/utils/homeApi";
-import { onBeforeMount, reactive, toRefs } from "vue";
-import  {useConfigStore} from "@/store/sysConfig";
-let configStore=useConfigStore()
+import { getConfigs } from '@/utils/homeApi'
+import { onBeforeMount, reactive, toRefs } from 'vue'
+import { useConfigStore } from '@/store/sysConfig'
+let configStore = useConfigStore()
 
 let state = reactive({
   navs: [
-    { text: "主页", id: 1 },
-    { text: "友情链接", id: 2 },
-    { text: "关于", id: 3 },
+    { text: '主页', id: 1 },
+    { text: '友情链接', id: 2 },
+    { text: '关于', id: 3 },
   ],
   activeRoute: 1,
   config: {},
-});
-let { navs, activeRoute, config } = toRefs(state);
+})
+let { navs, activeRoute, config } = toRefs(state)
 function gotoRoute(item) {
-  state.activeRoute = item.id;
+  state.activeRoute = item.id
 }
 onBeforeMount(async () => {
-  let { data } = await getConfigs();
+  let { data } = await getConfigs()
   configStore.setSysConfig(data)
-  state.config = data;
-});
+  state.config = data
+})
 </script>
 
 <style lang="scss" scoped>

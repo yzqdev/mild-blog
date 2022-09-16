@@ -9,7 +9,7 @@ import com.site.blog.model.dto.AjaxPutPage
 import com.site.blog.model.dto.AjaxResultPage
 import com.site.blog.model.entity.Category
 import com.site.blog.service.CategoryService
-import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.BaseResult.getResultByHttp
 import com.site.blog.util.ResultDto
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.stereotype.Controller
@@ -37,13 +37,13 @@ class CategoryController(private val categoryService: CategoryService) {
     @ResponseBody
     @GetMapping("/category/list")
     fun categoryList(): ResultDto<List<Category?>> {
-        val queryWrapper = KtQueryWrapper (Category())
+        val queryWrapper = KtQueryWrapper(Category())
         queryWrapper.eq(Category::show, ShowEnum.SHOW.status).orderByDesc(Category::createTime)
         val list = categoryService.list(queryWrapper)
         if (CollectionUtils.isEmpty(list)) {
             getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR)
         }
-        return getResultByHttp(HttpStatusEnum.OK, list)
+        return getResultByHttp(HttpStatusEnum.OK,true, list)
     }
 
     /**
@@ -56,11 +56,14 @@ class CategoryController(private val categoryService: CategoryService) {
     </com.site.blog.entity.BlogCategory> */
     @ResponseBody
     @GetMapping("/category/paging")
-    fun getCategoryList(ajaxPutPage: AjaxPutPage<Category?>, condition: Category): ResultDto<AjaxResultPage<Category?>> {
-        val queryWrapper =KtQueryWrapper(condition)
+    fun getCategoryList(
+        ajaxPutPage: AjaxPutPage<Category?>,
+        condition: Category
+    ): ResultDto<AjaxResultPage<Category?>> {
+        val queryWrapper = KtQueryWrapper(condition)
         queryWrapper.ne(Category::categoryId, "1").orderByAsc(Category::categoryRank)
         val page = ajaxPutPage.putPageToPage()
-        categoryService.page (page, queryWrapper)
+        categoryService.page(page, queryWrapper)
         val result = AjaxResultPage<Category?>()
         result.list = page.records
         result.count = page.total

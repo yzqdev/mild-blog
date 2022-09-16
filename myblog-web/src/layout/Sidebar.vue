@@ -6,77 +6,72 @@
         <span>七月飞雪</span>
       </span>
     </router-link>
-    <el-menu
-      :default-active="defaultActive"
-      class="side-menu"
-      router
-      background-color="#001529"
-      text-color="#fff"
-      @open="handleOpen"
-      :collapse-transition="false"
-      @close="handleClose"
-      ><el-menu-item index="/admin/welcome">
+    <el-menu :default-active="defaultActive" class="side-menu" router background-color="#001529" text-color="#fff" @open="handleOpen" :collapse-transition="false" @close="handleClose">
+      <el-menu-item index="/admin/welcome">
         <template #title>
-          <el-icon><home-filled /></el-icon>首页</template
-        >
+          <el-icon><home-filled /></el-icon>
+          首页
+        </template>
       </el-menu-item>
       <el-sub-menu index="2">
         <template #title>
-          <el-icon><Menu /></el-icon> 文章管理</template
-        >
-        <el-menu-item index="/admin/article-edit"> 文章编辑 </el-menu-item>
-        <el-menu-item index="/admin/article-list"> 文章列表 </el-menu-item>
-        <el-menu-item index="/admin/article-recycle"> 回收站 </el-menu-item>
-        <el-menu-item index="/admin/comment-list"> 评论列表 </el-menu-item>
-        <el-menu-item index="/admin/tag-list"> 标签列表</el-menu-item>
-        <el-menu-item index="/admin/category-list"> 分类列表 </el-menu-item>
-        <el-menu-item index="/admin/img-list"> 图片列表 </el-menu-item>
+          <el-icon><Menu /></el-icon>
+          文章管理
+        </template>
+        <el-menu-item index="/admin/article-edit">文章编辑</el-menu-item>
+        <el-menu-item index="/admin/article-list">文章列表</el-menu-item>
+        <el-menu-item index="/admin/article-recycle">回收站</el-menu-item>
+        <el-menu-item index="/admin/comment-list">评论列表</el-menu-item>
+        <el-menu-item index="/admin/tag-list">标签列表</el-menu-item>
+        <el-menu-item index="/admin/category-list">分类列表</el-menu-item>
+        <el-menu-item index="/admin/img-list">图片列表</el-menu-item>
       </el-sub-menu>
 
       <el-sub-menu index="4">
         <template #title>
-          <el-icon><setting /></el-icon> 系统管理</template
-        >
-        <el-menu-item index="/admin/system-info"> 系统信息 </el-menu-item>
-        <el-menu-item index="/admin/system-dict"> 系统字典 </el-menu-item>
-        <el-menu-item index="/admin/system-log"> 系统日志</el-menu-item>
-        <el-menu-item index="/admin/users"> 用户列表 </el-menu-item>
-        <el-menu-item index="/admin/link-list"> 链接列表</el-menu-item>
+          <el-icon><setting /></el-icon>
+          系统管理
+        </template>
+        <el-menu-item index="/admin/system-info">系统信息</el-menu-item>
+        <el-menu-item index="/admin/system-dict">系统字典</el-menu-item>
+        <el-menu-item index="/admin/system-log">系统日志</el-menu-item>
+        <el-menu-item index="/admin/users">用户列表</el-menu-item>
+        <el-menu-item index="/admin/link-list">链接列表</el-menu-item>
       </el-sub-menu>
     </el-menu>
   </el-aside>
 </template>
 
 <script lang="ts" setup>
-import { h, ref, computed, watchEffect, Component, watch } from "vue";
-import { Setting, HomeFilled, Menu } from "@element-plus/icons-vue";
+import { h, ref, computed, watchEffect, Component, watch } from 'vue'
+import { Setting, HomeFilled, Menu } from '@element-plus/icons-vue'
 
-import { useRoute, RouterLink, useRouter } from "vue-router";
+import { useRoute, RouterLink, useRouter } from 'vue-router'
 
-let defaultActive = $ref("home");
-const router = useRouter();
-const route = useRoute();
-let currentKey = $ref("");
-let expandedKeys = $ref([]);
+let defaultActive = $ref('home')
+const router = useRouter()
+const route = useRoute()
+let currentKey = $ref('')
+let expandedKeys = $ref([])
 function gotoRoute(params: string) {
-  console.log("cur route", route.name);
-  console.log(params);
-  router.push({ name: params });
+  console.log('cur route', route.name)
+  console.log(params)
+  router.push({ name: params })
 }
 const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-};
+  console.log(key, keyPath)
+}
 const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-};
+  console.log(key, keyPath)
+}
 watch(
   route,
   (val, oldVal) => {
-    defaultActive = val.path;
-    console.log("move to ", val.path);
+    defaultActive = val.path
+    console.log('move to ', val.path)
   },
   { immediate: true }
-);
+)
 </script>
 
 <style lang="scss" scoped>

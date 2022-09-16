@@ -55,84 +55,84 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent, onMounted } from "vue";
-import { addSystemInfo, delSystemInfo, editSystemInfo, getSystemInfo } from "@/utils/apiConfig";
-import dayjs from "dayjs";
-import { ElMessage } from "element-plus";
+import { defineComponent, onMounted } from 'vue'
+import { addSystemInfo, delSystemInfo, editSystemInfo, getSystemInfo } from '@/utils/apiConfig'
+import dayjs from 'dayjs'
+import { ElMessage } from 'element-plus'
 
-let dialogTxt = $ref("添加系统信息");
-let tableData = $ref();
-let addDialogVisible = $ref(false);
+let dialogTxt = $ref('添加系统信息')
+let tableData = $ref()
+let addDialogVisible = $ref(false)
 let addForm = $ref({
   id: null,
-  configCode: "",
-  configName: "",
-  configValue: "",
-});
+  configCode: '',
+  configName: '',
+  configValue: '',
+})
 
 async function getData() {
   try {
-    let res = await getSystemInfo();
+    let res = await getSystemInfo()
     if (res.success) {
-      tableData = res.data.list;
-    }else{
+      tableData = res.data.list
+    } else {
       ElMessage({
-        type:'error',
-        message:res.message
+        type: 'error',
+        message: res.message,
       })
     }
   } catch (e) {
     ElMessage({
       message: (e as Error).message,
-      type: "error",
-    });
+      type: 'error',
+    })
   }
 }
 
 function editSystem(row) {
-  addForm = row;
-  addDialogVisible = true;
+  addForm = row
+  addDialogVisible = true
 }
 function changeConfigName(row) {
-  editSystemInfo(row).then(({ data }) => {});
+  editSystemInfo(row).then(({ data }) => {})
 }
 
 function formatTime(time) {
-  let res = dayjs(new Date(time)).format("YYYY-MM-DD HH:mm:ss");
-  return res;
+  let res = dayjs(new Date(time)).format('YYYY-MM-DD HH:mm:ss')
+  return res
 }
 
 function deleteRow(row) {
   delSystemInfo(row.configField).then(({ data }) => {
-    getData();
+    getData()
     ElMessage({
-      type: "success",
-      message: "成功",
-    });
-  });
+      type: 'success',
+      message: '成功',
+    })
+  })
 }
 
 function addDialogShow() {
-  addDialogVisible = true;
+  addDialogVisible = true
 }
 
 async function confirmAdd() {
   if (addForm.id) {
-    await changeConfigName(addForm);
+    await changeConfigName(addForm)
   } else {
-    await addSystemInfo(addForm);
+    await addSystemInfo(addForm)
   }
-  getData();
+  getData()
   ElMessage({
-    type: "success",
-    message: "成功",
-  });
-  addDialogVisible = false;
+    type: 'success',
+    message: '成功',
+  })
+  addDialogVisible = false
 }
 
 onMounted(() => {
-  getData();
-});
+  getData()
+})
 </script>
 
 <style scoped></style>

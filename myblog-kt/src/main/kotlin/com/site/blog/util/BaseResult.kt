@@ -1,7 +1,8 @@
 package com.site.blog.util
 
 import com.site.blog.constants.HttpStatusEnum
-data class ResultDto<T>  (
+
+data class ResultDto<T>(
     var resultCode: Int? = null,
     var message: String? = null,
     var data: T? = null,
@@ -10,9 +11,9 @@ data class ResultDto<T>  (
     var timestamp: Long = 0
 
 
-
 )
-object Result {
+
+object BaseResult {
     @JvmStatic
     fun <T> getResultByHttp(constants: HttpStatusEnum, msg: String?, data: T): ResultDto<T> {
         val resultDto = ResultDto<T>()
@@ -67,37 +68,52 @@ object Result {
         resultDto.timestamp = System.currentTimeMillis()
         return resultDto
     }
+
     @JvmStatic
-    fun <T> ok(msg:String) :ResultDto<T>{
-        val resultDto=ResultDto<T>().apply {
-            resultCode=HttpStatusEnum.OK.status
-            message=msg
-            data=msg as T
-            success=true
-            timestamp=System.currentTimeMillis()
+    fun <T> ok(msg: String): ResultDto<T> {
+        val resultDto = ResultDto<T>().apply {
+            resultCode = HttpStatusEnum.OK.status
+            message = msg
+            data = msg as T
+            success = true
+            timestamp = System.currentTimeMillis()
         }
         return resultDto
     }
     @JvmStatic
-    fun <T> ok(data:T,msg:String) :ResultDto<T>{
-        val resultDto=ResultDto<T>().apply {
-            resultCode=HttpStatusEnum.OK.status
-            message=msg
+    fun <T> ok(data:T): ResultDto<T> {
+        val resultDto = ResultDto<T>().apply {
+            resultCode = HttpStatusEnum.OK.status
 
-            success=true
-            timestamp=System.currentTimeMillis()
+
+            success = true
+            timestamp = System.currentTimeMillis()
         }
         resultDto.data=data
         return resultDto
     }
+
     @JvmStatic
-    fun   err(code:HttpStatusEnum,msg:String):ResultDto<String>{
-        val result=ResultDto<String>().apply {
-            resultCode=code.status
-            data=msg
-            message=msg
-            success=false
-            timestamp=System.currentTimeMillis()
+    fun <T> ok(data: T, msg: String): ResultDto<T> {
+        val resultDto = ResultDto<T>().apply {
+            resultCode = HttpStatusEnum.OK.status
+            message = msg
+
+            success = true
+            timestamp = System.currentTimeMillis()
+        }
+        resultDto.data = data
+        return resultDto
+    }
+
+    @JvmStatic
+    fun err(code: HttpStatusEnum, msg: String): ResultDto<String> {
+        val result = ResultDto<String>().apply {
+            resultCode = code.status
+            data = msg
+            message = msg
+            success = false
+            timestamp = System.currentTimeMillis()
         }
         return result
     }

@@ -1,5 +1,6 @@
 package com.site.blog.controller
 
+import cn.hutool.core.lang.Console
 import cn.hutool.core.lang.UUID
 import cn.hutool.core.util.HexUtil
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
@@ -8,6 +9,7 @@ import com.site.blog.constants.HttpStatusEnum
 import com.site.blog.constants.SessionConstants
 import com.site.blog.constants.SysConfigConstants
 import com.site.blog.context.ConfigContextHolder.domain
+import com.site.blog.model.dto.UserLogin
 import com.site.blog.model.entity.AdminUser
 
 import com.site.blog.model.vo.UserVo
@@ -18,8 +20,8 @@ import com.site.blog.util.JwtUtil.sign
 import com.site.blog.util.MD5Utils.MD5Encode
 import com.site.blog.util.RequestHelper
 
-import com.site.blog.util.Result.getResultByHttp
-import com.site.blog.util.Result
+import com.site.blog.util.BaseResult.getResultByHttp
+import com.site.blog.util.BaseResult
 import com.site.blog.util.ResultDto
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -43,15 +45,17 @@ class AuthController(
     @PostMapping(value = ["/login"])
     @ResponseBody
     fun login(
-        username: String, password: String,
+      @RequestBody user:UserLogin,
         session: HttpSession
     ): ResultDto<*> {
+        val (username ,password)=user
         if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
-            return Result.err(HttpStatusEnum.BAD_REQUEST,"请输入账号密码")
+            return BaseResult.err(HttpStatusEnum.BAD_REQUEST,"请输入账号密码")
         }
         val queryWrapper: QueryWrapper<AdminUser > = QueryWrapper<AdminUser>(
            AdminUser(username=username, password = MD5Encode(password, "UTF-8"))
         )
+        Console.log(username,password)
         val adminUser = adminUserService.getOne(queryWrapper)
         return if (adminUser != null) {
             if (!adminUser.locked!!) {
@@ -81,9 +85,9 @@ class AuthController(
     @ResponseBody
     fun register(username: String?, password: String?): ResultDto<String> {
         if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
-            return getResultByHttp(HttpStatusEnum.BAD_REQUEST)
+            return BaseResult.err(HttpStatusEnum.BAD_REQUEST,"请填写用户名密码")
         }
-        val queryWrapper = KtQueryWrapper (AdminUser()).eq(AdminUser::username, username)
+        val queryWrapper = KtQueryWrapper (AdminUser::class.java).eq(AdminUser::username, username)
         val adminUser = adminUserService.getOne(queryWrapper)
         return if (adminUser != null) {
             getResultByHttp(HttpStatusEnum.BAD_REQUEST, false, "用户名已存在")

@@ -12,8 +12,9 @@ import com.site.blog.model.entity.Comment
 import com.site.blog.model.vo.CommentVo
 import com.site.blog.service.BlogInfoService
 import com.site.blog.service.CommentService
+import com.site.blog.util.BaseResult
 import com.site.blog.util.BeanMapUtil
-import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.BaseResult.getResultByHttp
 import com.site.blog.util.ResultDto
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.apache.commons.text.StringEscapeUtils
@@ -83,7 +84,7 @@ class CommentController(private val commentService: CommentService, private val 
     fun deleteComment(@PathVariable("id") id: String?): ResultDto<String> {
         val flag = commentService.removeById(id)
         return if (flag) {
-            getResultByHttp(HttpStatusEnum.OK)
+           BaseResult.ok("删除成功")
         } else getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR)
     }
 

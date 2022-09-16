@@ -2,14 +2,8 @@
   <el-button type="primary" @click="addCate">添加</el-button>
   <el-dialog width="30%" v-model="addDialogVisible" title="添加系统信息">
     <el-form ref="addFormRef" :model="addForm" :rules="addCateRules">
-      <el-form-item prop="categoryName" label="分类名"
-        ><el-input
-          placeholder="请输入分类名"
-          v-model="addForm.categoryName"
-        ></el-input> </el-form-item
-      ><el-form-item prop="categoryRank" label="排序值"
-        ><ElInputNumber v-model="addForm.categoryRank"></ElInputNumber>
-      </el-form-item>
+      <el-form-item prop="categoryName" label="分类名"><el-input placeholder="请输入分类名" v-model="addForm.categoryName"></el-input></el-form-item>
+      <el-form-item prop="categoryRank" label="排序值"><ElInputNumber v-model="addForm.categoryRank"></ElInputNumber></el-form-item>
     </el-form>
 
     <template #footer>
@@ -23,25 +17,15 @@
     <el-table-column prop="categoryName" label="分类名"></el-table-column>
     <el-table-column prop="categoryRank" label="排序值"></el-table-column>
     <el-table-column width="180" prop="createTime" label="创建时间">
-      <template v-slot="{ row }">{{
-      formatTime(row.createTime)
-      }}</template>
+      <template v-slot="{ row }">{{ formatTime(row.createTime) }}</template>
     </el-table-column>
 
     <el-table-column prop="show" label="当前状态">
-      <template v-slot="{ row }"> </template>
+      <template v-slot="{ row }"></template>
     </el-table-column>
     <el-table-column label="操作">
       <template v-slot="{ row }">
-        <el-popconfirm
-          title="确定删除吗？"
-          confirmButtonText="好的"
-          cancelButtonText="不用了"
-          icon="el-icon-info"
-          placement="right"
-          iconColor="red"
-          @confirm="deleteRow(row)"
-        >
+        <el-popconfirm title="确定删除吗？" confirmButtonText="好的" cancelButtonText="不用了" icon="el-icon-info" placement="right" iconColor="red" @confirm="deleteRow(row)">
           <template #reference>
             <el-button type="danger">删除</el-button>
           </template>
@@ -51,52 +35,61 @@
   </el-table>
 </template>
 
-<script setup>
-import { onMounted, reactive, ref } from "vue";
-import {formatTime} from "@/utils/utils";
-import { addCateApi, clearCateApi, getCatePaging } from "@/utils/apiConfig";
-let cateData = ref([]);
-let addFormRef = ref(null);
+<script setup lang="ts">
+import { onMounted, reactive, ref } from 'vue'
+import { formatTime } from '@/utils/utils'
+import { addCateApi, clearCateApi, getCatePaging } from '@/utils/apiConfig'
+import { ElMessage } from "element-plus";
+let cateData = ref([])
+let addFormRef = ref(null)
 let addCateRules = ref({
-  categoryName: [{ required: true, message: "请输入名称" }],
-  categoryRank: [{ required: true, message: "请输入排序" }],
-});
-let addDialogVisible = ref(false);
-let addForm = reactive({ categoryName: "", categoryRank: 1 });
+  categoryName: [{ required: true, message: '请输入名称' }],
+  categoryRank: [{ required: true, message: '请输入排序' }],
+})
+let addDialogVisible = ref(false)
+let addForm = reactive({ categoryName: '', categoryRank: 1 })
 function getData() {
   getCatePaging({ page: 1, limit: 30 }).then(({ data }) => {
-    console.log(data);
-    cateData.value = data.list;
-  });
+    console.log(data)
+    cateData.value = data.list
+  })
 }
 function addCate() {
-  addDialogVisible.value = true;
+  addDialogVisible.value = true
 }
 function confirmAdd() {
-  console.log(addFormRef.value);
+  console.log(addFormRef.value)
   addFormRef.value.validate((valid) => {
     if (valid) {
       addCateApi(addForm).then((res) => {
         if (res.success) {
-          getData();
-          addDialogVisible.value = false;
+          getData()
+          addDialogVisible.value = false
         }
-      });
+      })
     }
-  });
+  })
 }
-function deleteRow(row) {
-  clearCateApi(row.categoryId).then(({ data }) => {
-    if (data) {
-      getData();
-      this.$message.success("成功");
+async function deleteRow(row) {
+  try {
+   let res=await clearCateApi(row.categoryId)
+    if (res.success) {
+
+        getData()
+       ElMessage.success(res.message)
+
+    }else {
+      ElMessage.error(res.message)
     }
-  });
+  }catch (e) {
+    ElMessage.error((e as Error).message)
+
+  }
 }
 
 onMounted(() => {
-  getData();
-});
+  getData()
+})
 </script>
 
 <style scoped></style>

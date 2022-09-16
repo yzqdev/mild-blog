@@ -1,32 +1,14 @@
 <template>
   <div class="home-component" v-loading="loading">
     <div v-if="routeName == `tags`" class="d-flex">
-      <el-tag
-        style="margin: 0 10px; cursor: pointer"
-        v-for="(item, index) in data"
-        @click="gotoTag(item)"
-        :key="`tags${index}`"
-        >{{ item.tagName }}
-      </el-tag>
+      <el-tag style="margin: 0 10px; cursor: pointer" v-for="(item, index) in data" @click="gotoTag(item)" :key="`tags${index}`">{{ item.tagName }}</el-tag>
     </div>
     <div v-if="routeName == `cates`" class="d-flex">
-      <el-button
-        type="plain"
-        class="cate-span"
-        v-for="(item, index) in data"
-        :key="`cate${index}`"
-        @click="gotoCate(item)"
-        >{{ item.categoryName }}
-      </el-button>
+      <el-button type="plain" class="cate-span" v-for="(item, index) in data" :key="`cate${index}`" @click="gotoCate(item)">{{ item.categoryName }}</el-button>
     </div>
     <div v-if="routeName == `timeline`" class="timeline">
       <el-timeline>
-        <el-timeline-item
-          v-for="(item, index) in timelines"
-          :key="`timeline${index}`"
-          :timestamp="formatTime(item.updateTime)"
-          placement="top"
-        >
+        <el-timeline-item v-for="(item, index) in timelines" :key="`timeline${index}`" :timestamp="formatTime(item.updateTime)" placement="top">
           <el-card @click="gotoBlog(item)">
             <h4>{{ item.blogTitle }}</h4>
             <p>{{ item.blogPreface }}</p>
@@ -41,89 +23,83 @@
 </template>
 
 <script setup>
-import { reactive, toRefs, watch } from "vue";
-import {
-  getHomeCates,
-  getHomeTags,
-  getSearch,
-  getTimeline,
-} from "@/utils/homeApi";
-import PassageList from "@/components/PassageList.vue";
-import { useRoute, useRouter } from "vue-router";
-import dayjs from "dayjs";
+import { reactive, toRefs, watch } from 'vue'
+import { getHomeCates, getHomeTags, getSearch, getTimeline } from '@/utils/homeApi'
+import PassageList from '@/components/PassageList.vue'
+import { useRoute, useRouter } from 'vue-router'
+import dayjs from 'dayjs'
 
 let state = reactive({
   loading: true,
-  routeName: "tags",
+  routeName: 'tags',
   data: [],
   pageNum: 1,
   pageSize: 55,
   timelines: [],
   keywordList: [],
-});
-const router = useRouter();
-const route = useRoute();
-let { loading, routeName, data, pageNum, pageSize, timelines, keywordList } =
-  toRefs(state);
+})
+const router = useRouter()
+const route = useRoute()
+let { loading, routeName, data, pageNum, pageSize, timelines, keywordList } = toRefs(state)
 
 function gotoBlog(item) {
-  router.push("/home/blog/" + item.blogId);
+  router.push('/home/blog/' + item.blogId)
 }
 
 function formatTime(time) {
-  return dayjs(time).format("YYYY-MM-DD HH:mm:ss");
+  return dayjs(time).format('YYYY-MM-DD HH:mm:ss')
 }
 
 function gotoTag(item) {
-  router.push("/home/tag/" + item.tagId);
+  router.push('/home/tag/' + item.tagId)
 }
 
 function gotoCate(item) {
-  router.push("/home/category/" + item.categoryId);
+  router.push('/home/category/' + item.categoryId)
 }
 
 watch(
   () => route,
   async (val, preVal) => {
     switch (val.name) {
-      case "homeTags":
-        state.routeName = "tags";
-        let { data } = await getHomeTags();
-        state.data = data;
-        state.loading = false;
-        break;
-      case "homeCategories":
-        state.routeName = "cates";
-        let res = await getHomeCates();
-        state.data = res.data;
-        state.loading = false;
-        break;
-      case "homeTimeline":
-        state.routeName = "timeline";
+      case 'homeTags':
+        state.routeName = 'tags'
+        let { data } = await getHomeTags()
+        state.data = data
+        state.loading = false
+        break
+      case 'homeCategories':
+        state.routeName = 'cates'
+        let res = await getHomeCates()
+        state.data = res.data
+        state.loading = false
+        break
+      case 'homeTimeline':
+        state.routeName = 'timeline'
         getTimeline({
           pageNum: state.pageNum,
           pageSize: state.pageSize,
         }).then((res) => {
-          state.timelines = res.data;
-          state.loading = false;
-        });
+          state.timelines = res.data
+          state.loading = false
+        })
 
-        break;
-      case "homeSearch":
-        state.routeName = "search";
+        break
+      case 'homeSearch':
+        state.routeName = 'search'
         getSearch(route.query.text).then(({ data }) => {
-          console.log(data);
-          state.keywordList = data;
-        });
+          console.log(data)
+          state.keywordList = data
+        })
 
-        state.loading = false;
-        break;
+        state.loading = false
+        break
       default:
-        break;
+        break
     }
   },
   { immediate: true, deep: true }
-);
+)
 </script>
 
 <style lang="scss" scoped>

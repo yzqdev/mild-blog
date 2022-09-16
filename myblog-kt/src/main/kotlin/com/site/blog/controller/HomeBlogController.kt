@@ -16,7 +16,7 @@ import com.site.blog.model.vo.BlogDetailVO
 import com.site.blog.service.*
 import com.site.blog.util.BeanMapUtil
 import com.site.blog.util.RequestHelper
-import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.BaseResult.getResultByHttp
 import com.site.blog.util.ResultDto
 import org.apache.commons.text.StringEscapeUtils
 import org.slf4j.LoggerFactory

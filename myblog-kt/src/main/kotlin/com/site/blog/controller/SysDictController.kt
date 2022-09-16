@@ -10,7 +10,7 @@ import com.site.blog.model.entity.SysDictData
 import com.site.blog.model.entity.SysDictType
 import com.site.blog.service.SysDictDataService
 import com.site.blog.service.SysDictTypeService
-import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.BaseResult.getResultByHttp
 import com.site.blog.util.ResultDto
 import org.springframework.beans.BeanUtils
 import org.springframework.transaction.annotation.Transactional

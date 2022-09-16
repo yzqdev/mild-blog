@@ -3,16 +3,11 @@
     <template v-for="(item, index) in list">
       <article class="article" v-if="!item.deleted && item.show">
         <div class="article-top">
-          <span class="category-link" @click="gotoCate(item)">{{
-            item.blogCategory.categoryName
-          }}</span>
+          <span class="category-link" @click="gotoCate(item)">{{ item.blogCategory.categoryName }}</span>
           <span class="category-link">
-            <el-tag @click="gotoTagRoute(tag)" v-for="tag in item.blogTags">{{
-              tag.tagName
-            }}</el-tag> </span
-          ><span class="right">{{
-            $dayjs(item.updateTime).format("YYYY-MM-DD HH:mm:ss")
-          }}</span>
+            <el-tag @click="gotoTagRoute(tag)" v-for="tag in item.blogTags">{{ tag.tagName }}</el-tag>
+          </span>
+          <span class="right">{{ $dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss') }}</span>
         </div>
         <h1 class="article-title" @click="gotoBlog(item)">
           {{ item.blogTitle }}
@@ -24,25 +19,25 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
+import { useRouter } from 'vue-router'
 
-const router = useRouter();
+const router = useRouter()
 const props = defineProps({
   list: Array,
   loading: {
     type: Boolean,
     default: true,
   },
-});
+})
 
 function gotoCate(item) {}
 
 function gotoTagRoute(item) {
-  router.push("/home/tag/" + item.tagId);
+  router.push('/home/tag/' + item.tagId)
 }
 
 function gotoBlog(item) {
-  router.push("/home/blog/" + item.blogId);
+  router.push('/home/blog/' + item.blogId)
 }
 </script>
 

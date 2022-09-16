@@ -1,8 +1,8 @@
 <template>
   <div class="article-edit">
-    <el-form ref="form" :model="articleForm" label-width="6rem">
+    <el-form ref="form" :rules="rules" :model="articleForm" label-width="6rem">
       <div class="d-flex">
-        <el-form-item label="标题">
+        <el-form-item label="标题" prop="blogTitle">
           <el-input v-model="articleForm.blogTitle" placeholder="输入文章标题"></el-input>
         </el-form-item>
         <el-form-item label="自定义路径">
@@ -10,13 +10,13 @@
         </el-form-item>
       </div>
       <div class="d-flex">
-        <el-form-item label="标签">
-          <el-select style="width: 100%" v-model="articleForm.blogTagIds" multiple placeholder="请选择">
-            <el-option v-for="item in tagOptions" :key="+item.tagId" :label="item.tagName"
+        <el-form-item label="标签" prop="blogTagIds">
+          <el-select style="width: 100%" v-model="articleForm.blogTagIds" :multiple="true" placeholder="请选择">
+            <el-option v-for="item in tagOptions" :key="item.tagId" :label="item.tagName"
                        :value="item.tagId"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="分类">
+        <el-form-item label="分类" prop="blogCategoryId">
           <el-select style="width: 100%" v-model="articleForm.blogCategoryId" placeholder="请选择">
             <el-option v-for="item in cateOptions" :key="item.categoryId" :label="item.categoryName"
                        :value="item.categoryId"></el-option>
@@ -34,15 +34,10 @@
                      v-model="articleForm.enableComment"></el-switch>
         </div>
       </div>
-      <el-form-item>
-        <md-editor-v3
-          v-model="articleForm.blogContent"
-          height="400px"
-          code-theme="atomDark"
-          :show-code-row-number="true"
-          @copy-code-success="handleCopyCodeSuccess"
-          @on-upload-img="handleUploadImage"
-        ></md-editor-v3>
+      <el-form-item prop="blogContent" label="内容">
+        <md-editor-v3 v-model="articleForm.blogContent" height="400px" code-theme="atomDark"
+                      :show-code-row-number="true" @copy-code-success="handleCopyCodeSuccess"
+                      @on-upload-img="handleUploadImage"></md-editor-v3>
       </el-form-item>
       <el-button type="primary" @click="submit">提交</el-button>
     </el-form>
@@ -55,7 +50,7 @@ import { onBeforeMount, reactive, toRefs } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { Article } from "@/interface/result";
-
+import type { FormInstance, FormRules } from "element-plus";
 
 let articleForm = $ref<Article>({
   blogId: "",
@@ -67,6 +62,22 @@ let articleForm = $ref<Article>({
   subUrl: "",
   show: false,
   enableComment: false
+});
+const form = ref<FormInstance>();
+let rules = $ref<FormRules>({
+  blogTitle: [
+    { required: true, message: "请输入文章标题", trigger: "blur" }
+
+  ],
+  blogTagIds: [
+    { required: true, message: "请选择标签", trigger: "change" }
+  ],
+  blogCategoryId: [
+    { required: true, message: "请选择分类", trigger: "change" }
+  ],
+  blogContent: [
+    { required: true, message: "请填写内容", trigger: "blur" }
+  ]
 });
 let text = $ref("");
 let tagOptions = $ref([]);
@@ -103,13 +114,19 @@ async function getData() {
   } catch (error) {
     console.log(error);
   }
-
 }
 
-function tagList() {
-  getTagList({ page: 1, limit: 100, show: true }).then(({ data }) => {
-    tagOptions = data.list;
-  });
+async function tagList() {
+  try {
+    let res =await getTagList({ page: 1, limit: 100, show: true });
+    if (res.success) {
+      tagOptions = res.data.list;
+    }else{
+      ElMessage.error(res.message)
+    }
+  } catch (e) {
+    ElMessage.error((e as Error).message);
+  }
 }
 
 async function cateList() {
@@ -118,7 +135,7 @@ async function cateList() {
     if (res.success) {
       cateOptions = res.data;
     } else {
-      ElMessage.error(res.message)
+      ElMessage.error(res.message);
     }
   } catch (e) {
     console.log(e);
@@ -129,26 +146,30 @@ async function submit() {
   if (route.query.id) {
     articleForm.blogId = route.query.id;
   }
-
-  try {
-    let res = await addBlog(articleForm);
-    if (res.success) {
-      router.push({
-        name: "articleList"
-      });
-      ElMessage({
-        type: "success",
-        message: "成功"
-      });
-    } else {
-      ElMessage({
-        type: "error",
-        message: res.message
-      });
+  console.log(`%ctag`, `color:red;font-size:16px;background:transparent`);
+  console.log(articleForm.blogTagIds);
+  form.value.validate(async (valid) => {
+    if (valid) {
+      try {
+        let res = await addBlog(articleForm);
+        if (res.success) {
+          router.push({
+            name: "articleList"
+          });
+          ElMessage({
+            type: "success",
+            message: "成功"
+          });
+        } else {
+          ElMessage({
+            type: "error",
+            message: res.message
+          });
+        }
+      } catch (e) {
+      }
     }
-  } catch (e) {
-
-  }
+  });
 }
 
 onBeforeMount(() => {

@@ -35,9 +35,9 @@ class InitServiceImpl(
 
 
     override fun initDatabase() {
-        val flag: Boolean = blogConfigMapper.exists(KtQueryWrapper (BlogConfig()).eq(BlogConfig::configCode, "init"))
+        val flag: Boolean = blogConfigMapper.exists(QueryWrapper<BlogConfig>(BlogConfig(id="init")))
         if (!flag) {
-            jdbcTemplate.execute(SqlConstant.initAdminSql)
+//            jdbcTemplate.execute(SqlConstant.initAdminSql)
             jdbcTemplate.execute(SqlConstant.initTagSql)
             jdbcTemplate.execute(SqlConstant.initCateSql)
 //            jdbcTemplate.execute(SqlConstant.initLinkSql)
@@ -49,13 +49,11 @@ class InitServiceImpl(
     }
 
     override fun initUseEntity() {
-        val flag = blogConfigMapper.exists(QueryWrapper<BlogConfig>().eq("config_code","init"))
-        val userLambda=blogConfigMapper.exists(KtQueryWrapper(BlogConfig()).eq(BlogConfig::configCode,"init"))
+        val userLambda=blogConfigMapper.exists(KtQueryWrapper(BlogConfig::class.java).eq(BlogConfig::configCode,"init"))
         //使用lambda结果错误
         println("使用lambda ,$userLambda")
 //        val flag = blogConfigMapper.exists(KtQueryWrapper (BlogConfig()).eq(BlogConfig::code, "init"))
-        println("是否初始化过? $flag")
-        if (!flag ) {
+        if (!userLambda ) {
             //123456
             adminUserMapper.insert(
                 AdminUser(id="myid", username = "admin",password = "e10adc3949ba59abbe56e057f20f883e", nickname = "管理员", locked = false, role = 1, avatar = "https://img-static.mihoyo.com/communityweb/upload/222b847170feb3f2babcc1bd4f0e30dd.png")

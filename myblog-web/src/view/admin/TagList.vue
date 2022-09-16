@@ -5,13 +5,8 @@
         <el-input v-model="editForm.tagName"></el-input>
       </el-form-item>
       <el-form-item label="当前状态">
-        <el-switch
-          v-model="editForm.show"
-          :active-value="true"
-          :inactive-value="false"
-          active-text="显示"
-          inactive-text="隐藏"
-        ></el-switch>
+        <el-switch v-model="editForm.show" :active-value="true" :inactive-value="false" active-text="显示"
+                   inactive-text="隐藏"></el-switch>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -30,16 +25,9 @@
 
     <el-table-column label="操作" width="250">
       <template v-slot="{ row }">
-        <el-button type="primary" @click="editRow(row)">编辑 </el-button>
-        <el-popconfirm
-          title="确定删除吗？"
-          confirmButtonText="好的"
-          cancelButtonText="不用了"
-          icon="el-icon-info"
-          placement="right"
-          iconColor="red"
-          @confirm="deleteRow(row)"
-        >
+        <el-button type="primary" @click="editRow(row)">编辑</el-button>
+        <el-popconfirm title="确定删除吗？" confirmButtonText="好的" cancelButtonText="不用了" icon="el-icon-info"
+                       placement="right" iconColor="red" @confirm="deleteRow(row)">
           <template #reference>
             <el-button type="danger">删除</el-button>
           </template>
@@ -48,40 +36,30 @@
     </el-table-column>
   </el-table>
   <br />
-  <el-pagination
-    background
-    layout="total,sizes,prev, pager, next "
-    :total="count"
-    :page-size="pageSize"
-    @current-change="getData"
-    v-model:current-page="currentPage"
-    :page-sizes="[10, 20, 30, 40, 50, 100]"
-    @size-change="sizeChange"
-  />
+  <el-pagination background layout="total,sizes,prev, pager, next " :total="count" :page-size="pageSize"
+                 @current-change="getData" v-model:current-page="currentPage" :page-sizes="[10, 20, 30, 40, 50, 100]"
+                 @size-change="sizeChange" />
 </template>
 
 <script setup>
-import {
-  addTag,
-  clearTagById,
-  EditTagList,
-  getCommentList,
-  getTagList,
-} from "@/utils/apiConfig";
+import { addTag, clearTagById, EditTagList, getCommentList, getTagList } from "@/utils/apiConfig";
 import { onBeforeMount, reactive, toRefs } from "vue";
 import { ElMessage } from "element-plus";
+
 let count = $ref(0);
 let pageSize = $ref(10);
 let currentPage = $ref(1);
+
 function sizeChange(size) {
   pageSize = size;
   getData();
 }
+
 let state = reactive({
   isEdit: true,
   data: [],
   editForm: { tagName: "", show: false },
-  editFormShow: false,
+  editFormShow: false
 });
 let { isEdit, data, editForm, editFormShow } = toRefs(state);
 onBeforeMount(() => {
@@ -96,16 +74,35 @@ function getData() {
   });
 }
 
-function deleteRow(row) {
-  clearTagById(row.tagId).then(({ data }) => {
-    if (data) {
+async function deleteRow(row) {
+clearTagById(row.tagId).then((res) => {
+    if (res.success) {
       getData();
       ElMessage({
-        message: "成功",
-        type: "success",
+        message: res.message,
+        type: "success"
       });
+    } else {
+      ElMessage.error(res.message);
     }
-  });
+}).catch(e=>{
+  ElMessage.error(e)
+});
+  // try {
+  //   let res = await clearTagById(row.tagId);
+  //   if (res.success) {
+  //     getData();
+  //     ElMessage({
+  //       message: res.message,
+  //       type: "success"
+  //     });
+  //   } else {
+  //     ElMessage.error(res.message);
+  //   }
+  // } catch (e) {
+  //   ElMessage.error(e.message);
+  //
+  // }
 }
 
 function showAddForm() {
@@ -121,7 +118,7 @@ function submitEdit() {
       if (data) {
         ElMessage({
           message: "成功",
-          type: "success",
+          type: "success"
         });
         getData();
         state.editFormShow = false;
@@ -132,7 +129,7 @@ function submitEdit() {
       if (data) {
         ElMessage({
           message: "成功",
-          type: "success",
+          type: "success"
         });
         state.isEdit = true;
         getData();

@@ -9,7 +9,8 @@ import com.site.blog.model.dto.AjaxPutPage
 import com.site.blog.model.dto.AjaxResultPage
 import com.site.blog.model.entity.Tag
 import com.site.blog.service.TagService
-import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.BaseResult
+import com.site.blog.util.BaseResult.getResultByHttp
 import com.site.blog.util.ResultDto
 import lombok.extern.slf4j.Slf4j
 import org.springframework.util.CollectionUtils
@@ -96,7 +97,7 @@ class TagController {
         tag.updateTime = LocalDateTime.now()
         val flag = tagService!!.save(tag)
         return if (flag) {
-            getResultByHttp(HttpStatusEnum.OK, tag)
+            BaseResult.ok(  tag,"添加成功")
         } else {
             getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR)
         }
@@ -116,8 +117,11 @@ class TagController {
     )
     fun clearTag(@PathVariable("id") tagId: String?): ResultDto<out String?> {
         val name = tagService!!.getById(tagId)!!.tagName
+        if (tagId.equals("1")){
+            return BaseResult.err(HttpStatusEnum.BAD_REQUEST,"默认标签不可被删除")
+        }
         return if (tagService.clearTag(tagId) == 1) {
-            getResultByHttp(HttpStatusEnum.OK, name)
+            BaseResult.ok("成功")
         } else getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR)
     }
 

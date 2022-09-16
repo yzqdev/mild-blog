@@ -2,46 +2,27 @@
   <div class="home-blog" v-loading="loading">
     <h1>{{ blog.blogTitle }}</h1>
     <div class="home-blog-head">
-      <span>发表于{{ formatTime(blog.createTime) }}</span
-      ><span>共有{{ blog.commentCount }}条评论</span
-      ><span>{{ blog.blogViews }}浏览</span>
+      <span>发表于{{ formatTime(blog.createTime) }}</span>
+      <span>共有{{ blog.commentCount }}条评论</span>
+      <span>{{ blog.blogViews }}浏览</span>
     </div>
     <div class="blog-tags">
-      <el-tag
-        style="margin-left: 10px; cursor: pointer"
-        v-for="item in tags"
-        @click="gotoTag(item)"
-        >{{ item.tagName }}
-      </el-tag>
+      <el-tag style="margin-left: 10px; cursor: pointer" v-for="item in tags" @click="gotoTag(item)">{{ item.tagName }}</el-tag>
     </div>
     <article class="blog-content">
-      <md-editor-v3
-        v-model="blog.blogContent"
-        code-theme="atomDark"
-        :show-code-row-number="true"
-        preview-only
-      ></md-editor-v3>
+      <md-editor-v3 v-model="blog.blogContent" code-theme="atomDark" :show-code-row-number="true" preview-only></md-editor-v3>
     </article>
 
     <div class="blog-comment" v-if="blog.enableComment">
       <article class="blog-title">添加评论</article>
-      <el-form
-        ref="commentForm"
-        :model="comment"
-        label-position="top"
-        :rules="commentRule"
-      >
-        <el-form-item prop="commentator">
+      <el-form ref="commentForm" :model="comment" label-position="top" :rules="commentRule">
+        <el-form-item prop="commentator" label="">
           <el-input :input-style="commentInput" v-model="comment.commentator">
             <template #prepend>昵称</template>
           </el-input>
         </el-form-item>
         <el-form-item prop="email">
-          <el-input
-            :input-style="commentInput"
-            type="email"
-            v-model="comment.email"
-          >
+          <el-input :input-style="commentInput" type="email" v-model="comment.email">
             <template #prepend>邮箱</template>
           </el-input>
         </el-form-item>
@@ -53,10 +34,7 @@
         <article class="blog-title">评论内容</article>
         <el-form-item prop="commentBody">
           <div :class="active ? `active` : ``" style="width: 100%">
-            <md-editor-v3
-              v-model="comment.commentBody"
-              @on-upload-img="handleUploadImage"
-            ></md-editor-v3>
+            <md-editor-v3 v-model="comment.commentBody" @on-upload-img="handleUploadImage"></md-editor-v3>
           </div>
         </el-form-item>
         <el-button type="primary" @click="commentYou">提交</el-button>
@@ -67,9 +45,7 @@
           <template #header>
             <div style="display: flex">
               <span>{{ item.commentator }}</span>
-              <span style="flex: 1; text-align: right">{{
-                formatTime(item.commentCreateTime)
-              }}</span>
+              <span style="flex: 1; text-align: right">{{ formatTime(item.commentCreateTime) }}</span>
             </div>
           </template>
           <md-editor-v3 preview-only v-model="item.commentBody"></md-editor-v3>
@@ -84,113 +60,115 @@
   </div>
 </template>
 
-<script setup>
-import { uploadImg } from "@/utils/apiConfig";
-import { getBlogById, listComments, submitComment } from "@/utils/homeApi";
-import dayjs from "dayjs";
-import { onMounted, reactive, ref, toRefs, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { ElMessage } from "element-plus";
-
-const router = useRouter();
-const route = useRoute();
+<script setup lang="ts">
+import { uploadImg } from '@/utils/apiConfig'
+import { getBlogById, listComments, submitComment } from '@/utils/homeApi'
+import dayjs from 'dayjs'
+import { onMounted, reactive, ref, toRefs, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
+const router = useRouter()
+const route = useRoute()
 
 let state = reactive({
-  commentInput: { width: "50%" },
+  commentInput: { width: '50%' },
   blog: {},
   tags: {},
-  comment: { commentator: null, email: null, commentBody: "" },
+  comment: { commentator: null, email: null, commentBody: '' },
   commentList: [],
-});
-let commentRule = reactive({
+})
+let commentRule = $ref<FormRules>({
   commentator: [
-    { required: true, message: "请输入网名", trigger: "blur" },
-    { min: 1, max: 20, message: "长度在 3 到 5 个字符", trigger: "blur" },
+    { required: true, message: '请输入网名', trigger: 'blur' },
+    { min: 1, max: 20, message: '长度在 3 到 5 个字符', trigger: 'blur' },
   ],
   email: [
     {
       pattern: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
-      require: true,
-      message: "请输入邮箱",
-      trigger: "blur",
+      required: true,
+      message: '请输入邮箱',
+      trigger: 'blur',
     },
-    { min: 1, max: 20, message: "长度在 3 到 5 个字符", trigger: "blur" },
+    { min: 1, max: 20, message: '长度在 3 到 5 个字符', trigger: 'blur' },
   ],
-  commentBody: [{ required: true, message: "请输入评论内容" }],
-});
-let active = ref(false);
-let loading = ref(true);
-let { blog, tags, comment, commentList, commentInput } = toRefs(state);
-let commentForm = ref(null);
+  commentBody: [{ required: true, message: '请输入评论内容',trigger:'blur' }],
+})
+let active = ref(false)
+let loading = ref(true)
+let { blog, tags, comment, commentList, commentInput } = toRefs(state)
+let commentForm = ref<FormInstance>( )
 onMounted(async () => {
-  let id = route.params.id;
-  const { data } = await getBlogById(id);
+  let id = route.params.id
+  const { data } = await getBlogById(id)
 
-  blog.value = data.blogDetailVO;
-  tags.value = data.tagList;
+  blog.value = data.blogDetailVO
+  tags.value = data.tagList
 
-  getComments();
-});
+  getComments()
+})
 
 function handleUploadImage(files, callback) {
-  console.log(files);
-  let formData = new FormData();
-  formData.append("img", files[0]);
+  console.log(files)
+  let formData = new FormData()
+  formData.append('img', files[0])
   uploadImg(formData).then((res) => {
-    console.log(res);
-    callback([res.url]);
-  });
+    console.log(res)
+    callback([res.url])
+  })
 }
 
 function commentYou() {
   if (!state.comment.commentBody) {
     ElMessage({
-      message: "请输入评论内容!",
+      message: '请输入评论内容!',
       grouping: true,
-      type: "error",
-    });
+      type: 'error',
+    })
 
-    return;
+    return
   }
-  state.comment.blogId = state.blog.blogId;
-  commentForm.value.validate((valid) => {
-    console.log(state.comment);
-    console.log(
-      `%c看看是大幅度蓝山咖啡`,
-      `color:red;font-size:16px;background:transparent`
-    );
+  state.comment.blogId = state.blog.blogId
+  commentForm.value.validate(async (valid) => {
+    console.log(state.comment)
+    console.log(`%c看看是大幅度蓝山咖啡`, `color:red;font-size:16px;background:transparent`)
     if (valid) {
-      submitComment(state.comment).then((data) => {
-        ElMessage({ message: "成功", type: "success" });
-        getComments();
-      });
-    }
-  });
+     try {
+       let res=await submitComment(state.comment)
+       if (res.success) {
+         ElMessage({ message: '成功', type: 'success' })
+         getComments()
+       }else{
+         ElMessage.error(res.message)
+       }
+     }
+      catch(e){
+        ElMessage.error(e.message)
+    }}
+  })
 }
 
 function formatTime(time) {
-  return dayjs(new Date(time)).format("YYYY-MM-DD HH:mm:ss");
+  return dayjs(new Date(time)).format('YYYY-MM-DD HH:mm:ss')
 }
 
 function gotoTag(item) {
-  router.push("/home/tag/" + item.tagId);
+  router.push('/home/tag/' + item.tagId)
 }
 
 function getComments() {
-  listComments({ page: 1, limit: 30, blogId: blog.value.blogId }).then(
-    (res) => {
-      loading.value = false;
-      commentList.value = res.data.list;
-    }
-  );
+  listComments({ page: 1, limit: 30, blogId: blog.value.blogId }).then((res) => {
+    loading.value = false
+    commentList.value = res.data.list
+  })
 }
 
 watch(
   () => comment.value,
   (val, preVal) => {
-    active.value = !val.commentBody;
+    active.value = !val.commentBody
   }
-);
+)
 </script>
 
 <style lang="scss" scoped>

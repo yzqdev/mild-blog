@@ -6,12 +6,12 @@
   </el-main>
 </template>
 <script setup lang="ts">
-import { useThemeStore } from "@/store/themeConfig";
+import { useThemeStore } from '@/store/themeConfig'
 
-let themeStore = useThemeStore();
+let themeStore = useThemeStore()
 let themeConfig = $computed(() => {
-  return themeStore.$state;
-});
+  return themeStore.$state
+})
 </script>
 <style lang="scss" scoped>
 .content {

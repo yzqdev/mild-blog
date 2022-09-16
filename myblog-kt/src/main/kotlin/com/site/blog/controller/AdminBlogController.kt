@@ -19,7 +19,8 @@ import com.site.blog.model.vo.BlogEditVO
 import com.site.blog.service.*
 import com.site.blog.util.BeanMapUtil
 import com.site.blog.util.DateUtils.localCurrentDate
-import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.BaseResult.getResultByHttp
+import com.site.blog.util.BaseResult.ok
 import com.site.blog.util.ResultDto
 
 import org.slf4j.LoggerFactory
@@ -47,7 +48,7 @@ class AdminBlogController(
      */
     @GetMapping("/blog/get/{id}")
     fun getBlogById(@PathVariable("id") id: String?): ResultDto<*> {
-        val blogInfo = blogInfoService.getOne(KtQueryWrapper (BlogInfo()).eq(BlogInfo::blogId, id))
+        val blogInfo = blogInfoService.getOne(KtQueryWrapper (BlogInfo::class.java).eq(BlogInfo::blogId, id))
         val blogDetailVO = BlogEditVO()
         BeanUtils.copyProperties(blogInfo!!, blogDetailVO)
         blogDetailVO.blogCategoryId =
@@ -56,7 +57,7 @@ class AdminBlogController(
         val ids = blogTagService.list(queryWrapper).map { it?.tagId }
         blogDetailVO.blogTagIds = ids
         log.info("home创建时间{}", blogDetailVO.createTime.toString())
-        return getResultByHttp(HttpStatusEnum.OK, blogDetailVO)
+        return getResultByHttp(HttpStatusEnum.OK,true, blogDetailVO)
     }
 
     /**
@@ -93,7 +94,7 @@ class AdminBlogController(
                 //blogCategoryService.save()
                 blogCategory.categoryId = "1"
             } else {
-                val queryWrapper =KtQueryWrapper(BlogCategory()).eq(BlogCategory::blogId, blogInfo.blogId)
+                val queryWrapper =KtQueryWrapper(BlogCategory::class.java).eq(BlogCategory::blogId, blogInfo.blogId)
                 if (blogCategoryService.getOne(queryWrapper) == null) {
                     blogCategory.categoryId = "1"
                 } else {
@@ -144,12 +145,12 @@ class AdminBlogController(
             val blogDetailVOS = blogInfoPage.records.map { (BeanMapUtil::copyBlog)(it) }
             log.info("blogDetailVOS:{}", blogDetailVOS)
             blogDetailVOS.forEach {
-                val tagQueryWrapper = KtQueryWrapper (BlogTag()).eq(BlogTag::blogId, it.blogId)
+                val tagQueryWrapper = KtQueryWrapper (BlogTag::class.java).eq(BlogTag::blogId, it.blogId)
                 val tags = blogTagService.list(tagQueryWrapper).map {
-                    tagService.getOne(KtQueryWrapper (Tag()).eq(Tag::tagId, it?.tagId).eq(Tag::show, true))
+                    tagService.getOne(KtQueryWrapper (Tag::class.java).eq(Tag::tagId, it?.tagId).eq(Tag::show, true))
                 }
                 it.blogTags=tags
-                val cateId=blogCategoryService.getOne( KtQueryWrapper (BlogCategory()).eq(BlogCategory::blogId,it.blogId))?.categoryId
+                val cateId=blogCategoryService.getOne( KtQueryWrapper (BlogCategory::class.java).eq(BlogCategory::blogId,it.blogId))?.categoryId
                 if (cateId!=null){
                     it.blogCategory=categoryService.getById(cateId)
                 }
@@ -160,7 +161,7 @@ class AdminBlogController(
             getResultByHttp(HttpStatusEnum.OK, true, list)
         } catch (e: Exception) {
             e.printStackTrace()
-            getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false)
+            getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR )
         }
     }
 
@@ -175,7 +176,7 @@ class AdminBlogController(
     @PostMapping("/blog/show/{id}")
     @SysLogAnnotation(title = "更新博客状态", opType = LogOperationEnum.EDIT)
     fun hideBlog(@PathVariable("id") id: String?, @RequestParam("show") show: Boolean?): ResultDto<String> {
-        val sqlBlog = blogInfoService.getOne(LambdaQueryWrapper<BlogInfo>().eq(BlogInfo::blogId, id))
+        val sqlBlog = blogInfoService.getOne(KtQueryWrapper (BlogInfo::class.java).eq(BlogInfo::blogId, id))
         sqlBlog!!.show = show
         val flag = blogInfoService.updateById(sqlBlog)
         return if (flag) {
@@ -233,7 +234,7 @@ class AdminBlogController(
 
         val flag = blogInfoService.updateById(blogInfo)
         return if (flag) {
-            getResultByHttp(HttpStatusEnum.OK)
+           ok("恢复成功")
         } else getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR)
     }
 

@@ -5,10 +5,10 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
-import zhCn from "element-plus/lib/locale/lang/zh-cn";
-let router = useRouter();
-let locale = $ref(zhCn);
+import { useRouter } from 'vue-router'
+import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+let router = useRouter()
+let locale = $ref(zhCn)
 </script>
 
 <style>

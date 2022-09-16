@@ -3,17 +3,17 @@
 </template>
 
 <script setup>
-import { defineComponent, onBeforeMount, reactive, toRefs, watch } from "vue";
-import { getUserInfo } from "@/utils/apiConfig";
+import { defineComponent, onBeforeMount, reactive, toRefs, watch } from 'vue'
+import { getUserInfo } from '@/utils/apiConfig'
 
-const router = useRouter();
-import { useRouter } from "vue-router";
+const router = useRouter()
+import { useRouter } from 'vue-router'
 
 let state = reactive({
   user: {},
   actMenu: [],
-});
-let { user, actMenu } = toRefs(state);
+})
+let { user, actMenu } = toRefs(state)
 </script>
 
 <style lang="scss" scoped>

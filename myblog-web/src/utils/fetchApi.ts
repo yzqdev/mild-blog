@@ -1,4 +1,4 @@
-import { getApiUrl } from "@/utils/getApiUrl";
+import { getApiUrl } from '@/utils/getApiUrl'
 // import { Message } from "element-ui";
 //
 // const errorMessage = msg => {
@@ -11,82 +11,82 @@ import { getApiUrl } from "@/utils/getApiUrl";
 // };
 // 环境的切换
 
-let baseURL = getApiUrl();
+let baseURL = getApiUrl()
 let HttpMethodMap = {
-  get: "GET",
-  post: "POST",
-  put: "PUT",
-  patch: "PATCH",
-  delete: "DELETE",
-};
+  get: 'GET',
+  post: 'POST',
+  put: 'PUT',
+  patch: 'PATCH',
+  delete: 'DELETE',
+}
 class FetchApi {
   constructor() {}
   static get(url) {
     return new Promise((resolve, reject) => {
-      url = baseURL + url;
+      url = baseURL + url
       fetch(url)
         .then((res) => res.json())
         .then((data) => resolve(data))
-        .catch((err) => reject(err));
-    });
+        .catch((err) => reject(err))
+    })
   }
   static post(url, data) {
     return new Promise((resolve, reject) => {
-      url = baseURL + url;
+      url = baseURL + url
       fetch(url, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-type": "application/json",
+          'Content-type': 'application/json',
         },
         body: JSON.stringify(data),
       })
         .then((res) => res.json())
         .then((data) => resolve(data))
-        .catch((err) => reject(err));
-    });
+        .catch((err) => reject(err))
+    })
   }
   static put(url, data) {
     return new Promise((resolve, reject) => {
-      url = baseURL + url;
+      url = baseURL + url
       fetch(url, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-type": "application/json",
+          'Content-type': 'application/json',
         },
         body: JSON.stringify(data),
       })
         .then((res) => res.json())
         .then((data) => resolve(data))
-        .catch((err) => reject(err));
-    });
+        .catch((err) => reject(err))
+    })
   }
   static delete(url, data) {
     return new Promise((resolve, reject) => {
-      url = baseURL + url;
+      url = baseURL + url
       fetch(url, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          "Content-type": "application/json",
+          'Content-type': 'application/json',
         },
         body: JSON.stringify(data),
       })
         .then((res) => res.json())
-        .then((data) => resolve("删除成功"))
-        .catch((err) => reject(err));
-    });
+        .then((data) => resolve('删除成功'))
+        .catch((err) => reject(err))
+    })
   }
   static postForm(url, data) {
     return new Promise((resolve, reject) => {
-      url = baseURL + url;
+      url = baseURL + url
       fetch(url, {
-        method: "POST",
+        method: 'POST',
 
         body: data,
       })
         .then((res) => res.json())
-        .then((data) => resolve("删除成功"))
-        .catch((err) => reject(err));
-    });
+        .then((data) => resolve('删除成功'))
+        .catch((err) => reject(err))
+    })
   }
 
   /**
@@ -97,12 +97,12 @@ class FetchApi {
    */
   static default(url, RequestInit) {
     return new Promise((resolve, reject) => {
-      url = baseURL + url;
+      url = baseURL + url
       fetch(url, RequestInit)
         .then((res) => res.json())
         .then((data) => resolve(data))
-        .catch((err) => reject(err));
-    });
+        .catch((err) => reject(err))
+    })
   }
 }
-export default FetchApi;
+export default FetchApi

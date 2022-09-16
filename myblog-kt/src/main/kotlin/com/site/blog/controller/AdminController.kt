@@ -10,7 +10,7 @@ import com.site.blog.model.vo.UserVo
 import com.site.blog.service.*
 import com.site.blog.util.RequestHelper
 
-import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.BaseResult.getResultByHttp
 import com.site.blog.util.ResultDto
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.slf4j.LoggerFactory
@@ -68,7 +68,7 @@ class AdminController(
     fun editUser(userVo: UserVo): ResultDto<*> {
         val sqlUser = adminUserService.getAdminUserById(userVo.id)
         BeanUtils.copyProperties(userVo, sqlUser!!)
-        val conf = blogConfigService.getOne(KtQueryWrapper(BlogConfig()).eq(BlogConfig::configCode, "sysAuthorImg"))
+        val conf = blogConfigService.getOne(KtQueryWrapper(BlogConfig::class.java).eq(BlogConfig::configCode, "sysAuthorImg"))
         conf!!.configValue = userVo.avatar
         blogConfigService.updateById(conf)
         adminUserService.updateUserInfo(sqlUser)

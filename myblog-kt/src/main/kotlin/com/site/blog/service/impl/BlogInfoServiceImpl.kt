@@ -31,48 +31,47 @@ class BlogInfoServiceImpl(
     private val blogTagMapper: BlogTagMapper,
     private val commentMapper: CommentMapper
 ) : ServiceImpl<BlogInfoMapper, BlogInfo>(), BlogInfoService {
-    override fun getNewBlog(): List<SimpleBlogListVO>
-        {
-            val simpleBlogListVOS = ArrayList<SimpleBlogListVO>()
-            val page = Page<BlogInfo>(1, 5)
-            blogInfoMapper.selectPage(
-                page, KtQueryWrapper (BlogInfo())
+    override fun getNewBlog(): List<SimpleBlogListVO> {
+        val simpleBlogListVOS = ArrayList<SimpleBlogListVO>()
+        val page = Page<BlogInfo>(1, 5)
+        blogInfoMapper.selectPage(
+            page, KtQueryWrapper(BlogInfo())
 
-                    .eq(BlogInfo::show, ShowEnum.SHOW.status)
-                    .orderByDesc(BlogInfo::createTime)
-            )
-            for (blogInfo in page.records) {
-                val simpleBlogListVO = SimpleBlogListVO()
-                BeanUtils.copyProperties(blogInfo!!, simpleBlogListVO)
-                simpleBlogListVOS.add(simpleBlogListVO)
-            }
-            return simpleBlogListVOS
+                .eq(BlogInfo::show, ShowEnum.SHOW.status)
+                .orderByDesc(BlogInfo::createTime)
+        )
+        for (blogInfo in page.records) {
+            val simpleBlogListVO = SimpleBlogListVO()
+            BeanUtils.copyProperties(blogInfo!!, simpleBlogListVO)
+            simpleBlogListVOS.add(simpleBlogListVO)
         }
-    override fun getHotBlog(): List<SimpleBlogListVO>
-         {
-            val simpleBlogListVOS = ArrayList<SimpleBlogListVO>()
-            val page = Page<BlogInfo>(1, 5)
-            blogInfoMapper.selectPage(
-                page, KtQueryWrapper (BlogInfo())
+        return simpleBlogListVOS
+    }
 
-                    .eq(BlogInfo::show, ShowEnum.SHOW.status)
-                    .orderByDesc(BlogInfo::blogViews)
-            )
-            for (blogInfo in page.records) {
-                val simpleBlogListVO = SimpleBlogListVO()
-                BeanUtils.copyProperties(blogInfo!!, simpleBlogListVO)
-                simpleBlogListVOS.add(simpleBlogListVO)
-            }
-            return simpleBlogListVOS
+    override fun getHotBlog(): List<SimpleBlogListVO> {
+        val simpleBlogListVOS = ArrayList<SimpleBlogListVO>()
+        val page = Page<BlogInfo>(1, 5)
+        blogInfoMapper.selectPage(
+            page, KtQueryWrapper(BlogInfo())
+
+                .eq(BlogInfo::show, ShowEnum.SHOW.status)
+                .orderByDesc(BlogInfo::blogViews)
+        )
+        for (blogInfo in page.records) {
+            val simpleBlogListVO = SimpleBlogListVO()
+            BeanUtils.copyProperties(blogInfo!!, simpleBlogListVO)
+            simpleBlogListVOS.add(simpleBlogListVO)
         }
+        return simpleBlogListVOS
+    }
 
     @Transactional(rollbackFor = [Exception::class])
     override fun clearBlogInfo(blogId: String): Boolean {
         if (SqlHelper.retBool(blogInfoMapper.deleteById(blogId))) {
-            val tagRelationWrapper = KtQueryWrapper (BlogTag())
+            val tagRelationWrapper = KtQueryWrapper(BlogTag())
             tagRelationWrapper.eq(BlogTag::blogId, blogId)
             blogTagMapper.delete(tagRelationWrapper)
-            val commentWrapper = KtQueryWrapper (Comment())
+            val commentWrapper = KtQueryWrapper(Comment())
             commentWrapper.eq(Comment::blogId, blogId)
             commentMapper.delete(commentWrapper)
             return true
@@ -81,7 +80,7 @@ class BlogInfoServiceImpl(
     }
 
     override fun getViewsSum(): Int {
-         val res=  blogInfoMapper.getViews()
+        val res = blogInfoMapper.getViews()
         return res ?: 0
 
     }

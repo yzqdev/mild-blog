@@ -1,11 +1,16 @@
 package com.site.blog.controller
 
+import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.site.blog.aop.LogOperationEnum
 import com.site.blog.aop.SysLogAnnotation
 import com.site.blog.constants.HttpStatusEnum
+import com.site.blog.model.dto.AjaxPutPage
+import com.site.blog.model.dto.AjaxResultPage
 import com.site.blog.model.entity.Img
+import com.site.blog.model.entity.Tag
 import com.site.blog.service.ImgService
-import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.BaseResult
+import com.site.blog.util.BaseResult.getResultByHttp
 import com.site.blog.util.ResultDto
 import lombok.extern.slf4j.Slf4j
 import org.slf4j.LoggerFactory
@@ -24,7 +29,7 @@ import java.nio.file.Paths
 @RequestMapping("/v2/img")
 @Slf4j
 class ImgController(private val imgService: ImgService) {
-    val log =LoggerFactory.getLogger(this.javaClass)
+    val log = LoggerFactory.getLogger(this.javaClass)
 
     @PostMapping("/upload")
     @SysLogAnnotation(title = "上传图片", opType = LogOperationEnum.ADD)
@@ -38,9 +43,14 @@ class ImgController(private val imgService: ImgService) {
     }
 
     @GetMapping("/list")
-    fun listFiles(): ResultDto<Any> {
-        val imgs = imgService.list()
-        return getResultByHttp(HttpStatusEnum.OK,true, imgs)
+    fun listFiles(ajaxPutPage: AjaxPutPage<Img?>): ResultDto<Any> {
+        val page = ajaxPutPage.putPageToPage()
+        val imgs = imgService.page(page, KtQueryWrapper(Img::class.java))
+        val result = AjaxResultPage<Img?>()
+        result.list = page.records
+        result.count = page.total
+
+        return BaseResult.ok(result)
     }
 
     @DeleteMapping("/del/{id}")
@@ -50,8 +60,8 @@ class ImgController(private val imgService: ImgService) {
     )
     fun delImg(@PathVariable id: String?): ResultDto<*> {
         val img = imgService.getById(id)
-        val file = Paths.get(img?.imgPath )
-        val thumbPath = Paths.get(img?.thumbnailPath )
+        val file = Paths.get(img?.imgPath)
+        val thumbPath = Paths.get(img?.thumbnailPath)
         try {
             if (Files.exists(file)) {
                 Files.deleteIfExists(file)

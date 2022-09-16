@@ -7,7 +7,7 @@ import com.site.blog.model.dto.AjaxResultPage
 
 import com.site.blog.model.entity.SysOpLog
 import com.site.blog.service.SysOpLogService
-import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.BaseResult.getResultByHttp
 import com.site.blog.util.ResultDto
 import org.springframework.web.bind.annotation.*
 

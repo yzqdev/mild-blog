@@ -6,7 +6,7 @@ import com.site.blog.constants.HttpStatusEnum
 import com.site.blog.model.dto.AjaxResultPage
 import com.site.blog.model.entity.BlogConfig
 import com.site.blog.service.BlogConfigService
-import com.site.blog.util.Result.getResultByHttp
+import com.site.blog.util.BaseResult.getResultByHttp
 import com.site.blog.util.ResultDto
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.util.CollectionUtils
