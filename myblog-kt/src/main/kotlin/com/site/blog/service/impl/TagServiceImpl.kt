@@ -28,15 +28,15 @@ class TagServiceImpl(private val blogTagService: BlogTagService, private val tag
     ServiceImpl<TagMapper, Tag>(), TagService {
     override fun getBogTagCountForIndex(): List<BlogTagCount> {
         val queryWrapper =
-            KtQueryWrapper (Tag())
+            KtQueryWrapper(Tag())
         queryWrapper
             .eq(Tag::show, ShowEnum.SHOW.status)
         val list = baseMapper.selectList(queryWrapper)
         return list.map {
             BlogTagCount(
                 tagId = it?.tagId, tagName = it?.tagName, tagCount = blogTagService.count(
-                    KtQueryWrapper (BlogTag())
-                         .eq(BlogTag::tagId, it?.tagId)
+                    KtQueryWrapper(BlogTag())
+                        .eq(BlogTag::tagId, it?.tagId)
                 )
             )
         }
@@ -45,21 +45,22 @@ class TagServiceImpl(private val blogTagService: BlogTagService, private val tag
 
     @Transactional(rollbackFor = [Exception::class])
     override fun clearTag(tagId: String?): Int {
-        val queryWrapper = Wrappers.lambdaQuery<BlogTag>()
+        val queryWrapper = KtQueryWrapper(BlogTag::class.java)
             .eq(BlogTag::tagId, tagId)
         val blogTagList = blogTagService.list(queryWrapper)
         //如果存在不tag和blog的对应关系
         return if (blogTagList.isEmpty()) {
-            tagMapper.delete(LambdaQueryWrapper<Tag>().eq(Tag::tagId, tagId))
+            tagMapper.delete(KtQueryWrapper(Tag::class.java).eq(Tag::tagId, tagId))
         } else {
             blogTagList.forEach {
-val tagList =blogTagService.list(QueryWrapper<BlogTag>().lambda().eq(BlogTag::blogId, it?.blogId )).map { it?.tagId }
+                val tagList = blogTagService.list(KtQueryWrapper(BlogTag::class.java).eq(BlogTag::blogId, it?.blogId))
+                    .map { it?.tagId }
                 if (tagList.contains(SysConfigConstants.DEFAULT_TAG.configField)) {
                     blogTagService.removeById(it)
                 } else {
                     blogTagService.updateById(it.apply {
                         if (it != null) {
-                            it.tagId= SysConfigConstants.DEFAULT_TAG.configField
+                            it.tagId = SysConfigConstants.DEFAULT_TAG.configField
                         }
                     })
                 }

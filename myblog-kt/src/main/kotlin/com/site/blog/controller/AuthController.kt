@@ -45,17 +45,17 @@ class AuthController(
     @PostMapping(value = ["/login"])
     @ResponseBody
     fun login(
-      @RequestBody user:UserLogin,
+        @RequestBody user: UserLogin,
         session: HttpSession
     ): ResultDto<*> {
-        val (username ,password)=user
+        val (username, password) = user
         if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
-            return BaseResult.err(HttpStatusEnum.BAD_REQUEST,"请输入账号密码")
+            return BaseResult.err(HttpStatusEnum.BAD_REQUEST, "请输入账号密码")
         }
-        val queryWrapper: QueryWrapper<AdminUser > = QueryWrapper<AdminUser>(
-           AdminUser(username=username, password = MD5Encode(password, "UTF-8"))
-        )
-        Console.log(username,password)
+        val queryWrapper= KtQueryWrapper(AdminUser::class.java).eq(AdminUser::username,username).eq(AdminUser::password, MD5Encode(password, "UTF-8"))
+
+
+        Console.log(username, password)
         val adminUser = adminUserService.getOne(queryWrapper)
         return if (adminUser != null) {
             if (!adminUser.locked!!) {
@@ -74,7 +74,7 @@ class AuthController(
                 getResultByHttp(HttpStatusEnum.UNAUTHORIZED, false, "账户已被冻结")
             }
         } else {
-            getResultByHttp(HttpStatusEnum.UNAUTHORIZED,false,"用户不存在")
+            getResultByHttp(HttpStatusEnum.UNAUTHORIZED, false, "用户不存在")
         }
     }
 
@@ -85,15 +85,17 @@ class AuthController(
     @ResponseBody
     fun register(username: String?, password: String?): ResultDto<String> {
         if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
-            return BaseResult.err(HttpStatusEnum.BAD_REQUEST,"请填写用户名密码")
+            return BaseResult.err(HttpStatusEnum.BAD_REQUEST, "请填写用户名密码")
         }
-        val queryWrapper = KtQueryWrapper (AdminUser::class.java).eq(AdminUser::username, username)
+        val queryWrapper = KtQueryWrapper(AdminUser::class.java).eq(AdminUser::username, username)
         val adminUser = adminUserService.getOne(queryWrapper)
         return if (adminUser != null) {
             getResultByHttp(HttpStatusEnum.BAD_REQUEST, false, "用户名已存在")
         } else {
-            val regUser = AdminUser(username=username,password=password,
-                uuid=UUID.fastUUID().toString(),locked=true,role=0, )
+            val regUser = AdminUser(
+                username = username, password = password,
+                uuid = UUID.fastUUID().toString(), locked = true, role = 0,
+            )
             adminUserService.register(regUser)
             getResultByHttp(HttpStatusEnum.OK, true, "注册成功")
         }

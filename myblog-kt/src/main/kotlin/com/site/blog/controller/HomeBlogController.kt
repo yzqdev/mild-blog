@@ -217,7 +217,7 @@ class HomeBlogController(
     @GetMapping("/categories")
     fun cate(): ResultDto<*>
         {
-            val queryWrapper = KtQueryWrapper (Category())
+            val queryWrapper = KtQueryWrapper (Category::class.java)
             queryWrapper. eq(Category::show, ShowEnum.SHOW.status).orderByDesc(Category::createTime)
             val list = categoryService.list(queryWrapper)
             if (CollectionUtils.isEmpty(list)) {

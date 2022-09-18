@@ -102,7 +102,7 @@ class CommentController(private val commentService: CommentService, private val 
         comment.commentBody = StringEscapeUtils.escapeHtml4(comment.commentBody)
         val flag = commentService.updateById(comment)
         return if (flag) {
-            getResultByHttp(HttpStatusEnum.OK)
+            BaseResult.ok("编辑成功")
         } else {
             getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR)
         }
