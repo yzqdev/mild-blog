@@ -22,6 +22,7 @@
       </template>
     </el-table-column>
   </el-table>
+
   <el-dialog width="30%" v-model="showParamVisible" title="显示参数">
     <el-input type="textarea" v-model="dialogParam" :autosize="{ minRows: 2 }"></el-input>
   </el-dialog>

@@ -2,6 +2,6 @@
   "semi": false,
   "singleQuote": true,
   "printWidth": 600,
-  "htmlWhitespaceSensitivity": "ignore"
-
+  "htmlWhitespaceSensitivity": "ignore",
+  "tabWidth": 2
 }

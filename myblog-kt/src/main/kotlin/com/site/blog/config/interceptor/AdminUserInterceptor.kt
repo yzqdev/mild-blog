@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse
 
 @Component
 class AdminUserInterceptor : HandlerInterceptor {
-    val log = LoggerFactory.getLogger(this.javaClass)
+    val log  = LoggerFactory.getLogger(this.javaClass)
 
     @Throws(Exception::class)
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {

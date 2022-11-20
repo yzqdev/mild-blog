@@ -33,11 +33,11 @@ dependencies {
     // https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter
     implementation("com.baomidou:mybatis-plus-boot-starter:3.5.2")
     implementation("io.pebbletemplates:pebble-spring-boot-starter:3.1.5")
-    implementation("org.springdoc:springdoc-openapi-ui:1.6.11")
+    implementation("org.springdoc:springdoc-openapi-ui:1.6.12")
     // https://mvnrepository.com/artifact/cn.hutool/hutool-all
-    implementation("cn.hutool:hutool-all:5.8.8")
+    implementation("cn.hutool:hutool-all:5.8.10")
 // https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter
-    implementation("com.alibaba:druid-spring-boot-starter:1.2.11")
+    implementation("com.alibaba:druid-spring-boot-starter:1.2.15")
 // https://mvnrepository.com/artifact/net.coobird/thumbnailator
     implementation("net.coobird:thumbnailator:0.4.17")
 // https://mvnrepository.com/artifact/org.apache.commons/commons-text
