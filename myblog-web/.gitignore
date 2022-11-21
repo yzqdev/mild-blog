@@ -4,7 +4,7 @@ myblog
 *.local
 package-lock.json
 yarn.lock
-
+config.json
 .idea
 *.zip
 package-lock.json
