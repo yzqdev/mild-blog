@@ -1,6 +1,7 @@
 package com.site.blog.aop
 
 import com.site.blog.service.BlogConfigService
+import jakarta.annotation.Resource
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.AfterReturning
 import org.aspectj.lang.annotation.Aspect
@@ -12,7 +13,7 @@ import org.springframework.core.annotation.Order
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 import java.util.*
-import javax.annotation.Resource
+
 
 /**
  * @author yanni

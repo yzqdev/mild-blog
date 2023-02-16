@@ -6,8 +6,8 @@ import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor
 import org.springframework.web.servlet.ModelAndView
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 
 /**
  * @Author: Yangzhengqian
@@ -32,7 +32,7 @@ class CorsInterceptor : HandlerInterceptor {
             "Origin, X-Requested-With, token, Content-Type, Accept, version"
         )
         //浏览器会先发送一个试探请求OPTIONS,然后才会发送真正的请求，为了避免拦截器拦截两次请求，所以不能让OPTIONS请求通过
-        if (request.method == HttpMethod.OPTIONS.name) {
+        if (request.method == HttpMethod.OPTIONS.name()) {
             response.status = HttpServletResponse.SC_OK
             return false
         }

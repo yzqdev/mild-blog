@@ -4,8 +4,8 @@ import cn.hutool.json.JSONUtil
 import org.aspectj.lang.JoinPoint
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 
 /**
  * Spring切面工具类

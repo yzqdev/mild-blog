@@ -5,9 +5,9 @@ import cn.hutool.log.LogFactory
 import org.springframework.stereotype.Component
 import java.io.IOException
 import java.util.concurrent.CopyOnWriteArraySet
-import javax.websocket.*
-import javax.websocket.server.PathParam
-import javax.websocket.server.ServerEndpoint
+import jakarta.websocket.*
+import jakarta.websocket.server.PathParam
+import jakarta.websocket.server.ServerEndpoint
 
 @ServerEndpoint("/socket/{sid}")
 @Component

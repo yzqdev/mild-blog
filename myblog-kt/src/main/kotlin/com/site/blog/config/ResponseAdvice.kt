@@ -4,6 +4,7 @@ import com.site.blog.constants.HttpStatusEnum
 import com.site.blog.exception.ResultException
 import com.site.blog.util.BaseResult.getResultByHttp
 import com.site.blog.util.ResultDto
+import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import javax.servlet.http.HttpServletRequest
 
 /**
  * @author yanni

@@ -5,10 +5,10 @@
  */
 
 plugins {
-    id("org.springframework.boot") version "2.7.3"
-    id("io.spring.dependency-management") version "1.0.13.RELEASE"
-    kotlin("jvm") version "1.7.10"
-    kotlin("plugin.spring") version "1.7.10"
+    id("org.springframework.boot") version "2.7.8"
+    id("io.spring.dependency-management") version "1.1.0"
+    kotlin("jvm") version "1.8.10"
+    kotlin("plugin.spring") version "1.8.10"
 }
 
 group = "com.site.blog"
@@ -18,7 +18,7 @@ java.sourceCompatibility = JavaVersion.VERSION_17
 
 
 dependencies {
-    implementation("org.springdoc:springdoc-openapi-ui:1.6.9")
+    implementation("org.springdoc:springdoc-openapi-ui:1.6.10")
     implementation("com.auth0:java-jwt:4.0.0")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")

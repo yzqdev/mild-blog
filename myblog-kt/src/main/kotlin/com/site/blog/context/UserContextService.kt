@@ -7,7 +7,7 @@ import com.site.blog.util.JwtUtil.getUserId
 import com.site.blog.util.RequestHelper.getRequestHeader
 import org.springframework.beans.BeanUtils
 import org.springframework.stereotype.Service
-import javax.annotation.Resource
+import jakarta.annotation.Resource
 
 /**
  * @author yanni

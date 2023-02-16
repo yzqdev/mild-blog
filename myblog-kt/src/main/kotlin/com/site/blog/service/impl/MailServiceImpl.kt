@@ -4,12 +4,12 @@ import cn.hutool.core.lang.Console
 import cn.hutool.core.util.HexUtil
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
-import com.mitchellbosecke.pebble.PebbleEngine
 import com.site.blog.context.ConfigContextHolder.domain
 import com.site.blog.context.ConfigContextHolder.websiteName
 import com.site.blog.mapper.EmailMapper
 import com.site.blog.model.entity.EmailConfig
 import com.site.blog.service.MailService
+import io.pebbletemplates.pebble.PebbleEngine
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.FileSystemResource
@@ -22,9 +22,9 @@ import java.io.IOException
 import java.io.StringWriter
 import java.io.Writer
 import java.util.*
-import javax.annotation.Resource
-import javax.mail.*
-import javax.mail.internet.MimeMessage
+import jakarta.annotation.Resource
+import jakarta.mail.*
+import jakarta.mail.internet.MimeMessage
 
 @Service
 class MailServiceImpl : ServiceImpl<EmailMapper?, EmailConfig?>(), MailService {
@@ -199,7 +199,7 @@ class MailServiceImpl : ServiceImpl<EmailMapper?, EmailConfig?>(), MailService {
             p.setProperty("mail.smtp.host", emailConfig!!.emailUrl)
             p.setProperty("mail.smtp.port", emailConfig.port)
             p.setProperty("mail.smtp.socketFactory.port", emailConfig.port)
-            p.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory")
+            p.setProperty("mail.smtp.socketFactory.class", "jakarta.net.ssl.SSLSocketFactory")
             val session = Session.getInstance(p, object : Authenticator() {
                 // 设置认证账户信息
                 override fun getPasswordAuthentication(): PasswordAuthentication {

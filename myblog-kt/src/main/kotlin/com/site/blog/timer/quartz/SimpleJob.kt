@@ -5,7 +5,7 @@ import com.site.blog.util.ColorUtil.Companion.green
 import lombok.extern.slf4j.Slf4j
 import org.quartz.JobExecutionContext
 import org.springframework.scheduling.quartz.QuartzJobBean
-import javax.annotation.Resource
+import jakarta.annotation.Resource
 
 @Slf4j
 class SimpleJob : QuartzJobBean() {

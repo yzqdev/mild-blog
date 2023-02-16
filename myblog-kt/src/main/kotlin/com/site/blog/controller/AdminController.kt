@@ -18,8 +18,8 @@ import org.springframework.beans.BeanUtils
 import org.springframework.web.bind.annotation.*
 import java.lang.Boolean
 import java.util.function.Consumer
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpSession
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpSession
 import kotlin.Any
 import kotlin.Exception
 import kotlin.String

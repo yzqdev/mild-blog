@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.7.4"
-    id("io.spring.dependency-management") version "1.0.14.RELEASE"
-    kotlin("jvm") version "1.7.20"
-    kotlin("plugin.spring") version "1.7.20"
+    id("org.springframework.boot") version "3.0.2"
+    id("io.spring.dependency-management") version "1.1.0"
+    kotlin("jvm") version "1.8.10"
+    kotlin("plugin.spring") version "1.8.10"
 }
 
 group = "com.site.blog"
@@ -29,13 +29,13 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-quartz")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
     // https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter
-    implementation("com.baomidou:mybatis-plus-boot-starter:3.5.2")
-    implementation("io.pebbletemplates:pebble-spring-boot-starter:3.1.5")
-    implementation("org.springdoc:springdoc-openapi-ui:1.6.12")
+    implementation("com.baomidou:mybatis-plus-boot-starter:3.5.3.1")
+    implementation("io.pebbletemplates:pebble-spring-boot-starter:3.2.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
     // https://mvnrepository.com/artifact/cn.hutool/hutool-all
-    implementation("cn.hutool:hutool-all:5.8.10")
+    implementation("cn.hutool:hutool-all:5.8.12")
 // https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter
     implementation("com.alibaba:druid-spring-boot-starter:1.2.15")
 // https://mvnrepository.com/artifact/net.coobird/thumbnailator
@@ -45,10 +45,10 @@ dependencies {
 // https://mvnrepository.com/artifact/com.freewayso/image-combiner
     implementation("com.freewayso:image-combiner:2.3.7")
 // https://mvnrepository.com/artifact/com.dtflys.forest/forest-spring-boot-starter
-    implementation("com.dtflys.forest:forest-spring-boot-starter:1.5.26")
+    implementation("com.dtflys.forest:forest-spring-boot-starter:1.5.28")
 
 
-    implementation("com.auth0:java-jwt:4.0.0")
+    implementation("com.auth0:java-jwt:4.3.0")
 
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")

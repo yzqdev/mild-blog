@@ -17,7 +17,7 @@ import org.springframework.util.CollectionUtils
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
 import java.util.*
-import javax.annotation.Resource
+import jakarta.annotation.Resource
 
 @Slf4j
 @RestController
