@@ -158,13 +158,13 @@ class HomeBlogController(
         val page = Page<BlogInfo>(
             pageDto.pageNum!!.toLong(), pageDto.pageSize!!.toLong()
         )
-        val sqlWrapper = Wrappers.lambdaQuery<BlogInfo>()
+        val sqlWrapper = KtQueryWrapper(BlogInfo())
             .eq(BlogInfo::show, ShowEnum.SHOW.status).eq(BlogInfo::deleted, false)
         //获取tag下的文章
         if (Objects.nonNull(categoryId)) {
             val list = blogCategoryService.list(
-                QueryWrapper<BlogCategory>()
-                    .lambda().eq(BlogCategory::categoryId, categoryId)
+                KtQueryWrapper (BlogCategory())
+                     .eq(BlogCategory::categoryId, categoryId)
             )
             if (!CollectionUtils.isEmpty(list)) {
                 sqlWrapper.`in`(BlogInfo::blogId, list.map{ it?.blogId } )
@@ -192,8 +192,8 @@ class HomeBlogController(
             val ipage = Page<BlogInfo>(
                 pageNum!!.toLong(), pageSize!!.toLong()
             )
-            val queryWrapper = QueryWrapper<BlogInfo>()
-            queryWrapper.lambda().like(BlogInfo::blogTitle, keyword).or().like(BlogInfo::blogContent, keyword)
+            val queryWrapper = KtQueryWrapper (BlogInfo())
+            queryWrapper .like(BlogInfo::blogTitle, keyword).or().like(BlogInfo::blogContent, keyword)
             val blogInfos = blogInfoService.page(ipage, queryWrapper)
             return getResultByHttp(HttpStatusEnum.OK, toBlogVo(blogInfos))
         } catch (e: Exception) {

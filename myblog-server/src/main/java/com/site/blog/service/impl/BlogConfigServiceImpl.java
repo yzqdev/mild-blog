@@ -29,7 +29,7 @@ public class BlogConfigServiceImpl extends ServiceImpl<BlogConfigMapper, BlogCon
     public Map<String, String> getAllConfigs() {
         List<BlogConfig> list = blogConfigMapper.selectList(null);
         return list.stream().collect(Collectors.toMap(
-                BlogConfig::getCode,BlogConfig::getValue
+                BlogConfig::getConfigCode,BlogConfig::getConfigValue
         ));
     }
 }

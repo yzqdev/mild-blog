@@ -1,6 +1,6 @@
 package com.site.blog;
 
-import com.dtflys.forest.springboot.annotation.ForestScan;
+//import com.dtflys.forest.springboot.annotation.ForestScan;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,7 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @MapperScan("com.site.blog.mapper")
 @SpringBootApplication
-@ForestScan(basePackages = "com.site.blog.client")
+//@ForestScan(basePackages = "com.site.blog.client")
 public class BlogApp {
     public static void main(String[] args) {
         SpringApplication.run(BlogApp.class, args);

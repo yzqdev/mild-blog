@@ -2,9 +2,9 @@ package com.site.blog.ws;
 
 import cn.hutool.json.JSONUtil;
 import org.springframework.stereotype.Component;
-import javax.websocket.*;
-import javax.websocket.server.PathParam;
-import javax.websocket.server.ServerEndpoint;
+import jakarta.websocket.*;
+import jakarta.websocket.server.PathParam;
+import jakarta.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;
 import cn.hutool.log.Log;

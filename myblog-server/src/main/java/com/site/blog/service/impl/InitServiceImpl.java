@@ -34,7 +34,7 @@ public class InitServiceImpl implements InitService {
 
     @Override
     public void initDatabase() {
-        boolean flag = blogConfigMapper.exists(new LambdaQueryWrapper<BlogConfig>().eq(BlogConfig::getCode, "init"));
+        boolean flag = blogConfigMapper.exists(new LambdaQueryWrapper<BlogConfig>().eq(BlogConfig::getConfigCode, "init"));
         if (!flag) {
             jdbcTemplate.execute(SqlConstant.initAdminSql);
             jdbcTemplate.execute(SqlConstant.initTagSql);
@@ -50,7 +50,7 @@ public class InitServiceImpl implements InitService {
 
     @Override
     public void initUseEntity() {
-        boolean flag = blogConfigMapper.exists(new LambdaQueryWrapper<BlogConfig>().eq(BlogConfig::getCode, "init"));
+        boolean flag = blogConfigMapper.exists(new LambdaQueryWrapper<BlogConfig>().eq(BlogConfig::getConfigCode, "init"));
         if (!flag) {
 
             adminUserMapper.insert(AdminUser.builder().id("myid").username("admin").password("e10adc3949ba59abbe56e057f20f883e").nickname("管理员").locked(false).role(1).avatar("https://img-static.mihoyo.com/communityweb/upload/222b847170feb3f2babcc1bd4f0e30dd.png").build());

@@ -1,7 +1,6 @@
 package com.site.blog.model.entity;
 
 import java.io.Serial;
-import java.sql.Timestamp;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -35,19 +34,19 @@ private String id;
      * 字段名
      */
 
-    private String code;
+    private String configCode;
 
     /**
      * 配置名
      */
 
-    private String name;
+    private String configName;
 
     /**
      * 配置项的值
      */
 
-    private String value;
+    private String configValue;
 
     /**
      * 创建时间

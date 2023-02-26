@@ -1,6 +1,6 @@
 package com.site.blog.controller;
 
-import com.site.blog.client.MyClient;
+//import com.site.blog.client.MyClient;
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.model.dto.Result;
 import com.site.blog.util.ResultGenerator;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @author yanni
@@ -18,14 +18,14 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/v2/client")
 public class ClientController {
-    @Resource
-    private MyClient myClient;
-
-    @GetMapping("/home")
-    public Result getMihoyoHome() {
-       var result = myClient.helloForest();
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, result);
-    }
+    //@Resource
+    //private MyClient myClient;
+    //
+    //@GetMapping("/home")
+    //public Result getMihoyoHome() {
+    //   var result = myClient.helloForest();
+    //    return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, result);
+    //}
 
 
 }

@@ -8,7 +8,7 @@ import com.site.blog.util.RequestHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @author yanni

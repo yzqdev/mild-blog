@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+            background-color: transparent;
+        }
+        li {
+            list-style: none;
+        }
+        body {
+            font-size: 14px;
+            color: #494949;
+            overflow: auto;
+        }
+        .wrap-bg circle,
+        .wrap-bg rect {
+            stroke-width: 0;
+            -ms-transform: rotate(30deg) scale(1.1);
+            transform: rotate(30deg) scale(1.1);
+            -ms-transform-origin: center;
+            transform-origin: center;
+        }
+        .wrap {
+            position: relative;
+            min-height: 580px;
+        }
+        .wrap .main {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: 2;
+            width: 970px;
+            background: #effbff;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
+        }
+        .wrap .main .main-content {
+            padding: 40px;
+            border: 1px solid #c4dce5;
+            background: #f4fcff;
+        }
+        .wrap .main .main-content p {
+            font-size: 20px;
+            text-align: center;
+        }
+        .wrap .main .main-content .link a {
+            font-size: 30px;
+            transition: all 0.3s;
+        }
+        .wrap .main .main-content .link a:hover {
+            text-decoration: underline;
+            color: #2c7ce3;
+        }
+        .wrap .main .main-content h3 {
+            padding: 50px 0;
+            font-weight: 400;
+            text-align: center;
+        }
+        .wrap .main .main-content h3 span {
+            position: relative;
+            display: inline-block;
+            font-size: 60px;
+            color: #2c7ce3;
+        }
+        .wrap .main .main-content h3 span::after {
+            content: '';
+            position: absolute;
+            top: 32px;
+            left: -80px;
+            display: block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ded9ff, #2c7ce3);
+            opacity: 0.2;
+        }
+        .wrap .main .main-content h3 span:before {
+            content: '';
+            position: absolute;
+            top: 48px;
+            left: -36px;
+            display: block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ded9ff, #2c7ce3);
+            opacity: 0.2;
+        }
+        .wrap .main .main-content h3 span i:before {
+            content: '';
+            position: absolute;
+            top: 32px;
+            right: -72px;
+            display: block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ded9ff, #2c7ce3);
+            opacity: 0.2;
+        }
+        .wrap .main .main-content h3 span i:after {
+            content: '';
+            position: absolute;
+            top: 48px;
+            right: -40px;
+            display: block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ded9ff, #2c7ce3);
+            opacity: 0.2;
+        }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/less@4.1.1"></script>
+    <title></title>
+</head>
+<body>
+<div class="wrap">
+    <div class="main">
+        <div class="main-content">
+            <h3><span>亲爱的<b>{{ username }}</b>, 欢迎加入 {{webname}} !<i></i></span></h3>
+            <p>您离正常登录只有一步之遥啦。</p>
+            <p>请点击一下链接验证并激活账号: </p>
+            <p class="link"><a href='{{url}}'>{{url}}</a></p>
+            <p>如果您的 email 程序不支持链接点击，请将上面的地址拷贝至您的浏览器(如IE)的地址栏进入。</p>
+            <p>若非本人操作，请勿理会!</p>
+            <p>希望您在 {{webname}} 系统度过快乐的时光!</p>
+            <p></p>
+            <p>-----------------------</p>
+            <p></p>
+            <p>(这是一封自动产生的email，请勿回复。)</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

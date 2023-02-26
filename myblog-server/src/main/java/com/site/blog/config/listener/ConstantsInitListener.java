@@ -37,7 +37,7 @@ public class ConstantsInitListener implements ApplicationListener<ApplicationCon
 
     private static final Log log = Log.get();
 
-    private static final String initSql = "select code,value from  blog_config  ";
+    private static final String initSql = "select config_code,config_value from  blog_config  ";
 
     @Override
     public int getOrder() {

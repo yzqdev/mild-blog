@@ -4,12 +4,14 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.HexUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.mitchellbosecke.pebble.PebbleEngine;
-import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.site.blog.context.ConfigContextHolder;
 import com.site.blog.mapper.EmailMapper;
 import com.site.blog.model.entity.EmailConfig;
 import com.site.blog.service.MailService;
+import io.pebbletemplates.pebble.PebbleEngine;
+import io.pebbletemplates.pebble.template.PebbleTemplate;
+import jakarta.mail.*;
+import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,9 +22,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 
-import javax.annotation.Resource;
-import javax.mail.*;
-import javax.mail.internet.MimeMessage;
+import jakarta.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -101,7 +101,7 @@ public class MailServiceImpl extends ServiceImpl<EmailMapper, EmailConfig> imple
         p.setProperty("mail.smtp.host", emailConfig.getEmailUrl());
         p.setProperty("mail.smtp.port", emailConfig.getPort());
         p.setProperty("mail.smtp.socketFactory.port", emailConfig.getPort());
-        p.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        p.setProperty("mail.smtp.socketFactory.class", "jakarta.net.ssl.SSLSocketFactory");
 
         Session session = Session.getInstance(p, new Authenticator() {
             // 设置认证账户信息

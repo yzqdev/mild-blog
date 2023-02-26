@@ -17,8 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -75,8 +75,8 @@ public class AdminController {
     public  Result editUser(UserVo userVo){
         AdminUser sqlUser=adminUserService.getAdminUserById(userVo.getId());
         BeanUtils.copyProperties(userVo,sqlUser);
-        var conf=blogConfigService.getOne(new LambdaQueryWrapper<BlogConfig>().eq(BlogConfig::getCode,"sysAuthorImg"));
-        conf.setValue(userVo.getAvatar());
+        var conf=blogConfigService.getOne(new LambdaQueryWrapper<BlogConfig>().eq(BlogConfig::getConfigCode,"sysAuthorImg"));
+        conf.setConfigValue(userVo.getAvatar());
         blogConfigService.updateById(conf);
         adminUserService.updateUserInfo(sqlUser);
 

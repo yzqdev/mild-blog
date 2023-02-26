@@ -10,6 +10,8 @@ import com.site.blog.service.BlogConfigService;
 import com.site.blog.service.SysOpLogService;
 import com.site.blog.util.JoinPointUtil;
 import com.site.blog.util.RequestHelper;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -18,8 +20,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -68,9 +68,9 @@ public class SysLogAspect {
         sysOpLog.setOpTime(LocalDateTime.now());
         sysOpLog.setAccount(UserContextHolder.me().getUser().getUuid());
 
-        BlogConfig sqlBlogConfig = blogConfigService.getOne(new LambdaQueryWrapper<BlogConfig>().eq(BlogConfig::getCode, "sysUpdateTime"));
+        BlogConfig sqlBlogConfig = blogConfigService.getOne(new LambdaQueryWrapper<BlogConfig>().eq(BlogConfig::getConfigCode, "sysUpdateTime"));
 
-        sqlBlogConfig.setValue(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        sqlBlogConfig.setConfigValue(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         sysOpLogService.save(sysOpLog);
         blogConfigService.updateById(sqlBlogConfig);
         Console.log("更新系统修改日期");

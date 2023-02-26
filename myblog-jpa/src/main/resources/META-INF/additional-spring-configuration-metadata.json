@@ -1,0 +1,18 @@
+{
+  "properties": [
+    {
+      "name": "myblog.upload.file-url",
+      "type": "java.lang.String",
+      "description": "Description for myblog.upload.file-url."
+    },
+    {
+      "name": "myblog.upload.pic-url",
+      "type": "java.lang.String",
+      "description": "Description for myblog.upload.pic-url."
+    },
+    {
+      "name": "myblog.upload.avatar",
+      "type": "java.lang.String",
+      "description": "Description for myblog.upload.avatar."
+    }
+  ] }

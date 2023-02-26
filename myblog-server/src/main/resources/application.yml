@@ -25,7 +25,7 @@ spring:
       mail:
         smtp:
           socketFactory:
-            class: javax.net.ssl.SSLSocketFactory
+            class: jakarta.net.ssl.SSLSocketFactory
           auth: true
           timeout: 20000
           host: smtp.qq.com

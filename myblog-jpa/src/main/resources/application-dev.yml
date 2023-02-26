@@ -1,0 +1,65 @@
+
+server:
+  compression:
+    enabled: false
+    
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    
+    druid:
+      filter:
+        slf4j:
+          connection-log-enabled: false
+          data-source-log-enabled: false
+          enabled: true
+          result-set-log-enabled: false
+          statement-log-enabled: false
+        stat:
+          enabled: true
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          
+        wall:
+          config:
+            delete-where-none-check: true
+          enabled: true
+          log-violation: true
+          throw-exception: false
+      initialSize: 1
+      maxActive: 20
+      maxOpenPreparedStatements: 20
+      maxWait: 60000
+      minEvictableIdleTimeMillis: 300000
+      minIdle: 1
+      poolPreparedStatements: false
+      stat-view-servlet:
+        enabled: true
+        login-password: z1320291471
+        login-username: admin
+      testOnBorrow: false
+      testOnReturn: false
+      testWhileIdle: true
+      timeBetweenEvictionRunsMillis: 60000
+      validationQuery: select 'x'
+      web-stat-filter:
+        enabled: true
+        exclusions: /druid/*,*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico
+        url-pattern: /*
+    name: myBlog
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:postgresql://localhost:5432/my_blog_dbdev?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false
+
+    username: postgres
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+management:
+  endpoints:
+    web:
+      base-path: /actuator #配置端点访问前缀
+      exposure:
+        include: '*' #暴露所有端点
