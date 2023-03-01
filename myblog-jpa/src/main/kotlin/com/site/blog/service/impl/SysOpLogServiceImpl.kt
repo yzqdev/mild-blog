@@ -12,4 +12,8 @@ import org.springframework.stereotype.Service
  * @modified By:
  */
 @Service
-class SysOpLogServiceImpl : SysOpLogService
+class SysOpLogServiceImpl(private val sysOpLogMapper: SysOpLogMapper) : SysOpLogService {
+    override fun removeAll() {
+       sysOpLogMapper.deleteAll()
+    }
+}

@@ -123,6 +123,13 @@ class ImgServiceImpl(private val uploadProperty: UploadProperty, private val img
 
     override fun deleteImage(fileName: String) {}
     override fun createDirectory(path: String) {}
+    override fun getById(id: Long): Img {
+        return imgMapper.getReferenceById(id)
+    }
+
+    override fun removeById(id: Long) {
+       imgMapper.deleteById(id)
+    }
 
     companion object {
         /**

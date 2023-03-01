@@ -8,4 +8,6 @@ import com.site.blog.model.entity.SysOpLog
  * @date time 2022/6/16 2:09
  * @modified By:
  */
-interface SysOpLogService 
+interface SysOpLogService {
+    fun removeAll()
+}

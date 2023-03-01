@@ -45,4 +45,5 @@ interface BlogInfoService  {
      * @return [Integer]
      */
     fun getViewsSum(): Int
+    fun count():Int
 }

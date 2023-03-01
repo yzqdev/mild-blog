@@ -13,4 +13,6 @@ interface ImgService  {
     fun uploadImage(file: MultipartFile): Img
     fun deleteImage(fileName: String)
     fun createDirectory(path: String)
+   fun getById(id: Long): Img
+    fun removeById(id: Long)
 }

@@ -23,7 +23,7 @@ object MD5Utils {
     }
 
     @JvmStatic
-    fun MD5Encode(origin: String?, charsetname: String?): String? {
+    fun MD5Encode(origin: String, charsetname: String): String {
         var resultString: String? = null
         try {
             resultString = origin

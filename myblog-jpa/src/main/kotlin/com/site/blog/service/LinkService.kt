@@ -10,4 +10,7 @@ import com.site.blog.model.entity.Link
  *
  *
  */
-interface LinkService 
+interface LinkService {
+      fun removeById(linkId: Long)
+      fun save(link: Link)
+}

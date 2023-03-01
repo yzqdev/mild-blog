@@ -1,10 +1,6 @@
 package com.site.blog.service.impl
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
-import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 
-import com.baomidou.mybatisplus.extension.toolkit.SqlHelper
 import com.site.blog.constants.ShowEnum
 import com.site.blog.mapper.BlogInfoMapper
 import com.site.blog.mapper.BlogTagMapper
@@ -83,5 +79,9 @@ class BlogInfoServiceImpl(
         val res = blogInfoMapper.getViews()
         return res ?: 0
 
+    }
+
+    override fun count(): Int {
+        return blogInfoMapper.count()
     }
 }

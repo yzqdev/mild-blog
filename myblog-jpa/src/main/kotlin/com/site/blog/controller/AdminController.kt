@@ -1,6 +1,5 @@
 package com.site.blog.controller
 
-import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.site.blog.constants.BaseConstants
 import com.site.blog.constants.HttpStatusEnum
 import com.site.blog.constants.SessionConstants
@@ -43,7 +42,7 @@ class AdminController(
     private val linkService: LinkService
 ) {
     @PostMapping("/del/{id}")
-    fun removeUser(@PathVariable("id") id: String?): ResultDto<*> {
+    fun removeUser(@PathVariable("id") id: Long): ResultDto<*> {
         return if (id == null) {
             getResultByHttp(HttpStatusEnum.BAD_REQUEST,false, "请输入id")
         } else {
@@ -68,7 +67,7 @@ class AdminController(
     fun editUser(userVo: UserVo): ResultDto<*> {
         val sqlUser = adminUserService.getAdminUserById(userVo.id)
         BeanUtils.copyProperties(userVo, sqlUser!!)
-        val conf = blogConfigService.getOne(KtQueryWrapper(BlogConfig::class.java).eq(BlogConfig::configCode, "sysAuthorImg"))
+        var conf = blogConfigService.getOne(KtQueryWrapper(BlogConfig::class.java).eq(BlogConfig::configCode, "sysAuthorImg"))
         conf!!.configValue = userVo.avatar
         blogConfigService.updateById(conf)
         adminUserService.updateUserInfo(sqlUser)

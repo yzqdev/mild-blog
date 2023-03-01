@@ -11,14 +11,18 @@ import com.site.blog.model.entity.AdminUser
  *
  */
 interface AdminUserService  {
-    fun validatePassword(userId: Long, oldPwd: String): Boolean
-    fun updateUserInfo(adminUser: AdminUser): Boolean
-    fun register(user: AdminUser): Int
+    fun validatePassword(userId: String, oldPwd: String): Boolean
+    fun updateUserInfo(adminUser: AdminUser): AdminUser
+    fun register(user: AdminUser): AdminUser
 
     /**
      * 根据adminuserid获取用户
      * @param id
      * @return
      */
-    fun getAdminUserById(id: String): AdminUser
+    fun getAdminUserById(id: Long): AdminUser
+    fun removeById(id: Long): Any
+      fun updateById(user: AdminUser)
+
+
 }

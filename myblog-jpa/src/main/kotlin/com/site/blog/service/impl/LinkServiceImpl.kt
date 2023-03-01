@@ -14,4 +14,12 @@ import org.springframework.stereotype.Service
  *
  */
 @Service
-class LinkServiceImpl :  LinkService
+class LinkServiceImpl(private val linkMapper: LinkMapper) :  LinkService {
+    override fun removeById(linkId: Long) {
+        linkMapper.deleteById(linkId)
+    }
+
+    override fun save(link: Link) {
+        linkMapper.save(link)
+    }
+}

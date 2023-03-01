@@ -1,6 +1,5 @@
 package com.site.blog.controller
 
-import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.site.blog.aop.LogOperationEnum
 import com.site.blog.aop.SysLogAnnotation
 import com.site.blog.constants.HttpStatusEnum
@@ -33,7 +32,7 @@ class ImgController(private val imgService: ImgService) {
 
     @PostMapping("/upload")
     @SysLogAnnotation(title = "上传图片", opType = LogOperationEnum.ADD)
-    fun uploadFileByEditor(@RequestParam(name = "img") file: MultipartFile?): ResultDto<*> {
+    fun uploadFileByEditor(@RequestParam(name = "img") file: MultipartFile): ResultDto<*> {
         val result: MutableMap<String, Any?> = HashMap()
         val img = imgService.uploadImage(file)
         result["message"] = "上传成功"
@@ -43,7 +42,7 @@ class ImgController(private val imgService: ImgService) {
     }
 
     @GetMapping("/list")
-    fun listFiles(ajaxPutPage: AjaxPutPage<Img?>): ResultDto<Any> {
+    fun listFiles(ajaxPutPage: AjaxPutPage<Img>): ResultDto<Any> {
         val page = ajaxPutPage.putPageToPage()
         val imgs = imgService.page(page, KtQueryWrapper(Img::class.java))
         val result = AjaxResultPage<Img?>()
@@ -58,10 +57,10 @@ class ImgController(private val imgService: ImgService) {
     @Throws(
         IOException::class
     )
-    fun delImg(@PathVariable id: String?): ResultDto<*> {
+    fun delImg(@PathVariable id: Long): ResultDto<*> {
         val img = imgService.getById(id)
-        val file = Paths.get(img?.imgPath)
-        val thumbPath = Paths.get(img?.thumbnailPath)
+        val file = Paths.get(img.imgPath)
+        val thumbPath = Paths.get(img.thumbnailPath)
         try {
             if (Files.exists(file)) {
                 Files.deleteIfExists(file)
@@ -74,10 +73,9 @@ class ImgController(private val imgService: ImgService) {
         } catch (e: Exception) {
             throw IOException(e.message)
         }
-        val flag = imgService.removeById(id)
+          imgService.removeById(id)
 
-        return if (flag) {
-            getResultByHttp(HttpStatusEnum.OK, img)
-        } else getResultByHttp<Any?>(HttpStatusEnum.OK, null)
+        return  getResultByHttp(HttpStatusEnum.OK, img)
+
     }
 }

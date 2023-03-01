@@ -14,4 +14,8 @@ import org.springframework.stereotype.Service
  *
  */
 @Service
-class CommentServiceImpl : ServiceImpl<CommentMapper?, Comment?>(), CommentService
+class CommentServiceImpl(private val commentMapper: CommentMapper) :   CommentService{
+    override fun count(): Long {
+        return  commentMapper.count()
+    }
+}

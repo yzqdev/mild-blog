@@ -14,4 +14,7 @@ import org.springframework.stereotype.Repository
  * @since 2019-08-25
  */
 @Repository
-interface AdminUserMapper : JpaRepository<AdminUser,Long>
+interface AdminUserMapper : JpaRepository<AdminUser, Long> {
+    fun findAdminUserByUsernameAndPassword(username: String, password: String);
+    fun findAdminUserById(id: Long): AdminUser
+}

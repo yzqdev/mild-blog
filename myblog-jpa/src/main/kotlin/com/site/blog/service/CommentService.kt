@@ -10,4 +10,6 @@ import com.site.blog.model.entity.Comment
  *
  *
  */
-interface CommentService 
+interface CommentService {
+    fun count(): Long
+}

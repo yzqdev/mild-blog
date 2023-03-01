@@ -24,4 +24,8 @@ class BlogConfigServiceImpl(private val blogConfigMapper: BlogConfigMapper) :
         return mapOf()
 
     }
+
+    override fun updateById(conf:BlogConfig) {
+        blogConfigMapper.save(conf)
+    }
 }

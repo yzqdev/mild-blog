@@ -32,14 +32,14 @@ class MailServiceImpl( private val mailSender: JavaMailSender, private val email
 
 
     @Value("\${spring.mail.username}")
-    private val from: String? = null
-    override val defaultMail: EmailConfig?
+    private val from: String = null
+    override val defaultMail: EmailConfig
         get() {
 
             return  emailMapper.getReferenceById(1)
         }
 
-    override fun sendTemplateEmail(to: String?, subject: String?, hashMap: Map<String?, Any?>?) {
+    override fun sendTemplateEmail(to: String, subject: String, hashMap: Map<String, Any>) {
         try {
             val engine = PebbleEngine.Builder().build()
             val compiledTemplate = engine.getTemplate("emailTemplate/emailFindPass.html")
@@ -59,7 +59,7 @@ class MailServiceImpl( private val mailSender: JavaMailSender, private val email
      * @param subject 主题
      * @param content 内容
      */
-    override fun sendSimpleMail(to: String?, subject: String?, content: String?) {
+    override fun sendSimpleMail(to: String, subject: String, content: String) {
         val message = SimpleMailMessage()
         message.setFrom(from!!)
         message.setTo(to)
@@ -80,7 +80,7 @@ class MailServiceImpl( private val mailSender: JavaMailSender, private val email
      * @param subject
      * @param content
      */
-    override fun sendHtmlMail(to: String?, subject: String?, content: String?) {
+    override fun sendHtmlMail(to: String, subject: String, content: String) {
         val message = mailSender!!.createMimeMessage()
         try {
             //true表示需要创建一个multipart message
@@ -104,7 +104,7 @@ class MailServiceImpl( private val mailSender: JavaMailSender, private val email
      * @param content
      * @param filePath
      */
-    override fun sendAttachmentsMail(to: String?, subject: String?, content: String?, filePath: String?) {
+    override fun sendAttachmentsMail(to: String, subject: String, content: String, filePath: String) {
         val message = mailSender!!.createMimeMessage()
         try {
             val helper = MimeMessageHelper(message, true)
@@ -133,11 +133,11 @@ class MailServiceImpl( private val mailSender: JavaMailSender, private val email
      * @param rscId
      */
     override fun sendInlineResourceMail(
-        to: String?,
-        subject: String?,
-        content: String?,
-        rscPath: String?,
-        rscId: String?
+        to: String,
+        subject: String,
+        content: String,
+        rscPath: String,
+        rscId: String
     ) {
         val message = mailSender!!.createMimeMessage()
         try {
@@ -155,14 +155,14 @@ class MailServiceImpl( private val mailSender: JavaMailSender, private val email
         }
     }
 
-    override fun sendFindPassEmail(toEmail: String?, emailConfig: EmailConfig?) {
+    override fun sendFindPassEmail(toEmail: String, emailConfig: EmailConfig) {
         try {
             val hashMap: MutableMap<String, Any> = HashMap(16)
             val pass = "123456"
             val newPass = HexUtil.encodeHexStr(pass)
             hashMap["websiteName"] = websiteName()
             hashMap["newPass"] = pass
-            hashMap["url"] = domain() + "/v2/auth/findPass?email=" + toEmail + "&cip=" + newPass
+            hashMap["url"] = domain() + "/v2/auth/findPassemail=" + toEmail + "&cip=" + newPass
             val engine = PebbleEngine.Builder().build()
             val compiledTemplate = engine.getTemplate("emailTemplate/emailFindPass.html")
             val writer: Writer = StringWriter()
@@ -186,7 +186,7 @@ class MailServiceImpl( private val mailSender: JavaMailSender, private val email
     }
 
     companion object {
-        fun mimeMessage(emailConfig: EmailConfig?): MimeMessage {
+        fun mimeMessage(emailConfig: EmailConfig): MimeMessage {
             Console.log(emailConfig.toString())
             val p = Properties()
             p.setProperty("mail.smtp.auth", "true")

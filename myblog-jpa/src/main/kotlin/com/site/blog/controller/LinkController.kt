@@ -95,11 +95,10 @@ class LinkController(private val linkService: LinkService) {
 
     @DeleteMapping("/link/clear/{id}")
     @SysLogAnnotation(title = "清除链接", opType = LogOperationEnum.CLEAN)
-    fun clearLink(@PathVariable("id") linkId: String): ResultDto<*> {
-        val flag = linkService.removeById(linkId)
-        return if (flag) {
-            getResultByHttp(HttpStatusEnum.OK, true, linkId)
-        } else getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR)
+    fun clearLink(@PathVariable("id") linkId: Long): ResultDto<*> {
+         linkService.removeById(linkId)
+        return   getResultByHttp(HttpStatusEnum.OK, true, linkId)
+
     }
 
     @PostMapping("/link/edit")

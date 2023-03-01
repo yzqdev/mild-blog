@@ -12,4 +12,6 @@ import com.site.blog.model.entity.BlogConfig
  */
 interface BlogConfigService  {
     fun allConfigs(): Map<String, String>
+
+    fun updateById(conf: BlogConfig)
 }

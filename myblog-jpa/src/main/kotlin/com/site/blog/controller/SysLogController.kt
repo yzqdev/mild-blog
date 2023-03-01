@@ -1,6 +1,5 @@
 package com.site.blog.controller
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.site.blog.constants.HttpStatusEnum
 import com.site.blog.model.dto.AjaxPutPage
 import com.site.blog.model.dto.AjaxResultPage
@@ -31,7 +30,7 @@ class SysLogController(private val sysOpLogService: SysOpLogService) {
 
     @DeleteMapping("/log/clear")
     fun clearAll(): ResultDto<*> {
-        sysOpLogService.remove(QueryWrapper())
+        sysOpLogService.removeAll()
         return getResultByHttp(HttpStatusEnum.OK, true, "")
     }
 }

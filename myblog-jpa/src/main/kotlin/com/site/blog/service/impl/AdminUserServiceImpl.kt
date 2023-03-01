@@ -27,11 +27,9 @@ class AdminUserServiceImpl(private val adminUserMapper: AdminUserMapper) :
      * @date: 2019/8/26 13:27
      */
     override fun validatePassword(userId: String, oldPwd: String): Boolean {
-        val queryWrapper: QueryWrapper<AdminUser> = QueryWrapper(
-         AdminUser(userId ,password=MD5Encode(oldPwd, "UTF-8"))
-        )
 
-        val adminUser = adminUserMapper.selectOne(queryWrapper)
+
+        val adminUser = adminUserMapper.findAdminUserByUsernameAndPassword(userId,MD5Encode(oldPwd, "UTF-8"))
         return !ObjectUtils.isEmpty(adminUser)
     }
 
@@ -42,24 +40,28 @@ class AdminUserServiceImpl(private val adminUserMapper: AdminUserMapper) :
      * @return boolean
      */
     @Transactional(rollbackFor = [Exception::class])
-    override fun updateUserInfo(adminUser: AdminUser): Boolean {
+    override fun updateUserInfo(adminUser: AdminUser):AdminUser {
         adminUser!!.password = MD5Encode(adminUser.password, "UTF-8")
-        return SqlHelper.retBool(adminUserMapper.updateById(adminUser))
+        return  adminUserMapper.save(adminUser)
     }
 
-    override fun register(admin: AdminUser): Int {
+    override fun register(admin: AdminUser): AdminUser {
         admin!!.password = MD5Encode(admin.password, "UTF-8")
-        return adminUserMapper.insert(admin)
+        return adminUserMapper.save(admin)
     }
 
-    override fun getAdminUserById(id: String): AdminUser {
-        return try {
-            val queryWrapper = KtQueryWrapper (AdminUser())
-            queryWrapper.eq(AdminUser::id, id)
-            adminUserMapper.selectOne(queryWrapper)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
+    override fun getAdminUserById(id: Long): AdminUser {
+        return     adminUserMapper.findAdminUserById(id)
+
+    }
+
+
+
+    override fun updateById(user: AdminUser) {
+        adminUserMapper.save(user)
+    }
+
+    override fun removeById(id: Long): Any {
+      return  adminUserMapper.deleteById(id)
     }
 }

@@ -23,12 +23,12 @@ data class AdminUser(
     /**
      * 管理员登陆名称
      */
-    var  username: String? = null,
+    var  username: String  = "",
 
     /**
      * 管理员登陆密码
      */
-    var  password: String? = null,
+    var  password: String  = "",
 
     /**
      * 管理员显示昵称
