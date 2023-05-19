@@ -78,6 +78,7 @@ class AdminController(
     val users: ResultDto<*>
         get() {
             val users = adminUserService.list()
+
             val userVos = ArrayList<UserVo>()
             users.forEach(Consumer { item: AdminUser? ->
                 val userVoItem = UserVo()

@@ -2,7 +2,6 @@ package com.site.blog.aop
 
 import cn.hutool.core.lang.Console
 import cn.hutool.core.util.ObjectUtil
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.site.blog.context.UserContextHolder
 import com.site.blog.model.entity.BlogConfig
 import com.site.blog.model.entity.SysOpLog
