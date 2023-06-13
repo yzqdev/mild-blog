@@ -10,7 +10,9 @@
       <el-tag style="margin-left: 10px; cursor: pointer" v-for="item in tags" @click="gotoTag(item)">{{ item.tagName }}</el-tag>
     </div>
     <article class="blog-content">
-      <md-editor-v3 v-model="blog.blogContent" code-theme="atomDark" :show-code-row-number="true" preview-only></md-editor-v3>
+
+      <md-preview editor-id="preview-only" :model-value="blog.blogContent" code-theme="atomDark" :show-code-row-number="true" ></md-preview>
+      <md-catalog :editorId="id" :scrollElement="scrollElement" />
     </article>
 
     <div class="blog-comment" v-if="blog.enableComment">
@@ -48,7 +50,8 @@
               <span style="flex: 1; text-align: right">{{ formatTime(item.commentCreateTime) }}</span>
             </div>
           </template>
-          <md-editor-v3 preview-only v-model="item.commentBody"></md-editor-v3>
+          <md-editor editor-id="preview-only" v-model="item.commentBody"></md-editor>
+
           <div v-if="item.replyBody" style="text-indent: 40px">
             回复:
             {{ item.replyBody }}
@@ -68,9 +71,13 @@ import { onMounted, reactive, ref, toRefs, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
+import { MdCatalog, MdEditor, MdPreview } from "md-editor-v3";
+import 'md-editor-v3/lib/preview.css';
 const router = useRouter()
 const route = useRoute()
-
+const scrollElement = document.documentElement;
+const id = 'preview-only';
+const text = ref('# Hello Editor');
 let state = reactive({
   commentInput: { width: '50%' },
   blog: {},
