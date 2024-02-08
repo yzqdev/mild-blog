@@ -1,10 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.1.0"
-    id("io.spring.dependency-management") version "1.1.0"
-    kotlin("jvm") version "1.8.21"
-    kotlin("plugin.spring") version "1.8.21"
+    alias(libs.plugins.springboot) 
+    alias(libs.plugins.springDependency) 
+    alias(libs.plugins.kapt)
+    kotlin("jvm") version libs.versions.kotlin
+    kotlin("plugin.spring") version  libs.versions.kotlin
 }
 
 group = "com.site.blog"
@@ -19,8 +20,8 @@ configurations {
 
 
 dependencies {
-    compileOnly ("org.projectlombok:lombok:1.18.24")
-    annotationProcessor ("org.projectlombok:lombok:1.18.24")
+    compileOnly ("org.projectlombok:lombok")
+    annotationProcessor ("org.projectlombok:lombok")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-aop")
@@ -32,11 +33,11 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     // https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter
-    implementation("com.baomidou:mybatis-plus-boot-starter:3.5.3.1")
+    implementation(libs.mybatisPlusBoot)
     implementation("io.pebbletemplates:pebble-spring-boot-starter:3.2.0")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+    implementation(libs.bundles.utils)
     // https://mvnrepository.com/artifact/cn.hutool/hutool-all
-    implementation("cn.hutool:hutool-all:5.8.12")
+    implementation(libs.hutool)
 // https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter
     implementation("com.alibaba:druid-spring-boot-starter:1.2.15")
 // https://mvnrepository.com/artifact/net.coobird/thumbnailator
@@ -55,9 +56,6 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-}
-repositories {
-    mavenCentral()
 }
 
 tasks.withType<KotlinCompile> {

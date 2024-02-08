@@ -1,5 +1,7 @@
 package com.site.blog.mapper;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.site.blog.model.entity.Img;
 
@@ -9,4 +11,8 @@ import com.site.blog.model.entity.Img;
  * @modified By:
  */
 public interface ImgMapper extends BaseMapper<Img> {
+
+
+  Integer selectCount();
+  List<Img> imgs();
 }

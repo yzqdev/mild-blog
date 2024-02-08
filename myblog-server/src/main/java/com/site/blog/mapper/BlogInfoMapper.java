@@ -26,4 +26,6 @@ public interface BlogInfoMapper extends BaseMapper<BlogInfo> {
      */
     @Select("select sum(blog_views) FROM  blog_info")
     Integer getViews();
+
+    
 }
