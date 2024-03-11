@@ -1,0 +1,46 @@
+{
+  "name": "mild-blog",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "build:ts": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "lint": "prettier --write src/**/*.{vue,js,jsx,ts,tsx,json,html} vite.config.ts"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "@iconify/vue": "^4.1.1",
+    "@types/lodash": "^4.14.202",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vueuse/core": "^10.9.0",
+    "axios": "^1.6.7",
+    "dayjs": "^1.11.10",
+    "echarts": "^5.5.0",
+    "element-plus": "2.3.14",
+    "filepond": "^4.30.6",
+    "filepond-plugin-file-validate-type": "^1.2.9",
+    "filepond-plugin-image-preview": "^4.6.12",
+    "md-editor-v3": "^4.12.1",
+    "pinia": "^2.1.7",
+    "prettier": "^3.2.5",
+    "qs": "^6.12.0",
+    "sass": "latest",
+    "typescript": "^5.4.2",
+    "unplugin-auto-import": "^0.17.5",
+    "unplugin-icons": "^0.18.5",
+    "unplugin-vue-components": "^0.26.0",
+    "v-viewer": "^3.0.13",
+    "viewerjs": "^1.11.6",
+    "vue": "^3.4.21",
+    "vue-cropper": "^1.1.1",
+    "vue-filepond": "^7.0.4",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.25",
+    "@types/qs": "^6.9.12",
+    "vite": "^5.1.5",
+    "vue-tsc": "^2.0.6"
+  }
+}

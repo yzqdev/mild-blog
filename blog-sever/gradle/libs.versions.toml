@@ -1,0 +1,121 @@
+[versions]
+agp = "8.1.1"
+
+kotlin = "1.9.22"
+
+[libraries]
+
+# utils
+## network
+okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version = "4.+" }
+okhttp3-logging = "com.squareup.okhttp3:logging-interceptor:4.+"
+retrofit = "com.squareup.retrofit2:retrofit:2.9.0"
+retrofit-gson = "com.squareup.retrofit2:converter-gson:2.9.0"
+mockwebserver = "com.squareup.okhttp3:mockwebserver:4.10.0"
+okio = "com.squareup.okio:okio:3.5.0"
+netAwesome = "com.github.liangjingkanji:Net:3.6.1"
+# apache commons
+apiVersion = "com.github.lkqm:spring-api-versioning:1.4.0"
+commonsIo = "commons-io:commons-io:2.11.0"
+commonsLang3 = "org.apache.commons:commons-lang3:3.13.0"
+commonsText = "org.apache.commons:commons-text:1.10.0"
+commonsCollections = "org.apache.commons:commons-collections4:4.4"
+commonsCodec = "commons-codec:commons-codec:1.16.0"
+# // https://mvnrepository.com/artifact/commons-net/commons-net
+commonsNet = "commons-net:commons-net:3.10.0"
+commonsFileupload="commons-fileupload:commons-fileupload:1.5"
+
+
+fakedata="net.datafaker:datafaker:2.0.2"
+httpclient4 = { module = "org.apache.httpcomponents:httpclient" }
+httpclient5 = "org.apache.httpcomponents.client5:httpclient5:5.2.1"
+httpclient5Fluent = "org.apache.httpcomponents.client5:httpclient5-fluent:5.2.1"
+guava = "com.google.guava:guava:31.1-jre"
+thumbnailator = "net.coobird:thumbnailator:0.4.20"
+jsoup = "org.jsoup:jsoup:1.16.1"
+
+#dromara
+#// https://mvnrepository.com/artifact/cn.hutool/hutool-all
+hutool = 'cn.hutool:hutool-all:5.8.26'
+satokenBoot = "cn.dev33:sa-token-spring-boot-starter:1.36.0"
+satokenBoot3 = "cn.dev33:sa-token-spring-boot3-starter:1.37.0"
+satokenRedis = "cn.dev33:sa-token-redis-jackson:1.37.0"
+forestBoot = "com.dtflys.forest:forest-spring-boot-starter:1.5.36"
+xfileStoreBoot="org.dromara.x-file-storage:x-file-storage-spring:2.0.0"
+javaassist="org.javassist:javassist:3.29.2-GA"
+lombokModule = { module = "org.projectlombok:lombok", version = "1.18.30" }
+springdoc = "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0"
+springdoc1 = "org.springdoc:springdoc-openapi-ui:1.7.0"
+springDevtools={module="org.springframework.boot:spring-boot-devtools"}
+## aop
+aspectjTools = "org.aspectj:aspectjtools:1.9.20"
+#// https://mvnrepository.com/artifact/org.aspectj/aspectjrt
+aspectjrt = "org.aspectj:aspectjrt:1.9.20"
+
+# json
+gson = "com.google.code.gson:gson:latest.release"
+# https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+jackson = "com.fasterxml.jackson.core:jackson-databind:2.15.2"
+fastjson = "com.alibaba.fastjson2:fastjson2:2.0.41"
+
+rxjava3 = "io.reactivex.rxjava3:rxjava:3.1.5"
+mybatisPlusBoot = "com.baomidou:mybatis-plus-boot-starter:3.5.5"
+mybatisFlexBoot3="com.mybatis-flex:mybatis-flex-spring-boot3-starter:1.7.7"
+mybatisFlexBoot="com.mybatis-flex:mybatis-flex-spring-boot-starter:1.7.7"
+mybatisFlexAnno="com.mybatis-flex:mybatis-flex-processor:1.7.7"
+hikra="com.zaxxer:HikariCP:5.0.1"
+#// https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter
+druidSpringboot = "com.alibaba:druid-spring-boot-starter:1.2.19"
+mapstruct = "org.mapstruct:mapstruct:1.5.5.Final"
+# https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor
+mapstructAnno = "org.mapstruct:mapstruct-processor:1.5.5.Final"
+javaJwt = "com.auth0:java-jwt:4.4.0"
+pebble="io.pebbletemplates:pebble-spring-boot-starter:3.2.0"
+imageCombiner="com.freewayso:image-combiner:2.6.5"
+# https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+jjwtApi="io.jsonwebtoken:jjwt-api:0.12.3"
+
+jjwtImpl='io.jsonwebtoken:jjwt-impl:0.12.3'
+jjwtJackson='io.jsonwebtoken:jjwt-jackson:0.12.3'
+# https://mvnrepository.com/artifact/org.apache.shiro/shiro-spring-boot-web-starter
+shiroBoot = "org.apache.shiro:shiro-spring-boot-web-starter:2.0.0-alpha-4"
+shiroBoot1Module = { module = "org.apache.shiro:shiro-spring-boot-web-starter" }
+problemBoot2 = { module = "org.zalando:problem-spring-web", version = "0.27.0" }
+problemBoot3 = { module = "org.zalando:problem-spring-web", version = "0.29.1" }
+
+#// JSON序列化库, 首选推荐使用
+kotlinxSeriJson = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0"
+#// protobuf序列化
+kotlinSeriproto = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.0"
+#// JSON序列化库, 强校验, JSON字段缺失会导致解析异常, 故不推荐
+moshi = "com.squareup.moshi:moshi-kotlin:1.14.0"
+kotlinReflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
+kotlinStdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
+kotlinx-coroutinescore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+kotlinx-coroutines-android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+# rxjava
+rxjava2 = "io.reactivex.rxjava2:rxjava:2.2.21"
+# picture
+nettyAll="io.netty:netty-all:4.1.105.Final"
+[plugins]
+springDependency = { id = "io.spring.dependency-management", version = "1.1.4" }
+springDependency2 = { id = "io.spring.dependency-management", version = "1.0.15.RELEASE" }
+springboot2 = { id = "org.springframework.boot", version = "2.7.17" }
+springboot = { id = "org.springframework.boot", version = "3.2.3" }
+springPlugin = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
+shadowJar = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
+ksp = { id = "com.google.devtools.ksp", version = "1.9.22-1.0.17" }
+jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+[bundles]
+commons = [
+  "commonsIo",
+  "commonsCollections",
+  "commonsLang3",
+  "commonsText",
+  "commonsNet",
+  "commonsFileupload",
+  "commonsCodec",
+  "fakedata"
+]
+utils = ["springdoc", "apiVersion", "hutool", "guava", "httpclient5Fluent"]
