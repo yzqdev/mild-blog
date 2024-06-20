@@ -1,7 +1,7 @@
 [versions]
 agp = "8.1.1"
 
-kotlin = "1.9.22"
+kotlin = "2.0.0"
 
 [libraries]
 
@@ -37,13 +37,13 @@ jsoup = "org.jsoup:jsoup:1.16.1"
 #dromara
 #// https://mvnrepository.com/artifact/cn.hutool/hutool-all
 hutool = 'cn.hutool:hutool-all:5.8.26'
-satokenBoot = "cn.dev33:sa-token-spring-boot-starter:1.36.0"
-satokenBoot3 = "cn.dev33:sa-token-spring-boot3-starter:1.37.0"
-satokenRedis = "cn.dev33:sa-token-redis-jackson:1.37.0"
+satokenBoot = "cn.dev33:sa-token-spring-boot-starter:1.38.0"
+satokenBoot3 = "cn.dev33:sa-token-spring-boot3-starter:1.38.0"
+satokenRedis = "cn.dev33:sa-token-redis-jackson:1.38.0"
 forestBoot = "com.dtflys.forest:forest-spring-boot-starter:1.5.36"
 xfileStoreBoot="org.dromara.x-file-storage:x-file-storage-spring:2.0.0"
 javaassist="org.javassist:javassist:3.29.2-GA"
-lombokModule = { module = "org.projectlombok:lombok", version = "1.18.30" }
+lombokModule = { module = "org.projectlombok:lombok", version = "1.18.2" }
 springdoc = "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0"
 springdoc1 = "org.springdoc:springdoc-openapi-ui:1.7.0"
 springDevtools={module="org.springframework.boot:spring-boot-devtools"}
@@ -98,10 +98,10 @@ rxjava2 = "io.reactivex.rxjava2:rxjava:2.2.21"
 # picture
 nettyAll="io.netty:netty-all:4.1.105.Final"
 [plugins]
-springDependency = { id = "io.spring.dependency-management", version = "1.1.4" }
-springDependency2 = { id = "io.spring.dependency-management", version = "1.0.15.RELEASE" }
+springDependency = { id = "io.spring.dependency-management", version = "1.1.5" }
+
 springboot2 = { id = "org.springframework.boot", version = "2.7.17" }
-springboot = { id = "org.springframework.boot", version = "3.2.3" }
+springboot = { id = "org.springframework.boot", version = "3.3.0" }
 springPlugin = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 shadowJar = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
 ksp = { id = "com.google.devtools.ksp", version = "1.9.22-1.0.17" }
