@@ -59,8 +59,12 @@ public class WebLogAspect {
     //使用@AfterReturning在切入点return内容之后切入内容（可以用来对处理返回值做一些加工处理）
     @AfterReturning(returning = "ret", pointcut = "webLog()")
     public void doAfterReturning(Object ret) throws Throwable {
+var res=(String) ret.toString();
+if ((res).length()>100){
+    res=res.substring(0, 100)+"...";
+}
         // 处理完请求，返回内容
-        log.info("响应RESPONSE : " + ret);
+        log.info("响应RESPONSE : " + res);
         log.info("响应时间SPEND TIME : " + (System.currentTimeMillis() - startTime.get())+"ms");
 
     }

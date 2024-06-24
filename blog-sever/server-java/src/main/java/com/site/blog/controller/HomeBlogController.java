@@ -204,11 +204,11 @@ public class HomeBlogController {
             Page<BlogInfo> ipage = new Page<>(pageDto.getPageNum(), pageDto.getPageSize());
 
             QueryWrapper<BlogInfo> queryWrapper = new QueryWrapper<>();
-            queryWrapper.lambda().like(BlogInfo::getBlogTitle, keyword).or().like(BlogInfo::getBlogContent, keyword);
+            queryWrapper.lambda().nested(i->i.like(BlogInfo::getBlogTitle, keyword).or().like(BlogInfo::getBlogContent, keyword)).eq(BlogInfo::getDeleted,false).eq(BlogInfo::getShow,true);
             Page<BlogInfo> blogInfos = blogInfoService.page(ipage, queryWrapper);
 
 
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, toBlogVo(blogInfos));
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true,toBlogVo(blogInfos));
         } catch (Exception e) {
             e.printStackTrace();
         }
