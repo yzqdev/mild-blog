@@ -8,8 +8,8 @@
 <script setup lang="ts">
 import { useThemeStore } from '@/store/themeConfig'
 
-let themeStore = useThemeStore()
-let themeConfig = $computed(() => {
+const themeStore = useThemeStore()
+const themeConfig = computed(() => {
   return themeStore.$state
 })
 </script>

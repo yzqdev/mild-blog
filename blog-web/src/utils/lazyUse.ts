@@ -1,7 +1,7 @@
-import { MdEditor ,config} from 'md-editor-v3'
+import { MdEditor, config } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 
- config({
+config({
   editorExtensions: {
     highlight: {
       css: {

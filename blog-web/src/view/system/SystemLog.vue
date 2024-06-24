@@ -6,7 +6,7 @@
     <el-table-column prop="opType" width="80" label="操作类型"></el-table-column>
     <el-table-column width="180" prop="opTime" label="修改时间">
       <template v-slot="{ row }">
-        {{ $dayjs(row.updateTime).format('YYYY-MM-DD HH:mm:ss') }}
+        {{ formatTime(row.updateTime)  }}
       </template>
     </el-table-column>
     <el-table-column prop="browser" label="浏览器" width="100" show-overflow-tooltip></el-table-column>
@@ -35,21 +35,25 @@ import { getSysLogApi } from '@/utils/apiConfig'
 import { onBeforeMount } from 'vue'
 import { clearAllSysLogApi } from '@/utils/systemApi'
 import { ElMessage } from 'element-plus'
+import { formatTime } from "../../utils/utils";
 
-let loading = $ref(false)
-let count = $ref(0)
-let pageSize = $ref(10)
-let currentPage = $ref(1)
-let tableData = $ref([])
-let showParamVisible = $ref(false)
-let dialogParam = $ref('')
+const state=reactive({
+   loading :false,
+   count :0,
+   pageSize :10,
+   currentPage :1,
+   tableData :[],
+   showParamVisible :false,
+   dialogParam :'',
+})
+const {loading,count,pageSize,currentPage,tableData,showParamVisible,dialogParam}=toRefs(state)
 
 async function getData() {
-  loading = true
-  let res = await getSysLogApi({ page: currentPage, limit: pageSize })
-  tableData = res.data.list
-  count = res.data.count
-  loading = false
+state.  loading = true
+  let res = await getSysLogApi({ page:state. currentPage, limit:state. pageSize })
+  state.  tableData = res.data.list
+  state. count = res.data.count
+  state. loading = false
 }
 
 async function clearAll() {
@@ -61,17 +65,17 @@ async function clearAll() {
 }
 
 function sizeChange(size: number) {
-  pageSize = size
+  state. pageSize = size
   getData()
 }
 
 function showParams(row: any) {
   try {
-    dialogParam = JSON.stringify(JSON.parse(row.param), null, 4)
-    showParamVisible = true
+    state. dialogParam = JSON.stringify(JSON.parse(row.param), null, 4)
+    state. showParamVisible = true
   } catch (e) {
-    dialogParam = row.param
-    showParamVisible = true
+    state. dialogParam = row.param
+    state. showParamVisible = true
   }
 }
 

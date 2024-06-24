@@ -15,11 +15,9 @@
 import { useStorage } from '@vueuse/core/index'
 import { useConfigStore } from '@/store/sysConfig'
 let configStore = useConfigStore()
-import { SysConfig } from '@/type/storeTypes'
-import { defaultSysConfig } from '@/constants/defaultTheme'
 import { onBeforeMount } from 'vue'
 
-let avatar = $ref('')
+let avatar = ref('')
 onBeforeMount(() => {
   avatar = configStore.sysAuthorImg
 })

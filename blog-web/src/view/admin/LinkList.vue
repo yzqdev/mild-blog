@@ -38,18 +38,18 @@
     <el-table-column prop="updateTime" label="更新时间"></el-table-column>
     <el-table-column prop="show" label="当前状态">
       <template v-slot="{ row }">
-        {{ row.show ? '显示' : '隐藏' }}
+        <el-tag :type="row.show?'primary':'danger'">{{ row.show ? '显示' : '隐藏' }}</el-tag>
       </template>
     </el-table-column>
     <el-table-column label="操作" width="300">
       <template v-slot="{ row }">
-        <el-button type="primary" @click="editLinkClick(row)">编辑</el-button>
-        <el-button type="warning" @click="hideLink(row)">{{ row.show ? `隐藏` : `显示` }}</el-button>
-        <el-popconfirm title="确定删除吗？" confirmButtonText="好的" cancelButtonText="不用了" icon="el-icon-info" placement="right" iconColor="red" @confirm="deleteRow(row)">
-          <template #reference>
-            <el-button type="danger">删除</el-button>
-          </template>
-        </el-popconfirm>
+    <div class="flex gap">    <el-button type="primary" @click="editLinkClick(row)">编辑</el-button>
+      <el-switch :model-value="row.show"  active-text="显示" inactive-text="隐藏"  @change="hideLink(row)">{{ row.show ? `隐藏` : `显示` }}</el-switch>
+      <el-popconfirm title="确定删除吗？" confirmButtonText="好的" cancelButtonText="不用了" icon="el-icon-info" placement="right" iconColor="red" @confirm="deleteRow(row)">
+        <template #reference>
+          <el-button type="danger">删除</el-button>
+        </template>
+      </el-popconfirm></div>
       </template>
     </el-table-column>
   </el-table>
@@ -58,38 +58,40 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent, onBeforeMount } from 'vue'
+import { defineComponent, onBeforeMount, toRefs } from 'vue'
 import { addSystemInfo, clearLink, delLink, delSystemInfo, editLink, getLinkList, getSystemInfo } from '@/utils/apiConfig'
 import { ElMessage } from 'element-plus'
-import { Z_TEXT } from 'zlib'
 
-let count = $ref(0)
-let pageSize = $ref(10)
-let currentPage = $ref(1)
-let linkData = $ref('')
-let addDialogVisible = $ref(false)
-let addForm = $ref({
-  linkId: null,
-  linkName: '',
-  linkUrl: '',
-  linkDescription: '',
-  linkType: 0,
+const state = reactive({
+  count: 0,
+  pageSize: 10,
+  currentPage: 1,
+  linkData: '',
+  addDialogVisible: false,
+  addForm: {
+    linkId: null,
+    linkName: '',
+    linkUrl: '',
+    linkDescription: '',
+    linkType: 0,
+  },
+  linkTypeOptions: [
+    { label: '友链', value: 0 },
+    { label: '推荐', value: 1 },
+    { label: '个人网站', value: 2 },
+  ],
 })
-let defaultOption = [
-  { label: '友链', value: 0 },
-  { label: '推荐', value: 1 },
-  { label: '个人网站', value: 2 },
-]
-let linkTypeOptions = $ref(defaultOption)
+const { count, pageSize, currentPage, linkData, addDialogVisible, addForm, linkTypeOptions } = toRefs(state)
+
 function getLinkType(type: number) {
-  let text = defaultOption.find((item) => {
+  let text =state. linkTypeOptions.find((item) => {
     return item.value == type
   })
 
   return text.label
 }
 function sizeChange(size: number) {
-  pageSize = size
+  state.pageSize = size
   getData()
 }
 async function hideLink(row: any) {
@@ -108,18 +110,18 @@ async function hideLink(row: any) {
 }
 
 function editLinkClick(row) {
-  addForm = {
+  state.addForm = {
     linkId: row.linkId,
     linkName: row.linkName,
     linkUrl: row.linkUrl,
     linkDescription: row.linkDescription,
     linkType: row.linkType,
   }
-  addDialogVisible = true
+  state.addDialogVisible = true
 }
 
 function deleteRow(row) {
-  addForm = {
+  state.addForm = {
     linkId: null,
     linkName: '',
     linkUrl: '',
@@ -137,7 +139,7 @@ function deleteRow(row) {
 }
 
 function closeAddDialog() {
-  addForm = {
+  state.addForm = {
     linkId: null,
     linkName: '',
     linkUrl: '',
@@ -146,13 +148,13 @@ function closeAddDialog() {
 }
 
 function addDialogShow() {
-  addDialogVisible = true
+  state.addDialogVisible = true
 }
 
 function getData() {
-  getLinkList({ page: currentPage, limit: pageSize }).then((res) => {
-    linkData = res.data.list
-    count = res.data.count
+  getLinkList({ page: state.currentPage, limit:state. pageSize }).then((res) => {
+    state.linkData = res.data.list
+    state.count = res.data.count
   })
 }
 
@@ -161,7 +163,7 @@ function confirmAdd() {
     if (data) {
       getData()
       ElMessage({ type: 'success', message: '成功' })
-      addDialogVisible = false
+      state.addDialogVisible = false
     }
   })
 }

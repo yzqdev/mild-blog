@@ -43,26 +43,30 @@ const router = useRouter()
 
 import { useUserStore } from '@/store/user'
 let store = useUserStore()
-let activeName = $ref('first')
-let title = $ref('用户登录')
-let regForm = $ref({ username: '', password: '', password2: '' })
-let loginRules = $ref({
-  username: [{ required: true, message: '请输入用户名' }],
-  password: [{ required: true, message: '请输入密码' }],
+const state = reactive({
+  activeName: 'first',
+  title: '用户登录',
+  regForm: { username: '', password: '', password2: '' },
+  loginRules: {
+    username: [{ required: true, message: '请输入用户名' }],
+    password: [{ required: true, message: '请输入密码' }],
+  },
+  regRule: {
+    username: [{ required: true, message: '请输入用户名' }],
+    password: [{ required: true, message: '请输入密码' }],
+    password2: [{ required: true, message: '请输入确认密码' }],
+  },
+  loginForm: { username: 'admin', password: '123456' },
 })
-let regRule = $ref({
-  username: [{ required: true, message: '请输入用户名' }],
-  password: [{ required: true, message: '请输入密码' }],
-  password2: [{ required: true, message: '请输入确认密码' }],
-})
-let loginForm = $ref({ username: '', password: '' })
+const { activeName, title, regRule, regForm, loginForm } = toRefs(state)
+
 let loginFormRef = ref(null)
 let regFormRef = ref(null)
 
 async function login() {
   loginFormRef.value.validate(async (valid) => {
     if (valid) {
-      let res = await loginApi(loginForm)
+      let res = await loginApi(state.loginForm)
       console.log(res)
       console.log(`%c看到雷锋`, `color:red;font-size:16px;background:transparent`)
       if (res.success) {
@@ -80,7 +84,7 @@ async function login() {
 function reg() {
   regFormRef.value.validate((valid) => {
     if (valid) {
-      regApi(regForm.username, regForm.password).then(({ data }) => {
+      regApi(state.regForm.username, state.regForm.password).then(({ data }) => {
         if (data) {
           ElMessage({
             message: '成功',
@@ -96,11 +100,11 @@ watch(
   () => activeName,
   (val, preVal) => {
     if (val == 'first') {
-      title = '用户登录'
+      state.title = '用户登录'
     } else {
-      title = '用户注册'
+      state.title = '用户注册'
     }
-  }
+  },
 )
 onBeforeMount(() => {
   if (localStorage.token) {

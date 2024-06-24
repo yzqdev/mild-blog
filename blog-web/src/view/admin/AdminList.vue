@@ -16,8 +16,8 @@
 
     <el-table-column label="操作">
       <template v-slot="{ row }">
-        <el-button type="primary" v-if="row.locked" @click="editUserClick(row)">解冻</el-button>
-        <el-button type="warning" v-if="!row.locked" @click="editUserClick(row)">冻结</el-button>
+        <el-button :type="row.locked?'primary':'warning'"   @click="editUserClick(row)">{{row.locked?'解冻':'冻结'}}</el-button>
+
         <el-popconfirm title="确定删除吗？" confirmButtonText="好的" cancelButtonText="不用了" icon="el-icon-info" placement="right" iconColor="red" @confirm="deleteRow(row)">
           <template #reference>
             <el-button type="danger">删除</el-button>
@@ -40,9 +40,10 @@ let tableData = ref([])
 
 async function editUserClick(row) {
   const { data } = await unlockUser(row.id)
+  console.log(data)
   if (data) {
     await getData()
-    ElMessage({ message: '解冻成功', type: 'success' })
+    ElMessage({ message: '成功', type: 'success' })
   }
 }
 

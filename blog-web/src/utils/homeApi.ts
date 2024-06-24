@@ -1,6 +1,6 @@
 import http from '@/utils/http'
 import qs from 'qs'
-import { Result } from "@/interface/result";
+import { Result } from '@/interface/result'
 export const getIndex = () => {
   return http.get('/home/index')
 }
@@ -29,7 +29,7 @@ export const getSearch = (keyword: string) => {
 export const listComments = (data: object) => {
   return http.get('/home/blog/listComment?' + qs.stringify(data))
 }
-export const submitComment = (data: object):Promise<Result<any>> => {
+export const submitComment = (data: object): Promise<Result<any>> => {
   return http.postForm('/home/blog/comment', data)
 }
 export const getBlogById = (data: string) => {

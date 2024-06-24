@@ -5,7 +5,7 @@
       <el-icon><upload /></el-icon>
     </el-button>
     <el-dialog title="上传文件" v-model="uploadDialogVisible" @close="closeUpload">
-      <file-pond name="img" ref="pond" label-idle="点击选择文件或者拖动文件到这里" :allow-multiple="true" accepted-file-types="image/jpeg, image/png" :server="server" v-bind:files="myFiles" fileValidateTypeLabelExpectedTypes="请选择 {lastType} 格式的文件" labelFileProcessing="上传中" labelFileProcessingAborted="取消上传" labelFileProcessingComplete="上传完成" labelFileProcessingError="上传错误" labelFileTypeNotAllowed="不支持当前文件格式" labelTapToCancel="点击取消" labelTapToRetry="点击重试" v-on:init="handleFilePondInit" />
+      <file-pond name="img" ref="pond" label-idle="点击选择文件或者拖动文件到这里" :allow-multiple="true" accepted-file-types="image/jpeg, image/png"  v-bind:files="myFiles"  fileValidateTypeLabelExpectedTypes="请选择 {lastType} 格式的文件" labelFileProcessing="上传中" labelFileProcessingAborted="取消上传" labelFileProcessingComplete="上传完成" labelFileProcessingError="上传错误" labelFileTypeNotAllowed="不支持当前文件格式" labelTapToCancel="点击取消" labelTapToRetry="点击重试" v-on:init="handleFilePondInit" />
     </el-dialog>
     <el-dialog class="detail-dialog" title="图片详情" v-model="detailDialogVisible">
       <el-row>
@@ -84,7 +84,7 @@
       <el-table-column prop="imgPath" label="图片目录"></el-table-column>
 
       <el-table-column prop="uploadTime" label="上传时间">
-        <template v-slot="{ row }">{{ $dayjs(row.uploadTime).format('YYYY-MM-DD HH:mm:ss') }}</template>
+        <template v-slot="{ row }">{{ formatTime(row.uploadTime)  }}</template>
       </el-table-column>
 
       <el-table-column label="操作">
@@ -108,7 +108,7 @@ import { delImg, getImgs, uploadUrl } from '@/utils/apiConfig'
 import { convertSize, formatTime } from '@/utils/utils'
 import { useClipboard, usePermission } from '@vueuse/core'
 const { text, isSupported, copied, copy } = useClipboard()
-import vueFilePond from 'vue-filepond'
+import vueFilePond,{setOptions} from 'vue-filepond'
 
 // Import FilePond styles
 import 'filepond/dist/filepond.min.css'
@@ -129,36 +129,45 @@ import { computed, onBeforeMount, reactive, ref, toRefs } from 'vue'
 import { CopyDocument, Upload } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { baseConfig } from '@/utils/http'
+import { useUserStore } from "@/store/user";
+const userStore=useUserStore()
+
 const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview)
 
-let Imgs=$ref([])
-let count = $ref(0)
-let pageNum=$ref(0)
-let pageSize = $ref(10)
-let currentPage = $ref(1)
+const state = reactive({
+  myFiles: [],
+  detailImg: {},
+  server: uploadUrl,
+  uploadDialogVisible: false,
+  detailDialogVisible: false,
+  Imgs: [],
+  count: 0,
+  pageNum: 0,
+  pageSize: 10,
+  currentPage: 1,
+})
+const { myFiles, detailImg, server, uploadDialogVisible, detailDialogVisible, Imgs, count, pageNum, pageSize, currentPage } = toRefs(state)
 function sizeChange(size) {
-  pageSize = size
+  state.pageSize = size
   getList()
 }
 
 let pond = ref()
-let myFiles = $ref([])
-let detailImg = $ref()
-let server = $ref(uploadUrl)
-let uploadDialogVisible = $ref(false)
-let detailDialogVisible = $ref(false)
+
 onBeforeMount(() => {
   getList()
 })
 
-function handleFilePondInit() {}
+function handleFilePondInit() {
+  setOptions({server:{headers:{token:userStore.token},url:uploadUrl}})
+}
 
 function detailDialogShow(row) {
-  detailImg = row
-  detailDialogVisible = true
+  state.detailImg = row
+  state.detailDialogVisible = true
 }
 function copyMarkdown() {
-  copy(`![img](${getImgUrl(detailImg.imgUrl)})`).then(() => {
+  copy(`![img](${getImgUrl(state.detailImg.imgUrl)})`).then(() => {
     ElMessage({
       type: 'success',
       message: '复制markdown成功',
@@ -166,7 +175,7 @@ function copyMarkdown() {
   })
 }
 function copyImgUrl() {
-  copy(getImgUrl(detailImg.imgUrl))
+  copy(getImgUrl(state.detailImg.imgUrl))
   ElMessage({
     type: 'success',
     message: '复制路径成功',
@@ -178,14 +187,15 @@ function getImgUrl(url) {
 
 async function getList() {
   try {
-    let res=await getImgs({ page:pageNum, limit:pageSize })
+    let res = await getImgs({ page:state. pageNum, limit:state. pageSize })
     if (res.success) {
-      Imgs = res.data.list
-      count=res.data.count
-    }else{
+      state.Imgs = res.data.list
+      state.count = res.data.count
+    } else {
       ElMessage.error(res.message)
     }
-  }catch (e) {
+    console.error(state.Imgs)
+  } catch (e) {
     ElMessage.error((e as Error).message)
   }
 }
@@ -196,7 +206,7 @@ function closeUpload() {
 }
 
 function showUploadDialog() {
-  uploadDialogVisible = true
+  state.uploadDialogVisible = true
 }
 
 function deleteRow(row) {

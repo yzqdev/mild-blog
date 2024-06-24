@@ -29,30 +29,33 @@ import { onBeforeMount, reactive, toRefs } from 'vue'
 
 import { useConfigStore } from '@/store/sysConfig'
 let configStore = useConfigStore()
-let activeRoute = $ref('')
-let navs = $ref([
-  { text: '主页', id: 1, link: '/home/main' },
-  { text: '标签', id: 2, link: '/home/tags' },
-  { text: '分类', id: 3, link: '/home/categories' },
-  { text: '时间线', id: 6, link: '/home/timeline' },
-  { text: '友情链接', id: 4, link: '/home/link' },
-  { text: '关于', id: 5, link: '/home/about' },
-])
-let configs = $ref({
-  sysAuthor: '',
-  sysAuthorImg: '',
-  sysCopyRight: '',
-  sysEmail: '',
-  sysUpdateTime: '',
-  sysUrl: '',
-  sysVersion: '',
-  websiteName: '',
-  filing: '',
+const state = reactive({
+  activeRoute: '',
+  navs: [
+    { text: '主页', id: 1, link: '/home/main' },
+    { text: '标签', id: 2, link: '/home/tags' },
+    { text: '分类', id: 3, link: '/home/categories' },
+    { text: '时间线', id: 6, link: '/home/timeline' },
+    { text: '友情链接', id: 4, link: '/home/link' },
+    { text: '关于', id: 5, link: '/home/about' },
+  ],
+  configs: {
+    sysAuthor: '',
+    sysAuthorImg: '',
+    sysCopyRight: '',
+    sysEmail: '',
+    sysUpdateTime: '',
+    sysUrl: '',
+    sysVersion: '',
+    websiteName: '',
+    filing: '',
+  },
 })
+const { activeRoute, navs, configs } = toRefs(state)
 async function getData() {
   let { data } = await getConfigs()
   configStore.setSysConfig(data)
-  configs = data
+  state.configs = data
 }
 
 onBeforeMount(async () => {

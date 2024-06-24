@@ -1,9 +1,10 @@
 import { Article, ListData, Result } from '@/interface/result'
 import http from '@/utils/http'
 import qs from 'qs'
+import { useUserStore } from "@/store/user";
 
 export const loginApi = (loginForm: { username: string; password: string }): Promise<Result<any>> => {
-  return http.post(`/auth/login`, loginForm)
+  return http.post(`/auth/login?` + qs.stringify(loginForm))
 }
 
 export function getUsers(): Promise<Result<any>> {
@@ -42,7 +43,7 @@ export const editLink = (data: object) => {
   return http.postForm('/admin/link/edit', data)
 }
 export const delLink = (data: object): Promise<Result<any>> => {
-  return http.postForm('/admin/link/hide', data)
+  return http.post ('/admin/link/hide', data)
 }
 export const clearLink = (data: string): Promise<Result<any>> => {
   return http.delete('/admin/link/clear/' + data)
@@ -75,7 +76,7 @@ export const addTag = (data: object) => {
 export const EditTagList = (data: object) => {
   return http.post(`/admin/tags/update`, data)
 }
-export const clearTagById = (data: object):Promise<Result<any>> => {
+export const clearTagById = (data: object): Promise<Result<any>> => {
   return http.post(`/admin/tags/clear/${data}`)
 }
 
@@ -85,7 +86,7 @@ export function getCateList(): Promise<Result<any>> {
 export const addCateApi = (data: object) => {
   return http.postForm(`/admin/category/add`, data)
 }
-export const clearCateApi = (data: string):Promise<Result<any>> => {
+export const clearCateApi = (data: string): Promise<Result<any>> => {
   return http.post(`/admin/category/clear/${data}`)
 }
 export const getCatePaging = (data: { page: number; limit: number }) => {
@@ -110,20 +111,23 @@ export function getAdminBlogById(params: string): Promise<Result<any>> {
 }
 
 export function getSysLogApi(data: { page: number; limit: number }) {
-  return http.get('/admin/log?' + qs.stringify(data))
+  return http.post('/admin/log?' + qs.stringify(data))
 }
 
-export const uploadUrl = `${import.meta.env.VITE_APP_URL}/img/upload`
+export const uploadUrl = `${import.meta.env.VITE_APP_URL}/admin/img/upload`
 export const uploadImg = (params: object) => {
-  return http.post('/img/upload', params, {
+  const userStore=useUserStore()
+  console.log(userStore.token,"---------------bbbbbb")
+  return http.post('/admin/img/upload', params, {
     headers: {
       'Content-Type': 'multipart/form-data',
+      token:userStore.token
     },
   })
 }
-export const getImgs = (data:{page:number,limit:number}):Promise<Result<ListData>> => {
-  return http.get('/img/list?'+qs.stringify(data))
+export const getImgs = (data: { page: number; limit: number }): Promise<Result<ListData>> => {
+  return http.post('/admin/img/list' ,data)
 }
 export const delImg = (id: string) => {
-  return http.delete('/img/del/' + id)
+  return http.delete('/admin/img/del/' + id)
 }

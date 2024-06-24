@@ -81,30 +81,28 @@ import { useFullscreen, useStorage } from '@vueuse/core'
 import { getUserInfo, getUsers } from '@/utils/apiConfig'
 import { formatTime } from '@/utils/utils'
 
-let router = useRouter()
-let { setThemeConfig } = useThemeStore()
-let userStore = useUserStore()
-let userInfo: UserState = computed(() => {
+const router = useRouter()
+const { setThemeConfig } = useThemeStore()
+const userStore = useUserStore()
+const userInfo: UserState = computed(() => {
   return userStore.$state
 })
 
 function readAll() {}
 
-let notice = computed(() => {
+const notice = computed(() => {
   return `你好,${userStore.nickname ? userStore.nickname : userStore.username},今天要炸鱼吗?`
 })
-let comments = $ref<any>([])
-let settingDraw = $ref<boolean>(false)
-const theme = $(
-  useStorage('themeConfig', {
-    ...defaultTheme,
-  })
-)
-let noticeTab = $ref('notice')
+const comments = ref<any>([])
+const settingDraw = ref<boolean>(false)
+const theme = useStorage('themeConfig', {
+  ...defaultTheme,
+})
+
 const { isFullscreen, enter, exit, toggle } = useFullscreen()
 
 function showSettings() {
-  settingDraw = true
+  settingDraw.value = true
 }
 
 function gotoRoute(name: string) {
@@ -119,8 +117,8 @@ function logout() {
 }
 
 async function getUnread() {
-  // let data = await getCommentsUnreadApi();
-  comments = [
+  // const  data = await getCommentsUnreadApi();
+  comments.value = [
     {
       id: 5,
       created_at: '2022-05-12T13:21:47.077+08:00',
@@ -186,7 +184,7 @@ async function getUnread() {
 
 async function getUser() {
   try {
-    let res = await getUserInfo()
+    const res = await getUserInfo()
 
     if (res.success) {
       userStore.setUser(res.data)
@@ -205,7 +203,7 @@ watch(
   (val, oldVal) => {
     setThemeConfig(val)
   },
-  { immediate: true }
+  { immediate: true },
 )
 </script>
 

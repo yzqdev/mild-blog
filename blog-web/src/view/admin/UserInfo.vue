@@ -45,49 +45,54 @@ import { editUser, getUserInfo, uploadImg } from '@/utils/apiConfig'
 import { VueCropper } from 'vue-cropper'
 import { ElMessage } from 'element-plus'
 import { baseConfig } from '@/utils/http'
-let cropper = ref(null)
-let user = $ref({})
-const option = reactive({
-  img: '', // 裁剪图片的地址
-  info: true, // 裁剪框的大小信息
-  outputSize: 0.8, // 裁剪生成图片的质量
-  outputType: 'jpeg', // 裁剪生成图片的格式
-  canScale: false, // 图片是否允许滚轮缩放
-  autoCrop: true, // 是否默认生成截图框
-  // fixedBox: true, // 固定截图框大小 不允许改变
-  fixed: true, // 是否开启截图框宽高固定比例
-  fixedNumber: [], // 截图框的宽高比例
-  full: true, // 是否输出原图比例的截图
-  canMoveBox: false, // 截图框能否拖动
-  original: false, // 上传图片按照原始比例渲染
-  centerBox: false, // 截图框是否被限制在图片里面
-  infoTrue: true, // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
-})
-let cropperVisible = $ref(false)
+const cropper=ref()
+const state = reactive({
 
-let fileinfo = reactive({ name: '', type: '' })
+  user: {},
+  option: {
+    img: '', // 裁剪图片的地址
+    info: true, // 裁剪框的大小信息
+    outputSize: 0.8, // 裁剪生成图片的质量
+    outputType: 'jpeg', // 裁剪生成图片的格式
+    canScale: false, // 图片是否允许滚轮缩放
+    autoCrop: true, // 是否默认生成截图框
+    // fixedBox: true, // 固定截图框大小 不允许改变
+    fixed: true, // 是否开启截图框宽高固定比例
+    fixedNumber: [], // 截图框的宽高比例
+    full: true, // 是否输出原图比例的截图
+    canMoveBox: false, // 截图框能否拖动
+    original: false, // 上传图片按照原始比例渲染
+    centerBox: false, // 截图框是否被限制在图片里面
+    infoTrue: true, // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
+  },
+  cropperVisible: false,
+  fileinfo: { name: '', type: '' },
+})
+const {   user, option, cropperVisible, fileinfo } = toRefs(state)
+
 function finish() {
   console.log(cropper.value.getCropBlob)
   cropper.value.getCropBlob((data) => {
     // 获取当前裁剪好的数据
     // 注此时的data是一个Blob数据，部分接口接收的是File转化的FormData数据
-    let formData = new FormData()
+    const formData = new FormData()
     formData.append(
       'img',
       new File(
         [data], // 将Blob类型转化成File类型
-        fileinfo.name, // 设置File类型的文件名称
-        { type: fileinfo.type } // 设置File类型的文件类型
-      )
+        state.fileinfo.name, // 设置File类型的文件名称
+        { type: state.fileinfo.type }, // 设置File类型的文件类型
+      ),
     )
+    console.log(data)
     // 调用接口上传
     uploadImg(formData).then((result) => {
       console.log(`%c上传完成`, `color:red;font-size:16px;background:transparent`)
       console.log(result)
 
-      user.avatar = baseConfig.url + '/' + result.data.img.imgUrl
+      state.user.avatar = baseConfig.url + '/' + result.data.img.imgUrl
 
-      cropperVisible = false
+      state.cropperVisible = false
     })
   })
 }
@@ -96,8 +101,8 @@ function getUploadFile(file, fileList) {
   console.log(`%c则是getupdatefile`, `color:red;font-size:16px;background:transparent`)
   console.log(file)
   let files = file.raw
-  fileinfo = file // 保存下当前文件的一些基本信息
-  let reader = new FileReader() // 创建文件读取对象
+  state.fileinfo = file // 保存下当前文件的一些基本信息
+  const reader = new FileReader() // 创建文件读取对象
   reader.onload = async (e) => {
     let data
     if (typeof e.target.result === 'object') {
@@ -106,21 +111,21 @@ function getUploadFile(file, fileList) {
     } else {
       data = e.target.result
     }
-    option.img = data // 设置option的初始image
-    cropperVisible = true
+    state.option.img = data // 设置option的初始image
+    state.cropperVisible  = true
   }
   reader.readAsArrayBuffer(files)
-  option.fixedNumber = [1, 1] // 图片的裁剪宽高比在这里也可以进行设置
+  state.option.fixedNumber = [1, 1] // 图片的裁剪宽高比在这里也可以进行设置
 }
 
 function getUserData() {
   getUserInfo().then(({ data }) => {
-    user = data
+    state.user = data
   })
 }
 
 function showCropper() {
-  cropperVisible = true
+  state.cropperVisible = true
 }
 
 function getLockInfo(item) {
@@ -155,9 +160,11 @@ onBeforeMount(() => {
   position: relative;
   overflow: hidden;
 }
+
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;
 }
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -166,11 +173,13 @@ onBeforeMount(() => {
   line-height: 178px;
   text-align: center;
 }
+
 .avatar {
   width: 178px;
   height: 178px;
   display: block;
 }
+
 //设置裁剪框样式
 .cropper-content {
   .cropper {

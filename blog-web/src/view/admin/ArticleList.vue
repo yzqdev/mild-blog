@@ -58,19 +58,19 @@ import { clearBlog, deleteBlog, getBlogList, getCateList, getTagList, hideBlog }
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 
-let state = reactive({
+const state = reactive({
   data: [],
   loading: true,
   cateList: [],
   tagList: [],
+  count: 0,
+  currentPage: 1,
+  pageSize: 10,
 })
-let count = $ref(0)
-let currentPage = $ref(1)
 
-let pageSize = $ref(10)
 const router = useRouter()
 const route = useRoute()
-let { data, loading, cateList, tagList } = toRefs(state)
+const { data, loading, cateList, tagList, count, pageSize, currentPage } = toRefs(state)
 onBeforeMount(() => {
   getCate()
   getTags()
@@ -83,7 +83,7 @@ function getCate() {
   })
 }
 function sizeChange(size) {
-  pageSize = size
+  state.pageSize = size
 
   getData()
 }
@@ -96,12 +96,12 @@ function getTags() {
 async function getData() {
   state.loading = true
   try {
-    let res = await getBlogList({ page: currentPage, limit: pageSize, deleted: false })
+    const res = await getBlogList({ page: state.currentPage, limit: state.pageSize, deleted: false })
     if (res.success) {
       console.log(`%c获取`, `color:red;font-size:16px;background:transparent`)
 
       state.data = res.data.list
-      count = res.data.count
+      state.count = res.data.count
       state.loading = false
     }
   } catch (e) {
@@ -124,7 +124,7 @@ function editArticle(row) {
 
 async function deleteRow(row) {
   try {
-    let res = await deleteBlog(row.blogId)
+    const res = await deleteBlog(row.blogId)
     if (res.success) {
       getData()
       ElMessage({
@@ -139,7 +139,7 @@ async function deleteRow(row) {
 
 async function hide(row) {
   try {
-    let res = await hideBlog(row.blogId, !row.show)
+    const res = await hideBlog(row.blogId, !row.show)
     if (res.success) {
       getData()
       ElMessage({

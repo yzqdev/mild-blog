@@ -27,16 +27,18 @@
 <script setup>
 import { getIndex, getLinks } from '@/utils/homeApi'
 import { onBeforeMount, reactive, toRefs } from 'vue'
-
-let links = $ref()
-let favoriteLinks = $ref([])
-let recommendLinks = $ref([])
-let personalLinks = $ref([])
+const state = reactive({
+  links: [],
+  favoriteLinks: [],
+  recommendLinks: [],
+  personalLinks: [],
+})
+const { links, favoriteLinks, recommendLinks, personalLinks } = toRefs(state)
 onBeforeMount(async () => {
   let { data } = await getLinks()
-  favoriteLinks = data.favoriteLinks
-  recommendLinks = data.recommendLinks
-  personalLinks = data.personalLinks
+  state.favoriteLinks = data.favoriteLinks
+  state.recommendLinks = data.recommendLinks
+  state.personalLinks = data.personalLinks
 })
 </script>
 

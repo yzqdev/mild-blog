@@ -67,16 +67,19 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import * as echarts from 'echarts'
-import { onBeforeMount, onMounted } from 'vue'
+import { onBeforeMount, onMounted, toRefs } from 'vue'
 import { useUserStore } from '@/store/user'
-import { UserState } from '@/type/storeTypes'
+
 import { useRouter } from 'vue-router'
 import { dashboardApi } from '@/utils/systemApi'
 let router = useRouter()
 let userStore = useUserStore()
-let user = $ref<UserState>()
+const state = reactive({
+  user: {},
+})
+const { user } = toRefs(state)
 onBeforeMount(() => {
-  user = userStore.$state
+  state.user = userStore.$state
 })
 
 function gotoRoute(name: string) {
@@ -84,10 +87,10 @@ function gotoRoute(name: string) {
     name: name,
   })
 }
-let boardData = $ref({})
+let boardData = ref({})
 async function getData() {
   let res = await dashboardApi()
-  boardData = res.data
+  boardData.value = res.data
 }
 onBeforeMount(() => {
   getData()

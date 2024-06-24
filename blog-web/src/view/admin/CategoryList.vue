@@ -39,7 +39,7 @@
 import { onMounted, reactive, ref } from 'vue'
 import { formatTime } from '@/utils/utils'
 import { addCateApi, clearCateApi, getCatePaging } from '@/utils/apiConfig'
-import { ElMessage } from "element-plus";
+import { ElMessage } from 'element-plus'
 let cateData = ref([])
 let addFormRef = ref(null)
 let addCateRules = ref({
@@ -72,18 +72,15 @@ function confirmAdd() {
 }
 async function deleteRow(row) {
   try {
-   let res=await clearCateApi(row.categoryId)
+    let res = await clearCateApi(row.categoryId)
     if (res.success) {
-
-        getData()
-       ElMessage.success(res.message)
-
-    }else {
+      getData()
+      ElMessage.success(res.message)
+    } else {
       ElMessage.error(res.message)
     }
-  }catch (e) {
+  } catch (e) {
     ElMessage.error((e as Error).message)
-
   }
 }
 

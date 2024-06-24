@@ -16,7 +16,6 @@ instance.interceptors.request.use(
 
     // if (process.client) {
     config.headers['version'] = '1.0'
-    config.headers['Content-Type'] = 'application/json;charset=UTF-8'
     let userStore = useUserStore()
     if (userStore.token) {
       config.headers.token = userStore.token
@@ -28,7 +27,7 @@ instance.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error)
-  }
+  },
 )
 // 添加响应拦截器
 
@@ -42,7 +41,7 @@ instance.interceptors.response.use(
   function (error) {
     // 对响应错误做点什么
     return Promise.reject(error)
-  }
+  },
 )
 // @ts-ignore
 instance.postForm = (url: string, data: any) => {

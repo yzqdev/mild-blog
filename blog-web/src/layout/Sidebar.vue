@@ -43,16 +43,18 @@
 </template>
 
 <script lang="ts" setup>
-import { h, ref, computed, watchEffect, Component, watch } from 'vue'
+import { h, ref, computed, watchEffect, Component, watch, toRefs } from 'vue'
 import { Setting, HomeFilled, Menu } from '@element-plus/icons-vue'
 
 import { useRoute, RouterLink, useRouter } from 'vue-router'
-
-let defaultActive = $ref('home')
+const state = reactive({
+  defaultActive: 'home',
+  currentKey: '',
+})
+const { defaultActive } = toRefs(state)
 const router = useRouter()
 const route = useRoute()
-let currentKey = $ref('')
-let expandedKeys = $ref([])
+
 function gotoRoute(params: string) {
   console.log('cur route', route.name)
   console.log(params)
@@ -67,10 +69,10 @@ const handleClose = (key: string, keyPath: string[]) => {
 watch(
   route,
   (val, oldVal) => {
-    defaultActive = val.path
+    state.defaultActive = val.path
     console.log('move to ', val.path)
   },
-  { immediate: true }
+  { immediate: true },
 )
 </script>
 

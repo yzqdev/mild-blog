@@ -53,14 +53,18 @@ import { onBeforeMount, watch } from 'vue'
 import { addDictDataApi, getAllDictDataApi } from '@/utils/systemApi'
 import { ElMessage } from 'element-plus'
 
-let count = $ref(0)
-let currentPage = $ref(1)
-let pageSize = $ref(10)
-let dictDataTable = $ref([])
-let loading = $ref(false)
-let addDictDataDialog = $ref(false)
-let dictDataForm = $ref({ value: '', code: '', sort: 0, remark: '', typeId: '' })
-let typeId = $ref('')
+const state = reactive({
+  count: 0,
+  currentPage: 1,
+  pageSize: 10,
+  dictDataTable: [],
+  loading: false,
+  addDictDataDialog: false,
+  dictDataForm: { value: '', code: '', sort: 0, remark: '', typeId: '' },
+  typeId: '',
+})
+const { count, currentPage, pageSize, dictDataTable, loading, addDictDataDialog, dictDataForm, typeId } = toRefs(state)
+
 let props = defineProps({
   row: Object,
   dictType: { type: String, default: '' },
@@ -71,24 +75,27 @@ watch(
   props,
   (val, oldValue) => {
     if (val) {
-      typeId = props.dictType
+      state.typeId = props.dictType
       getData()
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
+
 async function getData() {
-  loading = true
-  let res = await getAllDictDataApi(props.dictType, { page: currentPage, limit: pageSize })
+  state.loading = true
+  let res = await getAllDictDataApi(props.dictType, { page: state.currentPage, limit: state.pageSize })
   if (res.success) {
-    dictDataTable = res.data.list
-    count = res.data.count
-    loading = false
+    state.dictDataTable = res.data.list
+    state.count = res.data.count
+    state.loading = false
   }
 }
+
 function deleteRow(row) {}
+
 async function submitAddDictData() {
-  dictDataForm.typeId = props.dictType
+  state.dictDataForm.typeId = props.dictType
   let res = await addDictDataApi(dictDataForm)
   if (res.success) {
     await getData()
@@ -96,12 +103,12 @@ async function submitAddDictData() {
       type: 'success',
       message: res.message,
     })
-    addDictDataDialog = false
+    state.addDictDataDialog = false
   }
 }
 
 function sizeChange(size: number) {
-  pageSize = size
+  state.pageSize = size
   getData()
 }
 </script>

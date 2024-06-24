@@ -59,22 +59,24 @@ import { defineComponent, onMounted } from 'vue'
 import { addSystemInfo, delSystemInfo, editSystemInfo, getSystemInfo } from '@/utils/apiConfig'
 import dayjs from 'dayjs'
 import { ElMessage } from 'element-plus'
-
-let dialogTxt = $ref('添加系统信息')
-let tableData = $ref()
-let addDialogVisible = $ref(false)
-let addForm = $ref({
-  id: null,
-  configCode: '',
-  configName: '',
-  configValue: '',
+const state = reactive({
+  dialogTxt: '添加系统信息',
+  tableData: [],
+  addDialogVisible: false,
+  addForm: {
+    id: null,
+    configCode: '',
+    configName: '',
+    configValue: '',
+  },
 })
+const { dialogTxt, tableData, addDialogVisible, addForm } = toRefs(state)
 
 async function getData() {
   try {
     let res = await getSystemInfo()
     if (res.success) {
-      tableData = res.data.list
+      state.tableData = res.data.list
     } else {
       ElMessage({
         type: 'error',
@@ -90,8 +92,8 @@ async function getData() {
 }
 
 function editSystem(row) {
-  addForm = row
-  addDialogVisible = true
+  state.addForm = row
+  state.addDialogVisible = true
 }
 function changeConfigName(row) {
   editSystemInfo(row).then(({ data }) => {})
@@ -113,21 +115,21 @@ function deleteRow(row) {
 }
 
 function addDialogShow() {
-  addDialogVisible = true
+  state.addDialogVisible = true
 }
 
 async function confirmAdd() {
-  if (addForm.id) {
-    await changeConfigName(addForm)
+  if (state.addForm.id) {
+    await changeConfigName(state.addForm)
   } else {
-    await addSystemInfo(addForm)
+    await addSystemInfo(state.addForm)
   }
   getData()
   ElMessage({
     type: 'success',
     message: '成功',
   })
-  addDialogVisible = false
+  state.addDialogVisible = false
 }
 
 onMounted(() => {

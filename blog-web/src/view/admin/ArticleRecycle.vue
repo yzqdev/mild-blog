@@ -18,8 +18,8 @@
     </el-table-column>
     <el-table-column prop="blogViews" width="80" label="阅读量"></el-table-column>
     <el-table-column width="180" prop="updateTime" label="修改时间">
-      <template v-slot="{ row }">
-        {{ $dayjs(row.updateTime).format('YYYY-MM-DD HH:mm:ss') }}
+      <template #default="{ row }">
+        {{ formatTime(row.updateTime) }}
       </template>
     </el-table-column>
     <el-table-column prop="show" label="文章状态">
@@ -51,20 +51,17 @@ import { defineComponent, onBeforeMount, reactive, toRefs } from 'vue'
 import { hideBlog, deleteBlog, getBlogList, getCateList, getTagList, clearBlog } from '@/utils/apiConfig'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-
-let state = reactive({
+import {formatTime}from '@/utils/utils'
+const state = reactive({
   data: [],
   loading: true,
   cateList: [],
-  tagList: [],
+  tagList: [],count:0,currentPage:1,pageSize:10
 })
-let count = $ref(0)
-let currentPage = $ref(1)
 
-let pageSize = $ref(10)
 const router = useRouter()
 const route = useRoute()
-let { data, loading, cateList, tagList } = toRefs(state)
+let { data, loading, cateList, tagList ,count,currentPage,pageSize} = toRefs(state)
 onBeforeMount(() => {
   getCate()
   getTags()
@@ -77,7 +74,7 @@ function getCate() {
   })
 }
 function sizeChange(size) {
-  pageSize = size
+ state. pageSize = size
   getData()
 }
 function getTags() {
@@ -87,11 +84,11 @@ function getTags() {
 }
 
 function getData() {
-  getBlogList({ page: 1, limit: pageSize, deleted: true }).then((res) => {
+  getBlogList({ page:state.currentPage, limit: state.pageSize, deleted: true }).then((res) => {
     console.log(`%c获取`, `color:red;font-size:16px;background:transparent`)
     console.log(res)
     state.data = res.data.list
-    count = res.data.count
+    state.count = res.data.count
     state.loading = false
   })
 }

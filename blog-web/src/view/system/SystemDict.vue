@@ -57,18 +57,22 @@ import { ElMessage } from 'element-plus'
 import { onBeforeMount } from 'vue'
 import SystemDictData from '@/view/system/SystemDictData.vue'
 
-let addDictDialog = $ref(false)
-let addDictDataDialog = $ref(false)
-let dictTypeForm = $ref({ name: '', code: '', sort: 0, remark: '' })
-let count = $ref(0)
-let pageSize = $ref(10)
-let currentPage = $ref(1)
-let loading = $ref(false)
-let dictTable = $ref([])
-let dictType = $ref('')
-let dictDataShow = $ref(false)
+const state = reactive({
+  addDictDialog: false,
+  addDictDataDialog: false,
+  dictTypeForm: { name: '', code: '', sort: 0, remark: '' },
+  count: 0,
+  pageSize: 10,
+  currentPage: 1,
+  loading: false,
+  dictTable: [],
+  dictType: '',
+  dictDataShow: false,
+})
+const { addDictDialog, addDictDataDialog, dictTypeForm, count, pageSize, currentPage, loading, dictTable, dictType, dictDataShow } = toRefs(state)
+
 function sizeChange(size: number) {
-  pageSize = size
+  state.pageSize = size
 }
 
 onBeforeMount(async () => {
@@ -76,20 +80,22 @@ onBeforeMount(async () => {
 })
 
 async function getData() {
-  loading = true
-  let res = await getAllDictTypeApi({ page: currentPage, limit: pageSize })
+  state.loading = true
+  let res = await getAllDictTypeApi({ page: state.currentPage, limit:state. pageSize })
 
   if (res.success) {
-    dictTable = res.data.list
-    count = res.data.count
-    loading = false
+    state.dictTable = res.data.list
+    state.count = res.data.count
+    state.loading = false
   }
 }
+
 function showDict(row) {
   console.log(row)
-  dictType = row.code
-  addDictDataDialog = true
+  state.dictType = row.code
+  state.addDictDataDialog = true
 }
+
 function editDictClick(row) {}
 
 function deleteRow(row) {}
@@ -98,7 +104,7 @@ async function submitEdit() {
   let res = await addDictTypeApi(dictTypeForm)
   if (res.success) {
     await getData()
-    addDictDialog = false
+    state.addDictDialog = false
     ElMessage({
       type: 'success',
       message: res.message,

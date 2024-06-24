@@ -10,8 +10,7 @@
       <el-tag style="margin-left: 10px; cursor: pointer" v-for="item in tags" @click="gotoTag(item)">{{ item.tagName }}</el-tag>
     </div>
     <article class="blog-content">
-
-      <md-preview editor-id="preview-only" :model-value="blog.blogContent" code-theme="atomDark" :show-code-row-number="true" ></md-preview>
+      <md-preview editor-id="preview-only" :model-value="blog.blogContent" code-theme="atomDark" :show-code-row-number="true"></md-preview>
       <md-catalog :editorId="id" :scrollElement="scrollElement" />
     </article>
 
@@ -50,7 +49,7 @@
               <span style="flex: 1; text-align: right">{{ formatTime(item.commentCreateTime) }}</span>
             </div>
           </template>
-          <md-editor editor-id="preview-only" v-model="item.commentBody"></md-editor>
+          <md-preview editor-id="preview-only" v-model="item.commentBody"></md-preview>
 
           <div v-if="item.replyBody" style="text-indent: 40px">
             回复:
@@ -71,13 +70,13 @@ import { onMounted, reactive, ref, toRefs, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
-import { MdCatalog, MdEditor, MdPreview } from "md-editor-v3";
-import 'md-editor-v3/lib/preview.css';
+import { MdCatalog, MdEditor, MdPreview } from 'md-editor-v3'
+import 'md-editor-v3/lib/preview.css'
 const router = useRouter()
 const route = useRoute()
-const scrollElement = document.documentElement;
-const id = 'preview-only';
-const text = ref('# Hello Editor');
+const scrollElement = document.documentElement
+const id = 'preview-only'
+const text = ref('# Hello Editor')
 let state = reactive({
   commentInput: { width: '50%' },
   blog: {},
@@ -85,7 +84,7 @@ let state = reactive({
   comment: { commentator: null, email: null, commentBody: '' },
   commentList: [],
 })
-let commentRule = $ref<FormRules>({
+let commentRule = ref<FormRules>({
   commentator: [
     { required: true, message: '请输入网名', trigger: 'blur' },
     { min: 1, max: 20, message: '长度在 3 到 5 个字符', trigger: 'blur' },
@@ -99,12 +98,12 @@ let commentRule = $ref<FormRules>({
     },
     { min: 1, max: 20, message: '长度在 3 到 5 个字符', trigger: 'blur' },
   ],
-  commentBody: [{ required: true, message: '请输入评论内容',trigger:'blur' }],
+  commentBody: [{ required: true, message: '请输入评论内容', trigger: 'blur' }],
 })
 let active = ref(false)
 let loading = ref(true)
 let { blog, tags, comment, commentList, commentInput } = toRefs(state)
-let commentForm = ref<FormInstance>( )
+let commentForm = ref<FormInstance>()
 onMounted(async () => {
   let id = route.params.id
   const { data } = await getBlogById(id)
@@ -140,18 +139,18 @@ function commentYou() {
     console.log(state.comment)
     console.log(`%c看看是大幅度蓝山咖啡`, `color:red;font-size:16px;background:transparent`)
     if (valid) {
-     try {
-       let res=await submitComment(state.comment)
-       if (res.success) {
-         ElMessage({ message: '成功', type: 'success' })
-         getComments()
-       }else{
-         ElMessage.error(res.message)
-       }
-     }
-      catch(e){
+      try {
+        let res = await submitComment(state.comment)
+        if (res.success) {
+          ElMessage({ message: '成功', type: 'success' })
+          getComments()
+        } else {
+          ElMessage.error(res.message)
+        }
+      } catch (e) {
         ElMessage.error(e.message)
-    }}
+      }
+    }
   })
 }
 
@@ -174,7 +173,7 @@ watch(
   () => comment.value,
   (val, preVal) => {
     active.value = !val.commentBody
-  }
+  },
 )
 </script>
 
