@@ -16,13 +16,13 @@
     "core-js": "^3.37.1",
     "dayjs": "^1.11.11",
     "quasar": "^2.16.4",
-    "vue": "^3.4.29",
-    "vue-router": "^4.3.3",
+    "vue": "^3.4.30",
+    "vue-router": "^4.4.0",
     "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@quasar/app": "^3.3.3",
-    "@types/node": "^20.14.6"
+    "@types/node": "^20.14.8"
   },
   "browserslist": [
     "last 10 Chrome versions",
