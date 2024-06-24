@@ -1,10 +1,17 @@
 package com.site.blog.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.site.blog.aop.LogOperationEnum;
 import com.site.blog.aop.SysLogAnnotation;
 import com.site.blog.constants.HttpStatusEnum;
+import com.site.blog.model.dto.AjaxPutPage;
+import com.site.blog.model.dto.AjaxResultPage;
+import com.site.blog.model.dto.PageDto;
 import com.site.blog.model.dto.Result;
+import com.site.blog.model.entity.BlogInfo;
 import com.site.blog.model.entity.Img;
+import com.site.blog.model.entity.SysOpLog;
 import com.site.blog.service.ImgService;
 import com.site.blog.util.*;
 import lombok.extern.slf4j.Slf4j;
@@ -27,11 +34,14 @@ import java.util.Map;
  * @modified By:
  */
 @RestController
-@RequestMapping("/v2/img")
+@RequestMapping("/v2/admin/img")
 @Slf4j
 public class ImgController {
-    @Resource
-    private ImgService imgService;
+    private  final ImgService imgService;
+
+    public ImgController(ImgService imgService) {
+        this.imgService = imgService;
+    }
 
 
     @PostMapping("/upload")
@@ -48,12 +58,18 @@ public class ImgController {
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,result);
     }
 
-    @GetMapping("/list")
-    public Result<Object> listFiles() {
-        List<Img> imgs = imgService.list();
+    @PostMapping("/list")
+    public Result<Object> listFiles(@RequestBody AjaxPutPage<Img> condition) {
+
+        Page<Img> ipage = new Page<>(condition.getPage(), condition.getLimit());
+        var imgs = imgService.page(ipage );
 
 
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, imgs);
+        var res = new AjaxResultPage<Img>();
+        res.setCount(imgs.getTotal());
+        res.setList(imgs.getRecords());
+
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, res);
     }
 
     @DeleteMapping("/del/{id}")

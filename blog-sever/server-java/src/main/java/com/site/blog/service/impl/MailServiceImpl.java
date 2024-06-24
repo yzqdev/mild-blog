@@ -12,6 +12,7 @@ import io.pebbletemplates.pebble.PebbleEngine;
 import io.pebbletemplates.pebble.template.PebbleTemplate;
 import jakarta.mail.*;
 import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,14 +34,14 @@ import java.util.Map;
 import java.util.Properties;
 
 @Service
+@RequiredArgsConstructor
 public class MailServiceImpl extends ServiceImpl<EmailMapper, EmailConfig> implements MailService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Resource
-    private JavaMailSender mailSender;
-    @Resource
-    private EmailMapper emailMapper;
+    private  final JavaMailSender mailSender;
+
+    private  final EmailMapper emailMapper;
     @Value("${spring.mail.username}")
     private String from;
 

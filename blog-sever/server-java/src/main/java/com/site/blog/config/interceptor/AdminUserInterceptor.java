@@ -3,7 +3,7 @@ package com.site.blog.config.interceptor;
 import com.site.blog.constants.BaseConstants;
 import com.site.blog.model.entity.AdminUser;
 import com.site.blog.model.vo.UserVo;
-import com.site.blog.util.JwtUtil;
+import com.site.blog.util.JwtService;
 import com.site.blog.util.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -42,8 +42,8 @@ public class AdminUserInterceptor implements HandlerInterceptor {
         }
 
         log.info("token=" + token);
-        boolean flag = JwtUtil.verifyToken(token);
-        String userId = JwtUtil.getUserId(token);
+        boolean flag = JwtService.verifyToken(token);
+        String userId = JwtService.getUserId(token);
         if (flag) {
 
             AdminUser user = UserUtil.getUserByUserCode( userId );

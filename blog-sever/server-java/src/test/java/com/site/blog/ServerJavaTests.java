@@ -14,8 +14,12 @@ import jakarta.annotation.Resource;
 @ExtendWith({SpringExtension.class})
 
 public class ServerJavaTests {
-    @Resource
-    AdminUserService adminUserService;
+
+    private  final AdminUserService adminUserService;
+
+    public ServerJavaTests(AdminUserService adminUserService) {
+        this.adminUserService = adminUserService;
+    }
 
     @Test
     public void contextLoads() {

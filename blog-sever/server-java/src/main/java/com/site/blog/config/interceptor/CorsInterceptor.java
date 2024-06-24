@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * @Date:Created time 2020/8/7 17:07
  * @Modified By:
  */
-@Component
+
 @Slf4j
 public class CorsInterceptor implements HandlerInterceptor {
     @Override

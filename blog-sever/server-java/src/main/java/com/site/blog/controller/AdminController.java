@@ -1,6 +1,8 @@
 package com.site.blog.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.site.blog.aop.LogOperationEnum;
+import com.site.blog.aop.SysLogAnnotation;
 import com.site.blog.constants.BaseConstants;
 import com.site.blog.constants.HttpStatusEnum;
 import com.site.blog.constants.SessionConstants;
@@ -15,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,7 +52,7 @@ public class AdminController {
      
     private final LinkService linkService;
 
-
+    @SysLogAnnotation(title = "删除用户",opType = LogOperationEnum.DELETE)
     @PostMapping("/del/{id}")
     public Result removeUser(@PathVariable("id") Integer id) {
         if (id == null) {
@@ -71,6 +74,7 @@ public class AdminController {
         res.put("viewsCount",views);
         return  ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,res);
     }
+    @SysLogAnnotation(title = "更改用户",opType = LogOperationEnum.EDIT)
     @PostMapping("/userEdit")
     public  Result editUser(UserVo userVo){
         AdminUser sqlUser=adminUserService.getAdminUserById(userVo.getId());
@@ -106,28 +110,26 @@ public class AdminController {
      */
     @GetMapping("/password")
     public Result<String> validatePassword(String oldPwd, HttpSession session) {
-        String userId = (String) session.getAttribute(SessionConstants.LOGIN_USER_ID);
+        AdminUser user= (AdminUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userId = user.getId();
         boolean flag = adminUserService.validatePassword(userId, oldPwd);
         if (flag) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
     }
-
+    @SysLogAnnotation(title = "冻结用户",opType = LogOperationEnum.CHANGE_STATUS)
     @PostMapping("/unlock/{id}")
     public Result unlock(@PathVariable("id") String id) {
         AdminUser user = adminUserService.getAdminUserById( id);
         UserVo currentUser = RequestHelper.getSessionUser();
+        log.info(currentUser.toString());
         if (user.getId().equals(currentUser.getId())) {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, "不能冻结自己");
         }
-        if (Boolean.TRUE.equals(user.getLocked()) ) {
-            user.setLocked(true);
-        } else {
-            user.setLocked(false);
-        }
+        user.setLocked(!user.getLocked());
         adminUserService.updateById(user);
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, user.getLocked());
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, user.getLocked()?"冻结":"未冻结");
     }
 
     @GetMapping("/getUser")

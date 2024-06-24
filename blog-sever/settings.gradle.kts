@@ -16,5 +16,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "BlogApp"
 include(":server-java")
-include(":server-jpa")
-include(":server-kt")

@@ -6,6 +6,7 @@ import com.site.blog.mapper.ImgMapper;
 import com.site.blog.model.entity.Img;
 import com.site.blog.service.ImgService;
 import com.site.blog.util.UploadFileUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +33,7 @@ import java.util.Objects;
  */
 @Service
 @Slf4j
+
 public class ImgServiceImpl extends ServiceImpl<ImgMapper, Img> implements ImgService {
     private final UploadProperty uploadProperty;
     private final Path staticDir;
@@ -44,15 +46,16 @@ public class ImgServiceImpl extends ServiceImpl<ImgMapper, Img> implements ImgSe
      * Thumbnail height.
      */
     private static final int THUMB_HEIGHT = 256;
-    @Resource
-    private ImgMapper imgMapper;
+
+    private  final ImgMapper imgMapper;
 
     @Value("${myblog.site.ip}")
     private String ip;
 
-    public ImgServiceImpl(UploadProperty uploadProperty) {
+    public ImgServiceImpl(UploadProperty uploadProperty, ImgMapper imgMapper) {
         this.uploadProperty = uploadProperty;
         staticDir = Paths.get(uploadProperty.getFileUrl());
+        this.imgMapper = imgMapper;
     }
 
     @Override

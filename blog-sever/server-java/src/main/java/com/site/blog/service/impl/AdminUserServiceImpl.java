@@ -9,6 +9,7 @@ import com.site.blog.mapper.AdminUserMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.site.blog.util.MD5Utils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -25,8 +26,8 @@ import org.springframework.util.ObjectUtils;
 public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser> implements AdminUserService {
 
 
-    private final AdminUserMapper adminUserMappe;
-
+    private final AdminUserMapper adminUserMapper;
+private final PasswordEncoder passwordEncoder;
     /**
      * @Description: 验证密码
      * @Param: [userId, oldPwd]
@@ -37,10 +38,10 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     public boolean validatePassword(String userId, String oldPwd) {
         QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<>(
                 new AdminUser().setId(userId)
-                        .setPassword(MD5Utils.MD5Encode(oldPwd, "UTF-8"))
+                        .setPassword(passwordEncoder.encode(oldPwd))
         );
 
-        AdminUser adminUser = adminUserMappe.selectOne(queryWrapper);
+        AdminUser adminUser = adminUserMapper.selectOne(queryWrapper);
         return !ObjectUtils.isEmpty(adminUser);
     }
 
@@ -53,14 +54,14 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean updateUserInfo(AdminUser adminUser) {
-        adminUser.setPassword(MD5Utils.MD5Encode(adminUser.getPassword(),"UTF-8"));
-        return SqlHelper.retBool(adminUserMappe.updateById(adminUser));
+        adminUser.setPassword(passwordEncoder.encode(adminUser.getPassword() ));
+        return SqlHelper.retBool(adminUserMapper.updateById(adminUser));
     }
 
     @Override
     public int register(AdminUser admin) {
-        admin.setPassword(MD5Utils.MD5Encode(admin.getPassword(), "UTF-8"));
-        return adminUserMappe.insert(admin);
+        admin.setPassword(passwordEncoder.encode(admin.getPassword() ));
+        return adminUserMapper.insert(admin);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         try {
             LambdaQueryWrapper<AdminUser> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(AdminUser::getId, id);
-            return adminUserMappe.selectOne(queryWrapper);
+            return adminUserMapper.selectOne(queryWrapper);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

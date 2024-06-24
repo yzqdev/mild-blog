@@ -33,8 +33,12 @@ import java.util.List;
 @Tag(name = "链接json")
 public class LinkController {
 
-    @Resource
-    private LinkService linkService;
+
+    private  final LinkService linkService;
+
+    public LinkController(LinkService linkService) {
+        this.linkService = linkService;
+    }
 
 
     @GetMapping("/linkType/list")
@@ -60,7 +64,7 @@ public class LinkController {
 
        var queryWrapper = new QueryWrapper<Link>( );
         queryWrapper.lambda()
-                .orderByAsc(Link::getLinkRank);
+                .orderByAsc(Link::getLinkRank).orderByAsc(Link::getCreateTime);
         if (ajaxPutPage != null) {
             Page<Link> page = ajaxPutPage.putPageToPage();
             linkService.page(page, queryWrapper);
@@ -75,13 +79,13 @@ public class LinkController {
 
     @PostMapping("/link/hide")
     @SysLogAnnotation(title = "删除链接",opType = LogOperationEnum.CHANGE_STATUS)
-    public Result  updateLinkStatus(Link link) {
+    public Result  updateLinkStatus(@RequestBody Link link) {
 
         boolean flag = linkService.updateById(link);
 
 
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, link );
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, link );
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }

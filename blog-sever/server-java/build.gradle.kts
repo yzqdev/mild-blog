@@ -24,8 +24,10 @@ dependencies {
     compileOnly ("org.projectlombok:lombok")
     annotationProcessor ("org.projectlombok:lombok")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-mail")
 
     implementation("org.springframework.boot:spring-boot-starter-websocket")
@@ -39,14 +41,15 @@ dependencies {
 
 // https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter
     implementation(libs.druidSpringboot)
+
 // https://mvnrepository.com/artifact/net.coobird/thumbnailator
     implementation(libs.thumbnailator)
 
     implementation(libs.bundles.commons)
+    implementation(libs.bundles.commonmark)
 // https://mvnrepository.com/artifact/com.freewayso/image-combiner
     implementation(libs.imageCombiner)
-// https://mvnrepository.com/artifact/com.dtflys.forest/forest-spring-boot-starter
-    implementation(libs.forestBoot)
+
 
 
     implementation(libs.javaJwt)

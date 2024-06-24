@@ -17,6 +17,7 @@ import com.site.blog.service.CommentService;
 import com.site.blog.util.BeanMapUtil;
 import com.site.blog.util.ResultGenerator;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,12 +29,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/v2/admin")
 @Tag(name = "评论json")
+@RequiredArgsConstructor
 public class CommentController {
 
-    @Resource
-    private CommentService commentService;
-    @Resource
-    private BlogInfoService blogService;
+
+    private  final    CommentService commentService;
+
+    private  final    BlogInfoService blogService;
 
 
     /**

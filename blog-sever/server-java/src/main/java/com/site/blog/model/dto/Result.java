@@ -17,7 +17,8 @@ public class Result<T> implements Serializable {
     private String message;
     private T data;
     private Boolean success;
-private long timestamp;
+    private long timestamp;
+
     public Result() {
     }
 
@@ -25,8 +26,6 @@ private long timestamp;
         this.resultCode = resultCode;
         this.message = message;
     }
-
-
 
 
 }

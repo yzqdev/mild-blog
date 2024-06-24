@@ -24,8 +24,7 @@ import java.util.Arrays;
 public class WebLogAspect {
 
     private ThreadLocal<Long> startTime = new ThreadLocal<>();
-@Resource
-    BlogConfigService blogConfigService;
+
     //使用@Pointcut定义一个切入点，可以是一个规则表达式，比如下例中某个package下的所有函数，也可以是一个注解等。
     @Pointcut("execution(public * com.site.blog.controller.*.*(..))")
     public void webLog() {

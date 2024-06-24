@@ -14,11 +14,15 @@ import com.site.blog.model.vo.UserVo;
 import com.site.blog.service.AdminUserService;
 import com.site.blog.service.BlogConfigService;
 import com.site.blog.service.MailService;
-import com.site.blog.util.JwtUtil;
-import com.site.blog.util.MD5Utils;
+import com.site.blog.util.JwtService;
 import com.site.blog.util.RequestHelper;
 import com.site.blog.util.ResultGenerator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -38,8 +42,9 @@ import java.util.Optional;
 public class AuthController {
     private final AdminUserService adminUserService;
     private final MailService mailService;
-
+    private final AuthenticationManager authenticationManager;
     private final BlogConfigService blogConfigService;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping(value = "/login")
     @ResponseBody
@@ -49,12 +54,11 @@ public class AuthController {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST);
         }
         QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<>(
-                new AdminUser().setUsername(username)
-                        .setPassword(MD5Utils.MD5Encode(password, "UTF-8")));
+                new AdminUser().setUsername(username));
         AdminUser adminUser = adminUserService.getOne(queryWrapper);
         if (adminUser != null) {
             if (!adminUser.getLocked()) {
-                String token = JwtUtil.sign(adminUser.getUsername(), adminUser.getId());
+                String token = JwtService.sign(adminUser.getUsername(), adminUser.getId());
 
                 session.setAttribute(SessionConstants.LOGIN_USER, adminUser.getNickname());
                 session.setAttribute(SessionConstants.LOGIN_USER_ID, adminUser.getId());
@@ -62,6 +66,10 @@ public class AuthController {
                 session.setAttribute(SessionConstants.AUTHOR_IMG, blogConfigService.getById(
                         SysConfigConstants.SYS_AUTHOR_IMG.getConfigField()));
 
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(username, password);
+                Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+                SecurityContextHolder.getContext().setAuthentication(authenticate);
                 return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, token);
             } else {
                 return ResultGenerator.getResultByHttp(HttpStatusEnum.UNAUTHORIZED, false, "账户已被冻结");
@@ -127,7 +135,7 @@ public class AuthController {
                 model.addAttribute("note", "密码已被系统重置，请登录修改你的新密码");
             } else {
                 model.addAttribute("title", "抱歉");
-                model.addAttribute("name", "为获取到用户信息");
+                model.addAttribute("name", "未获取到用户信息");
                 model.addAttribute("note", "操作失败");
 
             }

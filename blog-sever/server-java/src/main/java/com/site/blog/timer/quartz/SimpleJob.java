@@ -1,35 +1,28 @@
 package com.site.blog.timer.quartz;
 
-import com.site.blog.timer.quartz.service.OrderService;
+import com.site.blog.timer.quartz.service.SwaggerService;
 import com.site.blog.util.ColorUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.quartz.QuartzJobBean;
-
-import jakarta.annotation.Resource;
 
 
 @Slf4j
+@RequiredArgsConstructor
+
 public class SimpleJob extends QuartzJobBean {
-    @Resource
-    private OrderService orderService;
-    private String serviceCode;
 
-    public String getServiceCode() {
-        return serviceCode;
-    }
+    private final SwaggerService swaggerService;
 
-    public void setServiceCode(String serviceCode) {
-        this.serviceCode = serviceCode;
-    }
 
     @Override
     protected void executeInternal(JobExecutionContext context) {
 
-       ColorUtil.green(serviceCode);
+        String serviceCode = "swagger";
+        ColorUtil.green(serviceCode);
 
-        orderService.showSwagger();
+        swaggerService.showSwagger();
     }
 
 }

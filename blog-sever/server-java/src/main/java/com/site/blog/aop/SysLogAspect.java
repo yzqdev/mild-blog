@@ -12,6 +12,7 @@ import com.site.blog.util.JoinPointUtil;
 import com.site.blog.util.RequestHelper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -26,11 +27,12 @@ import java.time.format.DateTimeFormatter;
 
 @Aspect
 @Configuration
+@RequiredArgsConstructor
 public class SysLogAspect {
-    @Resource
-    BlogConfigService blogConfigService;
-    @Resource
-    SysOpLogService sysOpLogService;
+
+  private  final  BlogConfigService blogConfigService;
+
+    private  final SysOpLogService sysOpLogService;
 
     /**
      * 日志切入点

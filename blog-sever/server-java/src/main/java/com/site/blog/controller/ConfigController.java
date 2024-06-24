@@ -24,9 +24,11 @@ import java.util.List;
 @Slf4j
 public class ConfigController {
 
-    @Resource
-    private BlogConfigService blogConfigService;
+    private  final BlogConfigService blogConfigService;
 
+    public ConfigController(BlogConfigService blogConfigService) {
+        this.blogConfigService = blogConfigService;
+    }
 
 
     /**

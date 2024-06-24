@@ -59,6 +59,7 @@ public class RequestHelper {
      */
     public static UserVo getSessionUser() {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        requestAttributes.getAttributeNames(1);
         UserVo attribute = (UserVo) requestAttributes.getAttribute(BaseConstants.USER_ATTR, RequestAttributes.SCOPE_REQUEST);
         return attribute;
     }

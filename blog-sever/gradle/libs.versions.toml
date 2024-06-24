@@ -2,7 +2,7 @@
 agp = "8.1.1"
 
 kotlin = "2.0.0"
-
+commonmark = "0.21.0"
 [libraries]
 
 # utils
@@ -58,15 +58,22 @@ gson = "com.google.code.gson:gson:latest.release"
 jackson = "com.fasterxml.jackson.core:jackson-databind:2.15.2"
 fastjson = "com.alibaba.fastjson2:fastjson2:2.0.41"
 
-rxjava3 = "io.reactivex.rxjava3:rxjava:3.1.5"
-mybatisPlusBoot = "com.baomidou:mybatis-plus-boot-starter:3.5.5"
-mybatisFlexBoot3="com.mybatis-flex:mybatis-flex-spring-boot3-starter:1.7.7"
-mybatisFlexBoot="com.mybatis-flex:mybatis-flex-spring-boot-starter:1.7.7"
-mybatisFlexAnno="com.mybatis-flex:mybatis-flex-processor:1.7.7"
-hikra="com.zaxxer:HikariCP:5.0.1"
+rxjava3 = "io.reactivex.rxjava3:rxjava:3.1.8"
+mybatis3 = "org.mybatis:mybatis:3.5.15"
+pageHelper = "com.github.pagehelper:pagehelper:6.1.0"
+mybatisPlusBoot2="com.baomidou:mybatis-plus-boot-starter:3.5.7"
+mybatisPlusBoot = "com.baomidou:mybatis-plus-spring-boot3-starter:3.5.7"
+mybatisFlexBoot3 = "com.mybatis-flex:mybatis-flex-spring-boot3-starter:1.9.3"
+mybatisFlexBoot = "com.mybatis-flex:mybatis-flex-spring-boot-starter:1.9.3"
+mybatisFlexAnno = "com.mybatis-flex:mybatis-flex-processor:1.9.3"
+hikra = "com.zaxxer:HikariCP:5.1.0"
 #// https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter
-druidSpringboot = "com.alibaba:druid-spring-boot-starter:1.2.19"
+druidSpringboot = "com.alibaba:druid-spring-boot-starter:1.2.22"
+druidSpringboot3 ="com.alibaba:druid-spring-boot-3-starter:1.2.22"
 mapstruct = "org.mapstruct:mapstruct:1.5.5.Final"
+
+
+
 # https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor
 mapstructAnno = "org.mapstruct:mapstruct-processor:1.5.5.Final"
 javaJwt = "com.auth0:java-jwt:4.4.0"
@@ -97,6 +104,15 @@ kotlinx-coroutines-android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1
 rxjava2 = "io.reactivex.rxjava2:rxjava:2.2.21"
 # picture
 nettyAll="io.netty:netty-all:4.1.105.Final"
+commonMark = { module = "org.commonmark:commonmark", version.ref = "commonmark" }
+commonmarkExtAutolink = { module = "org.commonmark:commonmark-ext-autolink", version.ref = "commonmark" }
+commonmarkFgmTable = { module = "org.commonmark:commonmark-ext-gfm-tables", version.ref = "commonmark" }
+commonmarkStrikethrough = { module = "org.commonmark:commonmark-ext-gfm-strikethrough", version.ref = "commonmark" }
+commonmarkHeadingAnchor = { module = "org.commonmark:commonmark-ext-heading-anchor", version.ref = "commonmark" }
+commonmarkImageAttr = { module = "org.commonmark:commonmark-ext-image-attributes", version.ref = "commonmark" }
+commonmarkIns = { module = "org.commonmark:commonmark-ext-ins", version.ref = "commonmark" }
+commonmarkTaskListItem = { module = "org.commonmark:commonmark-ext-task-list-items", version.ref = "commonmark" }
+commonmarkParent = { module = "org.commonmark:commonmark-parent", version.ref = "commonmark" }
 [plugins]
 springDependency = { id = "io.spring.dependency-management", version = "1.1.5" }
 
@@ -119,3 +135,5 @@ commons = [
   "fakedata"
 ]
 utils = ["springdoc", "apiVersion", "hutool", "guava", "httpclient5Fluent"]
+commonmark = ["commonmarkParent", "commonMark","commonmarkStrikethrough", "commonmarkExtAutolink", "commonmarkFgmTable", "commonmarkHeadingAnchor", "commonmarkImageAttr", "commonmarkIns", "commonmarkTaskListItem"
+]

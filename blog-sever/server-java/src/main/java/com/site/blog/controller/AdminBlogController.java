@@ -70,7 +70,7 @@ public class AdminBlogController {
         List<String> ids = blogTagService.list(queryWrapper).stream().map(BlogTag::getTagId).toList();
         blogDetailVO.setBlogTagIds(ids);
         log.info("home创建时间{}", blogDetailVO.getCreateTime().toString());
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogDetailVO);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, blogDetailVO);
     }
 
 
@@ -136,7 +136,7 @@ public class AdminBlogController {
                 blogTagService.save(blogTag);
             }
             //blogService.removeAndsaveBatch(Arrays.asList(blogInfo.getBlogTags().split(",")), blogInfo);
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogInfo);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, blogInfo);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
@@ -213,7 +213,7 @@ public class AdminBlogController {
 
         boolean flag = blogInfoService.updateById(sqlBlog);
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,"成功");
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
@@ -237,7 +237,7 @@ public class AdminBlogController {
         }
         boolean flag = blogInfoService.updateById(blogInfo);
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogInfo);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, blogInfo);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
@@ -253,7 +253,7 @@ public class AdminBlogController {
     @PostMapping("/blog/clear/{id}")
     public Result clearBlog(@PathVariable("id") String blogId) {
         if (blogInfoService.clearBlogInfo(blogId)) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogId);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true,blogId);
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
@@ -275,7 +275,7 @@ public class AdminBlogController {
                 .setUpdateTime(LocalDateTime.now());
         boolean flag = blogInfoService.updateById(blogInfo);
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,"成功");
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }

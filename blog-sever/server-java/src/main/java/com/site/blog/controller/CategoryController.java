@@ -54,7 +54,7 @@ public class CategoryController {
         if (CollectionUtils.isEmpty(list)) {
             ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
         }
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, list);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, list);
     }
 
 
@@ -97,7 +97,7 @@ public class CategoryController {
 
             categoryService.updateById(category);
         }
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,"成功");
     }
 
     /**
@@ -113,7 +113,7 @@ public class CategoryController {
     public Result<String> updateCategoryStatus(Category category) {
         boolean flag = categoryService.updateById(category);
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,"成功");
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }

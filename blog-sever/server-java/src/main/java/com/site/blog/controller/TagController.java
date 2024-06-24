@@ -12,6 +12,7 @@ import com.site.blog.model.dto.Result;
 import com.site.blog.model.entity.Tag;
 import com.site.blog.service.TagService;
 import com.site.blog.util.ResultGenerator;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +25,10 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequestMapping("/v2/admin")
+@RequiredArgsConstructor
 public class TagController {
 
-    @Resource
-    private TagService tagService;
+    private  final TagService tagService;
 
 
     /**
@@ -85,7 +86,7 @@ public class TagController {
         tag.setUpdateTime(LocalDateTime.now());
         boolean flag = tagService.updateById(tag);
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, tag.getTagName());
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true, tag.getTagName());
         }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
     }
@@ -105,7 +106,7 @@ public class TagController {
         tag.setUpdateTime(LocalDateTime.now());
         boolean flag = tagService.save(tag);
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, tag);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true,tag);
         } else {
             return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
         }
