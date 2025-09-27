@@ -1,4 +1,5 @@
 <template>
+  <div>
   <el-button type="primary" @click="addDictDialog = true">添加字典</el-button>
   <el-dialog v-model="addDictDialog" width="30%" title="添加字典" append-to-body>
     <el-form :model="dictTypeForm" label-position="right" label-width="80px">
@@ -49,6 +50,7 @@
   </el-table>
   <br />
   <el-pagination background layout="total,sizes,prev, pager, next " :total="count" :page-size="pageSize" @current-change="getData" v-model:current-page="currentPage" :page-sizes="[10, 20, 30, 40, 50, 100]" @size-change="sizeChange" />
+  </div>
 </template>
 
 <script setup lang="ts">

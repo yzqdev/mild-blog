@@ -32,39 +32,40 @@ import java.util.List;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final  JwtAuthenticationTokenFilter authenticationTokenFilter;
-
+    private final JwtAuthenticationTokenFilter authenticationTokenFilter;
 
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
+
     @Bean
-      CorsConfigurationSource corsConfigSource() {
+    CorsConfigurationSource corsConfigSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
-configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(true);
         configuration.setAllowedMethods(Collections.singletonList("*"));
         configuration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
- http.cors(i->i.configurationSource(corsConfigSource()));
+        http.cors(i -> i.configurationSource(corsConfigSource()));
         http.csrf(i -> i.disable());
         http.formLogin(i -> i.disable());
         http.httpBasic(i -> i.disable());
         http.authorizeHttpRequests(auth -> {
-            auth.requestMatchers(  "/css/**","/upload/**", "/js/**", "/index.html", "/img/**", "/fonts/**" , "/verifyCode", "/swagger-ui/*", "/v2/api-docs/**", "/v3/api-docs/**",
-                    "/swagger-resources",
-                    "/swagger-resources/**",
+            auth.requestMatchers("/css/**", "/upload/**", "/js/**", "/index.html", "/img/**", "/fonts/**", "/verifyCode", "/swagger-ui/*", "/v2/api-docs/**", "/v3/api-docs/**",
+                            "/swagger-resources",
+                            "/swagger-resources/**",
 
-                    "/swagger-ui/**",
-                    "/webjars/**", "/api-docs","/v2/auth/**","/v2/home/**").permitAll()
+                            "/swagger-ui/**",
+                            "/webjars/**", "/api-docs", "/v2/auth/**", "/v2/home/**").permitAll()
                     .requestMatchers("/v2/admin/**").authenticated();
             ;
         });

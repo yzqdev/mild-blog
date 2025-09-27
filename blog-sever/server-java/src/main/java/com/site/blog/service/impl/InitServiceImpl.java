@@ -13,6 +13,7 @@ import com.site.blog.model.entity.Category;
 import com.site.blog.model.entity.Tag;
 import com.site.blog.service.InitService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class InitServiceImpl implements InitService {
     private final AdminUserMapper adminUserMapper;
     private final BlogConfigMapper blogConfigMapper;
@@ -36,13 +38,7 @@ public class InitServiceImpl implements InitService {
     public void initDatabase() {
         boolean flag = blogConfigMapper.exists(new LambdaQueryWrapper<BlogConfig>().eq(BlogConfig::getConfigCode, "init"));
         if (!flag) {
-            jdbcTemplate.execute(SqlConstant.initAdminSql);
-            jdbcTemplate.execute(SqlConstant.initTagSql);
-            jdbcTemplate.execute(SqlConstant.initCateSql);
-            jdbcTemplate.execute(SqlConstant.initLinkSql);
-            jdbcTemplate.execute(SqlConstant.insertConfigDataSql);
-            jdbcTemplate.execute(SqlConstant.initSysDictTypeSql);
-            jdbcTemplate.execute(SqlConstant.initSysDictDataSql);
+
             StaticLog.warn("创建sql完成");
         }
 
@@ -50,20 +46,15 @@ public class InitServiceImpl implements InitService {
 
     @Override
     public void initUseEntity() {
-        boolean flag = blogConfigMapper.exists(new LambdaQueryWrapper<BlogConfig>().eq(BlogConfig::getConfigCode, "init"));
-        if (!flag) {
-
-            adminUserMapper.insert(AdminUser.builder().id("myid").username("admin").password("e10adc3949ba59abbe56e057f20f883e").nickname("管理员").locked(false).role(1).avatar("https://img-static.mihoyo.com/communityweb/upload/222b847170feb3f2babcc1bd4f0e30dd.png").build());
-            var tag = Tag.builder().tagId("1").tagName("默认tag").createTime(LocalDateTime.now()).updateTime(LocalDateTime.now()).show(true).build();
-            var category= Category.builder().categoryId("1").categoryName("默认分类").createTime(LocalDateTime.now()).updateTime(LocalDateTime.now()).categoryRank(1).build();
-            tagMapper.insert(tag);
-           categoryMapper.insert(category);
-            jdbcTemplate.execute(SqlConstant.initLinkSql);
-            jdbcTemplate.execute(SqlConstant.insertConfigDataSql);
-            jdbcTemplate.execute(SqlConstant.initSysDictTypeSql);
-            jdbcTemplate.execute(SqlConstant.initSysDictDataSql);
-            StaticLog.warn("创建sql完成");
-        }
+      try {
+          boolean flag = blogConfigMapper.exists(new LambdaQueryWrapper<BlogConfig>().eq(BlogConfig::getConfigCode, "init"));
+          if (!flag) {
+ 
+              StaticLog.warn("创建sql完成");
+          }
+      } catch (Exception e) {
+          log.error(e.getMessage(),e);
+      }
     }
     private void initConf(){
 

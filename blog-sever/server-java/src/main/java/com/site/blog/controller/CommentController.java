@@ -96,9 +96,9 @@ public class CommentController {
     public Result<String> deleteComment(@PathVariable("id") String id) {
         boolean flag = commentService.removeById(id);
         if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK,true,null);
         }
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
+        return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR,false,null);
     }
 
 

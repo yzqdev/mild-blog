@@ -1,4 +1,5 @@
 <template>
+  <div>
   <el-button type="primary" @click="addDialogShow">{{ dialogTxt }}</el-button>
   <el-dialog width="30%" v-model="addDialogVisible" title="添加系统信息">
     <el-form :model="addForm">
@@ -52,6 +53,7 @@
       </template>
     </el-table-column>
   </el-table>
+  </div>
 </template>
 
 <script setup lang="ts">

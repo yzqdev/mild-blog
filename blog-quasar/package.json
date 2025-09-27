@@ -11,18 +11,18 @@
     "build:pwa": "quasar build -m pwa"
   },
   "dependencies": {
-    "@quasar/extras": "^1.16.11",
-    "axios": "^1.7.2",
-    "core-js": "^3.37.1",
-    "dayjs": "^1.11.11",
-    "quasar": "^2.16.4",
-    "vue": "^3.4.30",
-    "vue-router": "^4.4.0",
+    "@quasar/extras": "^2.0.2",
+    "axios": "^1.18.1",
+    "core-js": "^3.49.0",
+    "dayjs": "^1.11.21",
+    "quasar": "^2.21.2",
+    "vue": "^3.5.39",
+    "vue-router": "^5.1.0",
     "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@quasar/app": "^3.3.3",
-    "@types/node": "^20.14.8"
+    "@types/node": "^26.1.1"
   },
   "browserslist": [
     "last 10 Chrome versions",

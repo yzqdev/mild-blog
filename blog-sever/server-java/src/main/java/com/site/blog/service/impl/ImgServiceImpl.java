@@ -102,8 +102,7 @@ public class ImgServiceImpl extends ServiceImpl<ImgMapper, Img> implements ImgSe
             imgMapper.insert(img);
             return img;
         } catch (IOException e) {
-
-            e.printStackTrace();
+            log.error("上传图片失败", e);
         }
         return new Img();
     }

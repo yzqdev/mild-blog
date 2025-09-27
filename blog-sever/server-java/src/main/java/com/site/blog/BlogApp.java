@@ -22,9 +22,9 @@ import java.net.UnknownHostException;
 @SpringBootApplication
 
 @Slf4j
-public class ServerJava {
+public class BlogApp {
     public static void main(String[] args) throws UnknownHostException {
-      var application=  SpringApplication.run(ServerJava.class, args);
+      var application=  SpringApplication.run(BlogApp.class, args);
 
         log.info("""
       ..######..##.....##..######...######..########..######...######.

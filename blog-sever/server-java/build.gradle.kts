@@ -21,8 +21,13 @@ configurations {
 
 
 dependencies {
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-database-postgresql")
     compileOnly ("org.projectlombok:lombok")
     annotationProcessor ("org.projectlombok:lombok")
+     testCompileOnly ("org.projectlombok:lombok")
+   testAnnotationProcessor ("org.projectlombok:lombok")
+
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -50,7 +55,7 @@ dependencies {
 // https://mvnrepository.com/artifact/com.freewayso/image-combiner
     implementation(libs.imageCombiner)
 
-
+implementation(libs.bundles.springUtils)
 
     implementation(libs.javaJwt)
 

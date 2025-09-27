@@ -3,41 +3,19 @@ package main
 import (
 	"embed"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/gookit/color"
 	"io"
 	"io/fs"
-	"net/http"
 	"os"
 	"path/filepath"
 )
 
-//go:embed   templates
-var f embed.FS
-
-func MainAssets() http.FileSystem {
-	//这一步是必须的
-	pub, _ := fs.Sub(f, "templates")
-	return http.FS(pub)
-}
-
-func MainStatic(router *gin.Engine) {
-	color.Redln("main static")
-	router.StaticFS("/main", MainAssets())
-
-}
-
-var (
-
-	//go:embed config.yml
-	resource embed.FS
-)
+//go:embed config.yml
+var resource embed.FS
 
 var Embed = new(_embed)
 
 type _embed struct{}
 
-// RestoreFolder
 func (e *_embed) RestoreFolder(dir string) {
 	entries, err := resource.ReadDir(dir)
 	if err != nil {
@@ -53,29 +31,28 @@ func (e *_embed) RestoreFolder(dir string) {
 	}
 }
 
-// RestoreFile
 func (e *_embed) RestoreFile(path string, entry fs.DirEntry) {
 	_, err := os.Stat(path)
-	if entry.IsDir() { // 文件夹
-		if os.IsNotExist(err) { // 判断 path 变量的文件夹存在, 不存在则创建文件夹
+	if entry.IsDir() {
+		if os.IsNotExist(err) {
 			fmt.Printf("[embed restore mkdir] dir:%s\n", path)
-			err = os.Mkdir(path, os.ModePerm) // 创建文件夹, 权限为 os.ModePerm 可自行修改
+			err = os.Mkdir(path, os.ModePerm)
 			if err != nil {
 				fmt.Printf("[embed restore mkdir] err:%v\n", err)
 				return
 			}
 		}
 		var entries []fs.DirEntry
-		entries, err = resource.ReadDir(path) // 读取文件夹的文件和文件夹数据
+		entries, err = resource.ReadDir(path)
 		if err != nil {
 			return
 		}
 		for i := 0; i < len(entries); i++ {
-			_, err = os.Stat(entries[i].Name()) // 获取子文件夹的信息
+			_, err = os.Stat(entries[i].Name())
 			dirPath := filepath.Join(path, entries[i].Name())
-			if os.IsNotExist(err) && entries[i].IsDir() { // 判断子文件夹是否存在, 这里有可能是文件,所以要加上是否为文件夹
+			if os.IsNotExist(err) && entries[i].IsDir() {
 				fmt.Println("[embed restore mkdir] dir:", dirPath)
-				err = os.Mkdir(dirPath, os.ModePerm) // 创建文件夹, 权限为 os.ModePerm 可自行修改
+				err = os.Mkdir(dirPath, os.ModePerm)
 				if err != nil {
 					fmt.Println("[embed restore mkdir] err:", err)
 					return
@@ -85,25 +62,25 @@ func (e *_embed) RestoreFile(path string, entry fs.DirEntry) {
 		}
 	}
 
-	if os.IsNotExist(err) && !entry.IsDir() { // 文件
+	if os.IsNotExist(err) && !entry.IsDir() {
 		var src fs.File
-		src, err = resource.Open(path) // 根据path从embed的到文件数据
+		src, err = resource.Open(path)
 		if err != nil {
 			fmt.Println("[embed restore resource open file] open embed file failed, err:", err)
 			return
 		}
 		var dst *os.File
-		dst, err = os.Create(path) // 创建本地文件的 writer
+		dst, err = os.Create(path)
 		if err != nil {
 			fmt.Println("[embed restore os create file] write err:", err)
 			return
 		}
-		_, err = io.Copy(dst, src) // 把embed的数据复制到本地
+		_, err = io.Copy(dst, src)
 		if err != nil {
 			fmt.Println("[embed restore io copy file] writer file failed, err:", err)
 			return
 		}
-		defer func() { // 关闭文件流
+		defer func() {
 			_ = src.Close()
 			_ = dst.Close()
 		}()

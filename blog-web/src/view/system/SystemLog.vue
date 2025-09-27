@@ -1,4 +1,5 @@
 <template>
+  <div>
   <el-button type="danger" @click="clearAll">清空</el-button>
   <el-table v-loading="loading" :data="tableData" fit style="width: 100%">
     <el-table-column prop="name" label="名称" width="100"></el-table-column>
@@ -28,6 +29,7 @@
   </el-dialog>
   <br />
   <el-pagination background layout="total,sizes,prev, pager, next " :total="count" :page-size="pageSize" @current-change="getData" v-model:current-page="currentPage" :page-sizes="[10, 20, 30, 40, 50, 100]" @size-change="sizeChange" />
+  </div>
 </template>
 
 <script setup lang="ts">

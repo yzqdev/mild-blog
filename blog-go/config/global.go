@@ -2,12 +2,11 @@ package config
 
 import (
 	"fmt"
-	"github.com/gookit/color"
-	"github.com/spf13/viper"
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/spf13/viper"
 )
 
 type Global struct {
@@ -33,21 +32,24 @@ type Global struct {
 var g *Global
 
 func GetGlobal() *Global {
+	if g != nil {
+		return g
+	}
 
 	conf := "./config.yml"
 	viper.SetConfigFile(conf)
-	content, err := ioutil.ReadFile(conf)
+	content, err := os.ReadFile(conf)
 	if err != nil {
 		log.Fatal(fmt.Sprintf("Read conf file fail: %s", err.Error()))
 	}
-	//Replace environment variables
+
 	err = viper.ReadConfig(strings.NewReader(os.ExpandEnv(string(content))))
 	if err != nil {
 		log.Fatal(fmt.Sprintf("Parse conf file fail: %s", err.Error()))
 	}
 
 	if err = viper.Unmarshal(&g); err != nil {
-		color.Red.Println("unable to decode into struct, %v", err)
+		log.Fatal(fmt.Sprintf("Unable to decode into struct: %v", err))
 	}
 
 	return g

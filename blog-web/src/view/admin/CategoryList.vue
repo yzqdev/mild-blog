@@ -1,4 +1,5 @@
 <template>
+  <div>
   <el-button type="primary" @click="addCate">添加</el-button>
   <el-dialog width="30%" v-model="addDialogVisible" title="添加系统信息">
     <el-form ref="addFormRef" :model="addForm" :rules="addCateRules">
@@ -33,6 +34,7 @@
       </template>
     </el-table-column>
   </el-table>
+</div>
 </template>
 
 <script setup lang="ts">

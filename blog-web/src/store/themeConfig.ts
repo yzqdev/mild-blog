@@ -2,8 +2,8 @@ import { defaultTheme } from '@/constants/defaultTheme'
 import { defineStore } from 'pinia'
 import { ThemeState } from '@/interface/storeTypes'
 
-export const useThemeStore = defineStore({
-  id: 'themeConfig',
+export const useThemeStore = defineStore( 'themeConfig',{
+
   state: (): ThemeState => ({ ...defaultTheme }),
   getters: {
     getDark(): boolean {

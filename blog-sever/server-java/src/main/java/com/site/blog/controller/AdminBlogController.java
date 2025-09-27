@@ -49,8 +49,6 @@ public class AdminBlogController {
 
     private final TagService tagService;
 
-    private final BlogTagService blogService;
-
     /**
      * 跳转博客编辑界面
      *
@@ -102,8 +100,7 @@ public class AdminBlogController {
 
         blogInfo.setBlogContent(blogInfoDo.getBlogContent());
         blogInfo.setPreface(blogInfoDo.getPreface());
-        log.info("这是bloginfo");
-        log.info(blogInfo.toString());
+        log.debug("保存博客: {}", blogInfo);
         blogInfo.setDeleted(false);
         if (blogInfoService.saveOrUpdate(blogInfo)) {
             BlogCategory blogCategory = new BlogCategory();
@@ -188,7 +185,7 @@ public class AdminBlogController {
             list.setList(blogDetailVOS);
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, list);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("获取博客列表失败", e);
             return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false);
         }
 

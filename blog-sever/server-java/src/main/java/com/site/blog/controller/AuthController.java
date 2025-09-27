@@ -18,6 +18,7 @@ import com.site.blog.util.JwtService;
 import com.site.blog.util.RequestHelper;
 import com.site.blog.util.ResultGenerator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -39,6 +40,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/v2/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
     private final AdminUserService adminUserService;
     private final MailService mailService;
@@ -113,41 +115,38 @@ public class AuthController {
 
     @PostMapping("/findPass")
     @ResponseBody
-    public Result<UserVo> sengFindPassEmail() {
+    public Result<UserVo> sendFindPassEmail() {
         var user = RequestHelper.getSessionUser();
         mailService.sendFindPassEmail(user.getEmail(), mailService.getDefaultMail());
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, user);
     }
 
+    /**
+     * 密码重置确认页面 - 已弃用，保留用于向后兼容
+     * 新流程应使用邮箱中的 token 进行验证
+     */
+    @Deprecated
     @GetMapping("/findPass")
     public String findPass(Model model, @RequestParam("email") String email, @RequestParam("cip") String cip) {
         try {
-
             var sysUser = adminUserService.getOne(new LambdaQueryWrapper<AdminUser>().eq(AdminUser::getEmail, email));
-            var userFlag = Optional.ofNullable(sysUser);
-            if (userFlag.isPresent()) {
-                String newPass = HexUtil.decodeHexStr(cip);
-                sysUser.setPassword(newPass);
-
-                Boolean result = adminUserService.updateUserInfo(sysUser);
-                model.addAttribute("title", "成功");
-                model.addAttribute("name", "新密码:" + newPass);//
-                model.addAttribute("note", "密码已被系统重置，请登录修改你的新密码");
+            if (sysUser != null) {
+                // TODO: 新流程应验证 token 而非直接接受密码参数
+                model.addAttribute("title", "提示");
+                model.addAttribute("name", "密码重置功能已升级");
+                model.addAttribute("note", "请使用最新的密码重置流程");
             } else {
                 model.addAttribute("title", "抱歉");
                 model.addAttribute("name", "未获取到用户信息");
                 model.addAttribute("note", "操作失败");
-
             }
-
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("密码重置处理异常", e);
             model.addAttribute("title", "抱歉");
             model.addAttribute("name", "系统操作过程中发生错误");
             model.addAttribute("note", "操作失败");
         }
         model.addAttribute("webhost", ConfigContextHolder.domain());
         return "msg";
-
     }
 }

@@ -1,37 +1,80 @@
 package util
 
 import (
+	"time"
+
 	"github.com/gin-gonic/gin"
-	"github.com/gookit/color"
 )
 
 type ApiResponse struct {
-	Data    interface{} `json:"data"`
-	Msg     string      `json:"msg"`
-	Success bool        `json:"success"`
-	Code    int         `json:"code"`
+	ResultCode int         `json:"resultCode"`
+	Message    string      `json:"message"`
+	Data       interface{} `json:"data"`
+	Success    *bool       `json:"success"`
+	Timestamp  int64       `json:"timestamp"`
 }
 
-// JSON 标准返回结果数据结构封装。
-// 返回固定数据结构的JSON:
-// err:  错误码(0:成功, 1:失败, >1:错误码);
-// msg:  请求结果信息;
-// data: 请求结果,根据不同接口返回结果的数据结构不同;
+type PageResult struct {
+	List      interface{} `json:"list"`
+	Count     int64       `json:"count"`
+	Page      int         `json:"page"`
+	Limit     int         `json:"limit"`
+	TotalPage int         `json:"totalPage"`
+}
+
 func JSON(c *gin.Context, code int, msg string, data ...interface{}) {
 	responseData := interface{}(nil)
 	if len(data) > 0 {
 		responseData = data[0]
 	}
-	var success = false
-	if code == 200 {
-		success = true
-	}
-	color.Red.Println(c)
+	success := code == 200
 	c.JSON(code, ApiResponse{
-		Data:    responseData,
-		Msg:     msg,
-		Success: success,
-		Code:    code,
+		ResultCode: code,
+		Message:    msg,
+		Data:       responseData,
+		Success:    &success,
+		Timestamp:  time.Now().UnixMilli(),
 	})
+}
 
+func Success(c *gin.Context, data interface{}) {
+	success := true
+	c.JSON(200, ApiResponse{
+		ResultCode: 200,
+		Message:    "success",
+		Data:       data,
+		Success:    &success,
+		Timestamp:  time.Now().UnixMilli(),
+	})
+}
+
+func Error(c *gin.Context, code int, msg string) {
+	success := false
+	c.JSON(code, ApiResponse{
+		ResultCode: code,
+		Message:    msg,
+		Success:    &success,
+		Timestamp:  time.Now().UnixMilli(),
+	})
+}
+
+func PageSuccess(c *gin.Context, list interface{}, total int64, page, limit int) {
+	totalPage := int(total) / limit
+	if int(total)%limit > 0 {
+		totalPage++
+	}
+	success := true
+	c.JSON(200, ApiResponse{
+		ResultCode: 200,
+		Message:    "success",
+		Data: PageResult{
+			List:      list,
+			Count:     total,
+			Page:      page,
+			Limit:     limit,
+			TotalPage: totalPage,
+		},
+		Success:   &success,
+		Timestamp: time.Now().UnixMilli(),
+	})
 }

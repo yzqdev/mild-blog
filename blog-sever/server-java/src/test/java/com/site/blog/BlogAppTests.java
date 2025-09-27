@@ -13,11 +13,11 @@ import jakarta.annotation.Resource;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith({SpringExtension.class})
 
-public class ServerJavaTests {
+public class BlogAppTests {
 
     private  final AdminUserService adminUserService;
 
-    public ServerJavaTests(AdminUserService adminUserService) {
+    public BlogAppTests(AdminUserService adminUserService) {
         this.adminUserService = adminUserService;
     }
 

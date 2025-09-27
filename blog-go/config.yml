@@ -9,6 +9,6 @@ mysql:
 pg:
   port: 5432
   host: localhost
-  name: myblog-go
+  name: mild_blog
   user: postgres
   pass: 123456

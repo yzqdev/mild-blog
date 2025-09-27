@@ -1,7 +1,6 @@
 package com.site.blog.controller;
 
 
-import cn.hutool.core.lang.Console;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
@@ -16,9 +15,9 @@ import com.site.blog.util.BeanMapUtil;
 import com.site.blog.util.RequestHelper;
 import com.site.blog.util.ResultGenerator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -34,6 +33,7 @@ import java.util.*;
 @RequestMapping("/v2/home")
 @io.swagger.v3.oas.annotations.tags.Tag(name = "首页数据", description = "首页")
 @RequiredArgsConstructor
+@Slf4j
 public class HomeBlogController {
 
 
@@ -49,9 +49,6 @@ public class HomeBlogController {
     private final BlogTagService blogTagService;
 
     private final BlogConfigService blogConfigService;
-
-
-    private final BlogTagService blogService;
 
 
     private final CommentService commentService;
@@ -90,7 +87,7 @@ public class HomeBlogController {
                 .eq(BlogInfo::getShow, ShowEnum.SHOW.getStatus()).eq(BlogInfo::getDeleted, false);
         //获取tag下的文章
         if (Objects.nonNull(tagId)) {
-            List<BlogTag> list = blogService.list(new QueryWrapper<BlogTag>()
+            List<BlogTag> list = blogTagService.list(new QueryWrapper<BlogTag>()
                     .lambda().eq(BlogTag::getTagId, tagId));
             if (!CollectionUtils.isEmpty(list)) {
                 sqlWrapper.in(BlogInfo::getBlogId, list.stream().map(BlogTag::getBlogId).toArray());
@@ -112,8 +109,7 @@ public class HomeBlogController {
      * @return
      */
     public List<BlogDetailVO> toBlogVo(Page<BlogInfo> blogInfoPage) {
-
-        Console.log("toBlog",blogInfoPage.getRecords());
+        log.debug("toBlog, records={}", blogInfoPage.getRecords());
         List<BlogDetailVO> blogDetailVOS = blogInfoPage.getRecords().stream().map(BeanMapUtil::copyBlog).toList();
 
         blogDetailVOS.forEach(post -> {
@@ -151,7 +147,7 @@ public class HomeBlogController {
             });
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, blogDetailVOS);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("获取时间线失败", e);
             return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, "失败了");
         }
 
@@ -210,20 +206,16 @@ public class HomeBlogController {
 
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true,toBlogVo(blogInfos));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("搜索博客失败, keyword={}", keyword, e);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, "搜索失败");
         }
-
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, null);
     }
 
     @GetMapping("/tags")
     public Result getTags() {
         QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(Tag::getShow, ShowEnum.SHOW.getStatus());
-        List<Tag> list = tagService.list();
-        if (CollectionUtils.isEmpty(list)) {
-            ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR,false,"失败了");
-        }
+        List<Tag> list = tagService.list(queryWrapper);
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, list);
     }
 
@@ -232,9 +224,6 @@ public class HomeBlogController {
         QueryWrapper<Category> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(Category::getShow, ShowEnum.SHOW.getStatus()).orderByDesc(Category::getCreateTime);
         List<Category> list = categoryService.list(queryWrapper);
-        if (CollectionUtils.isEmpty(list)) {
-            ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR);
-        }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, list);
     }
 
@@ -245,9 +234,9 @@ public class HomeBlogController {
 
             return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, blogConfigService.getAllConfigs());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("获取配置失败", e);
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, "获取配置失败");
         }
-        return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST, "00");
     }
 
     /**
@@ -295,7 +284,10 @@ public class HomeBlogController {
     public Result<Object> detail(@PathVariable("blogId") String blogId) {
         // 获得文章info
         BlogInfo blogInfo = blogInfoService.getById(blogId);
-        List<BlogTag> blogTags = blogService.list(new QueryWrapper<BlogTag>()
+        if (blogInfo == null) {
+            return ResultGenerator.getResultByHttp(HttpStatusEnum.BAD_REQUEST, false, "文章不存在");
+        }
+        List<BlogTag> blogTags = blogTagService.list(new QueryWrapper<BlogTag>()
                 .lambda()
                 .eq(BlogTag::getBlogId, blogId));
         blogInfoService.updateById(new BlogInfo()
@@ -383,27 +375,31 @@ public class HomeBlogController {
      * @date 2019/9/6 17:40
      */
     @PostMapping(value = "/blog/comment")
-    @ResponseBody
+
     public Result<? super String>  comment(Comment comment) {
-        var request = RequestHelper.getHttpServletRequest();
-        String ref = request.getHeader("Referer");
+       try {
+           var request = RequestHelper.getHttpServletRequest();
+           String ref = request.getHeader("Referer");
 
 
-        // 对非法字符进行转义，防止xss漏洞
-        comment.setCommentBody(StringEscapeUtils.escapeHtml4(comment.getCommentBody()));
-        comment.setCommentStatus(true);
-        comment.setCommentatorIp(RequestHelper.getRequestIp());
-        comment.setUserAgent(RequestHelper.getUa().getBrowser() + RequestHelper.getUa().getVersion());
-        comment.setOs(RequestHelper.getUa().getOs().toString());
-        comment.setCommentCreateTime(LocalDateTime.now());
-        comment.setDeleted(true);
-        if (!StringUtils.hasText(ref)) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR,false, "非法请求");
-        }
-        boolean flag = commentService.save(comment);
-        if (flag) {
-            return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, comment);
-        }
+           // 对非法字符进行转义，防止xss漏洞
+           comment.setCommentBody(StringEscapeUtils.escapeHtml4(comment.getCommentBody()));
+           comment.setCommentStatus(true);
+           comment.setCommentatorIp(RequestHelper.getRequestIp());
+           comment.setUserAgent(RequestHelper.getUa().getBrowser() + RequestHelper.getUa().getVersion());
+           comment.setOs(RequestHelper.getUa().getOs().toString());
+           comment.setCommentCreateTime(LocalDateTime.now());
+           comment.setDeleted(true);
+//           if (!StringUtils.hasText(ref)) {
+//               return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR,false, "非法请求");
+//           }
+           boolean flag = commentService.save(comment);
+           if (flag) {
+               return ResultGenerator.getResultByHttp(HttpStatusEnum.OK, true, comment);
+           }
+       }catch (Exception e){
+           log.error(e.getMessage(),e);
+       }
         return ResultGenerator.getResultByHttp(HttpStatusEnum.INTERNAL_SERVER_ERROR, false, null);
     }
 

@@ -1,4 +1,5 @@
 <template>
+  <div>
   <el-table v-loading="loading" :data="data" fit>
     <el-table-column prop="blogId" label="博客id" width="90">
       <template v-slot="{ row }">
@@ -50,6 +51,7 @@
 
   <br />
   <el-pagination background layout="total,sizes,prev, pager, next " :total="count" :page-size="pageSize" @current-change="getData" v-model:current-page="currentPage" :page-sizes="[10, 20, 30, 40, 50, 100]" @size-change="sizeChange" />
+  </div>
 </template>
 
 <script setup>

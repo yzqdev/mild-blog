@@ -15,6 +15,7 @@ import org.springframework.boot.context.event.ApplicationContextInitializedEvent
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -32,7 +33,7 @@ import java.util.List;
  *
  * @author yanni
  */
-
+@Component
 public class ConstantsInitListener implements ApplicationListener<ApplicationContextInitializedEvent>, Ordered {
 
     private static final Log log = Log.get();

@@ -1,4 +1,5 @@
 <template>
+  <div>
   <el-button type="primary" @click="addDialogShow">添加链接信息</el-button>
   <el-dialog width="30%" v-model="addDialogVisible" @close="closeAddDialog" title="添加系统信息">
     <el-form :model="addForm" label-width="80px">
@@ -55,6 +56,7 @@
   </el-table>
   <br />
   <el-pagination background layout="total,sizes,prev, pager, next " :total="count" :page-size="pageSize" @current-change="getData" v-model:current-page="currentPage" :page-sizes="[10, 20, 30, 40, 50, 100]" @size-change="sizeChange" />
+  </div>
 </template>
 
 <script setup lang="ts">

@@ -1,11 +1,16 @@
 package com.site.blog.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.MessageDigest;
 
 /**
  * md5加密
  */
 public class MD5Utils {
+
+    private static final Logger log = LoggerFactory.getLogger(MD5Utils.class);
 
     private static String byteArrayToHexString(byte[] b) {
         StringBuilder resultSb = new StringBuilder();
@@ -38,7 +43,7 @@ public class MD5Utils {
                         .getBytes(charsetname)));
             }
         } catch (Exception exception) {
-            exception.printStackTrace();
+            log.error("MD5编码失败", exception);
         }
         return resultString;
     }

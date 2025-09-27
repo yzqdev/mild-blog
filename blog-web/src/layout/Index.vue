@@ -1,13 +1,12 @@
 <template>
-  <el-container class="home">
-    <sidebar />
-
-    <el-container class="main-wrap">
+  <div class="admin-layout">
+    <Sidebar />
+    <div class="main-container">
       <Header />
       <Content />
       <Footer />
-    </el-container>
-  </el-container>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -18,12 +17,13 @@ import Footer from './Footer.vue'
 
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-
 import { useUserStore } from '@/store/user'
-let store = useUserStore()
+
+const store = useUserStore()
 const router = useRouter()
+
 onMounted(() => {
-  let token = localStorage.getItem('token')
+  const token = localStorage.getItem('token')
   if (token && token !== 'undefined') {
     store.setUserToken(token)
   } else {
@@ -31,17 +31,18 @@ onMounted(() => {
   }
 })
 </script>
+
 <style lang="scss" scoped>
-.home {
+.admin-layout {
   display: flex;
-  height: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
 
-  .main-wrap {
-    height: 100%;
-
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-  }
+.main-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 </style>

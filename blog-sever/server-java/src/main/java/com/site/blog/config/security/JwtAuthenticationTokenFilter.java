@@ -34,16 +34,15 @@ import java.util.stream.Collectors;
 /**
  * @author yzqde
  */
- @Component
+@Component
 @Slf4j
- @RequiredArgsConstructor
+@RequiredArgsConstructor
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
 
     private final UserDetailsServiceImpl userDetailsService;
 
-private final   AdminUserService adminUserService;
-
+    private final AdminUserService adminUserService;
 
 
     @Override
@@ -58,18 +57,18 @@ private final   AdminUserService adminUserService;
         String authToken = authHeader;
         log.info("authToken:{}", authToken);
         //verify token
-        if (!JwtService.verifyToken(authToken )) {
+        if (!JwtService.verifyToken(authToken)) {
             log.info("invalid token");
             filterChain.doFilter(request, response);
             return;
         }
 
-        final String userName = (String) JwtService.getUsername(authToken) ;
-        AdminUser user = adminUserService.getOne( new QueryWrapper<AdminUser>().eq("username",userName));
+        final String userName = (String) JwtService.getUsername(authToken);
+        AdminUser user = adminUserService.getOne(new QueryWrapper<AdminUser>().eq("username", userName));
         UserVo userVo = new UserVo();
-        BeanUtils.copyProperties(user,userVo);
+        BeanUtils.copyProperties(user, userVo);
         log.info("这里设置用户到session");
-        log.info("user={}","myid");
+        log.info("user={}", "myid");
         log.info("user=" + user);
         request.setAttribute(BaseConstants.USER_ATTR, userVo);
         UserDetails userDetails = userDetailsService.loadUserByUsername(userName);

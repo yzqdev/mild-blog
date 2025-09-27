@@ -66,7 +66,7 @@ public class MailServiceImpl extends ServiceImpl<EmailMapper, EmailConfig> imple
             String output = writer.toString();
             sendHtmlMail(to, subject, output);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("发送模板邮件失败", e);
         }
     }
 
@@ -208,29 +208,27 @@ public class MailServiceImpl extends ServiceImpl<EmailMapper, EmailConfig> imple
     public void sendFindPassEmail(String toEmail, EmailConfig emailConfig) {
         try {
             Map<String, Object> hashMap = new HashMap<>(16);
-            var pass="123456";
-            var newPass = HexUtil.encodeHexStr(pass);
+            // 生成随机临时密码
+            String pass = cn.hutool.core.util.RandomUtil.randomString(12);
+            String token = cn.hutool.core.util.HexUtil.encodeHexStr(pass);
             hashMap.put("websiteName", ConfigContextHolder.websiteName());
             hashMap.put("newPass", pass);
-            hashMap.put("url", ConfigContextHolder.domain() + "/v2/auth/findPass?email=" + toEmail + "&cip=" + newPass);
-
+            // TODO: 新流程应生成一次性 token 存入数据库，而非直接传递密码
+            hashMap.put("url", ConfigContextHolder.domain() + "/v2/auth/findPass?email=" + toEmail + "&token=" + token);
 
             PebbleEngine engine = new PebbleEngine.Builder().build();
             PebbleTemplate compiledTemplate = engine.getTemplate("emailTemplate/emailFindPass.html");
             Writer writer = new StringWriter();
 
-
             compiledTemplate.evaluate(writer, hashMap);
 
             String content = writer.toString();
-
 
             MimeMessage message = mimeMessage(emailConfig);
             message.setFrom(emailConfig.getEmail());
             message.setRecipients(Message.RecipientType.TO, toEmail);
             message.setSubject("找回密码");
-            //不然会乱码
-            message.setContent(content, "text/html;charset=gbk");
+            message.setContent(content, "text/html;charset=utf-8");
             message.setSentDate(new Date());
             message.saveChanges();
             Transport.send(message);
@@ -238,7 +236,7 @@ public class MailServiceImpl extends ServiceImpl<EmailMapper, EmailConfig> imple
         } catch (MessagingException e) {
             logger.error("发送html邮件时发生异常！", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("生成找回密码邮件内容失败", e);
         }
     }
 }

@@ -15,17 +15,17 @@ import java.util.Map;
 
 public class JwtService {
 
+    /**
+     * 过期时间为15分钟
+     */
+    private static final long EXPIRE_TIME = 15 * 60 * 1000;
 
     /**
-     * 过期时间为一天
-     * TODO 正式上线更换为15分钟
+     * token私钥 - 从环境变量读取，未设置时使用默认值（仅开发环境）
      */
-    private static final long EXPIRE_TIME = 24 * 60 * 60 * 1000;
-
-    /**
-     * token私钥
-     */
-    private static final String TOKEN_SECRET = "thisistokensecret2022";
+    private static final String TOKEN_SECRET = System.getenv("JWT_SECRET") != null
+            ? System.getenv("JWT_SECRET")
+            : "thisistokensecret2022-dev-only";
 
     /**
      * 生成签名,15分钟后过期

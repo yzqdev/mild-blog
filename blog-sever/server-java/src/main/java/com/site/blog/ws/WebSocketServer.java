@@ -73,7 +73,7 @@ public class WebSocketServer {
             try {
                 item.sendMessage(message);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("发送消息失败", e);
             }
         }
     }
@@ -85,8 +85,7 @@ public class WebSocketServer {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("发生错误");
-        error.printStackTrace();
+        log.error("WebSocket发生错误, sid={}", sid, error);
     }
     /**
      * 实现服务器主动推送
@@ -115,7 +114,7 @@ public class WebSocketServer {
                     item.sendMessage(message);
                 }
             } catch (IOException e) {
-               e.printStackTrace();
+                log.error("推送消息到窗口{}失败", sid, e);
             }
         }
     }

@@ -6,7 +6,6 @@ require (
 	github.com/gin-contrib/cors v1.7.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/golang-jwt/jwt/v4 v4.5.0
-	github.com/gookit/color v1.5.4
 	github.com/rs/xid v1.5.0
 	github.com/spf13/viper v1.18.2
 	gorm.io/driver/postgres v1.5.7

@@ -1,29 +1,38 @@
 <template>
-  <el-main class="content">
-    <div class="wrap" :class="[themeConfig.contentPadding ? 'extra' : '']">
-      <router-view />
-    </div>
-  </el-main>
+  <main class="admin-content" :class="{ 'with-padding': theme.contentPadding }">
+    <router-view v-slot="{ Component }">
+      <transition name="fade" mode="out-in">
+        <component :is="Component" :key="$route.fullPath" />
+      </transition>
+    </router-view>
+  </main>
 </template>
-<script setup lang="ts">
-import { useThemeStore } from '@/store/themeConfig'
 
-const themeStore = useThemeStore()
-const themeConfig = computed(() => {
-  return themeStore.$state
-})
+<script setup lang="ts">
+import { useStorage } from '@vueuse/core'
+import { defaultTheme } from '@/constants/defaultTheme'
+
+const theme = useStorage('themeConfig', { ...defaultTheme })
 </script>
+
 <style lang="scss" scoped>
-.content {
-  padding: 1.5rem;
-  height: 100%;
-  background-color: #f5f6f7;
-  .wrap {
-    min-height: calc(100% - 4rem);
+.admin-content {
+  flex: 1;
+  background: #f5f7fa;
+  overflow-y: auto;
+
+  &.with-padding {
+    padding: 20px;
   }
-  .extra {
-    background-color: white;
-    padding: 1.5rem;
-  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

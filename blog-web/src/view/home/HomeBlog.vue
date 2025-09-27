@@ -16,7 +16,7 @@
 
     <div class="blog-comment" v-if="blog.enableComment">
       <article class="blog-title">添加评论</article>
-      <el-form ref="commentForm" :model="comment" label-position="top" :rules="commentRule">
+      <el-form ref="commentFormRef" :model="comment" label-position="top" :rules="commentRule">
         <el-form-item prop="commentator" label="">
           <el-input :input-style="commentInput" v-model="comment.commentator">
             <template #prepend>昵称</template>
@@ -34,11 +34,11 @@
         </el-form-item>
         <article class="blog-title">评论内容</article>
         <el-form-item prop="commentBody">
-          <div :class="active ? `active` : ``" style="width: 100%">
+          <div @focusout="checkCommentBody" :class="active ? `active` : ``" style="width: 100%">
             <md-editor-v3 v-model="comment.commentBody" @on-upload-img="handleUploadImage"></md-editor-v3>
           </div>
         </el-form-item>
-        <el-button type="primary" @click="commentYou">提交</el-button>
+        <el-button type="primary" @click="commentYou(commentFormRef)">提交</el-button>
       </el-form>
       <article class="blog-title">全部留言</article>
       <article v-if="commentList && commentList.length > 0">
@@ -77,14 +77,22 @@ const route = useRoute()
 const scrollElement = document.documentElement
 const id = 'preview-only'
 const text = ref('# Hello Editor')
-let state = reactive({
+interface Comment{
+ commentator: string
+  email: string, commentBody: string,website:string
+  blogId:string
+}
+const state = reactive({
   commentInput: { width: '50%' },
   blog: {},
   tags: {},
-  comment: { commentator: null, email: null, commentBody: '' },
+  comment: { commentator: null, email: null, commentBody: '',website:'',blogId:null },
   commentList: [],
 })
-let commentRule = ref<FormRules>({
+const  active = ref(false)
+const  loading = ref(true)
+const  { blog, tags, comment, commentList, commentInput } = toRefs(state)
+const commentRule = reactive<FormRules<Comment>>({
   commentator: [
     { required: true, message: '请输入网名', trigger: 'blur' },
     { min: 1, max: 20, message: '长度在 3 到 5 个字符', trigger: 'blur' },
@@ -93,30 +101,31 @@ let commentRule = ref<FormRules>({
     {
       pattern: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
       required: true,
-      message: '请输入邮箱',
+      message: '请输入正确的邮箱',
       trigger: 'blur',
-    },
-    { min: 1, max: 20, message: '长度在 3 到 5 个字符', trigger: 'blur' },
+    } 
   ],
-  commentBody: [{ required: true, message: '请输入评论内容', trigger: 'blur' }],
+  commentBody: [{ required: true, message: '请输入评论内容', trigger:'blur' },
+    { min: 1,   message: '请输入内容', trigger: 'blur' }],
 })
-let active = ref(false)
-let loading = ref(true)
-let { blog, tags, comment, commentList, commentInput } = toRefs(state)
-let commentForm = ref<FormInstance>()
+
+const  commentFormRef = ref<FormInstance>()
 onMounted(async () => {
-  let id = route.params.id
+  const  id = route.params.id
   const { data } = await getBlogById(id)
 
   blog.value = data.blogDetailVO
   tags.value = data.tagList
 
   getComments()
-})
 
+})
+function checkCommentBody() {
+  active.value = !state.comment.commentBody
+}
 function handleUploadImage(files, callback) {
   console.log(files)
-  let formData = new FormData()
+  const  formData = new FormData()
   formData.append('img', files[0])
   uploadImg(formData).then((res) => {
     console.log(res)
@@ -124,26 +133,18 @@ function handleUploadImage(files, callback) {
   })
 }
 
-function commentYou() {
-  if (!state.comment.commentBody) {
-    ElMessage({
-      message: '请输入评论内容!',
-      grouping: true,
-      type: 'error',
-    })
+async function commentYou(formEl: FormInstance | undefined) {
+  if (!formEl) return
+  await formEl.validate(async (valid,fields) => {
 
-    return
-  }
-  state.comment.blogId = state.blog.blogId
-  commentForm.value.validate(async (valid) => {
-    console.log(state.comment)
-    console.log(`%c看看是大幅度蓝山咖啡`, `color:red;font-size:16px;background:transparent`)
     if (valid) {
+      state.comment.blogId = state.blog.blogId
       try {
-        let res = await submitComment(state.comment)
+        const  res = await submitComment(state.comment)
         if (res.success) {
           ElMessage({ message: '成功', type: 'success' })
           getComments()
+          state.comment={ commentator: null, email: null, commentBody: '',website: "",blogId:null }
         } else {
           ElMessage.error(res.message)
         }
@@ -169,12 +170,7 @@ function getComments() {
   })
 }
 
-watch(
-  () => comment.value,
-  (val, preVal) => {
-    active.value = !val.commentBody
-  },
-)
+
 </script>
 
 <style lang="scss" scoped>

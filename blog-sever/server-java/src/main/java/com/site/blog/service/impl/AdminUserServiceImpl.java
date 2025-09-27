@@ -1,18 +1,16 @@
 package com.site.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.site.blog.service.AdminUserService;
 import com.site.blog.model.entity.AdminUser;
 import com.site.blog.mapper.AdminUserMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.site.blog.util.MD5Utils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 /**
  * <p>
@@ -23,26 +21,24 @@ import org.springframework.util.ObjectUtils;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser> implements AdminUserService {
 
-
     private final AdminUserMapper adminUserMapper;
-private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
     /**
-     * @Description: 验证密码
-     * @Param: [userId, oldPwd]
-     * @return: boolean
-     * @date: 2019/8/26 13:27
+     * 验证密码
      */
     @Override
     public boolean validatePassword(String userId, String oldPwd) {
-        QueryWrapper<AdminUser> queryWrapper = new QueryWrapper<>(
-                new AdminUser().setId(userId)
-                        .setPassword(passwordEncoder.encode(oldPwd))
-        );
-
+        LambdaQueryWrapper<AdminUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AdminUser::getId, userId);
         AdminUser adminUser = adminUserMapper.selectOne(queryWrapper);
-        return !ObjectUtils.isEmpty(adminUser);
+        if (adminUser == null) {
+            return false;
+        }
+        return passwordEncoder.matches(oldPwd, adminUser.getPassword());
     }
 
     /**
@@ -66,13 +62,12 @@ private final PasswordEncoder passwordEncoder;
 
     @Override
     public AdminUser getAdminUserById(String id) {
-
         try {
             LambdaQueryWrapper<AdminUser> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(AdminUser::getId, id);
             return adminUserMapper.selectOne(queryWrapper);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("获取用户信息失败, id={}", id, e);
             return null;
         }
     }

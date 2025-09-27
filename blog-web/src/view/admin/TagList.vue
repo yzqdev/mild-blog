@@ -1,4 +1,5 @@
 <template>
+  <div>
   <el-dialog v-model="editFormShow" width="30%">
     <el-form :model="editForm">
       <el-form-item label="标签名">
@@ -35,6 +36,7 @@
   </el-table>
   <br />
   <el-pagination background layout="total,sizes,prev, pager, next " :total="count" :page-size="pageSize" @current-change="getData" v-model:current-page="currentPage" :page-sizes="[10, 20, 30, 40, 50, 100]" @size-change="sizeChange" />
+  </div>
 </template>
 
 <script setup>

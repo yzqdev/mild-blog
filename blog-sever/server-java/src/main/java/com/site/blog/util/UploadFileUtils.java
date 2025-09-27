@@ -2,6 +2,8 @@ package com.site.blog.util;
 
 import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +21,8 @@ import java.util.Random;
 
 
 public class UploadFileUtils {
+
+    private static final Logger log = LoggerFactory.getLogger(UploadFileUtils.class);
 
     /**
      * 获取图片后缀
@@ -95,7 +99,7 @@ public class UploadFileUtils {
             byte[] b = md.digest();
             bi = new BigInteger(1, b);
         } catch (NoSuchAlgorithmException | IOException e) {
-            e.printStackTrace();
+            log.error("计算文件MD5失败, path={}", path, e);
         }
         return bi.toString(16);
     }

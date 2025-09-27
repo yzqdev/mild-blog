@@ -193,8 +193,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 })
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
   to.meta && typeof to.meta.title !== 'undefined' && setDocumentTitle(`${to.meta.title} `)
-  next()
 })
 export default router

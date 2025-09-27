@@ -1,10 +1,11 @@
 <template>
+  <div>
   <el-table :data="data">
     <el-table-column prop="commentator" label="评论者名称"></el-table-column>
     <el-table-column prop="email" label="评论者邮箱"></el-table-column>
     <el-table-column prop="blogId" label="文章">
       <template v-slot="{ row }">
-        <el-link :href="`/home/blog/${row.blogId}`">{{ row.blogInfo.blogTitle }}</el-link>
+        <el-link :href="`/home/blog/${row.blogId}`">{{ row.blogInfo?.blogTitle }}</el-link>
       </template>
     </el-table-column>
     <el-table-column prop="commentBody" label="评论内容" width="300" :show-overflow-tooltip="true"></el-table-column>
@@ -35,6 +36,7 @@
   </el-table>
   <br />
   <el-pagination background layout="total,sizes,prev, pager, next " :total="count" :page-size="pageSize" @current-change="getData" v-model:current-page="currentPage" :page-sizes="[10, 20, 30, 40, 50, 100]" @size-change="sizeChange" />
+  </div>
 </template>
 
 <script setup lang="ts">

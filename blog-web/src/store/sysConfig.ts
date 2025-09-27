@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import { SysConfig } from '@/interface/storeTypes'
 
-export const useConfigStore = defineStore({
-  id: 'config',
+export const useConfigStore = defineStore( 'config',{
+
   state: (): SysConfig => {
     return {
       sysAuthor: '',

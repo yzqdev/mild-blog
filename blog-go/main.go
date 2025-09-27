@@ -16,10 +16,8 @@ func main() {
 		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: false,
-
-		MaxAge: 12 * time.Hour,
+		MaxAge:           12 * time.Hour,
 	}))
-	Embed.RestoreFolder(".")
 	InitRouter(engine)
-	engine.Run(g.Server.Port) // 监听并在 0.0.0.0:8080 上启动服务
+	engine.Run(g.Server.Port)
 }

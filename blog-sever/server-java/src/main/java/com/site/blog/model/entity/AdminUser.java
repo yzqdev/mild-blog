@@ -29,7 +29,7 @@ public class AdminUser extends Model<AdminUser> implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    @TableId(  type = IdType.ASSIGN_UUID)
+    @TableId(type = IdType.ASSIGN_UUID)
     private String id;
 
     /**
@@ -61,5 +61,5 @@ public class AdminUser extends Model<AdminUser> implements Serializable {
      */
     private Integer role;
     private String avatar;
-    private  String email;
+    private String email;
 }
